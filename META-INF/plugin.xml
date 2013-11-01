@@ -1,0 +1,34 @@
+<idea-plugin version="2">
+  <id>foo.initial</id>
+  <name>StaticAnalysis</name>
+  <version>1.0</version>
+<!--  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>-->
+
+  <description><![CDATA[
+      Provides static analysis for the XML DSL provided by Apache Camel.<br>
+      ]]></description>
+
+  <change-notes><![CDATA[
+      Initial investigation.
+      ]]>
+  </change-notes>
+
+
+  <idea-version since-build="107.105"/>
+
+  <application-components>
+
+  </application-components>
+
+  <project-components>
+
+  </project-components>
+
+  <actions>
+
+  </actions>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <dom.fileDescription id="BlueprintDom" implementation="foo.BlueprintDom"/>
+  </extensions>
+</idea-plugin>

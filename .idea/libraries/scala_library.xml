@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="scala-library">
+    <CLASSES>
+      <root url="jar://C:/scala/scala-2.10.2/lib/scala-actors.jar!/" />
+      <root url="jar://C:/scala/scala-2.10.2/lib/scala-library.jar!/" />
+      <root url="jar://C:/scala/scala-2.10.2/lib/scala-swing.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://C:/scala/scala-2.10.2/src/scala-actors-src.jar!/" />
+      <root url="jar://C:/scala/scala-2.10.2/src/scala-library-src.jar!/" />
+    </SOURCES>
+  </library>
+</component>
