@@ -29,6 +29,6 @@
 
   <extensions defaultExtensionNs="com.intellij">
       <dom.fileDescription id="BlueprintDom" implementation="foo.BlueprintDom"/>
-      <fileEditorProvider implementation="foo.editor.EditorTest" />
+      <fileEditorProvider implementation="foo.editor.EipEditorProvider" />
   </extensions>
 </idea-plugin>
