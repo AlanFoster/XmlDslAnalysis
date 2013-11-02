@@ -24,17 +24,11 @@
   </project-components>
 
   <actions>
-      <group id="StaticAnalysis" text="StaticAnalysis"
-             description="StaticAnalysis tooling for XML Based DSLs">
-        <add-to-group group-id="MainMenu" anchor="last" />
-          <action id="StaticAnalysis.GenerateGraph" class="foo.GenerateGraphAction" text="Generate Graph" description="Generates a Graph from the Xml Dsl" />
-      </group>
+
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
       <dom.fileDescription id="BlueprintDom" implementation="foo.BlueprintDom"/>
-      <fileEditorProvider implementation="foo.EditorTest" />
-
-<!--    <toolWindow id="Hello world?" icon="/Camel_16x16.png" anchor="right" factoryClass="foo.GraphWindowFactory" />-->
+      <fileEditorProvider implementation="foo.editor.EditorTest" />
   </extensions>
 </idea-plugin>

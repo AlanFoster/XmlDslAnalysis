@@ -1,6 +1,6 @@
-package foo
+package foo.editor
 
-import com.intellij.openapi.util.{Disposer, UserDataHolderBase}
+import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.fileEditor._
 import com.intellij.openapi.project.{DumbAware, Project}
 import org.jdom.Element
@@ -8,8 +8,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ide.structureView.StructureViewBuilder
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter
 import java.beans.PropertyChangeListener
-import javax.swing.{JLabel, JPanel, JEditorPane, JComponent}
-import com.intellij.psi.PsiFile
+import javax.swing.{JLabel, JPanel, JComponent}
 
 class EditorTest extends FileEditorProvider with DumbAware {
   val editorID = "EipEditor"

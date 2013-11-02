@@ -13,7 +13,4 @@ class BlueprintDom extends DomFileDescription[Blueprint](classOf[Blueprint], "bl
    * @return The blueprint icon if this file description is met
    */
    override def getFileIcon(flags: Int): Icon = Icons.Camel
-
-
-
 }
