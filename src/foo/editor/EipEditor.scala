@@ -21,11 +21,7 @@ class EipEditor(project: Project, file: VirtualFile) extends UserDataHolderBase 
   /**
    * Represents the graph component within this tab
    */
-  val graph = new EipGraph(
-    null,
-    loadPickedIcon = s => IconLoader.getIcon(s"/eip/picked/${s}.gif"),
-    loadUnpickedIcon = s => IconLoader.getIcon(s"/eip/unpicked/${s}.gif")
-  ).createComponent
+  val graph = (new EipGraph(null) with IntellijIconLoader).createComponent
 
   /**
    * Disposes resources associated with this editor

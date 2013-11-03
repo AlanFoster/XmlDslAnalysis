@@ -24,7 +24,7 @@ case class Route(id: String, pointer: Pointer)
 case class Pointer(component: Component, children: List[Pointer] = List())
 case class Component(id: String, eipType: String, uri: String)
 
-class EipGraph(domModel: Blueprint, loadPickedIcon: String => Icon, loadUnpickedIcon: String => Icon) {
+abstract class EipGraph(domModel: Blueprint) extends IconLoader {
   /**
    * Create a type alias for VisualizationViewer to improve code readibility
    */
@@ -175,16 +175,7 @@ class EipGraph(domModel: Blueprint, loadPickedIcon: String => Icon, loadUnpicked
 
 object Starter {
   def main(args: Array[String]) {
-    def load: String => Icon = s => {
-      val resource = s.getClass.getResource(s)
-      new ImageIcon(resource)
-    }
-
-    val component = new EipGraph(
-      null,
-      loadPickedIcon = s => load(s"/eip/picked/${s}.gif"),
-      loadUnpickedIcon = s => load(s"/eip/unpicked/${s}.gif")
-    ).createComponent
+    val component = (new EipGraph(null) with DefaultIconLoader).createComponent
 
     val jframe = new JFrame()
     jframe.setSize(500, 700)
