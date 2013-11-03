@@ -1,9 +1,10 @@
 package foo.editor
 
-import com.intellij.openapi.fileEditor.{FileEditor, FileEditorState, FileEditorPolicy, FileEditorProvider}
+import com.intellij.openapi.fileEditor._
 import com.intellij.openapi.project.{Project, DumbAware}
 import org.jdom.Element
 import com.intellij.openapi.vfs.VirtualFile
+import foo.DomFileAccessor._
 
 /**
  * Represents the EipEditorProvider, which acts as a factory for FileEditors.
@@ -37,11 +38,13 @@ class EipEditorProvider extends FileEditorProvider with DumbAware {
    * If this file is accepted, createdEditor will be called.
    *
    * @param project
-   * @param file
+   * @param file Never null
    * @return
    */
-  // TODO Convert to DOM
-  def accept(project: Project, file: VirtualFile): Boolean = true
+  def accept(project: Project, file: VirtualFile): Boolean = {
+    val blueprintDomFile = getBlueprintDomFile(project, file)
+    blueprintDomFile.isDefined
+  }
 
   /**
    * Creates the EIP Graph editor associated with the virtual file.
@@ -75,5 +78,5 @@ class EipEditorProvider extends FileEditorProvider with DumbAware {
    * By default we wish to allow the user to choose the EIP tab themselves.
    * @return #FileEditorPolicy.PLACE_AFTER_DEFAULT_EDITOR
    */
-  def getPolicy: FileEditorPolicy = FileEditorPolicy.PLACE_AFTER_DEFAULT_EDITOR
+  def getPolicy: FileEditorPolicy = FileEditorPolicy.PLACE_BEFORE_DEFAULT_EDITOR
 }

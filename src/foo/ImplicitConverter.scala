@@ -1,0 +1,6 @@
+package foo
+
+class ImplicitConverter {
+
+}
+

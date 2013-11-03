@@ -1,7 +1,7 @@
 package foo.editor
 
 import com.intellij.openapi.fileEditor.{FileEditorStateLevel, FileEditorState, FileEditorLocation, FileEditor}
-import com.intellij.openapi.util.UserDataHolderBase
+import com.intellij.openapi.util.{IconLoader, UserDataHolderBase}
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.project.Project
 import com.intellij.ide.structureView.StructureViewBuilder
@@ -18,9 +18,14 @@ class EipEditor(project: Project, file: VirtualFile) extends UserDataHolderBase 
    */
   val tabName = "Eip Editor"
 
-  // todo
-  val jpanel = new JPanel()
-  jpanel.add(new JLabel("hiya"))
+  /**
+   * Represents the graph component within this tab
+   */
+  val graph = new EipGraph(
+    null,
+    loadPickedIcon = s => IconLoader.getIcon(s"/eip/picked/${s}.gif"),
+    loadUnpickedIcon = s => IconLoader.getIcon(s"/eip/unpicked/${s}.gif")
+  ).createComponent
 
   /**
    * Disposes resources associated with this editor
@@ -71,14 +76,14 @@ class EipEditor(project: Project, file: VirtualFile) extends UserDataHolderBase 
    * Represents the component to show within the editor region
    * @return the EIP graph component
    */
-  def getComponent: JComponent = jpanel
+  def getComponent: JComponent = graph
 
   /**
    * Places focus on the component when the tab is opened
    *
    * @return The EIP graph component
    */
-  def getPreferredFocusedComponent: JComponent = jpanel
+  def getPreferredFocusedComponent: JComponent = graph
 
   /**
    * Associates a name with the created editor tab
