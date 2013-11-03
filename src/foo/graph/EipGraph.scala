@@ -1,9 +1,9 @@
-package foo.editor
+package foo.graph
 
 import foo.Model.Blueprint
 import edu.uci.ics.jung.graph.{Graph, DirectedSparseMultigraph}
-import edu.uci.ics.jung.visualization.{BasicVisualizationServer, VisualizationViewer}
-import java.awt.{Color, Shape, Dimension}
+import edu.uci.ics.jung.visualization.{GraphZoomScrollPane, VisualizationViewer}
+import java.awt.{Color, Shape}
 import edu.uci.ics.jung.algorithms.layout.TreeLayout
 import edu.uci.ics.jung.graph.util.EdgeType
 import org.apache.commons.collections15.Transformer
@@ -11,14 +11,11 @@ import javax.swing._
 import java.awt.geom.Rectangle2D
 import edu.uci.ics.jung.visualization.decorators.EdgeShape
 import edu.uci.ics.jung.visualization.control.{ModalGraphMouse, DefaultModalGraphMouse}
-import com.intellij.openapi.util.IconLoader
-import foo.editor.Route
-import foo.editor.Component
-import foo.editor.Pointer
-import scala.swing.BoxPanel
 import java.awt.event.{KeyEvent, KeyListener}
 
 import foo.FunctionalUtil._
+import com.intellij.util.xml.DomUtil
+import foo.graph.loaders.{DefaultIconLoader, IconLoader}
 
 case class Route(id: String, pointer: Pointer)
 case class Pointer(component: Component, children: List[Pointer] = List())
@@ -26,20 +23,18 @@ case class Component(id: String, eipType: String, uri: String)
 
 abstract class EipGraph(domModel: Blueprint) extends IconLoader {
   /**
-   * Create a type alias for VisualizationViewer to improve code readibility
+   * Create a type alias for VisualizationViewer to improve code readability
    */
   type Viewer = VisualizationViewer[Component, String]
 
-  def createComponent = {
+  def createViewer = {
     val graph:Graph[Component, String] = new DirectedSparseMultigraph[Component, String]
 
       val route = Route("route", Pointer(null, List(
         Pointer(Component("1", "from", "uri")),
         Pointer(Component("2", "to", "uri")),
         Pointer(Component("3", "to", "uri")),
-        Pointer(Component("4", "to", "uri")),
-        Pointer(Component("5", "to", "uri")),
-        Pointer(Component("6", "to", "uri"))
+        Pointer(Component("4", "to", "uri"))
       )))
 
     def pipeLineChildren(children: List[Pointer]): Boolean = children match {
@@ -82,6 +77,12 @@ abstract class EipGraph(domModel: Blueprint) extends IconLoader {
 
     boundJavaComponent
   }
+
+  /**
+   * @return A scrollable Viewer
+   */
+  def createScrollableViewer: GraphZoomScrollPane =
+    new GraphZoomScrollPane(createViewer)
 
   /**
    * Binds the EIP renderer to the given Viewer
@@ -175,7 +176,7 @@ abstract class EipGraph(domModel: Blueprint) extends IconLoader {
 
 object Starter {
   def main(args: Array[String]) {
-    val component = (new EipGraph(null) with DefaultIconLoader).createComponent
+    val component = (new EipGraph(null) with DefaultIconLoader).createScrollableViewer
 
     val jframe = new JFrame()
     jframe.setSize(500, 700)

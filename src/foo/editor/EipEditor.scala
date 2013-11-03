@@ -8,11 +8,15 @@ import com.intellij.ide.structureView.StructureViewBuilder
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter
 import java.beans.PropertyChangeListener
 import javax.swing.{JLabel, JPanel, JComponent}
+import foo.DomFileAccessor._
+import foo.graph.{EipGraph}
+import foo.graph.loaders.IntellijIconLoader
 
 /**
  * Creates and visualises the given XML DSl as a graph.
  */
 class EipEditor(project: Project, file: VirtualFile) extends UserDataHolderBase with FileEditor {
+
   /**
    * Represents the constant tab name, for improved user experience
    */
@@ -21,7 +25,7 @@ class EipEditor(project: Project, file: VirtualFile) extends UserDataHolderBase 
   /**
    * Represents the graph component within this tab
    */
-  val graph = (new EipGraph(null) with IntellijIconLoader).createComponent
+  val graph = (new EipGraph(null) with IntellijIconLoader).createScrollableViewer
 
   /**
    * Disposes resources associated with this editor

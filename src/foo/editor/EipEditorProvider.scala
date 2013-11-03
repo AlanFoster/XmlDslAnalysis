@@ -54,7 +54,8 @@ class EipEditorProvider extends FileEditorProvider with DumbAware {
    * @param file
    * @return The new file editor associated to the given file
    */
-  def createEditor(project: Project, file: VirtualFile): FileEditor = new EipEditor(project, file)
+  def createEditor(project: Project, file: VirtualFile): FileEditor =
+    new EipEditor(project, file)
 
   /**
    * Loads the state from the specified sourceElement.

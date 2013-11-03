@@ -9,6 +9,6 @@ import com.intellij.util.xml.DomElement
  * Time: 02:08
  * To change this template use File | Settings | File Templates.
  */
-trait ToComponent extends DomElement {
+trait ToComponent extends DomElement with Component {
 
 }
