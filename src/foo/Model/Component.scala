@@ -1,6 +1,7 @@
 package foo.Model
 
 import com.intellij.util.xml.{GenericAttributeValue, DomElement, Attribute}
+import org.jetbrains.annotations._
 
 /**
  * Created with IntelliJ IDEA.

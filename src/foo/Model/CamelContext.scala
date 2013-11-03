@@ -1,6 +1,6 @@
 package foo.Model
 
-import com.intellij.util.xml.model.DomModel
+import com.intellij.util.xml.DomElement
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,6 +9,6 @@ import com.intellij.util.xml.model.DomModel
  * Time: 01:42
  * To change this template use File | Settings | File Templates.
  */
-trait CamelContext extends DomModel {
+trait CamelContext extends DomElement {
   def getRoutes: java.util.List[Route]
 }
