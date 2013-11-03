@@ -8,5 +8,5 @@ import com.intellij.util.xml.DomElement
  * and registered as usual under the plugin.xml extensions
  */
 trait Blueprint extends DomElement {
-
+  def getCamelContext: CamelContext
 }

@@ -162,7 +162,7 @@ class EipGraph(domModel: Blueprint, loadPickedIcon: String => Icon, loadUnpicked
     // Bind a keyboard listener, to toggle to Transforming mode when space bar is pressed
     viewer.addKeyListener(new KeyListener {
       def keyPressed(e: KeyEvent) =
-        if (e.getKeyCode == KeyEvent.VK_SPACE) toggle(isTransforming = true)
+         if (e.getKeyCode == KeyEvent.VK_SPACE) toggle(isTransforming = true)
 
       def keyReleased(e: KeyEvent) =
         if (e.getKeyCode == KeyEvent.VK_SPACE) toggle(isTransforming = false)

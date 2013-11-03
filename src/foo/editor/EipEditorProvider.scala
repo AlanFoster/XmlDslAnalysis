@@ -78,5 +78,5 @@ class EipEditorProvider extends FileEditorProvider with DumbAware {
    * By default we wish to allow the user to choose the EIP tab themselves.
    * @return #FileEditorPolicy.PLACE_AFTER_DEFAULT_EDITOR
    */
-  def getPolicy: FileEditorPolicy = FileEditorPolicy.PLACE_BEFORE_DEFAULT_EDITOR
+  def getPolicy: FileEditorPolicy = FileEditorPolicy.PLACE_AFTER_DEFAULT_EDITOR
 }
