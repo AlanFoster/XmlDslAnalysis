@@ -1,6 +1,6 @@
 package foo.Model
 
-import com.intellij.util.xml.DomElement
+import com.intellij.util.xml.{SubTag, DomElement}
 
 /**
  * Blueprint root element.
@@ -8,5 +8,6 @@ import com.intellij.util.xml.DomElement
  * and registered as usual under the plugin.xml extensions
  */
 trait Blueprint extends DomElement {
+  @SubTag("camelContext")
   def getCamelContext: CamelContext
 }

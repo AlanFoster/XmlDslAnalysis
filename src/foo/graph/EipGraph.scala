@@ -14,14 +14,15 @@ import edu.uci.ics.jung.visualization.control.{ModalGraphMouse, DefaultModalGrap
 import java.awt.event.{KeyEvent, KeyListener}
 
 import foo.FunctionalUtil._
-import com.intellij.util.xml.DomUtil
 import foo.graph.loaders.{DefaultIconLoader, IconLoader}
+import scala.collection.JavaConverters._
+
 
 case class Route(id: String, pointer: Pointer)
 case class Pointer(component: Component, children: List[Pointer] = List())
 case class Component(id: String, eipType: String, uri: String)
 
-abstract class EipGraph(domModel: Blueprint) extends IconLoader {
+abstract class EipGraph(blueprint: Blueprint) extends IconLoader {
   /**
    * Create a type alias for VisualizationViewer to improve code readability
    */
@@ -29,6 +30,14 @@ abstract class EipGraph(domModel: Blueprint) extends IconLoader {
 
   def createViewer = {
     val graph:Graph[Component, String] = new DirectedSparseMultigraph[Component, String]
+
+
+    val routes = blueprint.getCamelContext.getRoutes.asScala
+    val components = routes.head.getComponents.asScala
+
+    for { component <- components } {
+      println(component)
+    }
 
       val route = Route("route", Pointer(null, List(
         Pointer(Component("1", "from", "uri")),

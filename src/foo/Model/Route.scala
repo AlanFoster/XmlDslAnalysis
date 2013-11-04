@@ -1,6 +1,7 @@
 package foo.Model
 
-import com.intellij.util.xml.{SubTagsList, DomElement}
+import com.intellij.util.xml.{SubTagsList, SubTagList, DomElement}
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,10 +10,15 @@ import com.intellij.util.xml.{SubTagsList, DomElement}
  * Time: 02:02
  * To change this template use File | Settings | File Templates.
  */
-trait Route extends DomElement {
-  def getFrom: FromComponent
 
-  @SubTagsList(Array("to"))
-  def getOutputs: java.util.List[Component]
+trait Route extends DomElement {
+  @SubTagsList(Array("to", "inOut"))
+  def getComponents: java.util.List[Component]
+
+  @SubTagList("to")
+  def getTos: java.util.List[ToComponent]
+
+  @SubTagList("inOut")
+  def getInOuts: java.util.List[ToComponent]
 
 }

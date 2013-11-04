@@ -1,6 +1,6 @@
 package foo.Model
 
-import com.intellij.util.xml.DomElement
+import com.intellij.util.xml._
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,5 +10,10 @@ import com.intellij.util.xml.DomElement
  * To change this template use File | Settings | File Templates.
  */
 trait CamelContext extends DomElement {
+
+  @SubTagList("route")
   def getRoutes: java.util.List[Route]
+
+  @Attribute("trace")
+  def getTrace: GenericAttributeValue[String]
 }

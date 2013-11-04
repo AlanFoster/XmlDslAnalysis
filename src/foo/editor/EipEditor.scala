@@ -15,7 +15,7 @@ import foo.graph.loaders.IntellijIconLoader
 /**
  * Creates and visualises the given XML DSl as a graph.
  */
-class EipEditor(project: Project, file: VirtualFile) extends UserDataHolderBase with FileEditor {
+class EipEditor(project: Project, virtualFile: VirtualFile) extends UserDataHolderBase with FileEditor {
 
   /**
    * Represents the constant tab name, for improved user experience
@@ -25,7 +25,7 @@ class EipEditor(project: Project, file: VirtualFile) extends UserDataHolderBase 
   /**
    * Represents the graph component within this tab
    */
-  val graph = (new EipGraph(null) with IntellijIconLoader).createScrollableViewer
+  val graph = (new EipGraph(getBlueprintDomFile(project, virtualFile).get) with IntellijIconLoader).createScrollableViewer
 
   /**
    * Disposes resources associated with this editor
