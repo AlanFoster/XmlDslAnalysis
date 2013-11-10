@@ -18,6 +18,7 @@
     <SOURCES>
       <root url="jar://$USER_HOME$/.ideaLibSources/jung-graph-impl-2.0.1-sources.jar!/" />
       <root url="jar://$USER_HOME$/.ideaLibSources/jung-visualization-2.0.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.ideaLibSources/jung-api-2.0.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
