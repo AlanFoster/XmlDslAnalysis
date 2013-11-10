@@ -10,12 +10,10 @@ import org.jetbrains.annotations.NotNull
  * Time: 23:55
  * To change this template use File | Settings | File Templates.
  */
-trait WhenDefinition extends DomElement {
+trait WhenDefinition extends DomElement with ExpressionDefinition{
   @NotNull
   @Attribute("id")
   def getId: GenericAttributeValue[String]
-
-  def getExpression: GenericValue[String]
 
   @SubTagsList(Array("to", "inOut", "setBody", "choice"))
   def getComponents: java.util.List[ProcessorDefinition]

@@ -9,8 +9,6 @@ import com.intellij.util.xml.{GenericValue, DomElement}
  * Time: 17:08
  * To change this template use File | Settings | File Templates.
  */
-trait SetBodyProcessorDefinition extends DomElement with ProcessorDefinition {
-  def getExpression: GenericValue[String]
+trait SetBodyProcessorDefinition extends DomElement with ExpressionDefinition {
 
- // def getExpression: Expression
 }

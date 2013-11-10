@@ -53,7 +53,7 @@ class EipGraphCreator {
     }
 
     case (setBody: SetBodyProcessorDefinition) :: tail => {
-      val component = EipComponent(setBody.getId.getStringValue, "translator", "TODO-Expression")
+      val component = EipComponent(setBody.getId.getStringValue, "translator", setBody.getExpression.getValue)
       val newGraph = graph.addVertex(component)
       val linkedGraph = link(previous, component, newGraph)(UniqueString)
       createEipGraph(Some(component), tail, linkedGraph)
@@ -74,7 +74,7 @@ class EipGraphCreator {
       // TODO When node should have its own vertex, with a text box with its predicate
 
       choice.getWhens.asScala.foldLeft(linkedGraph)((graph, when) => {
-        val component = EipComponent(when.getId.getStringValue, "when", "TODO-Expression")
+        val component = EipComponent(when.getId.getStringValue, "when", when.getExpression.getValue)
         val newGraph = graph.addVertex(component)
         val linkedGraph = link(Some(choiceComponent), component, newGraph)(UniqueString)
         createEipGraph(Some(component), when.getComponents.asScala.toList, linkedGraph)
@@ -91,26 +91,6 @@ class EipGraphCreator {
     }
   }
 
-
-  
-  /*
-
-  def createVertex(parent: Component, children: List[Component], graph: EipDAG) {
-    graph.addVertex(parent)
-    for { child <- children } {
-      createVertex(child, List(), graph)
-      pipeLineChildren(children, graph)(_.toString)
-    }
-    (parent, children) match {
-      case (from, x :: _) => {
-        graph.addEdge(from.toString, from, x)
-      }
-      case _ => ()
-    }
-  }
-*/
-
-
   /**
    * Tail recursive implementation of a pipeline children function.
    * IE, each child will have an edge to next child
@@ -125,8 +105,8 @@ class EipGraphCreator {
     case Nil => graph
     case x :: Nil => graph
     case x :: x2 :: xs => {
-      graph.addEdge(f(x), x, x2)
-    //  pipeLineChildren(children.tail, newGraph)(f)
+      val newGraph = graph.addEdge(f(x), x, x2)
+      pipeLineChildren(children.tail, newGraph)(f)
     }
   }
 
