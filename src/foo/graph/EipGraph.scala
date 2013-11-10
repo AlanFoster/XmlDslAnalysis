@@ -1,6 +1,6 @@
 package foo.graph
 
-import foo.Model.Blueprint
+import foo.Model._
 import edu.uci.ics.jung.graph.{Graph, DirectedSparseMultigraph}
 import edu.uci.ics.jung.visualization.{GraphZoomScrollPane, VisualizationViewer}
 import java.awt.{Color, Shape}
@@ -17,10 +17,11 @@ import foo.FunctionalUtil._
 import foo.graph.loaders.{DefaultIconLoader, IconLoader}
 import scala.collection.JavaConverters._
 
-
+/*
 case class Route(id: String, pointer: Pointer)
 case class Pointer(component: Component, children: List[Pointer] = List())
 case class Component(id: String, eipType: String, uri: String)
+*/
 
 abstract class EipGraph(blueprint: Blueprint) extends IconLoader {
   /**
@@ -28,32 +29,41 @@ abstract class EipGraph(blueprint: Blueprint) extends IconLoader {
    */
   type Viewer = VisualizationViewer[Component, String]
 
-  def createViewer = {
-    val graph:Graph[Component, String] = new DirectedSparseMultigraph[Component, String]
+  type DAG = Graph[Component, String]
 
+  def pipeLineChildren[V, E](children: List[V], graph: Graph[V, E])(f: V => E): Boolean = children match {
+    case Nil => true
+    case x :: Nil => true
+    case x :: x2 :: xs => {
+      graph.addEdge(f(x), x, x2, EdgeType.DIRECTED)
+      pipeLineChildren(children.tail, graph)(f)
+    }
+  }
+
+  def createVertex(parent: Component, children: List[Component], graph: DAG) {
+    graph.addVertex(parent)
+    for { child <- children } {
+      createVertex(child, List(), graph)
+      pipeLineChildren(children, graph)(_.toString)
+    }
+    (parent, children) match {
+      case (from: FromComponent, x :: _) => {
+        graph.addEdge(from.toString, from, x, EdgeType.DIRECTED)
+      }
+      case _ => ()
+    }
+  }
+
+  def createViewer = {
+    val graph:DAG= new DirectedSparseMultigraph[Component, String]
 
     val routes = blueprint.getCamelContext.getRoutes.asScala
-    val components = routes.head.getComponents.asScala
+    val parent = routes.head.getFrom
+    val components = routes.head.getComponents.asScala.toList
 
-    for { component <- components } {
-      println(component)
-    }
+    createVertex(parent, components, graph)
 
-      val route = Route("route", Pointer(null, List(
-        Pointer(Component("1", "from", "uri")),
-        Pointer(Component("2", "to", "uri")),
-        Pointer(Component("3", "to", "uri")),
-        Pointer(Component("4", "to", "uri"))
-      )))
-
-    def pipeLineChildren(children: List[Pointer]): Boolean = children match {
-      case Nil => true
-      case x :: Nil => true
-      case x :: x2 :: xs => {
-        graph.addEdge(x.hashCode().toString, x.component, x2.component, EdgeType.DIRECTED)
-        pipeLineChildren(children.tail)
-      }
-    }
+/*
 
     def multiCastChildren(parent: Pointer, children: List[Pointer]): Boolean = children match {
       case Nil => true
@@ -62,17 +72,7 @@ abstract class EipGraph(blueprint: Blueprint) extends IconLoader {
         multiCastChildren(parent, xs)
       }
     }
-
-    def createTree(p: Pointer) {
-      if (p.component != null) {
-        graph.addVertex(p.component)
-      }
-
-      pipeLineChildren(p.children)
-      p.children.foreach(createTree)
-    }
-
-    createTree(route.pointer)
+*/
 
     val minimumSpanningForest = GraphGlue.newMinimumSpanningForest(graph)
     val viewer = new VisualizationViewer(new TreeLayout(minimumSpanningForest.getForest, 100, 100))
@@ -93,6 +93,14 @@ abstract class EipGraph(blueprint: Blueprint) extends IconLoader {
   def createScrollableViewer: GraphZoomScrollPane =
     new GraphZoomScrollPane(createViewer)
 
+  def getEipType(c:Component) = c match {
+    case from: FromComponent => "from"
+    case to: ToComponent => "to"
+    case inOut: InOutComponent => "to"
+    case setBody: SetBodyComponent => "translator"
+    case _ => "to"
+  }
+
   /**
    * Binds the EIP renderer to the given Viewer
    * @param viewer The viewer that will render EIP icons
@@ -101,8 +109,9 @@ abstract class EipGraph(blueprint: Blueprint) extends IconLoader {
   private def bindEipRenderer(viewer:Viewer): Viewer = {
     def getIcon(component: Component): Icon = {
       val isPicked = viewer.getPickedVertexState.getPicked.contains(component)
-      if (isPicked) loadPickedIcon(component.eipType)
-      else loadUnpickedIcon(component.eipType)
+      val componentType = getEipType(component)
+      if (isPicked) loadPickedIcon(componentType) // component.eipType
+      else loadUnpickedIcon(componentType)
     }
 
     viewer.getRenderContext.setVertexIconTransformer(new Transformer[Component, Icon] {
@@ -128,7 +137,7 @@ abstract class EipGraph(blueprint: Blueprint) extends IconLoader {
   private def setComponentToolTip(viewer: Viewer): Viewer =
     mutate(viewer) {
       _.setVertexToolTipTransformer(new Transformer[Component, String] {
-        def transform(component: Component): String = component.id + " " + component.uri
+        def transform(component: Component): String = component.getId + " " + component.getUri
       })
     }
 

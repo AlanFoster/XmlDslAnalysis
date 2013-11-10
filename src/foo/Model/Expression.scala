@@ -5,10 +5,10 @@ import com.intellij.util.xml.DomElement
 /**
  * Created with IntelliJ IDEA.
  * User: alan
- * Date: 03/11/13
- * Time: 02:09
+ * Date: 09/11/13
+ * Time: 23:57
  * To change this template use File | Settings | File Templates.
  */
-trait FromComponent extends DomElement with Component {
+trait Expression extends DomElement {
 
 }

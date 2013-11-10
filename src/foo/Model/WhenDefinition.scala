@@ -1,19 +1,16 @@
 package foo.Model
 
-import com.intellij.util.xml.{SubTag, SubTagsList, SubTagList, DomElement}
-
+import com.intellij.util.xml.{SubTagList, SubTagsList, DomElement}
 
 /**
  * Created with IntelliJ IDEA.
  * User: alan
- * Date: 03/11/13
- * Time: 02:02
+ * Date: 09/11/13
+ * Time: 23:55
  * To change this template use File | Settings | File Templates.
  */
-
-trait Route extends DomElement {
-  @SubTag("from")
-  def getFrom: FromComponent
+trait WhenDefinition extends DomElement {
+  def getExpression: Expression
 
   @SubTagsList(Array("to", "inOut", "setBody", "choice"))
   def getComponents: java.util.List[Component]
@@ -29,5 +26,6 @@ trait Route extends DomElement {
 
   @SubTagList("choice")
   def getChoices: java.util.List[ChoiceComponent]
+
 
 }
