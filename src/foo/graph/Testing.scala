@@ -1,5 +1,12 @@
 package foo.graph
 
+import edu.uci.ics.jung.graph.DirectedSparseMultigraph
+import foo.Model.Component
+import edu.uci.ics.jung.graph.util.EdgeType
+import javax.swing.{WindowConstants, JFrame}
+import edu.uci.ics.jung.visualization.VisualizationViewer
+import edu.uci.ics.jung.algorithms.layout.TreeLayout
+
 
 object Testing {
 
@@ -16,6 +23,8 @@ object Testing {
     def addVertex(vertex: V): Graph[V, E]
     def addEdge(vertex: E, vertex1: V, vertex2: V): Graph[V, E]
     def print: String
+    def vertices: List[V]
+    def edges: List[Edge[V, E]]
   }
 
   /**
@@ -50,20 +59,62 @@ object Testing {
     def addEdge(edge: E, vertex1: V, vertex2: V): Graph[V, E] =
       ???
 
+    def vertices: List[V] = Nil
+    def edges: List[Edge[V, E]] = Nil
+
     def print = "({}, {})"
   }
 
   def main(args: Array[String]) {
+
     val one = new EipComponent("from")
     val two = new EipComponent("to")
+    val three = new EipComponent("hi");
 
-
-    println(EmptyDAG[EipComponent, String]()
+    val dag = EmptyDAG[EipComponent, String]()
       .addVertex(one)
       .addVertex(two)
-      .addEdge("", one, two)
-      .print)
+      .addVertex(three)
+      .addEdge("a", one, two)
+      .addEdge("b", one, three)
+
+    val newGraph = asJungGraph[EipComponent, String](dag)
+    val component = asVisualGraph(newGraph)
+
+    val jframe = new JFrame()
+    jframe.setSize(500, 700)
+    jframe.getContentPane.add(component)
+    jframe.setVisible(true)
+    jframe.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+
   }
+
+  type MutableGraph[V, E] = edu.uci.ics.jung.graph.DirectedSparseMultigraph[V, E]
+  def asJungGraph[V, E](oldGraph: Graph[V, E]): MutableGraph[V, E] = {
+    val newGraph:MutableGraph[V, E] = new DirectedSparseMultigraph[V, E]
+
+    for {
+      vertex <- oldGraph.vertices
+    } {
+      newGraph.addVertex(vertex)
+    }
+
+    for {
+      edge <- oldGraph.edges
+    } {
+      newGraph.addEdge(edge.edge, edge.source, edge.target, EdgeType.DIRECTED)
+    }
+
+    newGraph
+  }
+
+  def asVisualGraph[V, E](graph: MutableGraph[V, E]): VisualizationViewer[V, E] = {
+    val minimumSpanningForest = GraphGlue.newMinimumSpanningForest(graph)
+    val viewer = new VisualizationViewer(new TreeLayout(minimumSpanningForest.getForest, 100, 100))
+    viewer
+  }
+
+
 }
 
 case class EipComponent(eip: String)
