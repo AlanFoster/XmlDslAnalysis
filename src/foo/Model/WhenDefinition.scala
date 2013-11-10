@@ -1,6 +1,7 @@
 package foo.Model
 
-import com.intellij.util.xml.{SubTagList, SubTagsList, DomElement}
+import com.intellij.util.xml._
+import org.jetbrains.annotations.NotNull
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,7 +11,11 @@ import com.intellij.util.xml.{SubTagList, SubTagsList, DomElement}
  * To change this template use File | Settings | File Templates.
  */
 trait WhenDefinition extends DomElement {
-  def getExpression: Expression
+  @NotNull
+  @Attribute("id")
+  def getId: GenericAttributeValue[String]
+
+  def getExpression: GenericValue[String]
 
   @SubTagsList(Array("to", "inOut", "setBody", "choice"))
   def getComponents: java.util.List[ProcessorDefinition]

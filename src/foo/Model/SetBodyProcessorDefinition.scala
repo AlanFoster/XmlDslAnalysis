@@ -1,6 +1,6 @@
 package foo.Model
 
-import com.intellij.util.xml.DomElement
+import com.intellij.util.xml.{GenericValue, DomElement}
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,5 +10,7 @@ import com.intellij.util.xml.DomElement
  * To change this template use File | Settings | File Templates.
  */
 trait SetBodyProcessorDefinition extends DomElement with ProcessorDefinition {
-  def getExpression: Expression
+  def getExpression: GenericValue[String]
+
+ // def getExpression: Expression
 }

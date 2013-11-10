@@ -5,6 +5,9 @@ import foo.graph.ADT.Graph
 import foo.graph.StaticGraphTypes.EipDAG
 import scala.collection.JavaConverters._
 import foo.graph.ADT.EmptyDAG
+import com.intellij.util.xml.DomElement
+import foo.graph.ADT.EmptyDAG
+import java.util.UUID
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,28 +24,74 @@ class EipGraphCreator {
 
     if (routes.isEmpty) createdDAG
     else createEipGraph(
-      routes.head,
-      routes.head.getComponents.asScala.toList,
+      None,
+      routes.head.getFrom :: routes.head.getComponents.asScala.toList,
       createdDAG
     )
   }
 
-  def createEipGraph(parent: Any, children: List[ProcessorDefinition], graph: EipDAG): EipDAG = {
-    graph
-      .addVertex(EipComponent("1", "from"))
-      .addVertex(EipComponent("1","to"))
-      .addVertex(EipComponent("1","to"))
-      .addVertex(EipComponent("1","to"))
+  def UniqueString(x: AnyRef, y: AnyRef) = UUID.randomUUID().toString
+
+  def link(previous: Option[EipComponent],
+            next: EipComponent,
+            graph: EipDAG)(f: (EipComponent, EipComponent) => String) = (previous, next) match {
+    case (None, _) => graph
+    case (Some(component1), component2) => graph.addEdge(f(component1, component2), component1, component2)
+    case _ => graph
   }
 
-/*  def getEipType(c:ProcessorDefinition) = c match {
-    case from: FromProcessorDefinition => "from"
-    case to: ToProcessorDefinition => "to"
-    case inOut: InOutProcessorDefinition => "to"
-    case setBody: SetBodyProcessorDefinition => "translator"
-    case _ => "to"
+  def createEipGraph(previous: Option[EipComponent],
+                     processors: List[ProcessorDefinition],
+                     graph: EipDAG): EipDAG = processors match {
+    case Nil => graph
+
+    case (from: FromProcessorDefinition) :: tail => {
+      val component = EipComponent(from.getId.getStringValue, "from", from.getUri.getStringValue)
+      val newGraph = graph.addVertex(component)
+      val linkedGraph = link(previous, component, newGraph)(UniqueString)
+      createEipGraph(Some(component), tail, linkedGraph)
+    }
+
+    case (setBody: SetBodyProcessorDefinition) :: tail => {
+      val component = EipComponent(setBody.getId.getStringValue, "translator", "TODO-Expression")
+      val newGraph = graph.addVertex(component)
+      val linkedGraph = link(previous, component, newGraph)(UniqueString)
+      createEipGraph(Some(component), tail, linkedGraph)
+    }
+
+    case (to: ToProcessorDefinition) :: tail => {
+      val component = EipComponent(to.getId.getStringValue, "to", to.getUri.getStringValue)
+      val newGraph = graph.addVertex(component)
+      val linkedGraph = link(previous, component, newGraph)(UniqueString)
+      createEipGraph(Some(component), tail, linkedGraph)
+    }
+
+    case (choice: ChoiceProcessorDefinition) :: tail => {
+      val choiceComponent = EipComponent(choice.getId.getStringValue, "choice", "choice")
+      val newGraph = graph.addVertex(choiceComponent)
+      val linkedGraph = link(previous, choiceComponent, newGraph)(UniqueString)
+
+      // TODO When node should have its own vertex, with a text box with its predicate
+
+      choice.getWhens.asScala.foldLeft(linkedGraph)((graph, when) => {
+        val component = EipComponent(when.getId.getStringValue, "when", "TODO-Expression")
+        val newGraph = graph.addVertex(component)
+        val linkedGraph = link(Some(choiceComponent), component, newGraph)(UniqueString)
+        createEipGraph(Some(component), when.getComponents.asScala.toList, linkedGraph)
+      })
+    }
+
+    // Fall through case, hitting a node we don't understand
+    // Intepret it as a to component
+    case _ :: tail => {
+      val component = EipComponent("", "to", "Error")
+      val newGraph = graph.addVertex(component)
+      val linkedGraph = link(previous, component, newGraph)(UniqueString)
+      createEipGraph(Some(component), tail, linkedGraph)
+    }
   }
-  */
+
+
   
   /*
 
@@ -72,14 +121,15 @@ class EipGraphCreator {
    * @tparam E
    * @return
    */
-  def pipeLineChildren[V, E](children: List[V], graph: Graph[V, E])(f: V => E): Boolean = children match {
-    case Nil => true
-    case x :: Nil => true
+  def pipeLineChildren[V, E](children: List[V], graph: Graph[V, E])(f: V => E): Graph[V, E] = children match {
+    case Nil => graph
+    case x :: Nil => graph
     case x :: x2 :: xs => {
-      val newGraph = graph.addEdge(f(x), x, x2)
-      pipeLineChildren(children.tail, newGraph)(f)
+      graph.addEdge(f(x), x, x2)
+    //  pipeLineChildren(children.tail, newGraph)(f)
     }
   }
+
 
   /*
 

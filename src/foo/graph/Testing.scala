@@ -34,7 +34,7 @@ object Testing {
   }
 }
 
-class EipComponent(val id: String, val eipType: String)
+class EipComponent(val id: String, val eipType: String, val text: String)
 object EipComponent {
-  def apply(id: String, eipType: String) = new EipComponent(id, eipType)
+  def apply(id: String, eipType: String, text: String) = new EipComponent(id, eipType, text)
 }

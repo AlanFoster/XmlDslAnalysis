@@ -1,11 +1,8 @@
 package foo.graph
 
 import foo.Model._
-import edu.uci.ics.jung.graph.{Graph, DirectedSparseMultigraph}
 import edu.uci.ics.jung.visualization.{GraphZoomScrollPane, VisualizationViewer}
 import java.awt.{Color, Shape}
-import edu.uci.ics.jung.algorithms.layout.TreeLayout
-import edu.uci.ics.jung.graph.util.EdgeType
 import org.apache.commons.collections15.Transformer
 import javax.swing._
 import java.awt.geom.Rectangle2D
@@ -15,7 +12,6 @@ import java.awt.event.{KeyEvent, KeyListener}
 
 import foo.FunctionalUtil._
 import foo.graph.loaders.{DefaultIconLoader, IconLoader}
-import scala.collection.JavaConverters._
 import foo.graph.Visualisation.EipGraphVisualisation
 
 abstract class EipGraph(blueprint: Blueprint) extends IconLoader {
@@ -82,8 +78,7 @@ abstract class EipGraph(blueprint: Blueprint) extends IconLoader {
   private def setComponentToolTip(viewer: Viewer): Viewer =
     mutate(viewer) {
       _.setVertexToolTipTransformer(new Transformer[EipComponent, String] {
-        // TODO
-        def transform(component: EipComponent): String = "TODO"
+        def transform(component: EipComponent): String = component.text
       })
     }
 
