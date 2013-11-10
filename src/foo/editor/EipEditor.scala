@@ -61,7 +61,7 @@ class EipEditor(project: Project, virtualFile: VirtualFile) extends UserDataHold
    * @inheritdoc
    */
   def selectNotify() {
-    // noop
+    // TODO - Regenerate the graph if it has changed?
   }
 
   /**

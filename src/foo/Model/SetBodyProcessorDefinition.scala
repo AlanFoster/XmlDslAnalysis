@@ -9,6 +9,6 @@ import com.intellij.util.xml.DomElement
  * Time: 17:08
  * To change this template use File | Settings | File Templates.
  */
-trait SetBodyComponent extends DomElement with Component {
+trait SetBodyProcessorDefinition extends DomElement with ProcessorDefinition {
   def getExpression: Expression
 }

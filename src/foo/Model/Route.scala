@@ -13,21 +13,21 @@ import com.intellij.util.xml.{SubTag, SubTagsList, SubTagList, DomElement}
 
 trait Route extends DomElement {
   @SubTag("from")
-  def getFrom: FromComponent
+  def getFrom: FromProcessorDefinition
 
   @SubTagsList(Array("to", "inOut", "setBody", "choice"))
-  def getComponents: java.util.List[Component]
+  def getComponents: java.util.List[ProcessorDefinition]
 
   @SubTagList("to")
-  def getTos: java.util.List[ToComponent]
+  def getTos: java.util.List[ToProcessorDefinition]
 
   @SubTagList("inOut")
-  def getInOuts: java.util.List[ToComponent]
+  def getInOuts: java.util.List[ToProcessorDefinition]
 
   @SubTagList("setBody")
-  def getBodies: java.util.List[SetBodyComponent]
+  def getBodies: java.util.List[SetBodyProcessorDefinition]
 
   @SubTagList("choice")
-  def getChoices: java.util.List[ChoiceComponent]
+  def getChoices: java.util.List[ChoiceProcessorDefinition]
 
 }

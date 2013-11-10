@@ -9,6 +9,6 @@ import com.intellij.util.xml.DomElement
  * Time: 12:58
  * To change this template use File | Settings | File Templates.
  */
-trait InOutComponent extends DomElement with Component {
+trait InOutProcessorDefinition extends DomElement with ProcessorDefinition {
 
 }

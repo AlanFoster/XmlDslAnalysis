@@ -9,7 +9,7 @@ import com.intellij.util.xml.{SubTagList, SubTagsList, DomElement}
  * Time: 23:53
  * To change this template use File | Settings | File Templates.
  */
-trait ChoiceComponent extends DomElement with Component {
+trait ChoiceProcessorDefinition extends DomElement with ProcessorDefinition {
   @SubTagsList(Array("when"))
   def getWhenClauses: java.util.List[WhenDefinition]
 

@@ -10,7 +10,7 @@ import org.jetbrains.annotations._
  * Time: 02:03
  * To change this template use File | Settings | File Templates.
  */
-trait Component extends DomElement {
+trait ProcessorDefinition extends DomElement {
   @NotNull
   @Attribute("id")
   def getId: GenericAttributeValue[String]
