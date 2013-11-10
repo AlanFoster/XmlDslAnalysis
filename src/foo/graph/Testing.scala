@@ -93,17 +93,8 @@ object Testing {
   def asJungGraph[V, E](oldGraph: Graph[V, E]): MutableGraph[V, E] = {
     val newGraph:MutableGraph[V, E] = new DirectedSparseMultigraph[V, E]
 
-    for {
-      vertex <- oldGraph.vertices
-    } {
-      newGraph.addVertex(vertex)
-    }
-
-    for {
-      edge <- oldGraph.edges
-    } {
-      newGraph.addEdge(edge.edge, edge.source, edge.target, EdgeType.DIRECTED)
-    }
+    oldGraph.vertices.foreach(newGraph.addVertex)
+    oldGraph.edges.foreach(e => newGraph.addEdge(e.edge, e.source, e.target, EdgeType.DIRECTED))
 
     newGraph
   }
