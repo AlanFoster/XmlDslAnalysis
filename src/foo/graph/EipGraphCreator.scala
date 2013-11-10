@@ -52,6 +52,13 @@ class EipGraphCreator {
       createEipGraph(Some(component), tail, linkedGraph)
     }
 
+    case (wireTap: WireTapDefinition) :: tail => {
+      val component = EipComponent(wireTap.getId.getStringValue, "awireTap", wireTap.getUri.getStringValue)
+      val newGraph = graph.addVertex(component)
+      val linkedGraph = link(previous, component, newGraph)(UniqueString)
+      createEipGraph(Some(component), tail, linkedGraph)
+    }
+
     case (setBody: SetBodyProcessorDefinition) :: tail => {
       val component = EipComponent(setBody.getId.getStringValue, "translator", setBody.getExpression.getValue)
       val newGraph = graph.addVertex(component)

@@ -15,8 +15,11 @@ trait Route extends DomElement {
   @SubTag("from")
   def getFrom: FromProcessorDefinition
 
-  @SubTagsList(Array("to", "inOut", "setBody", "choice"))
+  @SubTagsList(Array("to", "inOut", "setBody", "choice", "wireTap"))
   def getComponents: java.util.List[ProcessorDefinition]
+
+  @SubTagList("wireTap")
+  def getWireTaps: java.util.List[WireTapDefinition]
 
   @SubTagList("to")
   def getTos: java.util.List[ToProcessorDefinition]
