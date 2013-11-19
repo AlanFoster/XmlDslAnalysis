@@ -1,4 +1,4 @@
-package foo.graph;
+package foo.eip.graph;
 
 import edu.uci.ics.jung.algorithms.shortestpath.MinimumSpanningForest2;
 import edu.uci.ics.jung.graph.DelegateForest;

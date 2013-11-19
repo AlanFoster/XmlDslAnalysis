@@ -1,4 +1,4 @@
-package foo.graph
+package foo.eip.graph
 
 /**
  * Represents a basic class which can be represented within the context of an

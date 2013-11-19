@@ -1,13 +1,13 @@
-package foo.graph.Visualisation
+package foo.eip.graph.Visualisation
 
 import edu.uci.ics.jung.visualization.VisualizationViewer
 import foo.Model.ProcessorDefinition
-import foo.graph.{GraphGlue, EipComponent}
-import foo.graph.ADT.Graph
-import foo.graph.StaticGraphTypes.EipDAG
+import foo.eip.graph.GraphGlue
+import foo.eip.graph.StaticGraphTypes.EipDAG
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph
 import edu.uci.ics.jung.graph.util.EdgeType
 import edu.uci.ics.jung.algorithms.layout.TreeLayout
+import foo.eip.graph.ADT.Graph
 
 /**
  * Created with IntelliJ IDEA.

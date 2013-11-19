@@ -1,4 +1,4 @@
-package foo.graph.loaders
+package foo.eip.graph.loaders
 
 import javax.swing.{ImageIcon, Icon}
 

@@ -28,7 +28,20 @@
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
+      <!--
+        Register the Apache Camel Language
+      -->
+      <fileTypeFactory implementation="foo.language.Core.CamelFileTypeFactory"/>
+
+      <!--
+        Represents the top level blueprint DOM description, which provides an abstraction layer
+        for interacting with XML - rather than having to deal with null possible PSI elements
+      -->
       <dom.fileDescription id="BlueprintDom" implementation="foo.BlueprintDomFile"/>
-      <fileEditorProvider implementation="foo.editor.EipEditorProvider" />
+
+      <!--
+          Represents the EIP Editor functionality within a Dom tree
+        -->
+      <fileEditorProvider implementation="foo.eip.editor.EipEditorProvider" />
   </extensions>
 </idea-plugin>

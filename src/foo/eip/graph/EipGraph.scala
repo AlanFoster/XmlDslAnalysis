@@ -1,4 +1,4 @@
-package foo.graph
+package foo.eip.graph
 
 import foo.Model._
 import edu.uci.ics.jung.visualization.{GraphZoomScrollPane, VisualizationViewer}
@@ -11,8 +11,10 @@ import edu.uci.ics.jung.visualization.control.{ModalGraphMouse, DefaultModalGrap
 import java.awt.event.{KeyEvent, KeyListener}
 
 import foo.FunctionalUtil._
-import foo.graph.loaders.{DefaultIconLoader, IconLoader}
-import foo.graph.Visualisation.EipGraphVisualisation
+import foo.eip.graph.loaders.{DefaultIconLoader, IconLoader}
+import foo.eip.graph.EipGraphCreator
+import foo.eip.graph.Visualisation.EipGraphVisualisation
+
 
 abstract class EipGraph(blueprint: Blueprint) extends IconLoader {
   /**

@@ -1,4 +1,4 @@
-package foo.editor
+package foo.eip.editor
 
 import com.intellij.openapi.fileEditor._
 import com.intellij.openapi.project.{Project, DumbAware}

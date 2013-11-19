@@ -1,8 +1,4 @@
-package foo.graph.ADT
-
-
-
-
+package foo.eip.graph.ADT
 
 /**
  * An implementation of Graph, with certain limitations.
@@ -20,7 +16,6 @@ case class DAG[V, E](vertices: List[V], edges: List[Edge[V, E]]) extends Graph[V
   def addVertex(vertex: V): Graph[V, E] =
     DAG(vertex :: vertices, edges)
 
-  // TODO We could add both vertex to our vertices if they don't exist in our list already
   def addEdge(edge: E, vertex1: V, vertex2: V): Graph[V, E] =
     DAG(vertices, Edge(edge, vertex1, vertex2) :: edges)
 

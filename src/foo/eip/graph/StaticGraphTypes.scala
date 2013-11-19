@@ -1,4 +1,4 @@
-package foo.graph
+package foo.eip.graph
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,6 +12,6 @@ object StaticGraphTypes {
    * Create a new type alias for an Eip component graph, to
    * remove code smell from type signatures
    */
-  type EipDAG = foo.graph.ADT.Graph[EipComponent, String]
+  type EipDAG = foo.eip.graph.ADT.Graph[EipComponent, String]
 
 }

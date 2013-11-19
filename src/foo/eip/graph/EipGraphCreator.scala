@@ -1,12 +1,12 @@
-package foo.graph
+package foo.eip.graph
 
 import foo.Model._
-import foo.graph.ADT.Graph
-import foo.graph.StaticGraphTypes.EipDAG
+import foo.eip.graph.ADT.Graph
+import foo.eip.graph.StaticGraphTypes.EipDAG
 import scala.collection.JavaConverters._
-import foo.graph.ADT.EmptyDAG
+import foo.eip.graph.ADT.EmptyDAG
 import com.intellij.util.xml.DomElement
-import foo.graph.ADT.EmptyDAG
+import foo.eip.graph.ADT.EmptyDAG
 import java.util.UUID
 
 /**
@@ -40,37 +40,44 @@ class EipGraphCreator {
     case _ => graph
   }
 
+
+  def linkGraph(previous: Option[EipComponent],
+                  next: EipComponent,
+                  graph: EipDAG) = {
+    val newGraph = graph.addVertex(next)
+    val linkedGraph = link(previous, next, newGraph)(UniqueString)
+    linkedGraph
+  }
+
+
   def createEipGraph(previous: Option[EipComponent],
                      processors: List[ProcessorDefinition],
                      graph: EipDAG): EipDAG = processors match {
     case Nil => graph
 
     case (from: FromProcessorDefinition) :: tail => {
-      val component = EipComponent(from.getId.getStringValue, "from", from.getUri.getStringValue)
-      val newGraph = graph.addVertex(component)
-      val linkedGraph = link(previous, component, newGraph)(UniqueString)
-      createEipGraph(Some(component), tail, linkedGraph)
+      val next = EipComponent(from.getId.getStringValue, "from", from.getUri.getStringValue)
+      createEipGraph(Some(next), tail, linkGraph(previous, next, graph))
     }
 
     case (wireTap: WireTapDefinition) :: tail => {
       val component = EipComponent(wireTap.getId.getStringValue, "awireTap", wireTap.getUri.getStringValue)
-      val newGraph = graph.addVertex(component)
-      val linkedGraph = link(previous, component, newGraph)(UniqueString)
-      createEipGraph(Some(component), tail, linkedGraph)
+      createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
     }
 
     case (setBody: SetBodyProcessorDefinition) :: tail => {
-      val component = EipComponent(setBody.getId.getStringValue, "translator", setBody.getExpression.getValue)
-      val newGraph = graph.addVertex(component)
-      val linkedGraph = link(previous, component, newGraph)(UniqueString)
-      createEipGraph(Some(component), tail, linkedGraph)
+      val component = EipComponent(setBody.getId.getStringValue, "translator", "Expression ")
+      createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
     }
 
     case (to: ToProcessorDefinition) :: tail => {
       val component = EipComponent(to.getId.getStringValue, "to", to.getUri.getStringValue)
-      val newGraph = graph.addVertex(component)
-      val linkedGraph = link(previous, component, newGraph)(UniqueString)
-      createEipGraph(Some(component), tail, linkedGraph)
+      createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
+    }
+
+    case (to: ToProcessorDefinition) :: tail => {
+      val component = EipComponent(to.getId.getStringValue, "to", to.getUri.getStringValue)
+      createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
     }
 
     case (choice: ChoiceProcessorDefinition) :: tail => {
@@ -81,7 +88,7 @@ class EipGraphCreator {
       // TODO When node should have its own vertex, with a text box with its predicate
 
       choice.getWhens.asScala.foldLeft(linkedGraph)((graph, when) => {
-        val component = EipComponent(when.getId.getStringValue, "when", when.getExpression.getValue)
+        val component = EipComponent(when.getId.getStringValue, "when", "Expression ")
         val newGraph = graph.addVertex(component)
         val linkedGraph = link(Some(choiceComponent), component, newGraph)(UniqueString)
         createEipGraph(Some(component), when.getComponents.asScala.toList, linkedGraph)
@@ -92,9 +99,7 @@ class EipGraphCreator {
     // Intepret it as a to component
     case _ :: tail => {
       val component = EipComponent("", "to", "Error")
-      val newGraph = graph.addVertex(component)
-      val linkedGraph = link(previous, component, newGraph)(UniqueString)
-      createEipGraph(Some(component), tail, linkedGraph)
+      createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
     }
   }
 

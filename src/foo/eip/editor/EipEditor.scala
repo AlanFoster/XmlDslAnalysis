@@ -1,4 +1,4 @@
-package foo.editor
+package foo.eip.editor
 
 import com.intellij.openapi.fileEditor.{FileEditorStateLevel, FileEditorState, FileEditorLocation, FileEditor}
 import com.intellij.openapi.util.{IconLoader, UserDataHolderBase}
@@ -9,8 +9,8 @@ import com.intellij.codeHighlighting.BackgroundEditorHighlighter
 import java.beans.PropertyChangeListener
 import javax.swing.{JLabel, JPanel, JComponent}
 import foo.DomFileAccessor._
-import foo.graph.{EipGraph}
-import foo.graph.loaders.IntellijIconLoader
+import foo.eip.graph.{EipGraph}
+import foo.eip.graph.loaders.IntellijIconLoader
 
 /**
  * Creates and visualises the given XML DSl as a graph.

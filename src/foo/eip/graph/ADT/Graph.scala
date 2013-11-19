@@ -1,4 +1,4 @@
-package foo.graph.ADT
+package foo.eip.graph.ADT
 
 /**
  * Represents a Graph data structure.
