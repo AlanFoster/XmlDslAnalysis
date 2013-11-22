@@ -34,6 +34,12 @@
       <fileTypeFactory implementation="foo.language.Core.CamelFileTypeFactory"/>
 
       <!--
+        Register the parser definition which performs the role of creating a lexer, and parser.
+        And with the given AST tree will create the PSI elements etc
+      -->
+      <lang.parserDefinition language="Camel" implementationClass="foo.language.parser.CamelParserDefinition" />
+
+      <!--
         Represents the top level blueprint DOM description, which provides an abstraction layer
         for interacting with XML - rather than having to deal with null possible PSI elements
       -->

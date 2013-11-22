@@ -75,11 +75,6 @@ class EipGraphCreator {
       createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
     }
 
-    case (to: ToProcessorDefinition) :: tail => {
-      val component = EipComponent(to.getId.getStringValue, "to", to.getUri.getStringValue)
-      createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
-    }
-
     case (choice: ChoiceProcessorDefinition) :: tail => {
       val choiceComponent = EipComponent(choice.getId.getStringValue, "choice", "choice")
       val newGraph = graph.addVertex(choiceComponent)

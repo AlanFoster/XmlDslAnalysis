@@ -1,0 +1,95 @@
+{
+  classHeader = "ClassHeader.txt"
+
+  // Represents the generated parser class
+  parserClass="foo.language.CamelLanguageParser"
+  parserUtilClass="foo.language.implementation.parsing.CamelLanguageParserUtil"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  // Generated
+  psiClassPrefix="Camel"
+  psiImplClassSuffix="Impl"
+  psiPackage="foo.language.psi"
+  psiImplPackage="foo.language.psi.impl"
+
+  elementTypeHolderClass="foo.language.CamelTypes"
+
+  // Existing files
+  elementTypeClass="foo.language.elements.CamelElementType"
+  tokenTypeClass="foo.language.elements.CamelTokenType"
+
+  // Overlaps jobs with the job of the lexer ?...
+  tokens = [
+    FUNC_BEGIN="${"
+    FUNC_END="}"
+
+    DOT="."
+    QUESTION_MARK="?"
+
+    LEFT_SQUARE_BRACE="["
+    RIGHT_SQUARE_BRACE="]"
+
+    // Operators
+    GT_EQ=">="
+    GT=">"
+
+    LT_EQ="<="
+    LT="<"
+
+    EQ_EQ="=="
+
+    AND_AND="&&"
+    OR_OR="||"
+
+
+    IDENTIFIER="regexp:[a-zA-Z]([a-zA-Z_0-9])*"
+
+    NUMBER="regexp:\d+"
+
+    STRING="regexp:\"[^\"]+\"|'[^\']+'"
+
+    // Consume all text but a FUNC_BEGIN
+    // ie the string "hello ${body.name}" should consume "hello "
+   // PLAINTEXT="regexp:((?!\$\{).)+"
+  ]
+}
+
+camel_file ::= camelInterpolation*
+
+private camelInterpolation ::=  camel_expression
+
+expression ::= camel_expression | literal
+
+literal ::= number | string
+
+camel_expression ::=
+    camel_function operator expression (logic_operator camel_expression)*
+    | camel_function
+
+operator ::= binary_operator | logic_operator
+
+private logic_operator ::=
+    AND_AND | OR_OR
+private binary_operator ::=
+    GT_EQ | GT
+    | LT_EQ | LT
+    | EQ_EQ
+
+camel_function ::= FUNC_BEGIN camel_variable FUNC_END
+
+camel_variable ::= variableAccess
+
+variableAccess ::=
+    (arrayAccess | identifierAccess)
+    // Allow for object access to support both a.b and a?.b for null safe access
+    (QUESTION_MARK? DOT variableAccess)*
+
+private identifierAccess ::=
+    IDENTIFIER
+
+private arrayAccess ::=
+    IDENTIFIER arrayOrMapIndices
+
+private arrayOrMapIndices ::=
+    LEFT_SQUARE_BRACE (NUMBER | STRING | variableAccess) RIGHT_SQUARE_BRACE

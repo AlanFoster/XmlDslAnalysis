@@ -2,8 +2,8 @@ package foo
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.fileTypes.{LanguageFileType, StdFileTypes}
-import com.intellij.util.xml.{DomElement, DomFileElement, DomManager, DomFileDescription}
+import com.intellij.openapi.fileTypes.StdFileTypes
+import com.intellij.util.xml.{DomElement, DomManager}
 import com.intellij.psi.PsiManager
 import com.intellij.psi.xml.XmlFile
 import foo.Model.Blueprint
