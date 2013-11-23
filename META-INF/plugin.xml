@@ -57,6 +57,9 @@
 
             <!-- Brace Matching -->
             <lang.braceMatcher language="Camel" implementationClass="foo.language.formatting.CamelBraceMatcher" />
+
+            <!-- Show hint for function completion -->
+            <codeInsight.parameterInfo language="Camel" implementationClass="foo.language.ShowHintTest" />
       <!-- End Apache Camel Language Support -->
 
       <!--
