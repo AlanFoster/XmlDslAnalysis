@@ -54,6 +54,9 @@
                 Basic Code completion for core apache camel variables
             -->
             <completion.contributor language="Camel" implementationClass="foo.language.completion.CamelVariableCompletionContributor" />
+
+            <!-- Brace Matching -->
+            <lang.braceMatcher language="Camel" implementationClass="foo.language.formatting.CamelBraceMatcher" />
       <!-- End Apache Camel Language Support -->
 
       <!--
