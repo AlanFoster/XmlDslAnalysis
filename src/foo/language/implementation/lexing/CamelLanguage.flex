@@ -57,6 +57,12 @@ STRING=\"[^\"]+\"|'[^\']+'
     "&&" { return CamelTypes.AND_AND; }
     "||" { return CamelTypes.OR_OR; }
 
+
+    "," { return CamelTypes.COMMA; }
+
+    "(" { return CamelTypes.LEFT_PAREN; }
+    ")" { return CamelTypes.RIGHT_PAREN; }
+
     {IDENTIFIER}              { return CamelTypes.IDENTIFIER; }
     {STRING}              { return CamelTypes.STRING; }
     {NUMBER}              { return CamelTypes.NUMBER; }

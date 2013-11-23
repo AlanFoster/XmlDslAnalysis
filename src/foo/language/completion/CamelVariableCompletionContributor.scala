@@ -5,7 +5,7 @@ import com.intellij.patterns.{ElementPattern, PlatformPatterns}
 import com.intellij.util.ProcessingContext
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.PsiElement
-import foo.language.psi.{CamelCamelExpression, CamelCamelFunction, CamelCamelVariable}
+import foo.language.psi.{CamelCamelExpression, CamelCamelFunction, CamelCamelFuncBody}
 import foo.language.elements.CamelBaseElementType
 import foo.language.CamelTypes
 
@@ -19,7 +19,7 @@ class CamelVariableCompletionContributor extends CompletionContributor {
 
   case class Completion(lookupString: String, tail: String = "")
 
-  val VARIABLE = psiElement().inside(classOf[CamelCamelVariable])
+  val VARIABLE = psiElement().inside(classOf[CamelCamelFuncBody])
 
   val OPERATOR = psiElement().withParent(classOf[CamelCamelExpression])
     // .withElementType(CamelTypes.CAMEL_EXPRESSION))

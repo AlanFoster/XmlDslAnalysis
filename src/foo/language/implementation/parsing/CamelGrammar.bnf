@@ -26,6 +26,10 @@
 
     DOT="."
     QUESTION_MARK="?"
+    COMMA=","
+
+    LEFT_PAREN="("
+    RIGHT_PAREN=")"
 
     LEFT_SQUARE_BRACE="["
     RIGHT_SQUARE_BRACE="]"
@@ -55,18 +59,24 @@
   ]
 }
 
+// The main entry point to the grammar
 camel_file ::= camelInterpolation*
 
+// A valid camel string is an interpolation of normal text plus camel expressions  - ie `Hello ${body.name}
 private camelInterpolation ::=  camel_expression
 
+// A top level expression, IE useful as a RHS of a binary expression ie ${body} == RHS
 expression ::= camel_expression | literal
 
+// Represents literals, ie numbers, strings
 literal ::= NUMBER | STRING
 
+// A top level Camel expression such as `${foo} == ${bar}`
 camel_expression ::=
     camel_function operator expression (logic_operator camel_expression)*
     | camel_function
 
+// The union of all possible operators
 operator ::= binary_operator | logic_operator
 
 private logic_operator ::=
@@ -76,14 +86,23 @@ private binary_operator ::=
     | LT_EQ | LT
     | EQ_EQ
 
-camel_function ::= FUNC_BEGIN camel_variable FUNC_END
+camel_function ::= FUNC_BEGIN camel_func_body FUNC_END
 
-camel_variable ::= variableAccess
+// A camel function ${...} which can support the notation such as variable Access, function calls, bean ref etc
+camel_func_body ::= functionCall | variableAccess
 
 variableAccess ::=
     (arrayAccess | identifierAccess)
     // Allow for object access to support both a.b and a?.b for null safe access
     (QUESTION_MARK? DOT variableAccess)*
+
+// Represents a Camel Function call - IE ${foo(1, ..., n)}
+functionCall ::= IDENTIFIER LEFT_PAREN functionArgs? RIGHT_PAREN
+functionArgs ::= functionArg (COMMA functionArg)*
+functionArg ::= literal | FQCN
+
+// Fully Qualfied class name, IE foo.bar.baz.Qux
+FQCN ::= IDENTIFIER (DOT IDENTIFIER)*
 
 private identifierAccess ::=
     IDENTIFIER

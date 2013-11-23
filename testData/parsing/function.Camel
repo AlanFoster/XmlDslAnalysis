@@ -1,0 +1,1 @@
+${bodyAs(java.lang.String)} == "Alan" && ${headerAs('name', String)} == 'Alan'

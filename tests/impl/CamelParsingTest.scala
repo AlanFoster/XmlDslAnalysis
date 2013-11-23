@@ -20,6 +20,11 @@ class CamelParsingTest
   def testParsing() {
     doTest(true)
   }
+
+  def testFunction() {
+    doTest(true)
+  }
+
   override def skipSpaces(): Boolean = false
   override def includeRanges(): Boolean = true
 
