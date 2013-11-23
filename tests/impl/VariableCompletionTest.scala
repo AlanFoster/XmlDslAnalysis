@@ -24,6 +24,15 @@ class VariableCompletionTest
     ))
   }
 
+  def testOperatorContribution() {
+    doTest(List(
+      ">", ">=",
+      "<", "<=",
+      "||", "&&",
+      "=="
+    ))
+  }
+
   /**
    * Performs code completion on the current test file's name
    * @param expectedStrings The expected list of contributed strings
@@ -37,7 +46,5 @@ class VariableCompletionTest
     assertReflectionEquals(expectedStrings.asJava, suggestedStrings, LENIENT_ORDER)
   }
 
-
   override def getTestDataPath: String = testDataMapper("/contribution")
-
 }

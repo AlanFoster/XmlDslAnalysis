@@ -1,14 +1,12 @@
 package foo.language
 
 import com.intellij.codeInsight.completion._
-import com.intellij.patterns.{ElementPattern, PsiElementPattern, PlatformPatterns}
-import foo.language.Core.CamelLanguage
+import com.intellij.patterns.{ElementPattern, PlatformPatterns}
 import com.intellij.util.ProcessingContext
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.PsiElement
-import foo.language.psi.{CamelCamelFunction, CamelCamelVariable}
+import foo.language.psi.{CamelCamelExpression, CamelCamelFunction, CamelCamelVariable}
 import foo.language.elements.CamelBaseElementType
-import com.intellij.psi.tree.TokenSet
 
 /**
  * Provides basic code completion for common camel language variables
@@ -20,7 +18,8 @@ class CamelVariableCompletionContributor extends CompletionContributor {
 
   val VARIABLE = psiElement().inside(classOf[CamelCamelVariable])
 
-  val OPERATOR = psiElement().afterLeaf(psiElement.withElementType(CamelTypes.CAMEL_EXPRESSION))
+  val OPERATOR = psiElement().withParent(classOf[CamelCamelExpression])
+    // .withElementType(CamelTypes.CAMEL_EXPRESSION))
 
   /*
   TokenSet.create(
@@ -58,6 +57,12 @@ class CamelVariableCompletionContributor extends CompletionContributor {
       CamelBaseElementType.getName(CamelTypes.LT_EQ)
     )
   )
+
+/*  override def fillCompletionVariants(parameters: CompletionParameters, result: CompletionResultSet) = {
+    val context = new ProcessingContext()
+    val accepts = psiElement().withParent(classOf[CamelCamelExpression]).accepts(parameters.getPosition, context)
+    super.fillCompletionVariants(parameters, result)
+  }*/
 
   /**
    * Helper function to add the providers code completions for the given elementPattern
