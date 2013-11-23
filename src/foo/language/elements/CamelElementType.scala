@@ -10,4 +10,4 @@ import foo.language.Core.CamelLanguage
  * @param debugName The given name which will be output for debugging purposes
  * @see CamelTokenType
  */
-class CamelElementType(debugName: String) extends IElementType(debugName, CamelLanguage)
+class CamelElementType(debugName: String) extends CamelBaseElementType(debugName)

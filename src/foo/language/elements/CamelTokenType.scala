@@ -14,6 +14,6 @@ import foo.language.Core.CamelLanguage
  *
  * @see CamelElementType
  */
-class CamelTokenType(debugName: String) extends IElementType(debugName, CamelLanguage) {
+class CamelTokenType(debugName: String) extends CamelBaseElementType(debugName) {
   override def toString: String = s"{CamelTokenType ${super.toString}}"
 }

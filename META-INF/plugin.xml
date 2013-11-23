@@ -49,6 +49,11 @@
                 Color Highlighting editing
             -->
             <colorSettingsPage implementation="foo.language.Highlighting.CamelColorSettingsPage" />
+
+            <!--
+                Basic Code completion for core apache camel variables
+            -->
+            <completion.contributor language="Camel" implementationClass="foo.language.CamelVariableCompletionContributor" />
       <!-- End Apache Camel Language Support -->
 
       <!--
