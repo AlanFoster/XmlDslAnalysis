@@ -61,7 +61,7 @@ private camelInterpolation ::=  camel_expression
 
 expression ::= camel_expression | literal
 
-literal ::= number | string
+literal ::= NUMBER | STRING
 
 camel_expression ::=
     camel_function operator expression (logic_operator camel_expression)*

@@ -28,16 +28,28 @@
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
-      <!--
-        Register the Apache Camel Language
-      -->
-      <fileTypeFactory implementation="foo.language.Core.CamelFileTypeFactory"/>
+      <!-- Start Apache Camel Language Support -->
+          <!--
+            Register the Apache Camel Language
+          -->
+          <fileTypeFactory implementation="foo.language.Core.CamelFileTypeFactory"/>
 
-      <!--
-        Register the parser definition which performs the role of creating a lexer, and parser.
-        And with the given AST tree will create the PSI elements etc
-      -->
-      <lang.parserDefinition language="Camel" implementationClass="foo.language.parser.CamelParserDefinition" />
+          <!--
+            Register the parser definition which performs the role of creating a lexer, and parser.
+            And with the given AST tree will create the PSI elements etc
+          -->
+          <lang.parserDefinition language="Camel" implementationClass="foo.language.parser.CamelParserDefinition" />
+
+            <!--
+                Color Highlighting
+            -->
+            <lang.syntaxHighlighterFactory key="Camel" implementationClass="foo.language.Highlighting.CamelSyntaxHighlighterFactory" />
+
+            <!--
+                Color Highlighting editing
+            -->
+            <colorSettingsPage implementation="foo.language.Highlighting.CamelColorSettingsPage" />
+      <!-- End Apache Camel Language Support -->
 
       <!--
         Represents the top level blueprint DOM description, which provides an abstraction layer

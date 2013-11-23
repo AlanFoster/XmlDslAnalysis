@@ -29,7 +29,7 @@ LINE_WS=[\ \t\f]
 WHITE_SPACE=({LINE_WS}|{EOL})+
 
 IDENTIFIER=[a-zA-Z]([a-zA-Z_0-9])*
-NUMBER=\d+
+NUMBER=[:digit:]+
 STRING=\"[^\"]+\"|'[^\']+'
 
 %%
@@ -60,8 +60,6 @@ STRING=\"[^\"]+\"|'[^\']+'
     {IDENTIFIER}              { return CamelTypes.IDENTIFIER; }
     {STRING}              { return CamelTypes.STRING; }
     {NUMBER}              { return CamelTypes.NUMBER; }
-
-
 
     [^] { return TokenType.BAD_CHARACTER; }
 }
