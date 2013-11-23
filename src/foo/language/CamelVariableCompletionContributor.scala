@@ -22,7 +22,6 @@ class CamelVariableCompletionContributor extends CompletionContributor {
 
   val OPERATOR = psiElement().afterLeaf(psiElement.withElementType(CamelTypes.CAMEL_EXPRESSION))
 
-
   /*
   TokenSet.create(
     CamelTypes.AND_AND,
@@ -48,7 +47,7 @@ class CamelVariableCompletionContributor extends CompletionContributor {
 
   // TODO We potentially have this list already within the camel syntax highlighting
   addCompletion(
-    psiElement(),
+    OPERATOR,
     List(
       CamelBaseElementType.getName(CamelTypes.AND_AND),
       CamelBaseElementType.getName(CamelTypes.OR_OR),

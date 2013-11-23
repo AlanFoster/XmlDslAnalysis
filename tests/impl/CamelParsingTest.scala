@@ -13,15 +13,15 @@ import java.io.File
  * to find the file "{name}.{extention}" to use the parserDefinition on, and will
  * test the results against "{name}.txt"
  */
-class CamelParsingTest extends ParsingTestCase("", LanguageConstants.extensions, new CamelParserDefinition) {
+class CamelParsingTest
+  extends ParsingTestCase("", LanguageConstants.extensions, new CamelParserDefinition)
+  with TestBase {
+
   def testParsing() {
     doTest(true)
   }
-
   override def skipSpaces(): Boolean = false
   override def includeRanges(): Boolean = true
 
-  // Common
-  override def getTestDataPath: String = new File(sourceRoot, "../../../testData").getPath
-  def sourceRoot = new File(classOf[CamelParsingTest].getResource("/").getPath)
+  override def getTestDataPath: String = testDataMapper("/parsing")
 }

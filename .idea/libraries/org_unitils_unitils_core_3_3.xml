@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="org.unitils:unitils-core:3.3" type="repository">
+    <properties maven-id="org.unitils:unitils-core:3.3" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/unitils-core-3.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/junit-4.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-lang-2.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-collections-3.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ognl-2.6.9.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

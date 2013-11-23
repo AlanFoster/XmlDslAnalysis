@@ -23,6 +23,7 @@
     <orderEntry type="library" name="scala-compiler" level="project" />
     <orderEntry type="library" name="scala-library" level="project" />
     <orderEntry type="library" name="net.sf.jung:jung-samples:2.0.1" level="project" />
+    <orderEntry type="library" name="org.unitils:unitils-core:3.3" level="project" />
   </component>
 </module>
 
