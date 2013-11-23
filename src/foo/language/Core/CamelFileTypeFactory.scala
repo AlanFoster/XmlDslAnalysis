@@ -7,5 +7,5 @@ import com.intellij.openapi.fileTypes.{FileTypeConsumer, FileTypeFactory}
  */
 class CamelFileTypeFactory extends FileTypeFactory {
   def createFileTypes(consumer: FileTypeConsumer) =
-    consumer.consume(CamelFileType, LanguageConstants.extensions)
+    consumer.consume(CamelFileType, LanguageConstants.extension)
 }

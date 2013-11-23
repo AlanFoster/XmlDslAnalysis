@@ -32,7 +32,7 @@ object CamelFileType extends LanguageFileType(CamelLanguage) {
    * file type
    * @return The unique default file extension
    */
-  def getDefaultExtension: String = LanguageConstants.extensions
+  def getDefaultExtension: String = LanguageConstants.extension
 
   /**
    * Provide the ICON which can be used within the file when it is opened.

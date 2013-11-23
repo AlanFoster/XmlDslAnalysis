@@ -14,7 +14,7 @@ import java.io.File
  * test the results against "{name}.txt"
  */
 class CamelParsingTest
-  extends ParsingTestCase("", LanguageConstants.extensions, new CamelParserDefinition)
+  extends ParsingTestCase("", LanguageConstants.extension, new CamelParserDefinition)
   with TestBase {
 
   def testParsing() {
