@@ -1,4 +1,4 @@
-package foo.language
+package foo.language.Core
 
 import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.psi.FileViewProvider

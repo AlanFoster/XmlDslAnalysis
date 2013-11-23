@@ -1,4 +1,4 @@
-package foo.language
+package foo.language.completion
 
 import com.intellij.codeInsight.completion._
 import com.intellij.patterns.{ElementPattern, PlatformPatterns}
@@ -7,6 +7,7 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.PsiElement
 import foo.language.psi.{CamelCamelExpression, CamelCamelFunction, CamelCamelVariable}
 import foo.language.elements.CamelBaseElementType
+import foo.language.CamelTypes
 
 /**
  * Provides basic code completion for common camel language variables
