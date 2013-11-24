@@ -5,7 +5,7 @@ import com.intellij.patterns.{ElementPattern, PlatformPatterns}
 import com.intellij.util.ProcessingContext
 import com.intellij.codeInsight.lookup.{LookupElement, LookupElementBuilder}
 import com.intellij.psi.PsiElement
-import foo.language.psi.{CamelCamelExpression, CamelCamelFunction, CamelCamelFuncBody}
+import foo.language.psi.{CamelFunctionArgs, CamelCamelExpression, CamelCamelFunction, CamelCamelFuncBody}
 import foo.language.elements.CamelBaseElementType
 import foo.language.CamelTypes
 
@@ -21,7 +21,13 @@ class CamelVariableCompletionContributor extends CompletionContributor {
     var isFunction: Boolean = !tail.isEmpty
   }
 
+  /**
+   * A variable will be placed between ${..} however, <b>not</b> nested inside a
+   * function call, ie ${bodyAs(...)}
+   */
   val VARIABLE = psiElement().inside(classOf[CamelCamelFuncBody])
+          .andNot(psiElement().inside(classOf[CamelFunctionArgs]))
+
 
   val OPERATOR = psiElement().withParent(classOf[CamelCamelExpression])
     // .withElementType(CamelTypes.CAMEL_EXPRESSION))

@@ -83,6 +83,14 @@ class VariableCompletionTest
   }
 
   /**
+   * When the caret is between parenthesis, no basic completion should be
+   * possible through contribution.
+   */
+  def testFunctionContribution() {
+    doTest(List())
+  }
+
+  /**
    * Performs code completion on the current test file's name
    * @param expectedStrings The expected list of contributed strings
    */
