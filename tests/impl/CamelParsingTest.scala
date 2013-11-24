@@ -31,6 +31,13 @@ class CamelParsingTest
     doTest(true)
   }
 
+  /**
+   * Test Empty strings are valid
+   */
+  def testEmptyString() {
+    doTest(true)
+  }
+
   override def skipSpaces(): Boolean = false
   override def includeRanges(): Boolean = true
 

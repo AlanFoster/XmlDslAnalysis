@@ -30,7 +30,7 @@ WHITE_SPACE=({LINE_WS}|{EOL})+
 
 IDENTIFIER=[a-zA-Z]([a-zA-Z_0-9])*
 NUMBER=[:digit:]+
-STRING=\"[^\"]+\"|'[^\']+'
+STRING=\"[^\"]*\"|'[^\']*'
 
 %%
 <YYINITIAL> {

@@ -51,7 +51,7 @@
 
     NUMBER="regexp:\d+"
 
-    STRING="regexp:\"[^\"]+\"|'[^\']+'"
+    STRING="regexp:\"[^\"]*\"|'[^\']*'"
 
     // Consume all text but a FUNC_BEGIN
     // ie the string "hello ${body.name}" should consume "hello "
