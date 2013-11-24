@@ -17,10 +17,16 @@ class CamelParsingTest
   extends ParsingTestCase("", LanguageConstants.extension, new CamelParserDefinition)
   with TestBase {
 
+  /**
+   * Basic Parsing Test
+   */
   def testParsing() {
     doTest(true)
   }
 
+  /**
+   * Testing that functions are properly tested
+   */
   def testFunction() {
     doTest(true)
   }

@@ -14,6 +14,9 @@ class VariableCompletionTest
  extends LightCodeInsightFixtureTestCase
  with TestBase {
 
+  /**
+   * Testing that core camel variables are contributed
+   */
   def testVariableContribution() {
     doTest(List(
       "camelId",
@@ -67,6 +70,9 @@ class VariableCompletionTest
     ))
   }
 
+  /**
+   * Testing that operators are contributed when between camel functions
+   */
   def testOperatorContribution() {
     doTest(List(
       ">", ">=",
