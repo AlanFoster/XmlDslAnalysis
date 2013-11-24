@@ -14,10 +14,13 @@ class VariableCompletionTest
  extends LightCodeInsightFixtureTestCase
  with TestBase {
 
+  override def getTestDataPath: String = testDataMapper("/contribution")
+
   /**
    * Testing that core camel variables are contributed
    */
   def testVariableContribution() {
+    //<editor-fold desc="knownCamelVariables">
     doTest(List(
       "camelId",
       "camelContext.OGNL",
@@ -68,6 +71,7 @@ class VariableCompletionTest
       "ref:xxx",
       "type:name.field"
     ))
+    //</editor-fold>
   }
 
   /**
@@ -103,5 +107,4 @@ class VariableCompletionTest
     assertReflectionEquals(expectedStrings.asJava, suggestedStrings, LENIENT_ORDER)
   }
 
-  override def getTestDataPath: String = testDataMapper("/contribution")
 }
