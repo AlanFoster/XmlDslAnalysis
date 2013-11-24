@@ -98,7 +98,9 @@ variableAccess ::=
 
 // Represents a Camel Function call - IE ${foo(1, ..., n)}
 functionCall ::= functionName LEFT_PAREN functionArgs? RIGHT_PAREN
-functionArgs ::= functionArg (COMMA functionArg)*
+functionArgs ::= functionArg (functionArgTail)* // IE func(first (, tail)*)
+// Pin 1 - Error recovery, the functionArg tail is considered successful if we at least have a comma
+private functionArgTail ::= COMMA functionArg {pin=1}
 functionArg ::= literal | FQCN
 
 functionName ::= IDENTIFIER

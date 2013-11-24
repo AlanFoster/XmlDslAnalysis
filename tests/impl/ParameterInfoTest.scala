@@ -82,8 +82,7 @@ class ParameterInfoTest
   /**
    * Test headerAs parameter information valid for an invalid psi tree
    */
-  // TODO Figure out how to deal with broken PSI Trees :)
-  def ignore_testHeaderAs_SecondArgument_InvalidPsiTree() {
+  def testHeaderAs_SecondArgument_InvalidPsiTree() {
     doTest(
       "${headerAs('key', <caret>)}",
       "headerAs(key: String, type: Class)",
