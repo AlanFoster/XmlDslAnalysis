@@ -58,7 +58,7 @@ class CamelParameterInfoHandler extends ParameterInfoHandler[CamelFunctionCall, 
 
     val knownFunctions = List(
         CamelFunction("bodyAs", CamelPackage("type")),
-        CamelFunction("bodyAsMandatory", CamelPackage("type")),
+        CamelFunction("mandatoryBodyAs", CamelPackage("type")),
         CamelFunction("headerAs", CamelString("key"), CamelPackage("type"))
     )
 

@@ -29,7 +29,12 @@ class CamelColorSettingsPage extends ColorSettingsPage {
    */
   def getHighlighter: SyntaxHighlighter = new CamelSyntaxHighlighter
 
-  def getDemoText: String = "${body.firstName} == ${body.firstName} && ${body.isEmployeed} && ${body.address.location} == 'London' && ${body.order.items} < 5"
+  def getDemoText: String = """${body.firstName} == ${body.firstName}
+                              |    && ${body.isEmployeed}
+                              |    && ${body.address.location} == 'London'
+                              |    && ${body.order.items} < 5
+                              |    && ${bodyAs(java.lang.String)} == 'Employer'
+                              |    && ${headerAs("isValid", java.lang.String)}""".stripMargin.replaceAll("\r", "")
 
   def getAdditionalHighlightingTagToDescriptorMap: util.Map[String, TextAttributesKey] = null
 }

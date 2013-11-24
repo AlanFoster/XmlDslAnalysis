@@ -55,11 +55,13 @@ object CamelSyntaxHighlighter {
   private val textAttributeKeys: Map[TextAttributesKey, TextAttributesKey] = Map(
     customKey(OPERATION_SIGN)(),
     customKey(BRACES)(),
+    customKey(PARENTHESES)(),
     customKey(TEXT)(customColor(Color.decode("#82290C"))),
     customKey(STRING)(),
     customKey(NUMBER)(),
     customKey(BAD_CHARACTER)(),
-    customKey(CONSTANT)()
+    customKey(CONSTANT)(),
+    customKey(STATIC_FIELD)(customColor(Color.decode("#FF00FF")))
   ).withDefault(x => customKey(x)()._2)
 
 
@@ -84,10 +86,19 @@ object CamelSyntaxHighlighter {
       CamelTypes.RIGHT_SQUARE_BRACE
     ),
 
+    STATIC_FIELD -> List(
+      CamelTypes.FQCN
+    ),
+
     TEXT -> List(
       CamelTypes.IDENTIFIER,
       CamelTypes.DOT,
       CamelTypes.QUESTION_MARK
+    ),
+
+    PARENTHESES -> List(
+      CamelTypes.LEFT_PAREN,
+      CamelTypes.RIGHT_PAREN
     ),
 
     NUMBER -> List(
@@ -119,11 +130,13 @@ object CamelSyntaxHighlighter {
 
   val descriptors: Array[AttributesDescriptor] = Array(
     new AttributesDescriptor("Operator", textAttributeKeys(OPERATION_SIGN)),
-    new AttributesDescriptor("Braces", textAttributeKeys(BRACES)),
+    new AttributesDescriptor("Square Braces", textAttributeKeys(BRACES)),
+    new AttributesDescriptor("Parenthesis", textAttributeKeys(PARENTHESES)),
     new AttributesDescriptor("Text", textAttributeKeys(TEXT)),
     new AttributesDescriptor("String", textAttributeKeys(STRING)),
     new AttributesDescriptor("Number", textAttributeKeys(NUMBER)),
     new AttributesDescriptor("Error", textAttributeKeys(BAD_CHARACTER)),
-    new AttributesDescriptor("Constant", textAttributeKeys(CONSTANT))
+    new AttributesDescriptor("Constant", textAttributeKeys(CONSTANT)),
+    new AttributesDescriptor("FQCN", textAttributeKeys(STATIC_FIELD))
   )
 }
