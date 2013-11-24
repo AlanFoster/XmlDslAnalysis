@@ -11,9 +11,9 @@ import com.intellij.lang.ASTNode
 
 /**
  * Method invocation Order
- *  - findElementForParameterInfo - Returns an element of type `ParameterOwner`
- *  - showParameterInfo - Called when the call to findElementForParameterInfo is non-null
- *   - updateUI - if setItemsToShow is called
+ * - findElementForParameterInfo - Returns an element of type `ParameterOwner`
+ * - showParameterInfo - Called when the call to findElementForParameterInfo is non-null
+ * - updateUI - if setItemsToShow is called
  */
 class CamelParameterInfoHandler extends ParameterInfoHandler[CamelFunctionCall, CamelFunctionCall] with DumbAware {
   // Used to represent the identifiers for a highlighted argument index
@@ -21,13 +21,17 @@ class CamelParameterInfoHandler extends ParameterInfoHandler[CamelFunctionCall, 
 
   trait CamelType[A] {
     def argName: String
+
     def prettyType: String
+
     def prettyPrint: String = s"${argName}: ${prettyType}"
   }
+
   case class CamelString(override val argName: String) extends CamelType[String] {
     def prettyType: String = "String"
   }
-  case class CamelPackage(override val argName: String) extends CamelType[Class[_]]{
+
+  case class CamelPackage(override val argName: String) extends CamelType[Class[_]] {
     def prettyType: String = "Class"
   }
 
@@ -42,7 +46,7 @@ class CamelParameterInfoHandler extends ParameterInfoHandler[CamelFunctionCall, 
     def prettyPrint(argIndex: Int) = {
       val prettyArguments = arguments.zipWithIndex.map({
         case (argument, i) =>
-          if(i == argIndex) startHighlighting + argument.prettyPrint + endHighlighting
+          if (i == argIndex) startHighlighting + argument.prettyPrint + endHighlighting
           else argument.prettyPrint
       })
 
@@ -57,33 +61,33 @@ class CamelParameterInfoHandler extends ParameterInfoHandler[CamelFunctionCall, 
     val index = context.getCurrentParameterIndex
 
     val knownFunctions = List(
-        CamelFunction("bodyAs", CamelPackage("type")),
-        CamelFunction("mandatoryBodyAs", CamelPackage("type")),
-        CamelFunction("headerAs", CamelString("key"), CamelPackage("type"))
+      CamelFunction("bodyAs", CamelPackage("type")),
+      CamelFunction("mandatoryBodyAs", CamelPackage("type")),
+      CamelFunction("headerAs", CamelString("key"), CamelPackage("type"))
     )
 
     for {
       func <- knownFunctions.find(_.functionName == funcName)
       prettyPrint = func.prettyPrint(index)
       (startBold, endBold) = (prettyPrint.indexOf(startHighlighting), prettyPrint.indexOf(endHighlighting))
-      plainString = if(startBold != -1) func.prettyPrint(-1) else prettyPrint
+      plainString = if (startBold != -1) func.prettyPrint(-1) else prettyPrint
     } {
 
       // Show the suggestion; The supplied number ranges will bold the pretty function text
       context.setupUIComponentPresentation(plainString,
-        startBold, endBold - startHighlighting.size,  false, false, false, context.getDefaultParameterColor)
+        startBold, endBold - startHighlighting.size, false, false, false, context.getDefaultParameterColor)
     }
   }
 
   /**
    * Analyses the current function and argument selected and updates the context with the
    * corresponding argument index.
-   * Note, this index is zero baswed
+   * Note, this index is zero based
    * @param camelFunction The current camel function being edited by the user
    * @param context The operation context
    */
   def updateParameterInfo(camelFunction: CamelFunctionCall, context: UpdateParameterInfoContext) {
-    if(context.getParameterOwner != camelFunction) context.removeHint()
+    if (context.getParameterOwner != camelFunction) context.removeHint()
 
     val offset = context.getOffset
     val functionArgs = camelFunction.getFunctionArgs
@@ -92,8 +96,8 @@ class CamelParameterInfoHandler extends ParameterInfoHandler[CamelFunctionCall, 
     // a reference to the Comma Element, in order to calculate the currently
     // selected argument index
     def countCommas(parent: ASTNode, maximumOffset: Int, count: Int): Int = parent match {
-      case astNode:ASTNode if astNode.getStartOffset < maximumOffset => {
-        val newCount = if(astNode.getElementType == CamelTypes.COMMA) count + 1 else count
+      case astNode: ASTNode if astNode.getStartOffset < maximumOffset => {
+        val newCount = if (astNode.getElementType == CamelTypes.COMMA) count + 1 else count
         countCommas(astNode.getTreeNext, maximumOffset, newCount)
       }
       case _ => count
@@ -101,13 +105,22 @@ class CamelParameterInfoHandler extends ParameterInfoHandler[CamelFunctionCall, 
 
     // Create the zero based index of the currently selected argument within the function list
     val index =
-      if(functionArgs == null) 0
+      if (functionArgs == null) 0
       else countCommas(functionArgs.getNode.getFirstChildNode, offset, 0)
 
     context.setCurrentParameter(index)
   }
 
+  /**
+   * Expected to call setItemsToShow and showHint.
+   * If setItemsToShow contains the list of items to show, then the updateUI method will be
+   * called with all of the relevant items returned from the list
+   *
+   * @param element The element of ParameterOwner
+   * @param context The context
+   */
   def showParameterInfo(element: CamelFunctionCall, context: CreateParameterInfoContext) {
+    // Camel's language is not complex enough for overloading/multi params
     context.setItemsToShow(Array(element))
     context.showHint(element, element.getTextRange.getStartOffset, this)
   }
@@ -137,7 +150,7 @@ class CamelParameterInfoHandler extends ParameterInfoHandler[CamelFunctionCall, 
     val offset = context.getOffset
     val element = file.findElementAt(offset)
 
-    if(element == null) None
+    if (element == null) None
     else Option(PsiTreeUtil.getParentOfType(element, classOf[CamelFunctionCall]))
   }
 

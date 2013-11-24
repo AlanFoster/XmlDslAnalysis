@@ -17,6 +17,8 @@ class CamelParsingTest
   extends ParsingTestCase("", LanguageConstants.extension, new CamelParserDefinition)
   with TestBase {
 
+  override def getTestDataPath: String = testDataMapper("/parsing")
+
   /**
    * Basic Parsing Test
    */
@@ -41,5 +43,4 @@ class CamelParsingTest
   override def skipSpaces(): Boolean = false
   override def includeRanges(): Boolean = true
 
-  override def getTestDataPath: String = testDataMapper("/parsing")
 }
