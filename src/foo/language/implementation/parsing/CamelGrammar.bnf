@@ -97,9 +97,11 @@ variableAccess ::=
     (QUESTION_MARK? DOT variableAccess)*
 
 // Represents a Camel Function call - IE ${foo(1, ..., n)}
-functionCall ::= IDENTIFIER LEFT_PAREN functionArgs? RIGHT_PAREN
+functionCall ::= functionName LEFT_PAREN functionArgs? RIGHT_PAREN
 functionArgs ::= functionArg (COMMA functionArg)*
 functionArg ::= literal | FQCN
+
+functionName ::= IDENTIFIER
 
 // Fully Qualfied class name, IE foo.bar.baz.Qux
 FQCN ::= IDENTIFIER (DOT IDENTIFIER)*
@@ -112,3 +114,5 @@ private arrayAccess ::=
 
 private arrayOrMapIndices ::=
     LEFT_SQUARE_BRACE (NUMBER | STRING | variableAccess) RIGHT_SQUARE_BRACE
+
+
