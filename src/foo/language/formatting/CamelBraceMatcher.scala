@@ -28,5 +28,9 @@ class CamelBraceMatcher extends PairedBraceMatcher {
 }
 
 object CamelBraceMatcher {
-  val BracePair = Array[BracePair](new BracePair(CamelTypes.FUNC_BEGIN, CamelTypes.FUNC_END, true))
+  val BracePair = Array[BracePair](
+    new BracePair(CamelTypes.FUNC_BEGIN, CamelTypes.FUNC_END, true),
+    new BracePair(CamelTypes.LEFT_SQUARE_BRACE, CamelTypes.RIGHT_SQUARE_BRACE, true),
+    new BracePair(CamelTypes.LEFT_PAREN, CamelTypes.RIGHT_PAREN, true)
+  )
 }

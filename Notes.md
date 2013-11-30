@@ -7,3 +7,9 @@ IDEA will call the parser of the embedded language through a call to ILazyParsea
 
 - http://www.jetbrains.com/idea/webhelp/viewing-psi-structure.html
     idea.is.internal=true
+
+
+-     // http://devnet.jetbrains.com/message/5242172#5242172
+      //JavaPsiFacade.getInstance(null).getResolveHelper.p
+      // PsiShortNamesCache.getInstance(null).getAllClassNames
+      PsiShortNamesCache.getInstance(null).getCl
