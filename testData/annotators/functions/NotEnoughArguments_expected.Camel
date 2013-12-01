@@ -1,0 +1,1 @@
+${<error descr="Expected: headerAs(key: String, type: Class)">headerAs()</error>}

@@ -22,7 +22,7 @@ case class CamelFunction(functionName: String, arguments: List[CamelArgument]) {
    * @return A string representation of the method and the available arguments. If the argIndex is
    *         valid, then the relevant argument will be bolded
    */
-  def prettyPrint(argIndex: Int) = {
+  def prettyPrint(argIndex: Int = -1) = {
     val prettyArguments = arguments.zipWithIndex.map({
       case (argument, i) =>
         if (i == argIndex) startHighlighting + argument.prettyPrint + endHighlighting

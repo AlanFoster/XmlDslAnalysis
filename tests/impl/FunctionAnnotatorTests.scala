@@ -1,8 +1,6 @@
 package impl
 
-import com.intellij.testFramework.ParsingTestCase
 import foo.language.Core.LanguageConstants
-import foo.language.parser.CamelParserDefinition
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 
 /**
@@ -44,11 +42,27 @@ class FunctionAnnotatorTests
     doTest()
   }
 
+  /**
+   * Ensure the function is highlighted if it doesn't exist
+   * And the function definition has no defined arguments
+   */
   def testIncorrectFuncNameNoArgs(){
     doTest()
   }
 
+  /**
+   * Ensure the function is highlighted if it doesn't exist
+   * And the function definition has some defined arguments
+   */
   def testIncorrectFuncNameWithArgs() {
+    doTest()
+  }
+
+  /**
+   * Ensure the camel function is highlighted when not all
+   * arguments are applied as expected
+   */
+  def testNotEnoughArguments() {
     doTest()
   }
 

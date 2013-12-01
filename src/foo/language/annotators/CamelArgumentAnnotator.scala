@@ -3,9 +3,8 @@ package foo.language.annotators
 import com.intellij.lang.annotation.{AnnotationHolder, Annotator}
 import com.intellij.psi.PsiElement
 import com.intellij.patterns.PlatformPatterns._
-import foo.language.psi.{CamelFunctionArg, CamelFunctionCall}
-import com.intellij.psi.util.PsiTreeUtil
-import foo.{CamelFunction, CamelFunctions}
+import foo.language.psi.CamelFunctionArg
+import foo.{CamelArgument, CamelFunction}
 import com.intellij.psi.tree.IElementType
 import com.intellij.lang.ASTNode
 
@@ -19,30 +18,45 @@ class CamelArgumentAnnotator extends Annotator {
     val isAccepted = psiElement(classOf[CamelFunctionArg]).accepts(element)
     if (!isAccepted) return
 
-    // Extract the function call to perform analysis on
-    val camelFunction = PsiTreeUtil.getParentOfType(element, classOf[CamelFunctionCall])
-    val functionName = camelFunction.getFunctionName.getText
-    // Search for our function definition
-    val functionDefinition = CamelFunctions.knownFunctions.find(_.functionName == functionName)
-
-    functionDefinition match {
-      case Some(CamelFunction(_, arguments)) => {
-        // Calculate our current argument position
-        val index = camelFunction.getFunctionArgs.getFunctionArgList.indexOf(element)
-        if (arguments.isDefinedAt(index)) {
-          val camelArgumentDefinition = arguments(index)
-          //  val visitor = new FunctionArgumentValidator(camelArgumentDefinition.requiredElementType)
-          // element.accept(visitor)
-          // element.getNode
-          val isValid = containsElementType(element.getNode, camelArgumentDefinition.requiredElementType)
-          if (!isValid) {
-            holder.createErrorAnnotation(element, "Expected type: " + camelArgumentDefinition.prettyType)
-          }
-        } else {
-          holder.createErrorAnnotation(element, "Unexpected argument")
-        }
-      }
+    val addError = (s: String) => {
+      holder.createErrorAnnotation(element, s)
+      ()
     }
+
+    CamelFunctionUtil.matchFunction(element)({
+      case (camelFunctionDefinition@CamelFunction(_, arguments: List[CamelArgument]), psiCamelFunction) => {
+        // Calculate our current argument position
+        val index = psiCamelFunction.getFunctionArgs.getFunctionArgList.indexOf(element)
+
+        validateArgumentIndex(index, arguments)(addError)
+        validateArgumentType(index, arguments, element)(addError)
+      }
+    }, () => ())
+  }
+
+  /**
+   * Ensures that the given argument is within the boundaries of the function
+   */
+  def validateArgumentIndex(currentIndex: Int, arguments: List[CamelArgument])
+                           (addError: String => Unit) {
+    if (!arguments.isDefinedAt(currentIndex)) {
+      addError("Unexpected argument")
+    }
+  }
+
+  /**
+   * Ensures that the current argument has a valid type matching the original function
+   * definition
+   */
+  def validateArgumentType(currentIndex: Int, arguments: List[CamelArgument], psiArg: PsiElement)
+                          (addError: String => Unit) = arguments.lift(currentIndex) match {
+    case Some(camelArgumentDefinition : CamelArgument) => {
+          val isValid = containsElementType(psiArg.getNode, camelArgumentDefinition.requiredElementType)
+          if (!isValid) {
+            addError("Expected type: " + camelArgumentDefinition.prettyType)
+          }
+    }
+    case _ =>
   }
 
   /**
