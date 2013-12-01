@@ -66,6 +66,9 @@
             -->
             <annotator language="Camel" implementationClass="foo.language.annotators.CamelArgumentAnnotator"/>
             <annotator language="Camel" implementationClass="foo.language.annotators.CamelFunctionAnnotator"/>
+
+            <!-- Language Injector - Ensure that we have injected the camel language into the appropaite places -->
+            <languageInjector implementation="foo.language.CamelSimpleLanguageInjector" />
       <!-- End Apache Camel Language Support -->
 
       <!--
