@@ -13,7 +13,7 @@ import com.intellij.lang.ASTNode
  * Represents the annotator which ensures that the camel functions are called as expected.
  * IE provides semantic analysis for the camel functions, and highlights errors.
  */
-class CamelFunctionAnnotator extends Annotator {
+class CamelArgumentAnnotator extends Annotator {
   def annotate(element: PsiElement, holder: AnnotationHolder) {
     // Only accept psiElements which are a CamelFunctionArg
     val isAccepted = psiElement(classOf[CamelFunctionArg]).accepts(element)
@@ -42,8 +42,7 @@ class CamelFunctionAnnotator extends Annotator {
           holder.createErrorAnnotation(element, "Unexpected argument")
         }
       }
-      // Provide error highlighting on the function name, if the function doesn't exist
-      case None => holder.createErrorAnnotation(camelFunction.getFunctionName, "Function name does not exist")
+      case _ =>
     }
   }
 

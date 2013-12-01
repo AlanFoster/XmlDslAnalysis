@@ -36,6 +36,22 @@ class FunctionAnnotatorTests
     doTest()
   }
 
+  /**
+   * Test a not yet completed argument
+   */
+  // TODO Add annotation for incomplete argument
+  def ignoreNotCompletedArgument() {
+    doTest()
+  }
+
+  def testIncorrectFuncNameNoArgs(){
+    doTest()
+  }
+
+  def testIncorrectFuncNameWithArgs() {
+    doTest()
+  }
+
   private def doTest() {
     val testName = getTestName(true)
 
@@ -46,5 +62,4 @@ class FunctionAnnotatorTests
 
     myFixture.checkHighlighting(false, false, true)
   }
-
 }
