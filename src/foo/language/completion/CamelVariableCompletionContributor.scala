@@ -17,8 +17,14 @@ import foo.language.CamelTypes
 class CamelVariableCompletionContributor extends CompletionContributor {
   import PlatformPatterns._
 
+  /**
+   * Represents a code completion tuple
+   * @param lookupString The provided lookup string
+   * @param tail The tail to show, default by empty.
+   *             It is currently assumed that the completion is a function completion if non-empty
+   */
   case class Completion(lookupString: String, tail: String = "") {
-    var isFunction: Boolean = !tail.isEmpty
+    val isFunction: Boolean = !tail.isEmpty
   }
 
   /**

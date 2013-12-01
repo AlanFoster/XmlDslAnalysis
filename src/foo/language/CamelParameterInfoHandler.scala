@@ -8,6 +8,7 @@ import com.intellij.util.ArrayUtil
 import com.intellij.psi.util.PsiTreeUtil
 import foo.language.psi.{CamelFunctionArg, CamelFunctionCall}
 import com.intellij.lang.ASTNode
+import foo.CamelFunctions
 
 /**
  * Method invocation Order
@@ -19,55 +20,14 @@ class CamelParameterInfoHandler extends ParameterInfoHandler[CamelFunctionCall, 
   // Used to represent the identifiers for a highlighted argument index
   val (startHighlighting, endHighlighting) = ("<b>", "</b>")
 
-  trait CamelType[A] {
-    def argName: String
-
-    def prettyType: String
-
-    def prettyPrint: String = s"${argName}: ${prettyType}"
-  }
-
-  case class CamelString(override val argName: String) extends CamelType[String] {
-    def prettyType: String = "String"
-  }
-
-  case class CamelPackage(override val argName: String) extends CamelType[Class[_]] {
-    def prettyType: String = "Class"
-  }
-
-  case class CamelFunction(functionName: String, arguments: CamelType[_]*) {
-    /**
-     * Pretty prints the current camel function.
-     * @param argIndex The currently selected index. Useful in the case of ParameterInfoHandler class.
-     *                 Note, this index is zero based.
-     * @return A string representation of the method and the available arguments. If the argIndex is
-     *         valid, then the relevant argument will be bolded
-     */
-    def prettyPrint(argIndex: Int) = {
-      val prettyArguments = arguments.zipWithIndex.map({
-        case (argument, i) =>
-          if (i == argIndex) startHighlighting + argument.prettyPrint + endHighlighting
-          else argument.prettyPrint
-      })
-
-      s"${functionName}(${prettyArguments.mkString(", ")})"
-    }
-  }
-
   def updateUI(p: CamelFunctionCall, context: ParameterInfoUIContext) {
     //context.setUIComponentEnabled(false)
     val funcName = p.getFunctionName.getText
 
     val index = context.getCurrentParameterIndex
 
-    val knownFunctions = List(
-      CamelFunction("bodyAs", CamelPackage("type")),
-      CamelFunction("mandatoryBodyAs", CamelPackage("type")),
-      CamelFunction("headerAs", CamelString("key"), CamelPackage("type"))
-    )
-
     for {
-      func <- knownFunctions.find(_.functionName == funcName)
+      func <- CamelFunctions.knownFunctions.find(_.functionName == funcName)
       prettyPrint = func.prettyPrint(index)
       (startBold, endBold) = (prettyPrint.indexOf(startHighlighting), prettyPrint.indexOf(endHighlighting))
       plainString = if (startBold != -1) func.prettyPrint(-1) else prettyPrint

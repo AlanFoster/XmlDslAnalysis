@@ -60,6 +60,9 @@
 
             <!-- Show hint for function completion -->
             <codeInsight.parameterInfo language="Camel" implementationClass="foo.language.CamelParameterInfoHandler" />
+
+            <!-- Annotator for camel functions are called as expected -->
+            <annotator language="Camel" implementationClass="foo.language.annotators.CamelFunctionAnnotator"/>
       <!-- End Apache Camel Language Support -->
 
       <!--
