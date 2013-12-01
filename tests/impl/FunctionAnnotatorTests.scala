@@ -1,0 +1,50 @@
+package impl
+
+import com.intellij.testFramework.ParsingTestCase
+import foo.language.Core.LanguageConstants
+import foo.language.parser.CamelParserDefinition
+import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
+
+/**
+ * Tests for ensuring the function annotator works as expected with the Apache Camel
+ * function
+ */
+class FunctionAnnotatorTests
+  extends LightCodeInsightFixtureTestCase
+  with TestBase {
+
+  override def getTestDataPath: String = testDataMapper("/annotators/functions")
+
+  /**
+   * Tests for string in a place of a class
+   */
+  def testInvalidArgumentStringButExpectedClass() {
+    doTest()
+  }
+
+  /**
+   * Tests for an integer n a place of a class
+   */
+  def testInvalidArgumentIntButExpectedClass() {
+    doTest()
+  }
+
+  /**
+   * Test multiple arguments within headerAs
+   */
+  def testInvalidArgumentClassButExpectedString() {
+    doTest()
+  }
+
+  private def doTest() {
+    val testName = getTestName(true)
+
+    // Load the file and the expected errors with the given naming convention
+    val loadedFile = s"${testName}.${LanguageConstants.extension}"
+    val expectedErrors = s"${testName}_expected.${LanguageConstants.extension}"
+    myFixture.configureByFiles(expectedErrors, loadedFile)
+
+    myFixture.checkHighlighting(false, false, true)
+  }
+
+}

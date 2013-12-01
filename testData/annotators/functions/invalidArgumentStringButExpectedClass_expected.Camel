@@ -1,0 +1,1 @@
+${bodyAs(<error descr="Expected type: Class">"hello"</error>)}

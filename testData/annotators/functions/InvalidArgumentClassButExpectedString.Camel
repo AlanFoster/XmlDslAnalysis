@@ -1,0 +1,1 @@
+${headerAs(java.lang.String, "header")} == "a"
