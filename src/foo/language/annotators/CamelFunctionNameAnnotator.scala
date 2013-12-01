@@ -17,14 +17,10 @@ class CamelFunctionNameAnnotator extends Annotator {
     val isAccepted = psiElement(classOf[CamelFunctionCall]).accepts(element)
     if (!isAccepted) return
 
-    // Search for our function definition
-    val functionName = element.asInstanceOf[CamelFunctionCall].getFunctionName.getText
-    val functionDefinition = CamelFunctions.knownFunctions.find(_.functionName == functionName)
-
-    // Provide error highlighting on the function name, if the function doesn't exist
-     functionDefinition match {
-       case None => holder.createErrorAnnotation(element, "Function does not exist")
-       case _ =>
-     }
+    CamelFunctionUtil.matchFunction(element)(
+      success = _ => (),
+      // Provide error highlighting on the function name, if the function doesn't exist
+      () => holder.createErrorAnnotation(element, "Function does not exist")
+    )
   }
 }

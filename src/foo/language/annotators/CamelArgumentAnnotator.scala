@@ -42,7 +42,6 @@ class CamelArgumentAnnotator extends Annotator {
           holder.createErrorAnnotation(element, "Unexpected argument")
         }
       }
-      case _ =>
     }
   }
 
