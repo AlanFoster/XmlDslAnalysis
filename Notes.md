@@ -13,3 +13,14 @@ IDEA will call the parser of the embedded language through a call to ILazyParsea
       //JavaPsiFacade.getInstance(null).getResolveHelper.p
       // PsiShortNamesCache.getInstance(null).getAllClassNames
       PsiShortNamesCache.getInstance(null).getCl
+
+
+PSI Reference Contribution / Psi Reference Provider
+
+http://devnet.jetbrains.com/message/5493753#5493753
+
+PSI Reference Contribution allows you to inject a PsiReference into psi elements that you don't own.
+For custom languages you should prefer to use provide a psi element resolve() implementation
+
+Inplace renaming - lang.refactoringSupport extension point
+provide RefactoringSupportProvider, isMemberInplaceRenameAvailable

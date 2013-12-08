@@ -36,6 +36,7 @@ object DomFileAccessor {
       val psiFile = PsiManager.getInstance(project).findFile(virtualFile)
       val xmlFile = psiFile.asInstanceOf[XmlFile]
 
+
       Some(DomManager.getDomManager(project).getFileElement(xmlFile, clazz))
         .map(_.getRootElement)
     }

@@ -32,36 +32,36 @@ import org.jetbrains.annotations.NotNull;
  */
 public class MockUpdateParameterInfoContext implements UpdateParameterInfoContext {
     private int myCurrentParameter = -1;
-    private PsiFile myFile;
-    private JavaCodeInsightTestFixture myFixture;
+        private PsiFile myFile;
+        private JavaCodeInsightTestFixture myFixture;
 
-    public MockUpdateParameterInfoContext(PsiFile file, JavaCodeInsightTestFixture fixture) {
-        myFile = file;
-        myFixture = fixture;
-    }
+        public MockUpdateParameterInfoContext(PsiFile file, JavaCodeInsightTestFixture fixture) {
+            myFile = file;
+            myFixture = fixture;
+        }
 
 
-    @Override
-    public void removeHint() {
-    }
+        @Override
+        public void removeHint() {
+        }
 
-    @Override
-    public void setParameterOwner(PsiElement o) {
-    }
+        @Override
+        public void setParameterOwner(PsiElement o) {
+        }
 
-    @Override
-    public PsiElement getParameterOwner() {
-        return null;
-    }
+        @Override
+        public PsiElement getParameterOwner() {
+            return null;
+        }
 
-    @Override
-    public void setHighlightedParameter(Object parameter) {
-    }
+        @Override
+        public void setHighlightedParameter(Object parameter) {
+        }
 
-    @Override
-    public void setCurrentParameter(int index) {
-        myCurrentParameter = index;
-    }
+        @Override
+        public void setCurrentParameter(int index) {
+            myCurrentParameter = index;
+        }
 
     public int getCurrentParameter() {
         return myCurrentParameter;

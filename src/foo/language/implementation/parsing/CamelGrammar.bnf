@@ -1,6 +1,8 @@
 {
   classHeader = "ClassHeader.txt"
 
+  psiImplUtilClass="foo.language.psi.Util"
+
   // Represents the generated parser class
   parserClass="foo.language.CamelLanguageParser"
   parserUtilClass="foo.language.implementation.parsing.CamelLanguageParserUtil"
@@ -106,7 +108,11 @@ functionArg ::= literal | FQCN
 functionName ::= IDENTIFIER
 
 // Fully Qualfied class name, IE foo.bar.baz.Qux
-FQCN ::= IDENTIFIER (DOT IDENTIFIER)*
+FQCN ::= IDENTIFIER (DOT IDENTIFIER)* {
+    // Provide a mixin for this PSI element -- affects code generation
+    mixin="foo.language.psi.impl.CamelJavaFQCN"
+    implements="foo.language.psi.ICamelJavaFQCN"
+}
 
 private identifierAccess ::=
     IDENTIFIER
