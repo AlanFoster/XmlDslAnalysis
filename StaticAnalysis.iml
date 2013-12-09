@@ -25,6 +25,7 @@
     <orderEntry type="library" name="net.sf.jung:jung-samples:2.0.1" level="project" />
     <orderEntry type="library" name="org.unitils:unitils-core:3.3" level="project" />
     <orderEntry type="library" name="src" level="project" />
+    <orderEntry type="library" name="intellij-community-idea-133" level="project" />
   </component>
 </module>
 
