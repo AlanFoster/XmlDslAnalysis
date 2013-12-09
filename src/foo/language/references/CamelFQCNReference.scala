@@ -24,7 +24,12 @@ class CamelFQCNReference(element: PsiElement)
   with PsiPolyVariantReference {
 
   def multiResolve(incompleteCode: Boolean): Array[ResolveResult] = {
-    Array[ResolveResult]()
+    val text = element.getText
+    val packages = foo().filter({
+      case psiClass: PsiClass => psiClass.getQualifiedName.equals(text)
+      case directory: PsiPackage => directory.getQualifiedName.equals(text)
+    })
+    packages.map(new PsiElementResolveResult(_)).toArray
   }
 
   /**
@@ -37,20 +42,36 @@ class CamelFQCNReference(element: PsiElement)
    *         element's value
    */
   def getVariants: Array[AnyRef] = {
+    val packages = foo()
+
+    val suggestions = packages.map({
+      case psiClass: PsiClass => LookupElementBuilder.create(psiClass, psiClass.getQualifiedName)
+      case directory: PsiPackage => LookupElementBuilder.create(directory, directory.getQualifiedName)
+    })
+
+    suggestions.toArray
+  }
+
+
+  def foo() = {
+    val searchText = {
+      val text = myElement.getText
+      val lastIndex = text.lastIndexOf(".")
+      if(lastIndex == -1) ""
+      else myElement.getText.substring(0, lastIndex)
+    }
+
     val module = ModuleUtilCore.findModuleForPsiElement(myElement)
-    val scope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)
-
     val project = element.getProject
-
+    val scope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)
     val psiManager = PsiManager.getInstance(project)
     val directoryIndex = DirectoryIndex.getInstance(project)
     val javaDirectoryService =  JavaDirectoryService.getInstance
 
-    def findPackages(path: String):Iterable[PsiPackage] = path match {
-      case s if path.nonEmpty => {
+    def findRootDirectories(packageName: String):Iterable[PsiDirectory] = {
         // Find all files within scope
-         val scopedVirtualFiles =
-          directoryIndex.getDirectoriesByPackageName(s, false)
+        val scopedVirtualFiles =
+          directoryIndex.getDirectoriesByPackageName(packageName, false)
             .filter(scope.contains)
 
         // Turn the Virtual files into real directories that are valid
@@ -58,27 +79,32 @@ class CamelFQCNReference(element: PsiElement)
           scopedVirtualFiles
             .map(psiManager.findDirectory)
             .filter(directory => {
-              directory != null && directory.isValid
-            })
-
-        // Combine all sub directories from the parent directory
-        val combinedSubDirectories = validDirectories.flatMap(_.getSubdirectories)
-
-        // Map into the expected PsiPackage implementation, so we have access to the FQN for intellisense :)
-        combinedSubDirectories.map(javaDirectoryService.getPackage)
-      }
-      case _ => List[PsiPackage]()
+            directory != null && directory.isValid
+          })
+        validDirectories
     }
 
-    val packages = findPackages("java")
+    def findSubpackages(rootDirectories: Iterable[PsiDirectory]): Iterable[PsiPackage] = {
+      // Combine all sub directories from the parent directory
+      val combinedSubDirectories = rootDirectories.flatMap(_.getSubdirectories)
 
-    val suggestions = packages.map(directory =>
-      LookupElementBuilder
-        .create(directory)
-    )
+      // Map into the expected PsiPackage implementation, so we have access to the FQN for intellisense :)
+      combinedSubDirectories.map(javaDirectoryService.getPackage)
+    }
 
-   suggestions.toArray
+    val rootDirectories = findRootDirectories(searchText)
+
+    val packages = findSubpackages(rootDirectories)
+    packages
+
+    val classes =
+      rootDirectories
+        .map(javaDirectoryService.getPackage)
+        .flatMap(_.getClasses(scope))
+
+    packages ++ classes
   }
+
 
   def resolve(): PsiElement = {
     val results = multiResolve(incompleteCode = false)
