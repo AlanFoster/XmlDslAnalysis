@@ -8,6 +8,23 @@ IDEA will call the parser of the embedded language through a call to ILazyParsea
 - http://www.jetbrains.com/idea/webhelp/viewing-psi-structure.html
     idea.is.internal=true
 
+PsiMethodReferenceUtil.checkReturnType
+
+Good example code of PSI manipulation http://devnet.jetbrains.com/message/5102890#5102890
+
+
+Cookbook
+    http://devnet.jetbrains.com/message/5501099#5501099
+    https://code.google.com/p/ide-examples/wiki/IntelliJIdeaPsiCookbook
+
+Creating a class
+   JavaDirectoryService.getInstance().checkCreateClass()
+
+A list of identifiers which reference a piece of java code
+    PsiJavaCodeReferenceElementImpl
+
+PsiShortNamesCache.getInstance(element.getProject)
+      .getClassesByName(element.getText, GlobalSearchScope.allScope(element.getProject))
 
 -     // http://devnet.jetbrains.com/message/5242172#5242172
       //JavaPsiFacade.getInstance(null).getResolveHelper.p
@@ -16,11 +33,22 @@ IDEA will call the parser of the embedded language through a call to ILazyParsea
 
 
 PSI Reference Contribution / Psi Reference Provider
+----------------------------------------------------
 
 http://devnet.jetbrains.com/message/5493753#5493753
 
-PSI Reference Contribution allows you to inject a PsiReference into psi elements that you don't own.
-For custom languages you should prefer to use provide a psi element resolve() implementation
+PsiReferenceContributor allows you to inject a PsiReference into psi elements that you don't own; therefore for custom
+languages, there is no need for this class.
+
+If you are providing your own support for contribution you can simply implement getReference(), and return your
+implementation of PsiReference base. If you are using an implementation which implements PsiPolyVariantReference
+there appears to be duplicate implementation in the IJ codebase already
+
+- com.intellij.psi.PsiReferenceBase.Poly
+- com.intellij.psi.PsiPolyVariantReferenceBase
+
+getVariants will produce the lookup list, whilst resolve should provide the PsiElement reference - where returning null
+will suggest no reference exists. See com.intellij.psi.PsiReference which has all of the required header docs.
 
 Inplace renaming - lang.refactoringSupport extension point
 provide RefactoringSupportProvider, isMemberInplaceRenameAvailable
