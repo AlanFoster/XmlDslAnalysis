@@ -12,6 +12,14 @@ PsiMethodReferenceUtil.checkReturnType
 
 Good example code of PSI manipulation http://devnet.jetbrains.com/message/5102890#5102890
 
+Useful:
+    JavClassReferenceSet
+    JavaClassListReferenceProvider
+    JavaClassReferenceProvider
+    JavaClassReference
+    JavaPackageReference
+    JavaLookupElementBuilder
+
 
 Cookbook
     http://devnet.jetbrains.com/message/5501099#5501099

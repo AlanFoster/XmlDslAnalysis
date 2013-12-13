@@ -5,13 +5,14 @@ import com.intellij.codeInsight.lookup.{LookupElement, LookupElementBuilder}
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.search.{PsiSearchHelper, GlobalSearchScope}
 import com.intellij.openapi.module.ModuleUtilCore
-import com.intellij.codeInsight.completion.JavaCompletionUtil
+import com.intellij.codeInsight.completion.{JavaLookupElementBuilder, JavaCompletionUtil}
 import com.intellij.ide.util.{PlatformPackageUtil, PackageUtil}
 import com.intellij.codeInsight.ClassUtil
 import com.intellij.ide.ClassUtilCore
 import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
 import com.intellij.openapi.roots.impl.DirectoryIndex
+import com.intellij.openapi.util.text.StringUtil
 
 /**
  * Provides the ReferenceContribution for a Fully Qualified Class Name in the Apache Camel
@@ -19,12 +20,12 @@ import com.intellij.openapi.roots.impl.DirectoryIndex
  *
  * @param element The PsiElement
  */
-class CamelFQCNReference(element: PsiElement)
-  extends PsiReferenceBase[PsiElement](element, new TextRange(0, element.getTextLength))
+class CamelFQCNReference(element: PsiElement, range: TextRange)
+  extends PsiReferenceBase[PsiElement](element, range, true)
   with PsiPolyVariantReference {
 
   def multiResolve(incompleteCode: Boolean): Array[ResolveResult] = {
-    val text = element.getText
+    val text = element.getText.substring(0, getRangeInElement.getEndOffset)
     val packages = foo().filter({
       case psiClass: PsiClass => psiClass.getQualifiedName.equals(text)
       case directory: PsiPackage => directory.getQualifiedName.equals(text)
@@ -45,8 +46,11 @@ class CamelFQCNReference(element: PsiElement)
     val packages = foo()
 
     val suggestions = packages.map({
-      case psiClass: PsiClass => LookupElementBuilder.create(psiClass, psiClass.getQualifiedName)
-      case directory: PsiPackage => LookupElementBuilder.create(directory, directory.getQualifiedName)
+      case psiClass: PsiClass => //LookupElementBuilder.create(psiClass)
+     //   JavaLookupElementBuilder.forClass(psiClass, psiClass.getQualifiedName, true).withPresentableText(StringUtil.getShortName(psiClass.getQualifiedName))
+        psiClass
+      case directory: PsiPackage => //LookupElementBuilder.create(directory)
+        directory
     })
 
     suggestions.toArray
@@ -55,7 +59,7 @@ class CamelFQCNReference(element: PsiElement)
 
   def foo() = {
     val searchText = {
-      val text = myElement.getText
+      val text = myElement.getText.substring(0, getRangeInElement.getEndOffset)
       val lastIndex = text.lastIndexOf(".")
       if(lastIndex == -1) ""
       else myElement.getText.substring(0, lastIndex)
@@ -105,10 +109,12 @@ class CamelFQCNReference(element: PsiElement)
     packages ++ classes
   }
 
-
   def resolve(): PsiElement = {
     val results = multiResolve(incompleteCode = false)
-    if(results.length == 1) results(0).getElement
+    // TODO Multi-resolve as required
+    if(results.length > 0) results(0).getElement
     else null
   }
+
+
 }
