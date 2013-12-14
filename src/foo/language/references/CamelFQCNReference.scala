@@ -13,6 +13,9 @@ import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
 import com.intellij.openapi.roots.impl.DirectoryIndex
 import com.intellij.openapi.util.text.StringUtil
+import foo.language.Core.CamelFileType
+import com.intellij.psi.util.PsiTreeUtil
+import foo.language.psi.CamelFQCN
 
 /**
  * Provides the ReferenceContribution for a Fully Qualified Class Name in the Apache Camel
@@ -44,6 +47,33 @@ class CamelFQCNReference(element: PsiElement, range: TextRange)
    */
   def getVariants: Array[AnyRef] = {
     availablePackagesAndClasses().toArray
+  }
+
+
+  /**
+   * Handles an element rename. This will create an entirely new FQCN element
+   * and replace the existing element
+   *
+   * @param newElementName The renamed subset of the string, ie perhaps just 'String'
+   * @return The newly replaced PsiElement
+   */
+  override def handleElementRename(newElementName: String): PsiElement = {
+    val newFQCN = getRangeInElement.replace(myElement.getText, newElementName)
+    val newElem = createReplacementFQCN(newFQCN, myElement)
+
+    // Force a replacement of the current elem - Note this also returns our response.
+    myElement.replace(newElem)
+  }
+
+  // IntelliJ allows you to create new elements by simply creating new temp files which are lexed/parsed etc
+  // TODO Is there any functional composition gained from this ATM
+  def createReplacementFQCN(newText: String, existingElement: PsiElement) = {
+    val tempName = s"__${newText}_${existingElement.getContainingFile.getName}_replace.Camel"
+    val fileText = s"""$${headerAs('temp', ${newText})}"""
+    val newPsiFile = PsiFileFactory.getInstance(myElement.getProject)
+      .createFileFromText(tempName, CamelFileType, fileText)
+     val newFQCNElem = PsiTreeUtil.findChildOfType(newPsiFile, classOf[CamelFQCN])
+    newFQCNElem
   }
 
   /**
