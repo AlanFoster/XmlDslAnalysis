@@ -5,7 +5,6 @@ import foo.language.psi.ICamelJavaFQCN
 import com.intellij.lang.ASTNode
 import com.intellij.psi._
 import foo.language.references.CamelFQCNReference
-import scala.annotation.tailrec
 import com.intellij.openapi.util.TextRange
 
 class CamelJavaFQCN(node: ASTNode) extends ASTWrapperPsiElement(node) with ICamelJavaFQCN  {

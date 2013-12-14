@@ -26,7 +26,7 @@ class CamelFQCNReference(element: PsiElement, range: TextRange)
 
   def multiResolve(incompleteCode: Boolean): Array[ResolveResult] = {
     val text = element.getText.substring(0, getRangeInElement.getEndOffset)
-    val packages = foo().filter({
+    val packages = availablePackagesAndClasses().filter({
       case psiClass: PsiClass => psiClass.getQualifiedName.equals(text)
       case directory: PsiPackage => directory.getQualifiedName.equals(text)
     })
@@ -43,21 +43,14 @@ class CamelFQCNReference(element: PsiElement, range: TextRange)
    *         element's value
    */
   def getVariants: Array[AnyRef] = {
-    val packages = foo()
-
-    val suggestions = packages.map({
-      case psiClass: PsiClass => //LookupElementBuilder.create(psiClass)
-     //   JavaLookupElementBuilder.forClass(psiClass, psiClass.getQualifiedName, true).withPresentableText(StringUtil.getShortName(psiClass.getQualifiedName))
-        psiClass
-      case directory: PsiPackage => //LookupElementBuilder.create(directory)
-        directory
-    })
-
-    suggestions.toArray
+    availablePackagesAndClasses().toArray
   }
 
-
-  def foo() = {
+  /**
+   * Finds all available packages and classes for the given TextRange within this element
+   * @return The classes and packages which are available within the given TextRange of this element
+   */
+  def availablePackagesAndClasses() = {
     val searchText = {
       val text = myElement.getText.substring(0, getRangeInElement.getEndOffset)
       val lastIndex = text.lastIndexOf(".")
