@@ -1,0 +1,1 @@
+${bodyAs(foo.models.Order<caret>Model)}
