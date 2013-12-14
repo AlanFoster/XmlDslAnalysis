@@ -5,8 +5,6 @@ import foo.eip.graph.ADT.Graph
 import foo.eip.graph.StaticGraphTypes.EipDAG
 import scala.collection.JavaConverters._
 import foo.eip.graph.ADT.EmptyDAG
-import com.intellij.util.xml.DomElement
-import foo.eip.graph.ADT.EmptyDAG
 import java.util.UUID
 
 /**
