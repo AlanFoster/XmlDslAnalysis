@@ -3,6 +3,9 @@ package impl.fqcn
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import impl.{CommonTestClasses, JavaJDK1_7TestBase}
 
+/**
+ * Tests to ensure that elements can be renamed as expected
+ */
 class RenameTest
   extends LightCodeInsightFixtureTestCase
   with JavaJDK1_7TestBase

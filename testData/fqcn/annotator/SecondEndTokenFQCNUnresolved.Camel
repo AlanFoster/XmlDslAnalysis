@@ -1,0 +1,1 @@
+${bodyAs(java.<error descr="Unresolved Reference">foo</error>.<error descr="Unresolved Reference">MissingReference</error>)}

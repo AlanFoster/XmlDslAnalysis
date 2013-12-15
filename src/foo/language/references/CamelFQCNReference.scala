@@ -24,7 +24,8 @@ import foo.language.psi.CamelFQCN
  * @param element The PsiElement
  */
 class CamelFQCNReference(element: PsiElement, range: TextRange)
-  extends PsiReferenceBase[PsiElement](element, range, true)
+  // Note this reference is a hard reference, ie if it doesn't resolve, it's an error!
+  extends PsiReferenceBase[PsiElement](element, range, false)
   with PsiPolyVariantReference {
 
   def multiResolve(incompleteCode: Boolean): Array[ResolveResult] = {

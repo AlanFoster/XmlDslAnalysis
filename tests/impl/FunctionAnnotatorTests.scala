@@ -9,6 +9,7 @@ import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
  */
 class FunctionAnnotatorTests
   extends LightCodeInsightFixtureTestCase
+  with JavaJDK1_7TestBase
   with TestBase {
 
   override def getTestDataPath: String = testDataMapper("/annotators/functions")

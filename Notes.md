@@ -20,6 +20,12 @@ Useful:
     JavaPackageReference
     JavaLookupElementBuilder
 
+Validation/Annotators
+ -   http://devnet.jetbrains.com/message/5214206#5214206
+        You should implement custom highlighter for your reference, either
+        Annotator or LocalInspectionTool. And to prevent from compilation,
+        you'll need to create your own validating compiler or use existing
+        InspectionValidator.
 
 Cookbook
     http://devnet.jetbrains.com/message/5501099#5501099
