@@ -2,6 +2,8 @@ package impl.fqcn
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import impl.{CommonTestClasses, JavaJDK1_7TestBase}
+import junit.framework.Assert._
+import com.intellij.psi.{PsiPackage, PsiClass}
 
 /**
  * Tests to ensure that FQCNs are resolved as expected
@@ -13,6 +15,32 @@ class ResolveTest
 
   override def getTestDataPath: String = testDataMapper("/fqcn/resolve")
 
+  /**
+   * Test to ensure that classes are resolved as expected
+   */
+  def testClassResolve() {
+    val element = getElement()
 
+    // Note, it is not possible ot be DRY with this test, as PsiPackage/PsiClass do not share a base getQualifiedName function
+    assertTrue("The element should be a psi class", element.isInstanceOf[PsiClass])
+    assertEquals("The qualified name should be as expected", element.asInstanceOf[PsiClass].getQualifiedName, "java.lang.String")
+  }
+
+  /**
+   * Tests to ensure packages are resolved as expected
+   */
+  def testPackageResolve() {
+    val element = getElement()
+
+    // Note, it is not possible ot be DRY with this test, as PsiPackage/PsiClass do not share a base getQualifiedName function
+    assertTrue("The element should be a psi class", element.isInstanceOf[PsiPackage])
+    assertEquals("The qualified name should be as expected", element.asInstanceOf[PsiPackage].getQualifiedName, "java.lang")
+  }
+
+  def getElement() = {
+    myFixture.configureByFile(s"${getTestName(false)}.Camel")
+    val element = myFixture.getElementAtCaret
+    element
+  }
 
 }
