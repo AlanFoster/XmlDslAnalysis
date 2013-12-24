@@ -1,17 +1,16 @@
 package foo.eip.graph
 
 /**
- * Created with IntelliJ IDEA.
- * User: alan
- * Date: 10/11/13
- * Time: 16:35
- * To change this template use File | Settings | File Templates.
+ * Helper class which provides type aliasing for an EipGraph.
  */
 object StaticGraphTypes {
   /**
    * Create a new type alias for an Eip component graph, to
-   * remove code smell from type signatures
+   * remove code smell from type signatures.
+   *
+   * Note an EipGraph contains /no/ information in relation to the creation of a visual
+   * graph, and is purely used as a data structures which contains the relevant type information
+   * etc
    */
   type EipDAG = foo.eip.graph.ADT.Graph[EipComponent, String]
-
 }

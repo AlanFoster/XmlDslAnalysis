@@ -8,19 +8,31 @@ import foo.eip.graph.ADT.EmptyDAG
 import java.util.UUID
 
 /**
- * Created with IntelliJ IDEA.
- * User: alan
- * Date: 10/11/13
- * Time: 15:52
- * To change this template use File | Settings | File Templates.
+ * EIP Graph Creator class.
+ * This class will convert the given intellij DOM class into a more abstract
+ * DAG (Directed Acyclic Graph) which contains more semantic information
+ * relevent to EIPs than the lower level abstraction of DOM.
+ *
+ * This decision will allow for other DSLs such as Java to be supported.
+ *
+ * Note an EipGraph contains /no/ information in relation to the creation of a visual
+ * graph, and is purely used as a data structures which contains the relevant type information
+ * etc
  */
 class EipGraphCreator {
 
+  /**
+   * Converts the given blueprint DOM file into an EipDag
+   * @param root The root DOM element
+   * @return The converted EipDAG
+   */
   def createEipGraph(root:Blueprint): EipDAG = {
+    // Extract the given camel routes and create an empty EipDAG
     val routes = root.getCamelContext.getRoutes.asScala
     val createdDAG: EipDAG = EmptyDAG[EipComponent, String]()
 
-    if (routes.isEmpty) createdDAG
+    // There is no need to traverse the given routes if there are no processor definitions
+    if (routes.isEmpty || !routes.head.getFrom.exists) createdDAG
     else createEipGraph(
       None,
       routes.head.getFrom :: routes.head.getComponents.asScala.toList,
@@ -28,13 +40,33 @@ class EipGraphCreator {
     )
   }
 
+  /**
+   * Each edge within the DAG must have a unique ID
+   *
+   * @param x The first node between the given edge
+   * @param y The second node between the given edge
+   * @return A unique ID for the given edge relation
+   */
   def UniqueString(x: AnyRef, y: AnyRef) = UUID.randomUUID().toString
 
-  def link(previous: Option[EipComponent],
+  /**
+   * Creates the edges between the given nodes.
+   * This implementation will handle the scenarios of no previous node existing
+   * @param previous The previously visited node
+   * @param next The newly visited node
+   * @param graph The current EipGraph.
+   * @param namingFunction The naming function, which when given two nodes will create a unique
+   *                       ID associating the two nodes.
+   * @return A newly created EipDag - Note this operation does not mutate the original
+   *         data structure
+   */
+  def addEdge(previous: Option[EipComponent],
             next: EipComponent,
-            graph: EipDAG)(f: (EipComponent, EipComponent) => String) = (previous, next) match {
+            graph: EipDAG)(namingFunction: (EipComponent, EipComponent) => String) = (previous, next) match {
+    // Handle the scenario in which we are currently at the root node
     case (None, _) => graph
-    case (Some(component1), component2) => graph.addEdge(f(component1, component2), component1, component2)
+    // Handle the scenario in which we have visited a root node already
+    case (Some(component1), component2) => graph.addEdge(namingFunction(component1, component2), component1, component2)
     case _ => graph
   }
 
@@ -43,14 +75,28 @@ class EipGraphCreator {
                   next: EipComponent,
                   graph: EipDAG) = {
     val newGraph = graph.addVertex(next)
-    val linkedGraph = link(previous, next, newGraph)(UniqueString)
+    val linkedGraph = addEdge(previous, next, newGraph)(UniqueString)
     linkedGraph
   }
 
 
+  /**
+   * Creates a new EipDAG for the given list of processor definitions.
+   * More concretely a list of processor definitions will initially
+   * represent the given route, which will then be recursively visited.
+   * A pointer to the previously recursed node will be used to successfully
+   * create edges between the nodes in the DAG.
+   *
+   * @param previous The previously visited ProcessorDefinition.
+   *                 This should be None when called with the root node
+   * @param processors The remaining list of processor definitions.
+   * @param graph The current EipDag
+   * @return A new EipDag, note the original data structure will not be mutated
+   */
   def createEipGraph(previous: Option[EipComponent],
                      processors: List[ProcessorDefinition],
                      graph: EipDAG): EipDAG = processors match {
+    // When there are no processors, we have completed our effort.
     case Nil => graph
 
     case (from: FromProcessorDefinition) :: tail => {
@@ -76,56 +122,26 @@ class EipGraphCreator {
     case (choice: ChoiceProcessorDefinition) :: tail => {
       val choiceComponent = EipComponent(choice.getId.getStringValue, "choice", "choice")
       val newGraph = graph.addVertex(choiceComponent)
-      val linkedGraph = link(previous, choiceComponent, newGraph)(UniqueString)
+      val linkedGraph = addEdge(previous, choiceComponent, newGraph)(UniqueString)
 
       // TODO When node should have its own vertex, with a text box with its predicate
 
       choice.getWhens.asScala.foldLeft(linkedGraph)((graph, when) => {
         val component = EipComponent(when.getId.getStringValue, "when", "Expression ")
         val newGraph = graph.addVertex(component)
-        val linkedGraph = link(Some(choiceComponent), component, newGraph)(UniqueString)
+        val linkedGraph = addEdge(Some(choiceComponent), component, newGraph)(UniqueString)
         createEipGraph(Some(component), when.getComponents.asScala.toList, linkedGraph)
       })
     }
 
     // Fall through case, hitting a node we don't understand
-    // Intepret it as a to component
+    // We simply interpret it as a to component, so that we can still display
+    // the information without crashing or such
     case _ :: tail => {
       val component = EipComponent("", "to", "Error")
       createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
     }
   }
-
-  /**
-   * Tail recursive implementation of a pipeline children function.
-   * IE, each child will have an edge to next child
-   * @param children
-   * @param graph
-   * @param f
-   * @tparam V
-   * @tparam E
-   * @return
-   */
-  def pipeLineChildren[V, E](children: List[V], graph: Graph[V, E])(f: V => E): Graph[V, E] = children match {
-    case Nil => graph
-    case x :: Nil => graph
-    case x :: x2 :: xs => {
-      val newGraph = graph.addEdge(f(x), x, x2)
-      pipeLineChildren(children.tail, newGraph)(f)
-    }
-  }
-
-
-  /*
-
-      def multiCastChildren(parent: Pointer, children: List[Pointer]): Boolean = children match {
-        case Nil => true
-        case x :: xs => {
-          graph.addEdge(x.hashCode().toString, parent.component, x.component, EdgeType.DIRECTED)
-          multiCastChildren(parent, xs)
-        }
-      }
-  */
 }
 
 

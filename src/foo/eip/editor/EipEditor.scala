@@ -1,16 +1,23 @@
 package foo.eip.editor
 
-import com.intellij.openapi.fileEditor.{FileEditorStateLevel, FileEditorState, FileEditorLocation, FileEditor}
-import com.intellij.openapi.util.{IconLoader, UserDataHolderBase}
+import com.intellij.openapi.fileEditor._
+import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.project.Project
 import com.intellij.ide.structureView.StructureViewBuilder
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter
 import java.beans.PropertyChangeListener
-import javax.swing.{JLabel, JPanel, JComponent}
+import javax.swing.{JPanel, JComponent}
 import foo.DomFileAccessor._
-import foo.eip.graph.{EipGraph}
+import foo.eip.graph.{EipGraphCreator, VisualEipGraph}
 import foo.eip.graph.loaders.IntellijIconLoader
+import foo.FunctionalUtil._
+import java.awt.GridLayout
+import foo.Model.Blueprint
+import scala.collection.JavaConverters._
+import com.intellij.openapi.ui.popup.{Balloon, JBPopupFactory}
+import com.intellij.openapi.ui.MessageType
+import com.intellij.ui.awt.RelativePoint
 
 /**
  * Creates and visualises the given XML DSl as a graph.
@@ -23,15 +30,17 @@ class EipEditor(project: Project, virtualFile: VirtualFile) extends UserDataHold
   val tabName = "Eip Editor"
 
   /**
-   * Represents the graph component within this tab
+   * Define the graph container
    */
-  val graph = (new EipGraph(getBlueprintDomFile(project, virtualFile).get) with IntellijIconLoader).createScrollableViewer
+  val graphContainer =
+    mutate(new JPanel()) { _.setLayout(new GridLayout(0, 1))}
 
   /**
    * Disposes resources associated with this editor
    */
   def dispose() {
-    // noop - swing will automatically dispose of itself when de-referenced
+    // swing will automatically dispose of itself within the expected manner
+    graphContainer.removeAll()
   }
 
   /**
@@ -52,38 +61,88 @@ class EipEditor(project: Project, virtualFile: VirtualFile) extends UserDataHold
 
   /**
    * @inheritdoc
-   */
+   * Clears all state within the given graph container
+   * */
   def deselectNotify() {
-    // noop
+    // Clear all existing state within the graphContainer
+    graphContainer.removeAll()
   }
 
   /**
    * @inheritdoc
+   * Creates the given EIPGraph, and modifies the graphContainer
    */
   def selectNotify() {
-    // TODO - Regenerate the graph if it has changed?
+    // Clear all existing state within the graphContainer
+    graphContainer.removeAll()
+
+    // Assume we are using a DOM representation of camel intially
+    // Which allows for a EipDAG to be used within the VisualEipGraph, which could
+    // be expended upon in the future to allow for Java DSL EIP representations etc
+    val blueprintDom = getBlueprintDomFile(project, virtualFile).get
+
+    if(!isValid(blueprintDom)) {
+      val message = "Note - At least one route, with one From definition is required."
+
+/*  There doesn't seem a way to get the current editor tab ? :/
+      val foo =
+        WindowManager.getInstance()
+          .getIdeFrame(project).asInstanceOf[IdeFrameImpl]
+          .getRootPane.asInstanceOf[IdeRootPane]
+          .getToolWindowsPane
+      foo.getTool
+
+      val ids = ToolWindowManager.getInstance(project).getToolWindowIds
+      */
+
+     // val statusBar = WindowManager.getInstance().getStatusBar(project).getComponent
+      JBPopupFactory.getInstance()
+        .createHtmlTextBalloonBuilder(message, MessageType.WARNING, null)
+        .createBalloon()
+        .show(RelativePoint.getSouthEastOf(graphContainer), Balloon.Position.above)
+    }
+
+    // Create the EipGraph if 'all is well'
+    val eipGraph = new EipGraphCreator().createEipGraph(blueprintDom)
+
+    // Create a new VisualEipGraph, with an IntellijIconLoader mixed in
+    val visualEipGraph = (new VisualEipGraph(eipGraph) with IntellijIconLoader).createScrollableViewer
+
+    graphContainer.add(visualEipGraph)
   }
+
+  /**
+   * Performs initial validation for the given blueprint xml file
+   *
+   * <em>Note</em>: we could potentially hook into the local inspection service etc
+   *
+   * @param blueprint the given blueprint dom element
+   */
+  def isValid(blueprint:Blueprint):Boolean =  {
+    val routes = blueprint.getCamelContext.getRoutes.asScala
+    !routes.isEmpty && routes.head.getFrom.exists()
+  }
+
 
   /**
    *  The EIP editor is stateless. As such, this is noop.
    * @param state
    */
   def setState(state: FileEditorState) {
-
   }
 
   /**
    * Represents the component to show within the editor region
-   * @return the EIP graph component
+   * @return the EIP graph component container
    */
-  def getComponent: JComponent = graph
+  def getComponent: JComponent = graphContainer
 
   /**
    * Places focus on the component when the tab is opened
    *
    * @return The EIP graph component
    */
-  def getPreferredFocusedComponent: JComponent = graph
+  def getPreferredFocusedComponent: JComponent = null
 
   /**
    * Associates a name with the created editor tab
@@ -113,7 +172,7 @@ class EipEditor(project: Project, virtualFile: VirtualFile) extends UserDataHold
   def isValid: Boolean = true
 
   /**
-   * Get the background highlightor for this editor
+   * Get the background highlighter for this editor
    *
    * @return Noop, no highlighter is required for the EIP diagram.
    */

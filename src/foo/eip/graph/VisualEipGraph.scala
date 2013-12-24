@@ -14,19 +14,35 @@ import foo.FunctionalUtil._
 import foo.eip.graph.loaders.{DefaultIconLoader, IconLoader}
 import foo.eip.graph.EipGraphCreator
 import foo.eip.graph.Visualisation.EipGraphVisualisation
+import foo.eip.graph.StaticGraphTypes.EipDAG
 
-
-abstract class EipGraph(blueprint: Blueprint) extends IconLoader {
+/**
+ * Class used to represent a visual representation of the the given EipDAG.
+ *
+ * Note this class requires a concrete implementation of an IconLoader, which
+ * abstracts the differences in Java and IntelliJ's classloader for acquiring
+ * access to icons. This improves testability, and removes the dependency on intellij.
+ * This icon loader  can be provided with Scala's Mixins.
+ *
+ * @param eipDag In order to be agnostic of the underlying technology/DSL used for
+ *               creating the given Camel routes, the EipDAG abstraction is instead used
+ */
+abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
   /**
    * Create a type alias for VisualizationViewer to improve code readability
    */
   type Viewer = VisualizationViewer[EipComponent, String]
 
+  /**
+   * Creates a new Viewer
+   * @return A new Visual viewer for the given EipDAG
+   */
   def createViewer = {
-    val eipGraph = new EipGraphCreator().createEipGraph(blueprint)
-    val visualiser = new EipGraphVisualisation(eipGraph)
-    val viewer = visualiser.asVisualGraph(visualiser.asJungGraph(eipGraph))
+    val visualiser = new EipGraphVisualisation(eipDag)
+    val viewer = visualiser.asVisualGraph(visualiser.asJungGraph(eipDag))
 
+    // Create our bound java component ie, the Swing graph
+    // Note the use of functional composition in order to compose features
     val boundJavaComponent = (
       setBackground _
         andThen setLineRender
@@ -135,9 +151,10 @@ abstract class EipGraph(blueprint: Blueprint) extends IconLoader {
 
 }
 
+// Simple manual testing, note the DefaultIconLoader mixin
 object Starter {
   def main(args: Array[String]) {
-    val component = (new EipGraph(null) with DefaultIconLoader).createScrollableViewer
+    val component = (new VisualEipGraph(null) with DefaultIconLoader).createScrollableViewer
 
     val jframe = new JFrame()
     jframe.setSize(500, 700)
