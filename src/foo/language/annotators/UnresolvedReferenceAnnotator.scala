@@ -7,6 +7,10 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.editor.markup.TextAttributes
 import java.awt.Font
 import com.intellij.openapi.editor.colors.TextAttributesKey
+import com.intellij.openapi.editor.ex.util.EditorUtil
+import com.intellij.openapi.module.{ModuleUtilCore, ModuleUtil}
+import com.intellij.openapi.editor.{EditorFactory, Editor}
+import com.intellij.openapi.fileEditor.FileEditorManager
 
 /**
  * Represents an implementation of an annotator which will highlight all

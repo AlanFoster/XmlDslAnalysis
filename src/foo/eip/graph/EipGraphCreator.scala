@@ -119,19 +119,26 @@ class EipGraphCreator {
       createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
     }
 
+    case (bean: BeanDefinition) :: tail => {
+      val component = EipComponent(bean.getId.getStringValue, "to", bean.getRef.getStringValue)
+      createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
+    }
+
     case (choice: ChoiceProcessorDefinition) :: tail => {
       val choiceComponent = EipComponent(choice.getId.getStringValue, "choice", "choice")
       val newGraph = graph.addVertex(choiceComponent)
       val linkedGraph = addEdge(previous, choiceComponent, newGraph)(UniqueString)
 
       // TODO When node should have its own vertex, with a text box with its predicate
-
-      choice.getWhens.asScala.foldLeft(linkedGraph)((graph, when) => {
+      val choiceGraph = choice.getWhens.asScala.foldLeft(linkedGraph)((graph, when) => {
         val component = EipComponent(when.getId.getStringValue, "when", "Expression ")
         val newGraph = graph.addVertex(component)
         val linkedGraph = addEdge(Some(choiceComponent), component, newGraph)(UniqueString)
         createEipGraph(Some(component), when.getComponents.asScala.toList, linkedGraph)
       })
+
+      // TODO need to link all generated nodes to graph, IE Some(choiceComponent) isn't valid, it's Some(List[Choices]) possibly
+      createEipGraph(Some(choiceComponent), tail, linkGraph(previous, choiceComponent, choiceGraph))
     }
 
     // Fall through case, hitting a node we don't understand
