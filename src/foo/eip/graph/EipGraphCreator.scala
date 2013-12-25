@@ -33,7 +33,7 @@ class EipGraphCreator {
     // There is no need to traverse the given routes if there are no processor definitions
     if (routes.isEmpty || !routes.head.getFrom.exists) createdDAG
     else createEipGraph(
-      None,
+      List(),
       routes.head.getFrom :: routes.head.getComponents.asScala.toList,
       createdDAG
     )
@@ -59,23 +59,29 @@ class EipGraphCreator {
    * @return A newly created EipDag - Note this operation does not mutate the original
    *         data structure
    */
-  def addEdge(previous: Option[EipComponent],
+  def addEdge(previous: EipComponent,
             next: EipComponent,
-            graph: EipDAG)(namingFunction: (EipComponent, EipComponent) => String) = (previous, next) match {
-    // Handle the scenario in which we are currently at the root node
-    case (None, _) => graph
-    // Handle the scenario in which we have visited a root node already
-    case (Some(component1), component2) => graph.addEdge(namingFunction(component1, component2), component1, component2)
-    case _ => graph
-  }
+            graph: EipDAG)(namingFunction: (EipComponent, EipComponent) => String) =
+    graph.addEdge(namingFunction(previous, next), previous, next)
 
 
-  def linkGraph(previous: Option[EipComponent],
+  /**
+   * Adds the given EipComponent, and link the new EipComponent to all previously occurring nodes.
+   * This will be a list of nodes, for instance in the scenario of after a choice statement
+   *
+   * @param previousList the previous elements within the graph to link to this node
+   * @param next The EipComponent to link to
+   * @param graph The currently composed graph
+   * @return A new graph with the given composed edges added
+   */
+  def linkGraph(previousList: List[EipComponent],
                   next: EipComponent,
-                  graph: EipDAG) = {
+                  graph: EipDAG): EipDAG = {
     val newGraph = graph.addVertex(next)
-    val linkedGraph = addEdge(previous, next, newGraph)(UniqueString)
-    linkedGraph
+    previousList.foldLeft(newGraph)((graphAccumulator, previous) => {
+      val linkedGraph = addEdge(previous, next, graphAccumulator)(UniqueString)
+      linkedGraph
+    })
   }
 
 
@@ -92,60 +98,66 @@ class EipGraphCreator {
    * @param graph The current EipDag
    * @return A new EipDag, note the original data structure will not be mutated
    */
-  def createEipGraph(previous: Option[EipComponent],
+  def createEipGraph(previous: List[EipComponent],
                      processors: List[ProcessorDefinition],
                      graph: EipDAG): EipDAG = processors match {
     // When there are no processors, we have completed our effort.
     case Nil => graph
 
     case (from: FromProcessorDefinition) :: tail => {
-      val next = EipComponent(createId(from), "from", from.getUri.getStringValue)
-      createEipGraph(Some(next), tail, linkGraph(previous, next, graph))
+      val component = EipComponent(createId(from), "from", from.getUri.getStringValue, from)
+      createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
     case (wireTap: WireTapDefinition) :: tail => {
-      val component = EipComponent(createId(wireTap), "awireTap", wireTap.getUri.getStringValue)
-      createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
+      val component = EipComponent(createId(wireTap), "awireTap", wireTap.getUri.getStringValue, wireTap)
+      createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
     case (setBody: SetBodyProcessorDefinition) :: tail => {
-      val component = EipComponent(createId(setBody), "translator", "Expression ")
-      createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
+      val component = EipComponent(createId(setBody), "translator", "Expression ", setBody)
+      createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
     case (to: ToProcessorDefinition) :: tail => {
-      val component = EipComponent(createId(to), "to", to.getUri.getStringValue)
-      createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
+      val component = EipComponent(createId(to), "to", to.getUri.getStringValue, to)
+      createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
     case (bean: BeanDefinition) :: tail => {
-      val component = EipComponent(createId(bean), "to", bean.getRef.getStringValue)
-      createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
+      val component = EipComponent(createId(bean), "to", bean.getRef.getStringValue, bean)
+      createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
     case (choice: ChoiceProcessorDefinition) :: tail => {
-      val choiceComponent = EipComponent(createId(choice), "choice", "choice")
-      val newGraph = graph.addVertex(choiceComponent)
-      val linkedGraph = addEdge(previous, choiceComponent, newGraph)(UniqueString)
+      val choiceComponent = EipComponent(createId(choice), "choice", "choice", choice)
+      val linkedGraph = linkGraph(previous, choiceComponent, graph)
 
       // TODO When node should have its own vertex, with a text box with its predicate
-      val choiceGraph = choice.getWhens.asScala.foldLeft(linkedGraph)((graph, when) => {
-        val component = EipComponent(createId(when), "when", "Expression ")
-        val newGraph = graph.addVertex(component)
-        val linkedGraph = addEdge(Some(choiceComponent), component, newGraph)(UniqueString)
-        createEipGraph(Some(component), when.getComponents.asScala.toList, linkedGraph)
+      val (completedWhenGraph, previousDefinitions) = choice.getWhens.asScala.foldLeft((linkedGraph, List[EipComponent]()))({
+        case ((eipGraph, lastProcessorDefinition), when) => {
+          // Create the initial expression element from the when expression
+          val component = EipComponent(createId(when), "when", "Expression ", when)
+          val whenGraph = eipGraph.addVertex(component)
+
+          // Apply the graph function recursively to produce all children nodes within the when expression
+          val linkedGraph = addEdge(choiceComponent, component, whenGraph)(UniqueString)
+          val whenSubGraph = createEipGraph(List(component), when.getComponents.asScala.toList, linkedGraph)
+
+          (whenSubGraph, whenSubGraph.vertices.head :: lastProcessorDefinition)
+        }
       })
 
       // TODO need to link all generated nodes to graph, IE Some(choiceComponent) isn't valid, it's Some(List[Choices]) possibly
-      createEipGraph(Some(choiceComponent), tail, choiceGraph)
+      createEipGraph(previousDefinitions, tail, completedWhenGraph)
     }
 
     // Fall through case, hitting a node we don't understand
     // We simply interpret it as a to component, so that we can still display
     // the information without crashing or such
-    case _ :: tail => {
-      val component = EipComponent("", "to", "Error")
-      createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
+    case unmatched :: tail => {
+      val component = EipComponent("", "to", "Error", unmatched)
+      createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
   }
 

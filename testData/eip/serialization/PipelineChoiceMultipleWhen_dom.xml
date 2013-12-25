@@ -10,11 +10,11 @@
         <route>
             <from id="from" uri="direct:start"/>
             <choice id="choice">
-                <when id="when">
+                <when id="when1">
                     <constant>true</constant>
                     <to id="foo" uri="direct:foo" />
                 </when>
-                <when id="when">
+                <when id="when2">
                     <constant>false</constant>
                     <to id="bar" uri="direct:bar" />
                 </when>

@@ -2,11 +2,6 @@ package eip
 
 import impl.TestBase
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import foo.eip.graph.EipGraphCreator
-import foo.DomFileAccessor
-import foo.eip.graph.StaticGraphTypes.EipDAG
-import scala.xml.{Elem, PrettyPrinter}
-import junit.framework.Assert
 
 /**
  * Tests for ensuring the validity of the EipCreator interface which converts a Dom tree into
@@ -63,7 +58,7 @@ class EipCreatorTests
   /**
    * Test to ensure that the choice statement can be pipelined as expected
    */
-  def ignoreTestPipelineChoice() {
+  def testPipelineChoice() {
     doTest()
   }
 
@@ -71,7 +66,7 @@ class EipCreatorTests
    * Test to ensure that the choice statement can be pipelined as expected
    * with multiple when statements
    */
-  def ignoreTestPipelineChoiceMultipleWhen() {
+  def testPipelineChoiceMultipleWhen() {
     doTest()
   }
 
