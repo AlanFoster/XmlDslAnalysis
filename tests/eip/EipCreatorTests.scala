@@ -61,6 +61,21 @@ class EipCreatorTests
   }
 
   /**
+   * Test to ensure that the choice statement can be pipelined as expected
+   */
+  def ignoreTestPipelineChoice() {
+    doTest()
+  }
+
+  /**
+   * Test to ensure that the choice statement can be pipelined as expected
+   * with multiple when statements
+   */
+  def ignoreTestPipelineChoiceMultipleWhen() {
+    doTest()
+  }
+
+  /**
    * Ensures the test is valid
    */
   def doTest() {

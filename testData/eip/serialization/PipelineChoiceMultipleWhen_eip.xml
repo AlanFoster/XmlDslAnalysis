@@ -1,0 +1,20 @@
+<eipDag>
+    <vertices>
+        <vertex id="afterChoice" eipType="to" text="direct:afterChoice"/>
+        <vertex id="bar" eipType="to" text="direct:bar"/>
+        <vertex id="when" eipType="when" text="Expression "/>
+        <vertex id="foo" eipType="to" text="direct:foo"/>
+        <vertex id="when" eipType="when" text="Expression "/>
+        <vertex id="choice" eipType="choice" text="choice"/>
+        <vertex id="from" eipType="from" text="direct:start"/>
+    </vertices>
+    <edges>
+        <edge source="foo" target="afterChoice" edgeConnection="foo_afterChoice"/>
+        <edge source="bar" target="afterChoice" edgeConnection="bar_afterChoice"/>
+        <edge source="when" target="bar" edgeConnection="when_bar"/>
+        <edge source="choice" target="when" edgeConnection="choice_when"/>
+        <edge source="when" target="foo" edgeConnection="when_foo"/>
+        <edge source="choice" target="when" edgeConnection="choice_when"/>
+        <edge source="from" target="choice" edgeConnection="from_choice"/>
+    </edges>
+</eipDag>
