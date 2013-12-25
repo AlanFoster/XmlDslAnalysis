@@ -22,6 +22,20 @@ class EipCreatorTests
    * Performs the expected assertion between the loaded dom file and the created Eip DAG
    */
   def testSimpleRoute() {
+    doTest()
+  }
+
+  /**
+   * Ensures choice statement generation is as expected
+   */
+  def testSimpleChoiceStatement() {
+    doTest()
+  }
+
+  /**
+   * Ensures the test is valid
+   */
+  def doTest() {
     EipDagAssert.doTest(myFixture, getTestName(false))
   }
 }

@@ -137,7 +137,7 @@ class EipGraphCreator {
       })
 
       // TODO need to link all generated nodes to graph, IE Some(choiceComponent) isn't valid, it's Some(List[Choices]) possibly
-      createEipGraph(Some(choiceComponent), tail, linkGraph(previous, choiceComponent, choiceGraph))
+      createEipGraph(Some(choiceComponent), tail, choiceGraph)
     }
 
     // Fall through case, hitting a node we don't understand
