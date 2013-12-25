@@ -33,6 +33,34 @@ class EipCreatorTests
   }
 
   /**
+   * Ensure beans can be used in a pipline
+   */
+  def testChainedBean() {
+    doTest()
+  }
+
+  /**
+   * A route with no from method should produce an empty DAG
+   */
+  def testMissingFrom() {
+    doTest()
+  }
+
+  /**
+   * A camel context with no routes should produce an empty DAG
+   */
+  def testNoRoutes() {
+    doTest()
+  }
+
+  /**
+   * Ensure no NPEs if there is no camel context defined
+   */
+  def testNoCamelContext() {
+    doTest()
+  }
+
+  /**
    * Ensures the test is valid
    */
   def doTest() {

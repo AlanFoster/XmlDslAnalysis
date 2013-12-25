@@ -1,0 +1,13 @@
+<eipDag>
+    <vertices>
+        <vertex id="baz" eipType="to" text="baz"/>
+        <vertex id="bar" eipType="to" text="bar"/>
+        <vertex id="foo" eipType="to" text="foo"/>
+        <vertex id="from" eipType="from" text="direct:start"/>
+    </vertices>
+    <edges>
+        <edge source="bar" target="baz" edgeConnection="bar_baz"/>
+        <edge source="foo" target="bar" edgeConnection="foo_bar"/>
+        <edge source="from" target="foo" edgeConnection="from_foo"/>
+    </edges>
+</eipDag>
