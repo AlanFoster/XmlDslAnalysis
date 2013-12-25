@@ -19,6 +19,7 @@ import foo.eip.graph.ADT.EmptyDAG
  * etc
  */
 class EipGraphCreator {
+  import EipGraphCreator._
 
   /**
    * Converts the given blueprint DOM file into an EipDag
@@ -38,52 +39,6 @@ class EipGraphCreator {
       createdDAG
     )
   }
-
-  /**
-   * Each edge within the DAG must have a unique ID
-   *
-   * @param x The first node between the given edge
-   * @param y The second node between the given edge
-   * @return A unique ID for the given edge relation
-   */
-  def UniqueString(x: EipComponent, y: EipComponent) = x.id + "_" + y.id
-
-  /**
-   * Creates the edges between the given nodes.
-   * This implementation will handle the scenarios of no previous node existing
-   * @param previous The previously visited node
-   * @param next The newly visited node
-   * @param graph The current EipGraph.
-   * @param namingFunction The naming function, which when given two nodes will create a unique
-   *                       ID associating the two nodes.
-   * @return A newly created EipDag - Note this operation does not mutate the original
-   *         data structure
-   */
-  def addEdge(previous: EipComponent,
-            next: EipComponent,
-            graph: EipDAG)(namingFunction: (EipComponent, EipComponent) => String) =
-    graph.addEdge(namingFunction(previous, next), previous, next)
-
-
-  /**
-   * Adds the given EipComponent, and link the new EipComponent to all previously occurring nodes.
-   * This will be a list of nodes, for instance in the scenario of after a choice statement
-   *
-   * @param previousList the previous elements within the graph to link to this node
-   * @param next The EipComponent to link to
-   * @param graph The currently composed graph
-   * @return A new graph with the given composed edges added
-   */
-  def linkGraph(previousList: List[EipComponent],
-                  next: EipComponent,
-                  graph: EipDAG): EipDAG = {
-    val newGraph = graph.addVertex(next)
-    previousList.foldLeft(newGraph)((graphAccumulator, previous) => {
-      val linkedGraph = addEdge(previous, next, graphAccumulator)(UniqueString)
-      linkedGraph
-    })
-  }
-
 
   /**
    * Creates a new EipDAG for the given list of processor definitions.
@@ -110,7 +65,7 @@ class EipGraphCreator {
     }
 
     case (wireTap: WireTapDefinition) :: tail => {
-      val component = EipComponent(createId(wireTap), "awireTap", wireTap.getUri.getStringValue, wireTap)
+      val component = EipComponent(createId(wireTap), "wireTap", wireTap.getUri.getStringValue, wireTap)
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
@@ -171,6 +126,67 @@ class EipGraphCreator {
 
     if(idAttribute.exists()) idAttribute.getStringValue
     else idAttribute.hashCode.toString
+  }
+}
+
+/**
+ * EipGraphCreator Object which contains EipDag manipulation methods.
+ */
+object EipGraphCreator {
+  implicit def richEipGraph(eipDag: EipDAG) = new {
+    def linkComponents(previousList: List[EipComponent],
+                      next: EipComponent): EipDAG =
+      linkGraph(previousList, next, eipDag)
+
+    def linkComponents(previous: EipComponent,
+                       next: EipComponent): EipDAG =
+      linkGraph(List(previous), next, eipDag)
+  }
+
+
+  /**
+   * Each edge within the DAG must have a unique ID
+   *
+   * @param x The first node between the given edge
+   * @param y The second node between the given edge
+   * @return A unique ID for the given edge relation
+   */
+  def UniqueString(x: EipComponent, y: EipComponent) = x.id + "_" + y.id
+
+  /**
+   * Creates the edges between the given nodes.
+   * This implementation will handle the scenarios of no previous node existing
+   * @param previous The previously visited node
+   * @param next The newly visited node
+   * @param graph The current EipGraph.
+   * @param namingFunction The naming function, which when given two nodes will create a unique
+   *                       ID associating the two nodes.
+   * @return A newly created EipDag - Note this operation does not mutate the original
+   *         data structure
+   */
+  def addEdge(previous: EipComponent,
+              next: EipComponent,
+              graph: EipDAG)(namingFunction: (EipComponent, EipComponent) => String) =
+    graph.addEdge(namingFunction(previous, next), previous, next)
+
+
+  /**
+   * Adds the given EipComponent, and link the new EipComponent to all previously occurring nodes.
+   * This will be a list of nodes, for instance in the scenario of after a choice statement
+   *
+   * @param previousList the previous elements within the graph to link to this node
+   * @param next The EipComponent to link to
+   * @param graph The currently composed graph
+   * @return A new graph with the given composed edges added
+   */
+  def linkGraph(previousList: List[EipComponent],
+                next: EipComponent,
+                graph: EipDAG): EipDAG = {
+    val newGraph = graph.addVertex(next)
+    previousList.foldLeft(newGraph)((graphAccumulator, previous) => {
+      val linkedGraph = addEdge(previous, next, graphAccumulator)(UniqueString)
+      linkedGraph
+    })
   }
 }
 

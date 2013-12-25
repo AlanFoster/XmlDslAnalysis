@@ -6,17 +6,15 @@ import foo.eip.graph.GraphGlue
 import foo.eip.graph.StaticGraphTypes.EipDAG
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph
 import edu.uci.ics.jung.graph.util.EdgeType
-import edu.uci.ics.jung.algorithms.layout.TreeLayout
+import edu.uci.ics.jung.algorithms.layout.{StaticLayout, TreeLayout}
 import foo.eip.graph.ADT.Graph
+import java.awt.Dimension
+
 
 /**
- * Created with IntelliJ IDEA.
- * User: alan
- * Date: 10/11/13
- * Time: 16:25
- * To change this template use File | Settings | File Templates.
+ * Provides conversion methods for converting generic Graph[V,E] implementations
+ * directly into a JUNG Directed Sparse Multigraph implementation
  */
-
 class EipGraphVisualisation(eipGraph: EipDAG) {
 
   /**
@@ -28,6 +26,14 @@ class EipGraphVisualisation(eipGraph: EipDAG) {
   * Boiler plate
   */
   type MutableGraph[V, E] = edu.uci.ics.jung.graph.DirectedSparseMultigraph[V, E]
+
+  /**
+   * Converts the given graph
+   * @param oldGraph The immutable graph structure to convert
+   * @tparam V The generic type of the vertices
+   * @tparam E The generic type of the Edges
+   * @return A new, mutable, JUNG Directed Sparse Multigraph implementation
+   */
   def asJungGraph[V, E](oldGraph: Graph[V, E]): MutableGraph[V, E] = {
     val newGraph:MutableGraph[V, E] = new DirectedSparseMultigraph[V, E]
 
@@ -37,9 +43,21 @@ class EipGraphVisualisation(eipGraph: EipDAG) {
     newGraph
   }
 
+  /**
+   * Converts the given MutableGraph into a VisualViewer, which can then be
+   * embedded within a Swing component
+   * @param graph The Mutable graph.
+   * @tparam V The generic type of the vertices
+   * @tparam E The generic type of the Edges
+   * @return A new VisualViewer which represents the given Graph, with a minimum vertex distance of 100.
+   *         Note this implementation does not provide any 'additional' features.
+   *         It purely converts the MutableGraph[V, E] into a VisualizationViewer[V, E]
+   */
   def asVisualGraph[V, E](graph: MutableGraph[V, E]): VisualizationViewer[V, E] = {
     val minimumSpanningForest = GraphGlue.newMinimumSpanningForest(graph)
-    val viewer = new VisualizationViewer(new TreeLayout(minimumSpanningForest.getForest, 100, 100))
+    val treeLayout = new TreeLayout(minimumSpanningForest.getForest, 100, 100)
+    val staticLayout = new StaticLayout(graph, treeLayout)
+    val viewer = new VisualizationViewer(staticLayout, new Dimension(500, 500))
     viewer
   }
 }

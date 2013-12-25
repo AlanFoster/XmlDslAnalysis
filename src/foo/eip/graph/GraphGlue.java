@@ -23,7 +23,8 @@ public class GraphGlue {
     public static <V, E> MinimumSpanningForest2<V, E> newMinimumSpanningForest(Graph<V, E> graph) {
         MinimumSpanningForest2<V, E> minimumSpanningForest =
                 new MinimumSpanningForest2<V, E>(graph,
-                        new DelegateForest<V, E>(), DelegateTree.<V, E>getFactory(),
+                        new DelegateForest<V, E>(),
+                        DelegateTree.<V, E>getFactory(),
                         new Transformer<E, Double>() {
                             public Double transform(E e) {
                                 return 1d;
