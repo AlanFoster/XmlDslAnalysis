@@ -1,3 +1,11 @@
+Type Inference
+-----------------
+
+- http://en.wikipedia.org/wiki/Reaching_definition
+Local vs Global type inference
+Data flow analysis
+
+
 - An important feature which can be implemented at lexer level is mixing languages within a file (for example, embedding fragments
 of Java code in some template language). If a language supports embedding its fragments in another language, it needs to define
 the chameleon token types for different types of fragments which can be embedded, and these token types need to implement the
