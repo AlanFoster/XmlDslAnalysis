@@ -58,7 +58,7 @@ object EipDagAssert {
    * @param elem The root node to convert into a string
    * @return A pretty printed string of th egiven Xml Element
    */
-  def prettyPrint(elem: Elem) = new PrettyPrinter(80, 4).format(elem)
+  def prettyPrint(elem: Elem) = new PrettyPrinter(Integer.MAX_VALUE, 4).format(elem)
 
   /**
    * Serializes the given EipDag into a human-readable format
