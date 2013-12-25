@@ -1,0 +1,9 @@
+<eipDag>
+    <vertices>
+        <vertex id="second" eipType="to" text="direct:example"/>
+        <vertex id="first" eipType="from" text="direct:start"/>
+    </vertices>
+    <edges>
+        <edge source="first" target="second" edgeConnection="first_second"/>
+    </edges>
+</eipDag>

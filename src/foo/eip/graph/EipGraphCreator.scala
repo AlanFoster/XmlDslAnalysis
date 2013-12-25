@@ -1,11 +1,10 @@
 package foo.eip.graph
 
 import foo.Model._
-import foo.eip.graph.ADT.Graph
+
 import foo.eip.graph.StaticGraphTypes.EipDAG
 import scala.collection.JavaConverters._
 import foo.eip.graph.ADT.EmptyDAG
-import java.util.UUID
 
 /**
  * EIP Graph Creator class.
@@ -47,7 +46,7 @@ class EipGraphCreator {
    * @param y The second node between the given edge
    * @return A unique ID for the given edge relation
    */
-  def UniqueString(x: AnyRef, y: AnyRef) = UUID.randomUUID().toString
+  def UniqueString(x: EipComponent, y: EipComponent) = x.id + "_" + y.id
 
   /**
    * Creates the edges between the given nodes.
@@ -100,38 +99,38 @@ class EipGraphCreator {
     case Nil => graph
 
     case (from: FromProcessorDefinition) :: tail => {
-      val next = EipComponent(from.getId.getStringValue, "from", from.getUri.getStringValue)
+      val next = EipComponent(createId(from), "from", from.getUri.getStringValue)
       createEipGraph(Some(next), tail, linkGraph(previous, next, graph))
     }
 
     case (wireTap: WireTapDefinition) :: tail => {
-      val component = EipComponent(wireTap.getId.getStringValue, "awireTap", wireTap.getUri.getStringValue)
+      val component = EipComponent(createId(wireTap), "awireTap", wireTap.getUri.getStringValue)
       createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
     }
 
     case (setBody: SetBodyProcessorDefinition) :: tail => {
-      val component = EipComponent(setBody.getId.getStringValue, "translator", "Expression ")
+      val component = EipComponent(createId(setBody), "translator", "Expression ")
       createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
     }
 
     case (to: ToProcessorDefinition) :: tail => {
-      val component = EipComponent(to.getId.getStringValue, "to", to.getUri.getStringValue)
+      val component = EipComponent(createId(to), "to", to.getUri.getStringValue)
       createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
     }
 
     case (bean: BeanDefinition) :: tail => {
-      val component = EipComponent(bean.getId.getStringValue, "to", bean.getRef.getStringValue)
+      val component = EipComponent(createId(bean), "to", bean.getRef.getStringValue)
       createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
     }
 
     case (choice: ChoiceProcessorDefinition) :: tail => {
-      val choiceComponent = EipComponent(choice.getId.getStringValue, "choice", "choice")
+      val choiceComponent = EipComponent(createId(choice), "choice", "choice")
       val newGraph = graph.addVertex(choiceComponent)
       val linkedGraph = addEdge(previous, choiceComponent, newGraph)(UniqueString)
 
       // TODO When node should have its own vertex, with a text box with its predicate
       val choiceGraph = choice.getWhens.asScala.foldLeft(linkedGraph)((graph, when) => {
-        val component = EipComponent(when.getId.getStringValue, "when", "Expression ")
+        val component = EipComponent(createId(when), "when", "Expression ")
         val newGraph = graph.addVertex(component)
         val linkedGraph = addEdge(Some(choiceComponent), component, newGraph)(UniqueString)
         createEipGraph(Some(component), when.getComponents.asScala.toList, linkedGraph)
@@ -148,6 +147,18 @@ class EipGraphCreator {
       val component = EipComponent("", "to", "Error")
       createEipGraph(Some(component), tail, linkGraph(previous, component, graph))
     }
+  }
+
+  /**
+   * Attempts to extract the ID from the given processor definition.
+   * @param processorDefinition The dom processor definition element
+   * @return The ID attribute if present, otherwise defaults to the hash code of the element
+   */
+  def createId(processorDefinition: ProcessorDefinition): String = {
+    val idAttribute = processorDefinition.getId
+
+    if(idAttribute.exists()) idAttribute.getStringValue
+    else idAttribute.hashCode.toString
   }
 }
 

@@ -32,7 +32,9 @@ trait Graph[V, E] {
   def addEdge(edge: E, vertex1: V, vertex2: V): Graph[V, E]
 
   /**
-   * Generated a detail String representation of the given Graph
+   * Generated a detail String representation of the given Graph.
+   * Note this implementation should provide no side effects.
+   *
    * @return A string representation of the given graph
    */
   def print: String
