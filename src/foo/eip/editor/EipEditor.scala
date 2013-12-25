@@ -8,7 +8,6 @@ import com.intellij.ide.structureView.StructureViewBuilder
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter
 import java.beans.PropertyChangeListener
 import javax.swing.{JPanel, JComponent}
-import foo.DomFileAccessor._
 import foo.eip.graph.{EipGraphCreator, VisualEipGraph}
 import foo.eip.graph.loaders.IntellijIconLoader
 import foo.FunctionalUtil._
@@ -18,6 +17,7 @@ import scala.collection.JavaConverters._
 import com.intellij.openapi.ui.popup.{Balloon, JBPopupFactory}
 import com.intellij.openapi.ui.MessageType
 import com.intellij.ui.awt.RelativePoint
+import foo.DomFileAccessor
 
 /**
  * Creates and visualises the given XML DSl as a graph.
@@ -79,7 +79,7 @@ class EipEditor(project: Project, virtualFile: VirtualFile) extends UserDataHold
     // Assume we are using a DOM representation of camel intially
     // Which allows for a EipDAG to be used within the VisualEipGraph, which could
     // be expended upon in the future to allow for Java DSL EIP representations etc
-    val blueprintDom = getBlueprintDomFile(project, virtualFile).get
+    val blueprintDom = DomFileAccessor.getBlueprintDomFile(project, virtualFile).get
 
     if(!isValid(blueprintDom)) {
       val message = "Note - At least one route, with one From definition is required."
