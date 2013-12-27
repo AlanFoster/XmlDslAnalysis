@@ -10,7 +10,7 @@ import foo.eip.graph.ADT.EmptyDAG
  * EIP Graph Creator class.
  * This class will convert the given intellij DOM class into a more abstract
  * DAG (Directed Acyclic Graph) which contains more semantic information
- * relevent to EIPs than the lower level abstraction of DOM.
+ * relevant to EIPs than the lower level abstraction of DOM.
  *
  * This decision will allow for other DSLs such as Java to be supported.
  *
@@ -133,16 +133,38 @@ class EipGraphCreator {
  * EipGraphCreator Object which contains EipDag manipulation methods.
  */
 object EipGraphCreator {
+  /**
+   * Provides an implicit definition for conversion to a new 'richer' EipDag model
+   * which contains various useful methods for manipulating an Eip Dag, more so
+   * than a generic Graph
+   * @param eipDag The EipDag reference
+   * @return A rich EipDag
+   */
   implicit def richEipGraph(eipDag: EipDAG) = new {
+    /**
+     * Adds the given EipComponent, and link the new EipComponent to all previously occurring nodes.
+     * This will be a list of nodes, for instance in the scenario of after a choice statement
+     *
+     * @param previousList the previous elements within the graph to link to this node
+     * @param next The EipComponent to link to
+     * @return A new graph with the given composed edges added
+     */
     def linkComponents(previousList: List[EipComponent],
                       next: EipComponent): EipDAG =
       linkGraph(previousList, next, eipDag)
 
+    /**
+     * Adds the given EipComponent, and link the new EipComponent to all previously occurring nodes.
+     * This will be a list of nodes, for instance in the scenario of after a choice statement
+     *
+     * @param previous the previous element within the graph to link to this node
+     * @param next The EipComponent to link to
+     * @return A new graph with the given composed edges added
+     */
     def linkComponents(previous: EipComponent,
                        next: EipComponent): EipDAG =
       linkGraph(List(previous), next, eipDag)
   }
-
 
   /**
    * Each edge within the DAG must have a unique ID
@@ -151,7 +173,10 @@ object EipGraphCreator {
    * @param y The second node between the given edge
    * @return A unique ID for the given edge relation
    */
-  def UniqueString(x: EipComponent, y: EipComponent) = x.id + "_" + y.id
+  def UniqueString(graph: EipDAG)(x: EipComponent, y: EipComponent) = {
+    val edgeSize = graph.edges.size
+    x.id + "_" + y.id + edgeSize
+  }
 
   /**
    * Creates the edges between the given nodes.
@@ -166,8 +191,8 @@ object EipGraphCreator {
    */
   def addEdge(previous: EipComponent,
               next: EipComponent,
-              graph: EipDAG)(namingFunction: (EipComponent, EipComponent) => String) =
-    graph.addEdge(namingFunction(previous, next), previous, next)
+              graph: EipDAG)(namingFunction: EipDAG => (EipComponent, EipComponent) => String) =
+    graph.addEdge(namingFunction(graph)(previous, next), previous, next)
 
 
   /**
@@ -189,5 +214,3 @@ object EipGraphCreator {
     })
   }
 }
-
-

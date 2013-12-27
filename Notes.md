@@ -5,6 +5,11 @@ Type Inference
 Local vs Global type inference
 Data flow analysis
 
+Website
+--------
+
+Add description of the EIP icons
+
 JUNG
 ----
 Save graph as image

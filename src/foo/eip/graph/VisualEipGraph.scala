@@ -54,6 +54,7 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
         andThen bindGraphMouse
         andThen bindEipRenderer
         andThen setComponentToolTip
+        andThen addGraphToXmlDebugOption
       )(viewer)
 
     boundJavaComponent
@@ -70,7 +71,7 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
    * @param viewer The viewer that will render EIP icons
    * @return The Viewer
    */
-  private def bindEipRenderer(viewer:Viewer): Viewer = {
+  private def bindEipRenderer(viewer: Viewer): Viewer = {
     def getIcon(component: EipComponent): Icon = {
       val isPicked = viewer.getPickedVertexState.getPicked.contains(component)
       val eipType = component.eipType
@@ -137,7 +138,7 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
      */
     def toggle(isTransforming: Boolean) {
       val newMode =
-        if (isTransforming)  ModalGraphMouse.Mode.TRANSFORMING
+        if (isTransforming) ModalGraphMouse.Mode.TRANSFORMING
         else ModalGraphMouse.Mode.PICKING
       graphMouse.setMode(newMode)
     }
@@ -145,13 +146,14 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
     // Bind a keyboard listener, to toggle to Transforming mode when space bar is pressed
     viewer.addKeyListener(new KeyListener {
       def keyPressed(e: KeyEvent) =
-         if (e.getKeyCode == KeyEvent.VK_SPACE) toggle(isTransforming = true)
+        if (e.getKeyCode == KeyEvent.VK_SPACE) toggle(isTransforming = true)
 
       def keyReleased(e: KeyEvent) =
-        if (e.getKeyCode == KeyEvent.VK_SPACE) toggle(isTransforming = false)
+         if (e.getKeyCode == KeyEvent.VK_SPACE) toggle(isTransforming = false)
 
       def keyTyped(e: KeyEvent) {}
     })
+    viewer.requestFocus()
   })
 
   /**
@@ -174,6 +176,19 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
  * @param eipDag The current EIP diagram
  */
 class DebugGraphToXmlPlugin(eipDag: EipDAG) extends AbstractPopupGraphMousePlugin() with MouseListener {
+
+  /**
+   * Override the default implementation of mousePressed, which relies on e.isPopupTrigger.
+   * This method instead uses swing utilities to ensure the mouse event is a right click.
+   * @param e The mouse event
+   */
+  override def mousePressed(e: MouseEvent) {
+    if (SwingUtilities.isRightMouseButton(e)) {
+      handlePopup(e)
+      e.consume
+    }
+  }
+
   /**
    * Creates the JPopupMenu at the event source location
    * @param e the MouseEvent
@@ -249,25 +264,25 @@ object Starter {
 
     val component = (new VisualEipGraph(eipDag) with DefaultIconLoader).createScrollableViewer
 
-   // val graph = fakeGraph()
-/*
-    val delegateForest = new DelegateForest(graph)
-    val layout = new TreeLayout(delegateForest, 100, 100)
-    val viewer = new VisualizationViewer(layout)
-    val component = new GraphZoomScrollPane(viewer)
-*/
-/*    val minimumSpanningForest = GraphGlue.newMinimumSpanningForest(graph)
-    val treeLayout = new StaticLayout(graph, new TreeLayout(minimumSpanningForest.getForest))
-    val viewer = new VisualizationViewer(treeLayout)
+    // val graph = fakeGraph()
+    /*
+        val delegateForest = new DelegateForest(graph)
+        val layout = new TreeLayout(delegateForest, 100, 100)
+        val viewer = new VisualizationViewer(layout)
+        val component = new GraphZoomScrollPane(viewer)
+    */
+    /*    val minimumSpanningForest = GraphGlue.newMinimumSpanningForest(graph)
+        val treeLayout = new StaticLayout(graph, new TreeLayout(minimumSpanningForest.getForest))
+        val viewer = new VisualizationViewer(treeLayout)
 
-    mutate(viewer)(_.getRenderContext.setEdgeShapeTransformer(new EdgeShape.Line))
+        mutate(viewer)(_.getRenderContext.setEdgeShapeTransformer(new EdgeShape.Line))
 
-    val graphMouse = new DefaultModalGraphMouse[EipComponent, String]()
-    viewer.setGraphMouse(graphMouse)
+        val graphMouse = new DefaultModalGraphMouse[EipComponent, String]()
+        viewer.setGraphMouse(graphMouse)
 
-    graphMouse.setMode(ModalGraphMouse.Mode.PICKING)
+        graphMouse.setMode(ModalGraphMouse.Mode.PICKING)
 
-    val component = new GraphZoomScrollPane(viewer)*/
+        val component = new GraphZoomScrollPane(viewer)*/
 
     val jframe = new JFrame()
     jframe.setSize(500, 700)
