@@ -5,6 +5,12 @@ Type Inference
 Local vs Global type inference
 Data flow analysis
 
+JUNG
+----
+Save graph as image
+    - http://jung.sourceforge.net/developer_faq.txt
+Persist location
+    - http://stackoverflow.com/questions/2297315/cand-jung-graphics-apear-in-the-same-place-every-time
 
 - An important feature which can be implemented at lexer level is mixing languages within a file (for example, embedding fragments
 of Java code in some template language). If a language supports embedding its fragments in another language, it needs to define
