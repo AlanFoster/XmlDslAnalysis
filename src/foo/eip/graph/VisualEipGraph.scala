@@ -1,12 +1,12 @@
 package foo.eip.graph
 
-import edu.uci.ics.jung.visualization.{GraphZoomScrollPane, VisualizationViewer}
+import edu.uci.ics.jung.visualization.{VisualizationModel, DefaultVisualizationModel, GraphZoomScrollPane, VisualizationViewer}
 import java.awt._
 import org.apache.commons.collections15.Transformer
 import javax.swing._
-import java.awt.geom.Rectangle2D
+import java.awt.geom.{AffineTransform, Rectangle2D}
 import edu.uci.ics.jung.visualization.decorators.EdgeShape
-import edu.uci.ics.jung.visualization.control.{AbstractPopupGraphMousePlugin, ModalGraphMouse, DefaultModalGraphMouse}
+import edu.uci.ics.jung.visualization.control._
 import java.awt.event._
 
 import org.apache.commons.collections15.Factory
@@ -17,9 +17,19 @@ import foo.eip.graph.Visualisation.EipGraphVisualisation
 import foo.eip.graph.StaticGraphTypes.EipDAG
 import foo.eip.serializers.{TypeEipDagSerializer, EipDagSerializer}
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph
-import edu.uci.ics.jung.graph.util.EdgeType
+import edu.uci.ics.jung.graph.util.{TreeUtils, EdgeType}
 import foo.eip.graph.ADT.EmptyDAG
 import scala.List
+import fr.inria.zvtm.engine.{View, VirtualSpace, VirtualSpaceManager}
+import fr.inria.zvtm.glyphs.{VImage, VRectangle, VCircle}
+import fr.inria.zvtm.engine.portals.{OverviewPortal, CameraPortal}
+import com.intellij.openapi.vcs.changes.dbCommitted.VcsSqliteLayer
+import edu.uci.ics.jung.io.GraphMLWriter
+import edu.uci.ics.jung.samples.{GraphZoomScrollPaneDemo, SatelliteViewDemo}
+import edu.uci.ics.jung.algorithms.layout.{StaticLayout, TreeLayout}
+import javax.swing.border.LineBorder
+import foo.eip.graph.ADT.EmptyDAG
+import foo.eip.graph.ADT.EmptyDAG
 
 /**
  * Class used to represent a visual representation of the the given EipDAG.
@@ -42,9 +52,8 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
    * Creates a new Viewer
    * @return A new Visual viewer for the given EipDAG
    */
-  def createViewer: Viewer = {
-    val visualiser = new EipGraphVisualisation(eipDag)
-    val viewer = visualiser.asVisualGraph(visualiser.asJungGraph(eipDag))
+  def createViewer(model: VisualizationModel[EipComponent, String]): Viewer = {
+    val viewer = new VisualizationViewer(model, new Dimension(3000, 3000))
 
     // Create our bound java component ie, the Swing graph
     // Note the use of functional composition in order to compose features
@@ -60,11 +69,64 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
     boundJavaComponent
   }
 
+
+  def createSatelliteViewer(parent: Viewer, model: VisualizationModel[EipComponent, String]): Viewer = {
+    val viewer = new SatelliteVisualizationViewer[EipComponent, String](parent, new Dimension(200, 200))
+
+    // Create our bound java component ie, the Swing graph
+    // Note the use of functional composition in order to compose features
+    // Note this list differs from the main parent control's added features
+    val boundJavaComponent = (
+      setBackground _
+        andThen setLineRender
+        andThen bindEipRenderer
+        andThen setComponentToolTip
+      )(viewer)
+
+    // Scale the component to its available size
+    viewer.scaleToLayout(new CrossoverScalingControl)
+
+    boundJavaComponent
+  }
+
+
   /**
    * @return A scrollable Viewer
    */
-  def createScrollableViewer: GraphZoomScrollPane =
-    new GraphZoomScrollPane(createViewer)
+  def createScrollableViewer: JComponent = {
+    val visualiser = new EipGraphVisualisation(eipDag)
+    val graph = visualiser.asJungGraph(eipDag)
+
+    val minimumSpanningForest = GraphGlue.newMinimumSpanningForest(graph)
+
+/*    val roots = TreeUtils.getRoots(minimumSpanningForest.getForest)
+    for {
+      root <- roots
+    } {
+    }*/
+
+    val treeLayout = new TreeLayout(minimumSpanningForest.getForest, 100, 100)
+    val staticLayout = new StaticLayout(graph, treeLayout)
+
+    val visualisationModel = new DefaultVisualizationModel(staticLayout)
+
+    val mainViewer = createViewer(visualisationModel)
+    val mainZoomPane = new GraphZoomScrollPane(mainViewer)
+
+    val satelliteViewer = createSatelliteViewer(mainViewer, visualisationModel)
+    satelliteViewer.setBorder(LineBorder.createBlackLineBorder())
+
+    mainViewer.setLayout(new BorderLayout())
+
+    val rightHandSideBoxLayer = new JLayeredPane
+    rightHandSideBoxLayer.setLayout(new FlowLayout(FlowLayout.RIGHT))
+    rightHandSideBoxLayer.add(satelliteViewer, BorderLayout.LINE_END)
+
+    mainViewer.add(rightHandSideBoxLayer, BorderLayout.SOUTH)
+
+    mainZoomPane
+  }
+
 
   /**
    * Binds the EIP renderer to the given Viewer
@@ -240,6 +302,82 @@ object Starter {
   }
 
   def main(args: Array[String]) {
+
+
+/*    SatelliteViewDemo.main(Array())*/
+
+    val jframe = new JFrame()
+    jframe.setSize(500, 700)
+
+
+  //  jframe.getContentPane.add(ztvm())
+    jframe.getContentPane.add(JUNG())
+
+
+    jframe.setVisible(true)
+    jframe.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+  }
+
+  def ztvm() = {
+
+
+
+    // Access the virtual space manager which represents a singleton
+    val virtualSpaceManager = VirtualSpaceManager.INSTANCE
+
+    // Create our new virtual space, and register our camera requirements
+    val eipGraph = "EipGraph"
+    val virtualSpace = virtualSpaceManager.addVirtualSpace(eipGraph)
+
+
+/*
+    val circle = new VCircle(0, 0, 0, 10, Color.GREEN)
+    virtualSpace.addGlyph(circle)
+*/
+
+    val circle2 = new VCircle(900, 900, 0, 10, Color.RED)
+    virtualSpace.addGlyph(circle2)
+
+
+    val square = new VImage(javax.imageio.ImageIO.read(getClass.getResourceAsStream("/eip/picked/to.gif")))
+    square.setDrawBorder(false)
+    virtualSpace.addGlyph(square)
+
+
+
+/*    val square = new VImage[]()(300, 300, 0, 100, 100, Color.BLUE) {
+      override def draw(g: Graphics2D, vW: Int, vH: Int, i: Int, stdS: Stroke, stdT: AffineTransform, dx: Int, dy: Int): Unit = {
+
+        val image = javax.imageio.ImageIO.read(getClass.getResourceAsStream("/eip/picked/to.gif"))
+
+        g.drawImage(image, dx + pc[0], dy + pc[0], null)
+        super.draw(g, vW, vH, i, stdS, stdT, dx, dy)
+      }
+    }*/
+/*    virtualSpace.addGlyph(square)*/
+
+    // Create our Cameras
+    val mainCamera = virtualSpace.addCamera()
+    val portalCamera = virtualSpace.addCamera()
+
+
+    {
+      import scala.collection.JavaConverters._
+
+      val cameras = List(mainCamera, portalCamera).asJava
+
+      val view = virtualSpaceManager.addFrameView(cameras, eipGraph, View.OPENGL_VIEW, 800, 600, false)
+      view.setBackgroundColor(Color.WHITE)
+      val portal = new OverviewPortal(0, 0, 100, 50, portalCamera, mainCamera)
+      virtualSpaceManager.addPortal(portal, view)
+
+      view.getPanel.getComponent
+    }
+  }
+
+
+
+  def JUNG() = {
     import EipGraphCreator._
 
     val from = EipComponent("from", "from", "from", null)
@@ -284,12 +422,10 @@ object Starter {
 
         val component = new GraphZoomScrollPane(viewer)*/
 
-    val jframe = new JFrame()
-    jframe.setSize(500, 700)
-    jframe.getContentPane.add(component)
-    jframe.setVisible(true)
-    jframe.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+
+    component
   }
+
 }
 
 

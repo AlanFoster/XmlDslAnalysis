@@ -26,6 +26,7 @@
     <orderEntry type="library" name="src" level="project" />
     <orderEntry type="library" name="intellij-community-idea-133" level="project" />
     <orderEntry type="library" name="info.cukes:cucumber-java:1.1.5" level="project" />
+    <orderEntry type="library" name="zvtm-pdf-0.3.1-SNAPSHOT" level="project" />
   </component>
 </module>
 

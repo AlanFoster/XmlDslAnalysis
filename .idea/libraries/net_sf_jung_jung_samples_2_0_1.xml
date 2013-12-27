@@ -21,6 +21,7 @@
       <root url="jar://$USER_HOME$/.ideaLibSources/jung-api-2.0.1-sources.jar!/" />
       <root url="jar://$USER_HOME$/.ideaLibSources/jung-samples-2.0.1-sources.jar!/" />
       <root url="jar://$USER_HOME$/.ideaLibSources/jung-algorithms-2.0.1-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.ideaLibSources/jung-io-2.0.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
