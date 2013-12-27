@@ -1,0 +1,13 @@
+<eipDag>
+    <vertices>
+        <vertex id="fourth" eipType="to" text="direct:baz" inferredType="java.lang.Object"/>
+        <vertex id="third" eipType="to" text="direct:bar" inferredType="java.lang.Object"/>
+        <vertex id="second" eipType="to" text="direct:foo" inferredType="java.lang.Object"/>
+        <vertex id="first" eipType="from" text="direct:start" inferredType="java.lang.Object"/>
+    </vertices>
+    <edges>
+        <edge source="third" target="fourth" edgeConnection="third_fourth"/>
+        <edge source="second" target="third" edgeConnection="second_third"/>
+        <edge source="first" target="second" edgeConnection="first_second"/>
+    </edges>
+</eipDag>

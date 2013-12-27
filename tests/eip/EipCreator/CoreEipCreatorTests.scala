@@ -1,17 +1,19 @@
-package eip
+package eip.eipCreator
 
 import impl.TestBase
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
+import eip.EipDagAssert
+import foo.eip.serializers.CoreEipDagSerializer
 
 /**
- * Tests for ensuring the validity of the EipCreator interface which converts a Dom tree into
+ * Type inference tests for ensuring the validity of the EipCreator interface which converts a Dom tree into
  * a more abstracted EIP Dag
  */
-class EipCreatorTests
+class CoreEipCreatorTests
   extends LightCodeInsightFixtureTestCase
   with TestBase{
 
-  override def getTestDataPath: String = testDataMapper("/eip/serialization")
+  override def getTestDataPath: String = testDataMapper("/eip/eipCreator/core")
 
   /**
    * Performs the expected assertion between the loaded dom file and the created Eip DAG
@@ -69,11 +71,10 @@ class EipCreatorTests
   def testPipelineChoiceMultipleWhen() {
     doTest()
   }
-
   /**
    * Ensures the test is valid
    */
   def doTest() {
-    EipDagAssert.doTest(myFixture, getTestName(false))
+    EipDagAssert.doTest(myFixture, getTestName(false), new CoreEipDagSerializer)
   }
 }

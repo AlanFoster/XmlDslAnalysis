@@ -9,8 +9,7 @@ import scala.xml.{PrettyPrinter, Elem}
  *
  * This concrete implementation does not currently show any type information
  */
-// TODO Investigate implicits :)
-class EipDagSerializer extends Serializer[EipDAG] {
+trait EipDagSerializer extends Serializer[EipDAG] {
   /**
    * Serializes the given EipDag into a human-readable format
    * @param eipDag The given eipDag which contains the EIP abstraction
@@ -23,16 +22,7 @@ class EipDagSerializer extends Serializer[EipDAG] {
    * @param eipDag The EipDag to convert
    * @return The XML Node element
    */
-  def createXml(eipDag: EipDAG) = {
-    <eipDag>
-      <vertices>
-        {eipDag.vertices.map(vertex => <vertex id={vertex.id} eipType={vertex.eipType} text={vertex.text}/>)}
-      </vertices>
-      <edges>
-        {eipDag.edges.map(edge => <edge source={edge.source.id} target={edge.target.id} edgeConnection={edge.edge}/>)}
-      </edges>
-    </eipDag>
-  }
+  def createXml(eipDag: EipDAG): Elem
 
   /**
    * Pretty prints the given Xml Element

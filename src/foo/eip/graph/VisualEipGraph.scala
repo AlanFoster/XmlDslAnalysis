@@ -15,7 +15,7 @@ import foo.FunctionalUtil._
 import foo.eip.graph.loaders.{DefaultIconLoader, IconLoader}
 import foo.eip.graph.Visualisation.EipGraphVisualisation
 import foo.eip.graph.StaticGraphTypes.EipDAG
-import foo.eip.serializers.EipDagSerializer
+import foo.eip.serializers.{TypeEipDagSerializer, EipDagSerializer}
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph
 import edu.uci.ics.jung.graph.util.EdgeType
 import foo.eip.graph.ADT.EmptyDAG
@@ -183,7 +183,7 @@ class DebugGraphToXmlPlugin(eipDag: EipDAG) extends AbstractPopupGraphMousePlugi
     val popUp = new JPopupMenu()
     popUp.add(new AbstractAction("Output EIP") {
       def actionPerformed(e: ActionEvent): Unit = {
-        println(new EipDagSerializer().serialize(eipDag))
+        println(new TypeEipDagSerializer().serialize(eipDag))
       }
     })
     popUp.show(viewer, e.getX, e.getY)
