@@ -8,6 +8,7 @@ trait ProcessorDefinition extends DomElement {
   @Attribute("id")
   def getId: GenericAttributeValue[String]
 
+  // TODO Not all classes have this information :)
   @NotNull
   @Attribute("uri")
   def getUri: GenericAttributeValue[String]

@@ -69,6 +69,13 @@ class EipGraphCreator {
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
+    case (setHeader: SetHeaderProcessorDefinition) :: tail  => {
+      val headerName = setHeader.getHeaderName.getStringValue
+      val typeInformation = unionTypes(previous, CamelType(Set(), Set(headerName)))
+      val component = EipComponent(createId(setHeader), "translator", setHeader.getExpression.getValue, typeInformation, setHeader)
+      createEipGraph(List(component), tail, linkGraph(previous, component, graph))
+    }
+
     case (setBody: SetBodyProcessorDefinition) :: tail => {
       val component = EipComponent(createId(setBody), "translator", setBody.getExpression.getValue, unionTypes(previous), setBody)
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))

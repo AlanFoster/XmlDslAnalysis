@@ -7,7 +7,7 @@ import scala.xml.Elem
  * Represents a concrete implementation implementation of an EipDagSerializer
  * which contains all inferred type information/semantics from the original model.
  */
-class TypeEipDagSerializer extends EipDagSerializer {
+class BodyTypeEipDagSerializer extends EipDagSerializer {
   /**
    * Creates the XML for the given EipDag
    * @param eipDag The EipDag to convert

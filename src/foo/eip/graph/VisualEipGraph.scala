@@ -4,7 +4,7 @@ import edu.uci.ics.jung.visualization.{VisualizationModel, DefaultVisualizationM
 import java.awt._
 import org.apache.commons.collections15.Transformer
 import javax.swing._
-import java.awt.geom.{AffineTransform, Rectangle2D}
+import java.awt.geom.Rectangle2D
 import edu.uci.ics.jung.visualization.decorators.EdgeShape
 import edu.uci.ics.jung.visualization.control._
 import java.awt.event._
@@ -15,20 +15,16 @@ import foo.FunctionalUtil._
 import foo.eip.graph.loaders.{DefaultIconLoader, IconLoader}
 import foo.eip.graph.Visualisation.EipGraphVisualisation
 import foo.eip.graph.StaticGraphTypes.EipDAG
-import foo.eip.serializers.{TypeEipDagSerializer, EipDagSerializer}
+import foo.eip.serializers.BodyTypeEipDagSerializer
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph
-import edu.uci.ics.jung.graph.util.{TreeUtils, EdgeType}
-import foo.eip.graph.ADT.EmptyDAG
+import edu.uci.ics.jung.graph.util.EdgeType
 import scala.List
-import fr.inria.zvtm.engine.{View, VirtualSpace, VirtualSpaceManager}
-import fr.inria.zvtm.glyphs.{VImage, VRectangle, VCircle}
-import fr.inria.zvtm.engine.portals.{OverviewPortal, CameraPortal}
-import com.intellij.openapi.vcs.changes.dbCommitted.VcsSqliteLayer
-import edu.uci.ics.jung.io.GraphMLWriter
-import edu.uci.ics.jung.samples.{GraphZoomScrollPaneDemo, SatelliteViewDemo}
+import fr.inria.zvtm.engine.{View, VirtualSpaceManager}
+import fr.inria.zvtm.glyphs.{VImage, VCircle}
+import fr.inria.zvtm.engine.portals.OverviewPortal
 import edu.uci.ics.jung.algorithms.layout.{StaticLayout, TreeLayout}
 import javax.swing.border.LineBorder
-import foo.eip.graph.ADT.EmptyDAG
+
 import foo.eip.graph.ADT.EmptyDAG
 
 /**
@@ -292,7 +288,7 @@ class DebugGraphToXmlPlugin(eipDag: EipDAG) extends AbstractPopupGraphMousePlugi
     val popUp = new JPopupMenu()
     popUp.add(new AbstractAction("Output EIP") {
       def actionPerformed(e: ActionEvent): Unit = {
-        println(new TypeEipDagSerializer().serialize(eipDag))
+        println(new BodyTypeEipDagSerializer().serialize(eipDag))
       }
     })
     popUp.show(viewer, e.getX, e.getY)

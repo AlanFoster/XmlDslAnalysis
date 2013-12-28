@@ -6,7 +6,7 @@ import eip.EipDagAssert
 import foo.eip.serializers.CoreEipDagSerializer
 
 /**
- * Type inference tests for ensuring the validity of the EipCreator interface which converts a Dom tree into
+ * Core tests for ensuring the validity of the EipCreator interface which converts a Dom tree into
  * a more abstracted EIP Dag
  */
 class CoreEipCreatorTests

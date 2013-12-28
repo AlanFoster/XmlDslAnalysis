@@ -8,7 +8,7 @@ trait WhenDefinition extends DomElement with ExpressionDefinition{
   @Attribute("id")
   def getId: GenericAttributeValue[String]
 
-  @SubTagsList(Array("to", "inOut", "setBody", "choice", "wireTap", "bean"))
+  @SubTagsList(Array("to", "inOut", "setBody", "choice", "wireTap", "bean", "setHeader"))
   def getComponents: java.util.List[ProcessorDefinition]
 
   @SubTagList("wireTap")
@@ -22,6 +22,9 @@ trait WhenDefinition extends DomElement with ExpressionDefinition{
 
   @SubTagList("inOut")
   def getInOuts: java.util.List[ToProcessorDefinition]
+
+  @SubTagList("setHeader")
+  def getSetHeaders: java.util.List[SetHeaderProcessorDefinition]
 
   @SubTagList("setBody")
   def getBodies: java.util.List[SetBodyProcessorDefinition]

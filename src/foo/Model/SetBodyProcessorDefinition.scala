@@ -1,6 +1,6 @@
 package foo.Model
 
-import com.intellij.util.xml.{GenericValue, DomElement}
+import com.intellij.util.xml.DomElement
 
 trait SetBodyProcessorDefinition extends DomElement with ExpressionDefinition {
 
