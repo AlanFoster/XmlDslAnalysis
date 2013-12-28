@@ -19,7 +19,7 @@ class TypePropagationTests
    * Ensure that type information is cascaded to following processors within
    * the EIP Dag
    */
-  def ignoretestPipelineTypePropagation() {
+  def testPipelineTypePropagation() {
     doTest()
   }
 
@@ -27,7 +27,7 @@ class TypePropagationTests
    * Ensure that the type information from a call to setHeader understands the
    * resultType attribute, and propagates information accordingly.
    */
-  def ignoretestSingleSetHeader() {
+  def testSingleSetHeader() {
     doTest()
   }
 

@@ -60,39 +60,39 @@ class EipGraphCreator {
     case Nil => graph
 
     case (from: FromProcessorDefinition) :: tail => {
-      val component = EipComponent(createId(from), "from", from.getUri.getStringValue, from)
+      val component = EipComponent(createId(from), "from", from.getUri.getStringValue, CamelType("java.lang.Object"), from)
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
     case (wireTap: WireTapDefinition) :: tail => {
-      val component = EipComponent(createId(wireTap), "wireTap", wireTap.getUri.getStringValue, wireTap)
+      val component = EipComponent(createId(wireTap), "wireTap", wireTap.getUri.getStringValue, unionTypes(previous), wireTap)
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
     case (setBody: SetBodyProcessorDefinition) :: tail => {
-      val component = EipComponent(createId(setBody), "translator", setBody.getExpression.getValue, setBody)
+      val component = EipComponent(createId(setBody), "translator", setBody.getExpression.getValue, unionTypes(previous), setBody)
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
     case (to: ToProcessorDefinition) :: tail => {
-      val component = EipComponent(createId(to), "to", to.getUri.getStringValue, to)
+      val component = EipComponent(createId(to), "to", to.getUri.getStringValue, unionTypes(previous), to)
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
     case (bean: BeanDefinition) :: tail => {
-      val component = EipComponent(createId(bean), "to", bean.getRef.getStringValue, bean)
+      val component = EipComponent(createId(bean), "to", bean.getRef.getStringValue, unionTypes(previous),  bean)
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
     case (choice: ChoiceProcessorDefinition) :: tail => {
-      val choiceComponent = EipComponent(createId(choice), "choice", "choice", choice)
+      val choiceComponent = EipComponent(createId(choice), "choice", "choice", unionTypes(previous), choice)
       val linkedGraph = linkGraph(previous, choiceComponent, graph)
 
       // TODO When node should have its own vertex, with a text box with its predicate
       val (completedWhenGraph, previousDefinitions) = choice.getWhens.asScala.foldLeft((linkedGraph, List[EipComponent]()))({
         case ((eipGraph, lastProcessorDefinition), when) => {
           // Create the initial expression element from the when expression
-          val component = EipComponent(createId(when), "when", when.getExpression.getValue, when)
+          val component = EipComponent(createId(when), "when", when.getExpression.getValue, unionTypes(previous), when)
           val whenGraph = eipGraph.addVertex(component)
 
           // Apply the graph function recursively to produce all children nodes within the when expression
@@ -111,7 +111,7 @@ class EipGraphCreator {
     // We simply interpret it as a to component, so that we can still display
     // the information without crashing or such
     case unmatched :: tail => {
-      val component = EipComponent("", "to", "Error", unmatched)
+      val component = EipComponent("", "to", "Error", unionTypes(previous), unmatched)
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
   }
@@ -127,6 +127,15 @@ class EipGraphCreator {
     if(idAttribute.exists()) idAttribute.getStringValue
     else idAttribute.hashCode.toString
   }
+
+
+  def unionTypes(previous: List[EipComponent],
+                 current: CamelType = CamelType()) = {
+     previous
+       .map(_.semantics)
+       .foldLeft(current)((acc, next) => CamelType(acc.possibleBodyTypes ++ next.possibleBodyTypes, acc.headers ++ next.headers))
+  }
+
 }
 
 /**
