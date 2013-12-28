@@ -2,14 +2,14 @@
     <vertices>
         <vertex id="afterChoice" eipType="to" text="direct:afterChoice"/>
         <vertex id="foo" eipType="to" text="direct:foo"/>
-        <vertex id="when" eipType="when" text="Expression "/>
+        <vertex id="when" eipType="when" text="true"/>
         <vertex id="choice" eipType="choice" text="choice"/>
         <vertex id="from" eipType="from" text="direct:start"/>
     </vertices>
     <edges>
-        <edge source="foo" target="afterChoice" edgeConnection="foo_afterChoice"/>
-        <edge source="when" target="foo" edgeConnection="when_foo"/>
-        <edge source="choice" target="when" edgeConnection="choice_when"/>
-        <edge source="from" target="choice" edgeConnection="from_choice"/>
+        <edge source="foo" target="afterChoice" edgeConnection="foo_afterChoice3"/>
+        <edge source="when" target="foo" edgeConnection="when_foo2"/>
+        <edge source="choice" target="when" edgeConnection="choice_when1"/>
+        <edge source="from" target="choice" edgeConnection="from_choice0"/>
     </edges>
 </eipDag>

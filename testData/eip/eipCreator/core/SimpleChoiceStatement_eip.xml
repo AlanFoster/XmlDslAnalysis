@@ -1,17 +1,17 @@
 <eipDag>
     <vertices>
         <vertex id="processorBar" eipType="to" text="direct:processorBar"/>
-        <vertex id="secondWhen" eipType="when" text="Expression "/>
+        <vertex id="secondWhen" eipType="when" text="${body.bar} == &quot;bar&quot;"/>
         <vertex id="processorFoo" eipType="to" text="direct:processorFoo"/>
-        <vertex id="firstWhen" eipType="when" text="Expression "/>
+        <vertex id="firstWhen" eipType="when" text="${body.foo} == &quot;foo&quot;"/>
         <vertex id="choice" eipType="choice" text="choice"/>
         <vertex id="from" eipType="from" text="direct:start"/>
     </vertices>
     <edges>
-        <edge source="secondWhen" target="processorBar" edgeConnection="secondWhen_processorBar"/>
-        <edge source="choice" target="secondWhen" edgeConnection="choice_secondWhen"/>
-        <edge source="firstWhen" target="processorFoo" edgeConnection="firstWhen_processorFoo"/>
-        <edge source="choice" target="firstWhen" edgeConnection="choice_firstWhen"/>
-        <edge source="from" target="choice" edgeConnection="from_choice"/>
+        <edge source="secondWhen" target="processorBar" edgeConnection="secondWhen_processorBar4"/>
+        <edge source="choice" target="secondWhen" edgeConnection="choice_secondWhen3"/>
+        <edge source="firstWhen" target="processorFoo" edgeConnection="firstWhen_processorFoo2"/>
+        <edge source="choice" target="firstWhen" edgeConnection="choice_firstWhen1"/>
+        <edge source="from" target="choice" edgeConnection="from_choice0"/>
     </edges>
 </eipDag>

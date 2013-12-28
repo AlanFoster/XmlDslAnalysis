@@ -4,6 +4,6 @@
         <vertex id="first" eipType="from" text="direct:start"/>
     </vertices>
     <edges>
-        <edge source="first" target="second" edgeConnection="first_second"/>
+        <edge source="first" target="second" edgeConnection="first_second0"/>
     </edges>
 </eipDag>
