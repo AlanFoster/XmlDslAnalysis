@@ -69,9 +69,17 @@ class EipGraphCreator {
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
+    case (removeHeader: RemoveHeaderProcessorDefinition) :: tail => {
+      // TODO Remove a header from the semantic graph... somehow
+      val typeInformation = unionTypes(previous, CamelType(Set(), Map()))
+      val component = EipComponent(createId(removeHeader), "translator", removeHeader.getHeaderName.getStringValue, typeInformation, removeHeader)
+      createEipGraph(List(component), tail, linkGraph(previous, component, graph))
+    }
+
     case (setHeader: SetHeaderProcessorDefinition) :: tail  => {
+      // Add a new header definition to the semantic model of the graph
       val headerName = setHeader.getHeaderName.getStringValue
-      val typeInformation = unionTypes(previous, CamelType(Set(), Set(headerName)))
+      val typeInformation = unionTypes(previous, CamelType(Set(), Map(headerName -> setHeader)))
       val component = EipComponent(createId(setHeader), "translator", setHeader.getExpression.getValue, typeInformation, setHeader)
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }

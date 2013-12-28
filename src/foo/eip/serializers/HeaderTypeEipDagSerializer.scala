@@ -16,7 +16,7 @@ class HeaderTypeEipDagSerializer extends EipDagSerializer {
   def createXml(eipDag: EipDAG): Elem =
     <eipDag>
       <vertices>
-        {eipDag.vertices.map(vertex => <vertex id={vertex.id} eipType={vertex.eipType} text={vertex.text} headers={vertex.semantics.headers.toList.sortBy(identity).mkString("{", ", ", "}")}/>)}
+        {eipDag.vertices.map(vertex => <vertex id={vertex.id} eipType={vertex.eipType} text={vertex.text} headers={vertex.semantics.headers.keys.toList.sortBy(identity).mkString("{", ", ", "}")}/>)}
       </vertices>
       <edges>
         {eipDag.edges.map(edge => <edge source={edge.source.id} target={edge.target.id} edgeConnection={edge.edge}/>)}

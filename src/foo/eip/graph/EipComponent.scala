@@ -26,9 +26,10 @@ object EipComponent {
 }
 
 // Initial type semantic information
-class CamelType(val possibleBodyTypes: Set[String], val headers: Set[String])
+class CamelType(val possibleBodyTypes: Set[String], val headers: Map[String, ProcessorDefinition])
+
 object CamelType {
-  def apply(bodyType: String) = new CamelType(Set(bodyType), Set())
-  def apply() = new CamelType(Set(), Set())
-  def apply(bodyTypes: Set[String], headers: Set[String]) = new CamelType(bodyTypes, headers)
+  def apply(bodyType: String) = new CamelType(Set(bodyType), Map())
+  def apply() = new CamelType(Set(), Map())
+  def apply(bodyTypes: Set[String], headers: Map[String, ProcessorDefinition]) = new CamelType(bodyTypes, headers)
 }
