@@ -82,6 +82,11 @@
       -->
       <dom.fileDescription id="BlueprintDom" implementation="foo.BlueprintDomFile"/>
 
+      <!-- Provide an implementation for expression elements -->
+      <dom.implementation
+            interfaceClass="foo.Model.ExpressionDefinition"
+            implementationClass="foo.Model.impl.ExpressionDefinitionImpl" />
+
       <!--
           Represents the EIP Editor functionality within a Dom tree
         -->

@@ -70,7 +70,7 @@ class EipGraphCreator {
     }
 
     case (setBody: SetBodyProcessorDefinition) :: tail => {
-      val component = EipComponent(createId(setBody), "translator", "Expression ", setBody)
+      val component = EipComponent(createId(setBody), "translator", setBody.getExpression.getValue, setBody)
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
@@ -92,7 +92,7 @@ class EipGraphCreator {
       val (completedWhenGraph, previousDefinitions) = choice.getWhens.asScala.foldLeft((linkedGraph, List[EipComponent]()))({
         case ((eipGraph, lastProcessorDefinition), when) => {
           // Create the initial expression element from the when expression
-          val component = EipComponent(createId(when), "when", "Expression ", when)
+          val component = EipComponent(createId(when), "when", when.getExpression.getValue, when)
           val whenGraph = eipGraph.addVertex(component)
 
           // Apply the graph function recursively to produce all children nodes within the when expression

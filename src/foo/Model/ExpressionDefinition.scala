@@ -1,14 +1,14 @@
 package foo.Model
 
-import com.intellij.util.xml.{SubTagList, SubTagsList, DomElement}
+import com.intellij.util.xml.{SubTag, SubTagList, SubTagsList, DomElement}
 
 trait ExpressionDefinition extends DomElement with ProcessorDefinition {
-  @SubTagsList(Array("constant", "simple"))
+  // Implementation provided to get this working - Is there no annotation for this already?
   def getExpression: Expression
 
-  @SubTagList("constant")
+  @SubTag("constant")
   def getConstant: ConstantExpression
 
-  @SubTagList("simple")
+  @SubTag("simple")
   def getSimple: SimpleExpression
 }
