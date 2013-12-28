@@ -1,0 +1,33 @@
+<eipDag>
+    <vertices>
+        <vertex id="afterChoice" eipType="to" text="direct:afterChoice" headers="{firstHeader, initialHeader, secondHeader, thirdHeader}"/>
+        <vertex id="c" eipType="translator" text="3" headers="{initialHeader, secondHeader, thirdHeader}"/>
+        <vertex id="baz" eipType="to" text="direct:baz" headers="{initialHeader, secondHeader}"/>
+        <vertex id="b" eipType="translator" text="secondHeader" headers="{initialHeader, secondHeader}"/>
+        <vertex id="when3" eipType="when" text="true" headers="{initialHeader}"/>
+        <vertex id="bar" eipType="to" text="direct:bar" headers="{initialHeader}"/>
+        <vertex id="when2" eipType="when" text="true" headers="{initialHeader}"/>
+        <vertex id="a" eipType="translator" text="firstHeader" headers="{firstHeader, initialHeader}"/>
+        <vertex id="foo" eipType="to" text="direct:foo" headers="{initialHeader}"/>
+        <vertex id="when" eipType="when" text="true" headers="{initialHeader}"/>
+        <vertex id="choice" eipType="choice" text="choice" headers="{initialHeader}"/>
+        <vertex id="initialHeader" eipType="translator" text="initialHeader" headers="{initialHeader}"/>
+        <vertex id="from" eipType="from" text="direct:start" headers="{}"/>
+    </vertices>
+    <edges>
+        <edge source="a" target="afterChoice" edgeConnection="a_afterChoice13"/>
+        <edge source="bar" target="afterChoice" edgeConnection="bar_afterChoice12"/>
+        <edge source="c" target="afterChoice" edgeConnection="c_afterChoice11"/>
+        <edge source="baz" target="c" edgeConnection="baz_c10"/>
+        <edge source="b" target="baz" edgeConnection="b_baz9"/>
+        <edge source="when3" target="b" edgeConnection="when3_b8"/>
+        <edge source="choice" target="when3" edgeConnection="choice_when37"/>
+        <edge source="when2" target="bar" edgeConnection="when2_bar6"/>
+        <edge source="choice" target="when2" edgeConnection="choice_when25"/>
+        <edge source="foo" target="a" edgeConnection="foo_a4"/>
+        <edge source="when" target="foo" edgeConnection="when_foo3"/>
+        <edge source="choice" target="when" edgeConnection="choice_when2"/>
+        <edge source="initialHeader" target="choice" edgeConnection="initialHeader_choice1"/>
+        <edge source="from" target="initialHeader" edgeConnection="from_initialHeader0"/>
+    </edges>
+</eipDag>

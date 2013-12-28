@@ -25,6 +25,13 @@ class HeaderTypePropagationTests
   }
 
   /**
+   * Ensure header information converges when completing a choice statement
+   */
+  def testHeaderPropagationChoiceConverging() {
+    doTest()
+  }
+
+  /**
    * Ensures the test is valid
    */
   def doTest() {
