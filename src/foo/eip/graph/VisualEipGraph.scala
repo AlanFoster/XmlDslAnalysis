@@ -118,6 +118,38 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
 
     mainViewer.setLayout(new BorderLayout())
 
+
+    // Help Window
+/*    val helpLayer = new JLayeredPane
+
+    val helpPanel = new JPanel()
+    helpPanel.setLayout(new FlowLayout())
+    helpPanel.setBackground(Color.WHITE)
+    helpPanel.add(new JLabel("howdy!"))
+
+    helpLayer.setLayout(new FlowLayout(FlowLayout.CENTER))
+    helpLayer.add(helpPanel, BorderLayout.CENTER)
+
+    mainViewer.add(helpLayer, BorderLayout.CENTER)*/
+
+    // settings button handling
+/*    val button = new JButton(load("/eip/settings-32.png"))
+    button.setBorder(BorderFactory.createEmptyBorder())
+    button.setBackground(Color.WHITE)
+    button.setContentAreaFilled(false)
+    button.addActionListener (new ActionListener {
+      def actionPerformed(e: ActionEvent): Unit = {
+        helpLayer.setVisible(true)
+      }
+    })*/
+
+/*    val settingsLayer = new JLayeredPane
+    settingsLayer.setLayout(new FlowLayout(FlowLayout.RIGHT))
+    settingsLayer.add(button, BorderLayout.LINE_END)
+    mainViewer.add(settingsLayer, BorderLayout.NORTH)*/
+
+
+    // Satellite View
     val rightHandSideBoxLayer = new JLayeredPane
     rightHandSideBoxLayer.setLayout(new FlowLayout(FlowLayout.RIGHT))
     rightHandSideBoxLayer.add(satelliteViewer, BorderLayout.LINE_END)
