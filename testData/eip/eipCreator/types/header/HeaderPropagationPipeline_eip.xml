@@ -1,0 +1,21 @@
+<eipDag>
+    <vertices>
+        <vertex id="bar" eipType="to" text="direct:bar" headers="{firstHeader, secondHeader, thirdHeader}"/>
+        <vertex id="e" eipType="translator" text="${body}" headers="{firstHeader, secondHeader, thirdHeader}"/>
+        <vertex id="d" eipType="translator" text="${body}" headers="{firstHeader, secondHeader, thirdHeader}"/>
+        <vertex id="c" eipType="translator" text="${body}" headers="{firstHeader, secondHeader}"/>
+        <vertex id="foo" eipType="to" text="direct:foo" headers="{firstHeader, secondHeader}"/>
+        <vertex id="b" eipType="translator" text="${body}" headers="{firstHeader, secondHeader}"/>
+        <vertex id="a" eipType="translator" text="${body}" headers="{firstHeader}"/>
+        <vertex id="first" eipType="from" text="direct:start" headers="{}"/>
+    </vertices>
+    <edges>
+        <edge source="e" target="bar" edgeConnection="e_bar6"/>
+        <edge source="d" target="e" edgeConnection="d_e5"/>
+        <edge source="c" target="d" edgeConnection="c_d4"/>
+        <edge source="foo" target="c" edgeConnection="foo_c3"/>
+        <edge source="b" target="foo" edgeConnection="b_foo2"/>
+        <edge source="a" target="b" edgeConnection="a_b1"/>
+        <edge source="first" target="a" edgeConnection="first_a0"/>
+    </edges>
+</eipDag>

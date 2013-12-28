@@ -2,7 +2,7 @@ package eip.eipCreator
 
 import impl.TestBase
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import foo.eip.serializers.BodyTypeEipDagSerializer
+import foo.eip.serializers.{HeaderTypeEipDagSerializer, BodyTypeEipDagSerializer}
 import eip.EipDagAssert
 
 /**
@@ -18,9 +18,16 @@ class HeaderTypePropagationTests
   override def getTestDataPath: String = testDataMapper("/eip/eipCreator/types/header")
 
   /**
+   * Tests header information is union within a pipeline
+   */
+  def testHeaderPropagationPipeline() {
+    doTest()
+  }
+
+  /**
    * Ensures the test is valid
    */
   def doTest() {
-    EipDagAssert.doTest(myFixture, getTestName(false), new BodyTypeEipDagSerializer)
+    EipDagAssert.doTest(myFixture, getTestName(false), new HeaderTypeEipDagSerializer)
   }
 }

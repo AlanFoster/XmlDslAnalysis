@@ -5,9 +5,9 @@ import scala.xml.Elem
 
 /**
  * Represents a concrete implementation implementation of an EipDagSerializer
- * which contains all inferred body type information/semantics from the original model.
+ * which contains header inferred type information/semantics from the original model.
  */
-class BodyTypeEipDagSerializer extends EipDagSerializer {
+class HeaderTypeEipDagSerializer extends EipDagSerializer {
   /**
    * Creates the XML for the given EipDag
    * @param eipDag The EipDag to convert
@@ -16,7 +16,7 @@ class BodyTypeEipDagSerializer extends EipDagSerializer {
   def createXml(eipDag: EipDAG): Elem =
     <eipDag>
       <vertices>
-        {eipDag.vertices.map(vertex => <vertex id={vertex.id} eipType={vertex.eipType} text={vertex.text} inferredType={vertex.semantics.possibleBodyTypes.mkString("{", ", ", "}")} />)}
+        {eipDag.vertices.map(vertex => <vertex id={vertex.id} eipType={vertex.eipType} text={vertex.text} headers={vertex.semantics.headers.toList.sortBy(identity).mkString("{", ", ", "}")}/>)}
       </vertices>
       <edges>
         {eipDag.edges.map(edge => <edge source={edge.source.id} target={edge.target.id} edgeConnection={edge.edge}/>)}
