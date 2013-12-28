@@ -412,16 +412,16 @@ object Starter {
   def JUNG() = {
     import EipGraphCreator._
 
-    val from = EipComponent("from", "from", "from", null)
-    val choice = EipComponent("choice", "choice", "choice", null)
+    val from = EipComponent("from", "from", "from", CamelType(), null)
+    val choice = EipComponent("choice", "choice", "choice", CamelType(), null)
 
-    val when1 = EipComponent("when1", "when", "when1", null)
-    val foo = EipComponent("foo", "to", "foo", null)
+    val when1 = EipComponent("when1", "when", "when1", CamelType(), null)
+    val foo = EipComponent("foo", "to", "foo", CamelType(), null)
 
-    val when2 = EipComponent("when2", "when", "when2", null)
-    val bar = EipComponent("bar", "to", "bar", null)
+    val when2 = EipComponent("when2", "when", "when2", CamelType(), null)
+    val bar = EipComponent("bar", "to", "bar", CamelType(), null)
 
-    val afterChoice = EipComponent("afterChoice", "to", "afterChoice", null)
+    val afterChoice = EipComponent("afterChoice", "to", "afterChoice", CamelType(), null)
 
     val eipDag = EmptyDAG[EipComponent, String]()
       .linkComponents(List(), from)
