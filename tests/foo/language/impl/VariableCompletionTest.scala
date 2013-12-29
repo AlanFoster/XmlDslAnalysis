@@ -2,9 +2,6 @@ package foo.language.impl
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import com.intellij.codeInsight.completion.CompletionType
-import scala.collection.JavaConverters._
-import org.unitils.reflectionassert.ReflectionAssert._
-import org.unitils.reflectionassert.ReflectionComparatorMode._
 import foo.language.Core.LanguageConstants
 import foo.TestBase
 
@@ -101,6 +98,10 @@ class VariableCompletionTest
    * @param expectedStrings The expected list of contributed strings
    */
   def doTest(expectedStrings: List[String]) {
+    import scala.collection.JavaConverters._
+    import org.unitils.reflectionassert.ReflectionAssert._
+    import org.unitils.reflectionassert.ReflectionComparatorMode._
+
     val name = getTestName(false)
     myFixture.configureByFile(s"${name}.${LanguageConstants.extension}")
     myFixture.complete(CompletionType.BASIC, 1)
