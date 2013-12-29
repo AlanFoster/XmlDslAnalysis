@@ -3,7 +3,7 @@ package foo.language.debugger
 import com.intellij.xdebugger.breakpoints.{XBreakpointProperties, XLineBreakpointType}
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.project.Project
-import foo.DomFileAccessor
+import foo.dom.DomFileAccessor
 
 /**
  * Represents an implementation of the XLineBreakpoingType which allow the user to place breakpoints

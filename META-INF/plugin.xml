@@ -84,12 +84,12 @@
         Represents the top level blueprint DOM description, which provides an abstraction layer
         for interacting with XML - rather than having to deal with null possible PSI elements
       -->
-      <dom.fileDescription id="BlueprintDom" implementation="foo.BlueprintDomFile"/>
+      <dom.fileDescription id="BlueprintDom" implementation="foo.dom.BlueprintDomFile"/>
 
       <!-- Provide an implementation for expression elements -->
       <dom.implementation
-            interfaceClass="foo.Model.ExpressionDefinition"
-            implementationClass="foo.Model.impl.ExpressionDefinitionImpl" />
+            interfaceClass="foo.dom.Model.ExpressionDefinition"
+            implementationClass="foo.dom.Model.impl.ExpressionDefinitionImpl" />
 
       <!--
           Represents the EIP Editor functionality within a Dom tree

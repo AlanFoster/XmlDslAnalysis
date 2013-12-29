@@ -1,6 +1,6 @@
 package foo.eip.graph
 
-import foo.Model.ProcessorDefinition
+import foo.dom.Model.ProcessorDefinition
 
 /**
  * Represents a basic class which can be represented within the context of an

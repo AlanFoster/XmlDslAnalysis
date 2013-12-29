@@ -4,7 +4,8 @@ import com.intellij.openapi.fileEditor._
 import com.intellij.openapi.project.{Project, DumbAware}
 import org.jdom.Element
 import com.intellij.openapi.vfs.VirtualFile
-import foo.DomFileAccessor._
+import foo.dom.DomFileAccessor
+import DomFileAccessor._
 
 /**
  * Represents the EipEditorProvider, which acts as a factory for FileEditors.

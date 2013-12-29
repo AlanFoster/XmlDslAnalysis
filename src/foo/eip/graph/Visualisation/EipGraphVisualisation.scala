@@ -1,7 +1,6 @@
 package foo.eip.graph.Visualisation
 
 import edu.uci.ics.jung.visualization.VisualizationViewer
-import foo.Model.ProcessorDefinition
 import foo.eip.graph.GraphGlue
 import foo.eip.graph.StaticGraphTypes.EipDAG
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph
@@ -9,6 +8,7 @@ import edu.uci.ics.jung.graph.util.EdgeType
 import edu.uci.ics.jung.algorithms.layout.{StaticLayout, TreeLayout}
 import foo.eip.graph.ADT.Graph
 import java.awt.Dimension
+import foo.dom.Model.ProcessorDefinition
 
 
 /**

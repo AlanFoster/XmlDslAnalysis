@@ -1,9 +1,11 @@
 package foo.eip.graph
 
-import foo.Model._
+import foo.dom.Model._
 
 import foo.eip.graph.StaticGraphTypes.EipDAG
 import scala.collection.JavaConverters._
+import foo.eip.graph.ADT.EmptyDAG
+import foo.dom.Model._
 import foo.eip.graph.ADT.EmptyDAG
 
 /**

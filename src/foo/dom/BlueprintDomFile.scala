@@ -1,8 +1,9 @@
-package foo
+package foo.dom
 
 import com.intellij.util.xml.DomFileDescription
-import foo.Model.Blueprint
 import javax.swing.Icon
+import foo.Icons
+import foo.dom.Model.Blueprint
 
 /**
  * Defines the BlueprintDom file description for the Blueprint root node.

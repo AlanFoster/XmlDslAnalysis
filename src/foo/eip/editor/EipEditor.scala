@@ -12,12 +12,12 @@ import foo.eip.graph.{EipGraphCreator, VisualEipGraph}
 import foo.eip.graph.loaders.IntellijIconLoader
 import foo.FunctionalUtil._
 import java.awt.GridLayout
-import foo.Model.Blueprint
 import scala.collection.JavaConverters._
 import com.intellij.openapi.ui.popup.{Balloon, JBPopupFactory}
 import com.intellij.openapi.ui.MessageType
 import com.intellij.ui.awt.RelativePoint
-import foo.DomFileAccessor
+import foo.dom.DomFileAccessor
+import foo.dom.Model.Blueprint
 
 /**
  * Creates and visualises the given XML DSl as a graph.

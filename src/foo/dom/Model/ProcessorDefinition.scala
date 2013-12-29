@@ -1,4 +1,4 @@
-package foo.Model
+package foo.dom.Model
 
 import com.intellij.util.xml.{GenericAttributeValue, DomElement, Attribute}
 import org.jetbrains.annotations._

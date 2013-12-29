@@ -1,7 +1,7 @@
-package foo.Model
+package foo.dom.Model
 
 import com.intellij.util.xml._
-import foo.ClearHeaderResolvingConverter
+import foo.dom.converters.ClearHeaderResolvingConverter
 
 trait RemoveHeaderProcessorDefinition extends DomElement with ProcessorDefinition {
   /**

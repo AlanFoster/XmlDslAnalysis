@@ -1,4 +1,4 @@
-package foo
+package foo.dom
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -6,7 +6,7 @@ import com.intellij.openapi.fileTypes.StdFileTypes
 import com.intellij.util.xml.{DomElement, DomManager}
 import com.intellij.psi.PsiManager
 import com.intellij.psi.xml.XmlFile
-import foo.Model.Blueprint
+import foo.dom.Model.Blueprint
 
 /**
  * Represents functions which are useful to gain access to core DomFile

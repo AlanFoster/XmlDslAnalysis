@@ -3,7 +3,6 @@ package foo.language
 import com.intellij.psi._
 import com.intellij.patterns.XmlPatterns._
 import com.intellij.patterns.DomPatterns._
-import foo.Model.SimpleExpression
 import com.intellij.psi.xml.{XmlText, XmlTag}
 import foo.language.Core.CamelLanguage
 import com.intellij.openapi.util.TextRange
@@ -12,6 +11,7 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.search.PsiShortNamesCache
 import java.net.URLDecoder
 import org.apache.commons.lang.StringEscapeUtils
+import foo.dom.Model.SimpleExpression
 
 /**
  * Injects the apache camel language into the DOM elements which are 'Simple' expressions

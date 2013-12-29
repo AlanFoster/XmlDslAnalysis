@@ -1,4 +1,4 @@
-package foo
+package foo.dom.converters
 
 import com.intellij.util.xml.{ElementPresentationManager, DomElement, ConvertContext, ResolvingConverter}
 import java.util
@@ -6,7 +6,8 @@ import com.intellij.psi.PsiElement
 import foo.eip.graph.EipGraphCreator
 import scala.collection.JavaConverters._
 import java.util.Collections
-import foo.Model.{SetHeaderProcessorDefinition, ProcessorDefinition}
+import foo.dom.DomFileAccessor
+import foo.dom.Model.ProcessorDefinition
 
 
 /**
