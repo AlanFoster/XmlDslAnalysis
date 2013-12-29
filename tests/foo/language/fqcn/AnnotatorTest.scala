@@ -1,7 +1,7 @@
-package impl.fqcn
+package foo.language.fqcn
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import impl.JavaJDK1_7TestBase
+import foo.JavaJDK1_7TestBase
 
 /**
  * Tests to ensure that unresolved references are highlighted as red
@@ -10,7 +10,7 @@ class AnnotatorTest
   extends LightCodeInsightFixtureTestCase
   with JavaJDK1_7TestBase {
 
-  override def getTestDataPath: String = testDataMapper("/fqcn/annotator")
+  override def getTestDataPath: String = testDataMapper("/foo/language/fqcn/annotator")
 
   /**
    * Ensure highlighting is correct when the last class/package element does not exist

@@ -1,9 +1,9 @@
-package eip.eipCreator
+package foo.eip.eipCreator
 
-import impl.TestBase
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import foo.eip.serializers.{HeaderTypeEipDagSerializer, BodyTypeEipDagSerializer}
-import eip.EipDagAssert
+import foo.eip.EipDagAssert
+import foo.TestBase
 
 /**
  * Type inference tests for ensuring the validity of the EipCreator interface which converts a Dom tree into
@@ -15,7 +15,7 @@ class HeaderTypePropagationTests
   extends LightCodeInsightFixtureTestCase
   with TestBase{
 
-  override def getTestDataPath: String = testDataMapper("/eip/eipCreator/types/header")
+  override def getTestDataPath: String = testDataMapper("/foo/eip/eipCreator/types/header")
 
   /**
    * Tests header information is union within a pipeline

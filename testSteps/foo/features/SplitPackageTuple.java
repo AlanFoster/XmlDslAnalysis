@@ -1,7 +1,7 @@
-package features;
+package foo.features;
 
 /**
- * Represents a concrete implementatoin of an expected Token tuple used
+ * Represents a concrete implementation of an expected Token tuple used
  * within the CucumberJVM behaviour tests
  */
 public class SplitPackageTuple {

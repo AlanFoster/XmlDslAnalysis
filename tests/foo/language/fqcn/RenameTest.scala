@@ -1,7 +1,7 @@
-package impl.fqcn
+package foo.language.fqcn
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import impl.{CommonTestClasses, JavaJDK1_7TestBase}
+import foo.{CommonTestClasses, JavaJDK1_7TestBase}
 
 /**
  * Tests to ensure that elements can be renamed as expected
@@ -11,7 +11,7 @@ class RenameTest
   with JavaJDK1_7TestBase
   with CommonTestClasses {
 
-  override def getTestDataPath: String = testDataMapper("/fqcn/rename")
+  override def getTestDataPath: String = testDataMapper("/foo/language/fqcn/rename")
 
   /**
    * Test to ensure that class renaming is supported

@@ -1,4 +1,4 @@
-package impl
+package foo.language.impl
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import foo.language.CamelParameterInfoHandler
@@ -10,6 +10,7 @@ import com.intellij.lang.parameterInfo.ParameterInfoHandler
 import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiFile
 import foo.language.Core.CamelFileType
+import foo.TestBase
 
 /**
  * Tests to ensure that the ParameterInfo implementation is valid.
@@ -19,7 +20,12 @@ class ParameterInfoTest
   extends LightCodeInsightFixtureTestCase
   with TestBase {
 
-  override def getTestDataPath: String = testDataMapper("/parameterInfo")
+  /**
+   * Note this test does not explicitly make use of external data, instead tests are constructed
+   * via strings
+   * @return
+   */
+  override def getTestDataPath: String = testDataMapper("/foo/language/parameterInfo")
 
   /**
    * The type signature of the ParameterInfoHandler implementation

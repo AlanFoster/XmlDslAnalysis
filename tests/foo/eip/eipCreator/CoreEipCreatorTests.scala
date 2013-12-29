@@ -1,9 +1,9 @@
-package eip.eipCreator
+package foo.eip.eipCreator
 
-import impl.TestBase
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import eip.EipDagAssert
 import foo.eip.serializers.CoreEipDagSerializer
+import foo.eip.EipDagAssert
+import foo.TestBase
 
 /**
  * Core tests for ensuring the validity of the EipCreator interface which converts a Dom tree into
@@ -11,9 +11,9 @@ import foo.eip.serializers.CoreEipDagSerializer
  */
 class CoreEipCreatorTests
   extends LightCodeInsightFixtureTestCase
-  with TestBase{
+  with TestBase {
 
-  override def getTestDataPath: String = testDataMapper("/eip/eipCreator/core")
+  override def getTestDataPath: String = testDataMapper("/foo/eip/eipCreator/core")
 
   /**
    * Performs the expected assertion between the loaded dom file and the created Eip DAG

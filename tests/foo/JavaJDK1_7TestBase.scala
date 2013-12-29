@@ -1,4 +1,4 @@
-package impl
+package foo
 
 import com.intellij.testFramework.fixtures.{DefaultLightProjectDescriptor, LightCodeInsightFixtureTestCase}
 import com.intellij.testFramework.LightProjectDescriptor

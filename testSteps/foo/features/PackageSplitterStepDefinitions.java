@@ -1,4 +1,4 @@
-package features;
+package foo.features;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;

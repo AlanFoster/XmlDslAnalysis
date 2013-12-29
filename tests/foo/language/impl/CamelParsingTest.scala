@@ -1,9 +1,10 @@
-package impl
+package foo.language.impl
 
 import com.intellij.testFramework.ParsingTestCase
 import foo.language.Core.LanguageConstants
 import foo.language.parser.CamelParserDefinition
 import java.io.File
+import foo.TestBase
 
 /**
  * Camel Parsing tests.
@@ -17,7 +18,7 @@ class CamelParsingTest
   extends ParsingTestCase("", LanguageConstants.extension, new CamelParserDefinition)
   with TestBase {
 
-  override def getTestDataPath: String = testDataMapper("/parsing")
+  override def getTestDataPath: String = testDataMapper("/foo/language/parsing")
 
   /**
    * Basic Parsing Test

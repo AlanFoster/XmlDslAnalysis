@@ -1,4 +1,4 @@
-package eip
+package foo.eip
 
 import foo.eip.graph.StaticGraphTypes._
 import scala.xml.{PrettyPrinter, Elem}

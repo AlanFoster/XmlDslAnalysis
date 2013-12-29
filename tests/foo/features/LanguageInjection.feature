@@ -34,7 +34,6 @@ Feature: Language Injection
   Examples:
     | example_xml                             | example_childText | example_range |
     | <simple>${body} < 10 </simple>          | 10                | 0             |
-    | <simple>${body} <><><><<<><>< </simple> |                   | 0             |
 
 
   Scenario Outline: Entity Encoding should be taken into consideration

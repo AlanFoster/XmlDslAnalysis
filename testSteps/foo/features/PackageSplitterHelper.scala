@@ -1,4 +1,4 @@
-package features
+package foo.features
 
 import scala.collection.JavaConverters._
 

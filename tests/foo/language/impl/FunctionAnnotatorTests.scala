@@ -1,7 +1,8 @@
-package impl
+package foo.language.impl
 
 import foo.language.Core.LanguageConstants
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
+import foo.{JavaJDK1_7TestBase, TestBase}
 
 /**
  * Tests for ensuring the function annotator works as expected with the Apache Camel
@@ -12,7 +13,7 @@ class FunctionAnnotatorTests
   with JavaJDK1_7TestBase
   with TestBase {
 
-  override def getTestDataPath: String = testDataMapper("/annotators/functions")
+  override def getTestDataPath: String = testDataMapper("/foo/language/annotators/functions")
 
   /**
    * Tests for string in a place of a class

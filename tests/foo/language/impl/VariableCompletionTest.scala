@@ -1,4 +1,4 @@
-package impl
+package foo.language.impl
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import com.intellij.codeInsight.completion.CompletionType
@@ -6,6 +6,7 @@ import scala.collection.JavaConverters._
 import org.unitils.reflectionassert.ReflectionAssert._
 import org.unitils.reflectionassert.ReflectionComparatorMode._
 import foo.language.Core.LanguageConstants
+import foo.TestBase
 
 /**
  * Tests for variable completion within the apache camel language
@@ -14,7 +15,7 @@ class VariableCompletionTest
  extends LightCodeInsightFixtureTestCase
  with TestBase {
 
-  override def getTestDataPath: String = testDataMapper("/contribution")
+  override def getTestDataPath: String = testDataMapper("/foo/language/contribution")
 
   /**
    * Testing that core camel variables are contributed

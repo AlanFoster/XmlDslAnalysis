@@ -1,10 +1,10 @@
-package impl.fqcn
+package foo.language.fqcn
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import scala.collection.JavaConverters._
 import org.unitils.reflectionassert.ReflectionAssert._
 import org.unitils.reflectionassert.ReflectionComparatorMode._
-import impl.JavaJDK1_7TestBase
+import foo.JavaJDK1_7TestBase
 
 
 /**
@@ -15,7 +15,7 @@ class VariantsTest
   extends LightCodeInsightFixtureTestCase
   with JavaJDK1_7TestBase {
 
-  override def getTestDataPath: String = testDataMapper("/fqcn/variants")
+  override def getTestDataPath: String = testDataMapper("/foo/language/fqcn/variants")
 
   def testPackageVariantsSuggestedWhenNoExistingText() {
     val expected = List(
