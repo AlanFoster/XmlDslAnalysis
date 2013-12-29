@@ -31,6 +31,21 @@ class HeaderTypePropagationTests
     doTest()
   }
 
+
+  /**
+   * Ensure that header information unions within nested choice statements that converge
+   */
+  def testNestedChoiceConverging() {
+    doTest()
+  }
+
+  /**
+   * Ensure header propagation occurs in more complex nested choice statements
+   */
+  def testThreeNestedChoice() {
+    doTest()
+  }
+
   /**
    * Ensures the test is valid
    */

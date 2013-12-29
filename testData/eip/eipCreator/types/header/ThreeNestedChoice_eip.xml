@@ -1,0 +1,33 @@
+<eipDag>
+    <vertices>
+        <vertex id="id13" eipType="to" text="direct:end" headers="{a, b, c, d, e}"/>
+        <vertex id="id12" eipType="translator" text="e -&gt; true" headers="{a, c, e}"/>
+        <vertex id="id11" eipType="when" text="false" headers="{a, c}"/>
+        <vertex id="id10" eipType="translator" text="d -&gt; true" headers="{a, c, d}"/>
+        <vertex id="id9" eipType="when" text="true" headers="{a, c}"/>
+        <vertex id="id8" eipType="choice" text="choice" headers="{a, c}"/>
+        <vertex id="id7" eipType="translator" text="c -&gt; true" headers="{a, c}"/>
+        <vertex id="id5" eipType="when" text="false" headers="{a}"/>
+        <vertex id="id4" eipType="translator" text="b -&gt; true" headers="{a, b}"/>
+        <vertex id="id3" eipType="when" text="true" headers="{a}"/>
+        <vertex id="id2" eipType="choice" text="choice" headers="{a}"/>
+        <vertex id="id1" eipType="translator" text="a -&gt; true" headers="{a}"/>
+        <vertex id="from" eipType="from" text="direct:start" headers="{}"/>
+    </vertices>
+    <edges>
+        <edge source="id4" target="id13" edgeConnection="id4_id1313"/>
+        <edge source="id10" target="id13" edgeConnection="id10_id1312"/>
+        <edge source="id12" target="id13" edgeConnection="id12_id1311"/>
+        <edge source="id11" target="id12" edgeConnection="id11_id1210"/>
+        <edge source="id8" target="id11" edgeConnection="id8_id119"/>
+        <edge source="id9" target="id10" edgeConnection="id9_id108"/>
+        <edge source="id8" target="id9" edgeConnection="id8_id97"/>
+        <edge source="id7" target="id8" edgeConnection="id7_id86"/>
+        <edge source="id5" target="id7" edgeConnection="id5_id75"/>
+        <edge source="id2" target="id5" edgeConnection="id2_id54"/>
+        <edge source="id3" target="id4" edgeConnection="id3_id43"/>
+        <edge source="id2" target="id3" edgeConnection="id2_id32"/>
+        <edge source="id1" target="id2" edgeConnection="id1_id21"/>
+        <edge source="from" target="id1" edgeConnection="from_id10"/>
+    </edges>
+</eipDag>

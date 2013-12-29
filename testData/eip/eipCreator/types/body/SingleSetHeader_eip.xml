@@ -1,7 +1,7 @@
 <eipDag>
     <vertices>
         <vertex id="third" eipType="to" text="direct:foo" inferredType="{java.lang.Object}"/>
-        <vertex id="setHeader" eipType="translator" text="${body}" inferredType="{java.lang.Object}"/>
+        <vertex id="setHeader" eipType="translator" text="firstHeader -&gt; ${body}" inferredType="{java.lang.Object}"/>
         <vertex id="first" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
     </vertices>
     <edges>

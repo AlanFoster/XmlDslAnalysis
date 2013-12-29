@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:camel="http://camel.apache.org/schema/blueprint"
+           xsi:schemaLocation="
+       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+    <camelContext trace="true" xmlns="http://camel.apache.org/schema/blueprint">
+        <route>
+            <from id="first" uri="direct:start"/>
+
+            <to id="beforeChoice" uri="direct:foo" />
+            <choice id="outerChoice">
+                <when id="outerChoiceWhen1">
+                    <constant>true</constant>
+                    <setHeader id="outerHeader" headerName="outerHeader">
+                        <constant>inner</constant>
+                    </setHeader>
+                    <choice id="innerChoice">
+                        <when id="innerChoiceWhen1">
+                            <constant>true</constant>
+                            <setHeader id="innerChoiceWhen1Header" headerName="innerChoiceWhen1Header">
+                                <constant>true</constant>
+                            </setHeader>
+                        </when>
+                        <when id="innerChoiceWhen2">
+                            <constant>true</constant>
+                            <to id="beforeInnerHeader" uri="direct:beforeInnerHeader" />
+                            <setHeader id="innerChoiceWhen2Header" headerName="innerChoiceWhen2Header">
+                                <constant>outer</constant>
+                            </setHeader>
+                            <to id="afterInnerHeader" uri="direct:afterInnerHeader" />
+                        </when>
+                    </choice>
+                    <to id="afterOuterChoice" uri="direct:afterOuterChoice"/>
+                </when>
+            </choice>
+            <to id="endProcessor" uri="direct:end" />
+        </route>
+    </camelContext>
+</blueprint>

@@ -1,0 +1,35 @@
+<eipDag>
+    <vertices>
+        <vertex id="endProcessor" eipType="to" text="direct:end" headers="{innerChoiceWhen1Header, innerChoiceWhen2Header, outerHeader}"/>
+        <vertex id="afterOuterChoice" eipType="to" text="direct:afterOuterChoice" headers="{innerChoiceWhen1Header, innerChoiceWhen2Header, outerHeader}"/>
+        <vertex id="afterInnerHeader" eipType="to" text="direct:afterInnerHeader" headers="{innerChoiceWhen2Header, outerHeader}"/>
+        <vertex id="innerChoiceWhen2Header" eipType="translator" text="innerChoiceWhen2Header -&gt; outer" headers="{innerChoiceWhen2Header, outerHeader}"/>
+        <vertex id="beforeInnerHeader" eipType="to" text="direct:beforeInnerHeader" headers="{outerHeader}"/>
+        <vertex id="innerChoiceWhen2" eipType="when" text="true" headers="{outerHeader}"/>
+        <vertex id="innerChoiceWhen1Header" eipType="translator" text="innerChoiceWhen1Header -&gt; true" headers="{innerChoiceWhen1Header, outerHeader}"/>
+        <vertex id="innerChoiceWhen1" eipType="when" text="true" headers="{outerHeader}"/>
+        <vertex id="innerChoice" eipType="choice" text="choice" headers="{outerHeader}"/>
+        <vertex id="outerHeader" eipType="translator" text="outerHeader -&gt; inner" headers="{outerHeader}"/>
+        <vertex id="outerChoiceWhen1" eipType="when" text="true" headers="{}"/>
+        <vertex id="outerChoice" eipType="choice" text="choice" headers="{}"/>
+        <vertex id="beforeChoice" eipType="to" text="direct:foo" headers="{}"/>
+        <vertex id="first" eipType="from" text="direct:start" headers="{}"/>
+    </vertices>
+    <edges>
+        <edge source="afterOuterChoice" target="endProcessor" edgeConnection="afterOuterChoice_endProcessor14"/>
+        <edge source="afterOuterChoice" target="endProcessor" edgeConnection="afterOuterChoice_endProcessor13"/>
+        <edge source="innerChoiceWhen1Header" target="afterOuterChoice" edgeConnection="innerChoiceWhen1Header_afterOuterChoice12"/>
+        <edge source="afterInnerHeader" target="afterOuterChoice" edgeConnection="afterInnerHeader_afterOuterChoice11"/>
+        <edge source="innerChoiceWhen2Header" target="afterInnerHeader" edgeConnection="innerChoiceWhen2Header_afterInnerHeader10"/>
+        <edge source="beforeInnerHeader" target="innerChoiceWhen2Header" edgeConnection="beforeInnerHeader_innerChoiceWhen2Header9"/>
+        <edge source="innerChoiceWhen2" target="beforeInnerHeader" edgeConnection="innerChoiceWhen2_beforeInnerHeader8"/>
+        <edge source="innerChoice" target="innerChoiceWhen2" edgeConnection="innerChoice_innerChoiceWhen27"/>
+        <edge source="innerChoiceWhen1" target="innerChoiceWhen1Header" edgeConnection="innerChoiceWhen1_innerChoiceWhen1Header6"/>
+        <edge source="innerChoice" target="innerChoiceWhen1" edgeConnection="innerChoice_innerChoiceWhen15"/>
+        <edge source="outerHeader" target="innerChoice" edgeConnection="outerHeader_innerChoice4"/>
+        <edge source="outerChoiceWhen1" target="outerHeader" edgeConnection="outerChoiceWhen1_outerHeader3"/>
+        <edge source="outerChoice" target="outerChoiceWhen1" edgeConnection="outerChoice_outerChoiceWhen12"/>
+        <edge source="beforeChoice" target="outerChoice" edgeConnection="beforeChoice_outerChoice1"/>
+        <edge source="first" target="beforeChoice" edgeConnection="first_beforeChoice0"/>
+    </edges>
+</eipDag>

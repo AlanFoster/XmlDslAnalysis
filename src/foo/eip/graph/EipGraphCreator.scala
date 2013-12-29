@@ -80,7 +80,9 @@ class EipGraphCreator {
       // Add a new header definition to the semantic model of the graph
       val headerName = setHeader.getHeaderName.getStringValue
       val typeInformation = unionTypes(previous, CamelType(Set(), Map(headerName -> setHeader)))
-      val component = EipComponent(createId(setHeader), "translator", setHeader.getExpression.getValue, typeInformation, setHeader)
+      val expressionValue = setHeader.getExpression.getValue
+      val text = headerName + " -> " + expressionValue
+      val component = EipComponent(createId(setHeader), "translator", text, typeInformation, setHeader)
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
@@ -108,13 +110,23 @@ class EipGraphCreator {
         case ((eipGraph, lastProcessorDefinition), when) => {
           // Create the initial expression element from the when expression
           val component = EipComponent(createId(when), "when", when.getExpression.getValue, unionTypes(previous), when)
-          val whenGraph = eipGraph.addVertex(component)
+          val linkedGraph = linkGraph(List(choiceComponent), component, eipGraph)
 
           // Apply the graph function recursively to produce all children nodes within the when expression
-          val linkedGraph = addEdge(choiceComponent, component, whenGraph)(UniqueString)
           val whenSubGraph = createEipGraph(List(component), when.getComponents.asScala.toList, linkedGraph)
 
-          (whenSubGraph, whenSubGraph.vertices.head :: lastProcessorDefinition)
+          // get all leaf nodes which are contained within the subgraph
+          // ie all descendants of the parent when node
+          val leafNodes = {
+            def getLeafNodes(parent: EipComponent, graph: EipDAG, leafNodes: List[EipComponent]): List[EipComponent] = {
+              val children = graph.edges.toList.filter(_.source == parent)
+              if(children.isEmpty) parent :: leafNodes
+              else  children.flatMap(child => getLeafNodes(child.target, graph, leafNodes))
+            }
+            getLeafNodes(component, whenSubGraph, List())
+          }
+
+          (whenSubGraph, leafNodes ::: lastProcessorDefinition)
         }
       })
 

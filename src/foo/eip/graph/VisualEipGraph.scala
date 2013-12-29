@@ -15,7 +15,7 @@ import foo.FunctionalUtil._
 import foo.eip.graph.loaders.{DefaultIconLoader, IconLoader}
 import foo.eip.graph.Visualisation.EipGraphVisualisation
 import foo.eip.graph.StaticGraphTypes.EipDAG
-import foo.eip.serializers.BodyTypeEipDagSerializer
+import foo.eip.serializers.{CompleteEipDagSerializer, BodyTypeEipDagSerializer}
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph
 import edu.uci.ics.jung.graph.util.EdgeType
 import scala.List
@@ -101,7 +101,7 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
     } {
     }*/
 
-    val treeLayout = new TreeLayout(minimumSpanningForest.getForest, 100, 100)
+    val treeLayout = new TreeLayout(minimumSpanningForest.getForest, 125, 125)
     val staticLayout = new StaticLayout(graph, treeLayout)
 
     val visualisationModel = new DefaultVisualizationModel(staticLayout)
@@ -192,7 +192,16 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
   private def setComponentToolTip(viewer: Viewer): Viewer =
     mutate(viewer) {
       _.setVertexToolTipTransformer(new Transformer[EipComponent, String] {
-        def transform(component: EipComponent): String = component.text
+        def transform(component: EipComponent): String = {
+          val typeInformation = component.semantics
+
+          // Concatenate the type information and EipComponent's specific text  value
+          s"""<html>
+            |${component.text}<br />
+            |Possible Body Types: ${typeInformation.possibleBodyTypes.toList.sortBy(identity).mkString("{", ", ", "}")}<br />
+            |Headers: ${typeInformation.headers.keys.toList.sortBy(identity).mkString("{", ", ", "}")}<br />
+            |</html>""".stripMargin
+        }
       })
     }
 
@@ -201,8 +210,8 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
    * @param viewer The viewer
    * @return The viewer
    */
-  private def setLineRender(viewer: Viewer): Viewer =
-    mutate(viewer)(_.getRenderContext.setEdgeShapeTransformer(new EdgeShape.Line))
+  private def setLineRender(viewer: Viewer): Viewer = viewer
+    //mutate(viewer)(_.getRenderContext.setEdgeShapeTransformer(new EdgeShape.Line))
 
   /**
    * Sets the background of the viewer
@@ -288,7 +297,7 @@ class DebugGraphToXmlPlugin(eipDag: EipDAG) extends AbstractPopupGraphMousePlugi
     val popUp = new JPopupMenu()
     popUp.add(new AbstractAction("Output EIP") {
       def actionPerformed(e: ActionEvent): Unit = {
-        println(new BodyTypeEipDagSerializer().serialize(eipDag))
+        println(new CompleteEipDagSerializer().serialize(eipDag))
       }
     })
     popUp.show(viewer, e.getX, e.getY)

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:camel="http://camel.apache.org/schema/blueprint"
+           xsi:schemaLocation="
+       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+    <camelContext trace="true" xmlns="http://camel.apache.org/schema/blueprint">
+        <route>
+            <from id="from" uri="direct:start"/>
+
+            <setHeader id="id1" headerName="a">
+                <constant>true</constant>
+            </setHeader>
+
+            <choice id="id2">
+                <when id="id3">
+                    <constant>true</constant>
+                    <setHeader id="id4" headerName="b">
+                        <constant>true</constant>
+                    </setHeader>
+                </when>
+                <when id="id5">
+                    <constant id="id6" >false</constant>
+                    <setHeader id="id7" headerName="c">
+                        <constant>true</constant>
+                    </setHeader>
+                    <choice id="id8">
+                        <when id="id9">
+                            <constant>true</constant>
+                            <setHeader id="id10" headerName="d">
+                                <constant>true</constant>
+                            </setHeader>
+                        </when>
+                        <when id="id11">
+                            <constant>false</constant>
+                            <setHeader id="id12" headerName="e">
+                                <constant>true</constant>
+                            </setHeader>
+                        </when>
+                    </choice>
+                </when>
+            </choice>
+
+            <!-- All headers - especially 'd' should be visible, as it is a leaf node -->
+            <to id="id13" uri="direct:end" />
+        </route>
+    </camelContext>
+</blueprint>
