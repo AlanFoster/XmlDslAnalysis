@@ -74,6 +74,10 @@
 
             <!-- Annotator for unresolved class names -->
             <annotator language="Camel" implementationClass="foo.language.annotators.UnresolvedReferenceAnnotator" />
+
+            <!-- Quote Handler - Comments added to the top of the CamelQuoteHandler class as to why this is registered -->
+            <quoteHandler fileType="Camel" className="foo.language.formatting.CamelQuoteHandler" />
+
       <!-- End Apache Camel Language Support -->
 
       <!--
