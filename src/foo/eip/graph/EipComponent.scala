@@ -26,7 +26,19 @@ object EipComponent {
 }
 
 // Initial type semantic information
-class CamelType(val possibleBodyTypes: Set[String], val headers: Map[String, ProcessorDefinition])
+class CamelType(val possibleBodyTypes: Set[String], val headers: Map[String, ProcessorDefinition]) {
+  /**
+   * Unions two CamelTypes together
+   *
+   * @param other The other type to union with
+   * @return A new CamelType instance with the union of type information performed
+   */
+  def +(other:CamelType): CamelType =
+    CamelType(
+      this.possibleBodyTypes ++ other.possibleBodyTypes,
+      this.headers ++ other.headers
+    )
+}
 
 object CamelType {
   def apply(bodyType: String) = new CamelType(Set(bodyType), Map())

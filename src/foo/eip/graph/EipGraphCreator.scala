@@ -1,10 +1,8 @@
 package foo.eip.graph
 
-import foo.dom.Model._
 
 import foo.eip.graph.StaticGraphTypes.EipDAG
 import scala.collection.JavaConverters._
-import foo.eip.graph.ADT.EmptyDAG
 import foo.dom.Model._
 import foo.eip.graph.ADT.EmptyDAG
 
@@ -157,12 +155,18 @@ class EipGraphCreator {
     else idAttribute.hashCode.toString
   }
 
-
+  /**
+   * Unions all given type information together.
+   * @param previous The list of all known previous EipComponents
+   * @param current The current type information present within the given EipComponent
+   * @return A union of all type information
+   */
   def unionTypes(previous: List[EipComponent],
                  current: CamelType = CamelType()) = {
+    // Note, we fold *right* in order to ensure that the newest type information is only shown
      previous
        .map(_.semantics)
-       .foldLeft(current)((acc, next) => CamelType(acc.possibleBodyTypes ++ next.possibleBodyTypes, acc.headers ++ next.headers))
+       .foldRight(current)(_ + _)
   }
 
 }

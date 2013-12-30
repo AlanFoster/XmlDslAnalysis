@@ -41,6 +41,13 @@ PsiMethodReferenceUtil.checkReturnType
 
 Good example code of PSI manipulation http://devnet.jetbrains.com/message/5102890#5102890
 
+Navigating to elements arbitrarily
+    - http://devnet.jetbrains.com/message/5044260#5044260
+
+        Most implementations of PsiElements like XmlTag, XmlAtribute, etc. implement the
+        Navigatable interface. Once you've found your attribute, cast it to Navigatable
+        and call navigate(true).
+
 Useful:
     JavClassReferenceSet
     JavaClassListReferenceProvider
