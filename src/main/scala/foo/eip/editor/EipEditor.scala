@@ -11,13 +11,22 @@ import javax.swing.{JPanel, JComponent}
 import foo.eip.graph.{EipGraphCreator, VisualEipGraph}
 import foo.eip.graph.loaders.IntellijIconLoader
 import foo.FunctionalUtil._
-import java.awt.GridLayout
+import java.awt.{Color, GridLayout}
 import scala.collection.JavaConverters._
 import com.intellij.openapi.ui.popup.{Balloon, JBPopupFactory}
 import com.intellij.openapi.ui.MessageType
 import com.intellij.ui.awt.RelativePoint
 import foo.dom.DomFileAccessor
 import foo.dom.Model.Blueprint
+import com.intellij.notification.Notifications
+import com.intellij.notification.Notification
+import com.intellij.notification.NotificationGroup
+import com.intellij.notification.NotificationType
+import com.intellij.notification.Notifications
+import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx
+import org.jdom.Element
+import com.intellij.openapi.fileEditor.impl.EditorWindow
+import com.intellij.openapi.wm.WindowManager
 
 /**
  * Creates and visualises the given XML DSl as a graph.
@@ -96,10 +105,31 @@ class EipEditor(project: Project, virtualFile: VirtualFile) extends UserDataHold
       */
 
      // val statusBar = WindowManager.getInstance().getStatusBar(project).getComponent
+
+/*
+      val editorManager = FileEditorManagerEx.getInstanceEx(project)
+      val splitters = editorManager.getSplitters
+
+    val windows = editorManager.getWindows
+      val first  = windows.head
+      val foo = first.getTabbedPane.getTabs.getTabAt(0).getComponent
+      foo.setBackground(Color.red)
+*/
+
       JBPopupFactory.getInstance()
         .createHtmlTextBalloonBuilder(message, MessageType.WARNING, null)
         .createBalloon()
         .show(RelativePoint.getSouthEastOf(graphContainer), Balloon.Position.above)
+
+
+
+
+/*      Notifications.Bus.notify(new Notification(
+        "groupId",
+        "TopHeading", "Bottom Heading",
+        NotificationType.WARNING), project)*/
+
+
     }
 
     // Create the EipGraph if 'all is well'
