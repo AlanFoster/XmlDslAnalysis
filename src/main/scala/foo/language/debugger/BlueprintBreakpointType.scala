@@ -1,4 +1,5 @@
 package foo.language.debugger
+/*
 
 import com.intellij.xdebugger.breakpoints.{XBreakpointProperties, XLineBreakpointType}
 import com.intellij.openapi.vfs.VirtualFile
@@ -39,3 +40,4 @@ class BlueprintBreakpointType extends XLineBreakpointType[XBreakpointProperties[
 
 
 }
+*/

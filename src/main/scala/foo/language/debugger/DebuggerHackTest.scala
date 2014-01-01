@@ -1,4 +1,5 @@
 package foo.language.debugger
+/*
 
 import com.intellij.openapi.components.{ProjectComponent, ApplicationComponent}
 import java.lang.String
@@ -7,9 +8,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.debugger.impl.{DebuggerSession, DebuggerManagerListener}
 import com.intellij.debugger.ui.breakpoints.BreakpointManagerListener
 
-/**
- * Created by alan on 23/12/13.
- */
+
 /**
  * Created by alan on 23/12/13.
  */
@@ -52,4 +51,5 @@ class DebuggerHackTest(project: Project) extends ProjectComponent {
 
   def projectClosed(): Unit = {}
 }
+*/
 

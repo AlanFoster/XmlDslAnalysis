@@ -1,4 +1,5 @@
 package foo.language.debugger
+/*
 
 import com.intellij.execution.runners.{ExecutionEnvironment, GenericProgramRunner, ProgramRunner}
 import com.intellij.openapi.project.Project
@@ -16,3 +17,4 @@ class BlueprintDebugRunner extends GenericProgramRunner {
 
   def doExecute(project: Project, state: RunProfileState, contentToReuse: RunContentDescriptor, env: ExecutionEnvironment): RunContentDescriptor = ???
 }
+*/

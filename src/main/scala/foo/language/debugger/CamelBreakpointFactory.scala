@@ -1,5 +1,6 @@
 package foo.language.debugger
 
+/*
 import com.intellij.debugger.ui.breakpoints.{Breakpoint, BreakpointPropertiesPanel, BreakpointFactory}
 import com.intellij.openapi.project.Project
 import javax.swing.Icon
@@ -27,3 +28,4 @@ class CamelBreakpointFactory extends BreakpointFactory {
 
   def createBreakpointPropertiesPanel(project: Project, compact: Boolean): BreakpointPropertiesPanel = ???
 }
+*/

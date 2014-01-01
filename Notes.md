@@ -102,3 +102,7 @@ will suggest no reference exists. See com.intellij.psi.PsiReference which has al
 
 Inplace renaming - lang.refactoringSupport extension point
 provide RefactoringSupportProvider, isMemberInplaceRenameAvailable
+
+sbt
+---
+http://stackoverflow.com/questions/8418457/add-tools-jar-in-the-classpath-of-sbt-project

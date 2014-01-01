@@ -1,5 +1,6 @@
 package foo.language.debugger
 
+/*
 import com.intellij.execution.configurations.{RunConfiguration, ConfigurationFactory, ConfigurationType}
 import javax.swing.Icon
 import foo.Icons
@@ -24,4 +25,4 @@ class CamelConfigurationType extends ConfigurationType {
 
 class CamelConfigurationFactory(runConfiguration: ConfigurationType) extends ConfigurationFactory(runConfiguration)  {
   def createTemplateConfiguration(project: Project): RunConfiguration = null
-}
+}*/

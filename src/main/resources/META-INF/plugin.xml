@@ -20,9 +20,9 @@
   </application-components>
 
   <project-components>
-      <component>
+<!--      <component>
           <implementation-class>foo.language.debugger.DebuggerHackTest</implementation-class>
-      </component>
+      </component>-->
   </project-components>
 
   <actions>
@@ -110,7 +110,7 @@
          Defines a breakpoint, which allows the user to place a breakpoint within a valid blueprint route.
          Note this breakpoint by itself will do nothing other than place the icon where appropriate etc
      -->
-      <xdebugger.breakpointType implementation="foo.language.debugger.BlueprintBreakpointType" />
+<!--      <xdebugger.breakpointType implementation="foo.language.debugger.BlueprintBreakpointType" />-->
 
 <!--      <programRunner implementation="foo.language.debugger.BlueprintDebugRunner"-->
 <!--
