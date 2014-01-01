@@ -1,7 +1,7 @@
 package foo.language.annotators
 
 import com.intellij.psi.PsiElement
-import foo.language.psi.CamelFunctionCall
+import foo.language.generated.psi.CamelFunctionCall
 import foo.{CamelFunction, CamelFunctions}
 import com.intellij.psi.util.PsiTreeUtil
 

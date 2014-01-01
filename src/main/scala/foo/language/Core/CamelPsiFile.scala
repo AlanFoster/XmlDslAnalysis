@@ -2,10 +2,8 @@ package foo.language.Core
 
 import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.psi.FileViewProvider
-import foo.language.Core.{LanguageConstants, CamelFileType, CamelLanguage}
 import com.intellij.openapi.fileTypes.FileType
 import javax.swing.Icon
-import com.intellij.psi.tree.IFileElementType
 
 /**
  * This CamePsiFile (Program Structure Interface) extends the base PsiFileBase class.

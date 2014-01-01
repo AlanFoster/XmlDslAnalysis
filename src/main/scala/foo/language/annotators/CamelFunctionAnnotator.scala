@@ -3,10 +3,8 @@ package foo.language.annotators
 import com.intellij.lang.annotation.{AnnotationHolder, Annotator}
 import com.intellij.psi.PsiElement
 import com.intellij.patterns.PlatformPatterns._
-import foo.language.psi.{CamelFunctionCall, CamelCamelFunction, CamelFunctionArg}
-import scala.None
-import foo.{CamelFunction, CamelFunctions}
-import com.intellij.psi.util.PsiTreeUtil
+import foo.language.generated.psi.CamelFunctionCall
+import foo.CamelFunction
 
 /**
  * Ensures that the given function name exists within the camel language

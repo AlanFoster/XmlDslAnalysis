@@ -2,7 +2,7 @@ package foo.language.implementation.lexing;
 
 import com.intellij.lexer.*;
 import com.intellij.psi.tree.IElementType;
-import foo.language.CamelTypes;
+import foo.language.generated.CamelTypes;
 import com.intellij.psi.TokenType;
 
 

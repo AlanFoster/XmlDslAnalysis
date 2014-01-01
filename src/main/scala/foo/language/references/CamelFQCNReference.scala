@@ -1,21 +1,14 @@
 package foo.language.references
 
 import com.intellij.psi._
-import com.intellij.codeInsight.lookup.{LookupElement, LookupElementBuilder}
 import com.intellij.openapi.util.TextRange
-import com.intellij.psi.search.{PsiSearchHelper, GlobalSearchScope}
+import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.openapi.module.ModuleUtilCore
-import com.intellij.codeInsight.completion.{JavaLookupElementBuilder, JavaCompletionUtil}
-import com.intellij.ide.util.{PlatformPackageUtil, PackageUtil}
-import com.intellij.codeInsight.ClassUtil
-import com.intellij.ide.ClassUtilCore
 import scala.collection.JavaConversions._
-import scala.collection.JavaConverters._
 import com.intellij.openapi.roots.impl.DirectoryIndex
-import com.intellij.openapi.util.text.StringUtil
 import foo.language.Core.CamelFileType
 import com.intellij.psi.util.PsiTreeUtil
-import foo.language.psi.CamelFQCN
+import foo.language.generated.psi.CamelFQCN
 
 /**
  * Provides the ReferenceContribution for a Fully Qualified Class Name in the Apache Camel
@@ -123,7 +116,6 @@ class CamelFQCNReference(element: PsiElement, range: TextRange)
     val rootDirectories = findRootDirectories(searchText)
 
     val packages = findSubpackages(rootDirectories)
-    packages
 
     val classes =
       rootDirectories

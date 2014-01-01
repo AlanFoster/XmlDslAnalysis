@@ -4,24 +4,24 @@
   psiImplUtilClass="foo.language.psi.Util"
 
   // Represents the generated parser class
-  parserClass="foo.language.CamelLanguageParser"
+  parserClass="foo.language.generated.CamelLanguageParser"
   parserUtilClass="foo.language.implementation.parsing.CamelLanguageParserUtil"
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
-  // Generated
+  // Generated Details
   psiClassPrefix="Camel"
   psiImplClassSuffix="Impl"
-  psiPackage="foo.language.psi"
-  psiImplPackage="foo.language.psi.impl"
+  psiPackage="foo.language.generated.psi"
+  psiImplPackage="foo.language.generated.psi.impl"
 
-  elementTypeHolderClass="foo.language.CamelTypes"
+  elementTypeHolderClass="foo.language.generated.CamelTypes"
 
   // Existing files
   elementTypeClass="foo.language.elements.CamelElementType"
   tokenTypeClass="foo.language.elements.CamelTokenType"
 
-  // Overlaps jobs with the job of the lexer ?...
+  // Overlaps jobs with the job of the lexer - as this file can generate a lexer, and give live-preview support
   tokens = [
     FUNC_BEGIN="${"
     FUNC_END="}"

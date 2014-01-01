@@ -7,7 +7,7 @@ import com.intellij.psi.tree.{IFileElementType, TokenSet}
 import com.intellij.openapi.project.Project
 import com.intellij.lexer.Lexer
 import foo.language.implementation.lexing.CamelLanguageLexerAdapter
-import foo.language.{CamelTypes, CamelLanguageParser}
+import foo.language.generated.{CamelTypes, CamelLanguageParser}
 import foo.language.Core.{CamelPsiFile, CamelLanguage}
 
 /**

@@ -5,9 +5,9 @@ import com.intellij.patterns.{ElementPattern, PlatformPatterns}
 import com.intellij.util.ProcessingContext
 import com.intellij.codeInsight.lookup.{LookupElement, LookupElementBuilder}
 import com.intellij.psi.PsiElement
-import foo.language.psi.{CamelFunctionArgs, CamelCamelExpression, CamelCamelFunction, CamelCamelFuncBody}
+import foo.language.generated.psi.{CamelFunctionArgs, CamelCamelExpression, CamelCamelFunction, CamelCamelFuncBody}
 import foo.language.elements.CamelBaseElementType
-import foo.language.CamelTypes
+import foo.language.generated.CamelTypes
 
 /**
  * Provides basic code completion for common camel language variables

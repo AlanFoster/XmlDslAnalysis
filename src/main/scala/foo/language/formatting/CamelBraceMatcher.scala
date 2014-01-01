@@ -3,7 +3,7 @@ package foo.language.formatting
 import com.intellij.lang.{BracePair, PairedBraceMatcher}
 import com.intellij.psi.PsiFile
 import com.intellij.psi.tree.IElementType
-import foo.language.CamelTypes
+import foo.language.generated.CamelTypes
 
 /**
  * Provides the brace matching definition for Camel.

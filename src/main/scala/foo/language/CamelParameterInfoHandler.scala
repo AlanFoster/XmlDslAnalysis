@@ -2,13 +2,13 @@ package foo.language
 
 import com.intellij.lang.parameterInfo._
 import com.intellij.codeInsight.lookup.LookupElement
-import com.intellij.psi.PsiElement
 import com.intellij.openapi.project.DumbAware
 import com.intellij.util.ArrayUtil
 import com.intellij.psi.util.PsiTreeUtil
-import foo.language.psi.{CamelFunctionArg, CamelFunctionCall}
+import foo.language.generated.psi.CamelFunctionCall
 import com.intellij.lang.ASTNode
 import foo.CamelFunctions
+import foo.language.generated.CamelTypes
 
 /**
  * Method invocation Order

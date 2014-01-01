@@ -2,7 +2,7 @@ package foo.language.Highlighting
 
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.editor.{SyntaxHighlighterColors, HighlighterColors, DefaultLanguageHighlighterColors}
-import foo.language.CamelTypes
+import foo.language.generated.CamelTypes
 import com.intellij.openapi.fileTypes.{SyntaxHighlighterBase, SyntaxHighlighter}
 import com.intellij.psi.tree.IElementType
 import com.intellij.lexer.Lexer

@@ -2,7 +2,7 @@ package foo.language.formatting
 
 import com.intellij.codeInsight.editorActions.SimpleTokenSetQuoteHandler
 import com.intellij.psi.tree.TokenSet
-import foo.language.CamelTypes
+import foo.language.generated.CamelTypes
 
 /**
  * Represents the CamelQuoteHandler which propagates the string TokenSet information

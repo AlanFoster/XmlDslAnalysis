@@ -1,8 +1,8 @@
 package foo
 
-import foo.language.psi.CamelFQCN
+import foo.language.generated.psi.CamelFQCN
 import com.intellij.psi.tree.IElementType
-import foo.language.CamelTypes
+import foo.language.generated.CamelTypes
 
 trait CamelArgument {
   def argName: String

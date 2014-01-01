@@ -3,7 +3,7 @@ package foo.language.annotators
 import com.intellij.lang.annotation.{AnnotationHolder, Annotator}
 import com.intellij.psi.PsiElement
 import com.intellij.patterns.PlatformPatterns._
-import foo.language.psi.CamelFunctionArg
+import foo.language.generated.psi.CamelFunctionArg
 import foo.{CamelArgument, CamelFunction}
 import com.intellij.psi.tree.IElementType
 import com.intellij.lang.ASTNode
