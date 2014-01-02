@@ -1,3 +1,9 @@
+// Constants
+val intellijPath = file("C:/Users/alan/.IntelliJIdea13/")
+val ideaHome = intellijPath / "/system/plugins-sandbox/test"
+val pluginsPath = intellijPath / "/system/plugins-sandbox/plugins"
+val pluginid = "foo.initial"
+
 name := "StaticAnalysis"
 
 version := "1.0"
@@ -20,17 +26,14 @@ parallelExecution in Test := false
 javaOptions in Test ++= Seq(
   "-ea",
   "-Dfoo=bar",
-  "-Didea.load.plugins.id=foo.initial",
-  "-Didea.home.path=C:\\Users\\alan\\.IntelliJIdea13\\system\\plugins-sandbox\\test",
-  "-Didea.plugins.path=C:\\Users\\alan\\.IntelliJIdea13\\system\\plugins-sandbox\\plugins",
-//  "-Didea.launcher.port=7532",
- // "\"-Didea.launcher.bin.path=C:\\Program Files (x86)\\JetBrains\\IntelliJ IDEA 13.0\\bin\"",
+  s"-Didea.load.plugins.id=${pluginid}",
+  s"-Didea.home.path=${ideaHome}",
+  s"-Didea.plugins.path=${pluginsPath}",
   "-Dfile.encoding=UTF-8"
 )
 
 testOptions in Test := Seq(Tests.Filter(s => {
-  //s.endsWith("FooTest")  ||
-  true
+  !s.endsWith("FooTest") // || true
 }))
 
 // TODO Compile didn't work by itself, and don't use hard coded path
@@ -45,8 +48,6 @@ libraryDependencies ++= Seq(
   "info.cukes" % "cucumber-java" % "1.1.5" % "test",
   // Testing support
   "com.novocode" % "junit-interface" % "0.8" % "test->default",
-  // SUN dependencies - These should exist on the user's computer
-  //"com.sun" % "tools" % "1.6.0" % "system",
   // IntelliJ dependencies - Note these are generated
   "com.intellij" % "alloy" % "133.139" % "compile",
   "com.intellij" % "jps-server" % "133.139" % "compile",
