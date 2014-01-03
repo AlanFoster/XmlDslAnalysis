@@ -10,8 +10,6 @@ version := "1.0"
 
 scalaVersion := "2.10.0"
 
-//sourceDirectories in Compile ++= Seq(baseDirectory.value / "gen")
-
 // Additionally add a reference to our local m2 repository
 // According to SBT this is apparently done by default, but doesn't appear to
 resolvers += "Local Maven Repository" at Path.userHome.asFile.toURI.toURL + ".m2/repository"
@@ -20,9 +18,7 @@ resolvers += "Local Maven Repository" at Path.userHome.asFile.toURI.toURL + ".m2
 fork in Test := true
 
 // Enable the required JVM options when running tests. Note tests are forked in their own JVM instance
-
-parallelExecution in Test := false
-
+// Intellij requires specific JVM args when running, which we set them here
 javaOptions in Test ++= Seq(
   "-ea",
   "-Dfoo=bar",
@@ -32,12 +28,16 @@ javaOptions in Test ++= Seq(
   "-Dfile.encoding=UTF-8"
 )
 
+// Disable Parallel exceution - IntelliJ can not support this
+parallelExecution in Test := false
+
 testOptions in Test := Seq(Tests.Filter(s => {
   !s.endsWith("FooTest") // || true
 }))
 
-// TODO Compile didn't work by itself, and don't use hard coded path
-fullClasspath in Test += Attributed.blank(file("C:/Program Files/Java/jdk1.7.0_25/lib/tools.jar"))
+// Java tools is only available from the lib JDK folder, and is not accessible over Maven
+// We use the tools lib for debugging related classes for example
+fullClasspath in Test += Attributed.blank(file(System.getProperty("java.home")) / "/lib/tools.jar")
 
 libraryDependencies ++= Seq(
   // hope some sun.tools are included
