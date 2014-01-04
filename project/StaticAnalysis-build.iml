@@ -28,9 +28,9 @@
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/api-0.13.0.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/persist-0.13.0.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/lib/jansi.jar!/" />
+          <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/compile-0.13.0.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/commons-io/commons-io/jars/commons-io-2.0.1.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/command-0.13.0.jar!/" />
-          <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/compile-0.13.0.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/sbinary_2.10-0.4.2.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/classpath-0.13.0.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/relation-0.13.0.jar!/" />
@@ -51,6 +51,7 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/scala_2.10/sbt_0.13/org.jetbrains/sbt-structure/jars/sbt-structure-1.0.3.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/lib/scala-compiler.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/compiler-ivy-integration-0.13.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/scala_2.10/sbt_0.13/com.gu/sbt-teamcity-test-reporting-plugin/jars/sbt-teamcity-test-reporting-plugin-1.5.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/run-0.13.0.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/control-0.13.0.jar!/" />
           <root url="jar://$USER_HOME$/.sbt/boot/scala-2.10.2/org.scala-sbt/sbt/0.13.0/actions-0.13.0.jar!/" />
