@@ -25,6 +25,8 @@ For instance; after running tests your testing directory structure will look lik
 
 Without this step you may run into exceptions such as
 
+    java.lang.UnsatisfiedLinkError: 'IdeaWin64.dll'
+    ...
     java.io.FileNotFoundException: Native filesystem .dll is missing, home: ... path here ...
 
 or
@@ -32,6 +34,8 @@ or
     failed: Could not initialize class com.intellij.openapi.vfs.newvfs.ManagingFS$ManagingFSHolder
     [error]     at com.intellij.openapi.vfs.newvfs.ManagingFS.getInstance(ManagingFS.java:35)
     [error]     at com.intellij.openapi.vfs.newvfs.persistent.PersistentFS.getInstance(PersistentFS.java:52)
+
+
 
 
 ### Dependencies
