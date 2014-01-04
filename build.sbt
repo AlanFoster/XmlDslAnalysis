@@ -1,13 +1,14 @@
 // Configuration
-// Note these are overridable by passing into command line, for instance "sbt set baz := 'qux'" test`
 lazy val intellijPath = SettingKey[String]("intellijPath")
 
 lazy val ideaHome = SettingKey[String]("ideaHome")
 
 lazy val pluginsPath = SettingKey[String]("pluginsPath")
 
-// It is not possible to override this value within SBT command line... Due to scoping issues.
-intellijPath := System.getenv("intellijPath") // "C:/Users/alan/.IntelliJIdea13"
+// It is not possible to override this value within SBT command line... due to scoping issues.
+// Instead system environment variables are used. If you are using teamcity these can be set per build under
+// C:\TeamCity\buildAgent\conf\buildAgent.properties - adding an item `env.intellijPath=...`
+intellijPath := System.getenv("intellijPath")
 
 ideaHome := intellijPath.value + "/system/plugins-sandbox/test"
 
@@ -26,6 +27,7 @@ scalaVersion := "2.10.0"
 resolvers += "Local Maven Repository" at Path.userHome.asFile.toURI.toURL + ".m2/repository"
 
 // Enable JVM forking during SBT tests, as we require a separate running JVM instance
+// If this was not used, then `javaOptions in Test` would not trigger otherwise
 fork in Test := true
 
 // Enable the required JVM options when running tests. Note tests are forked in their own JVM instance
@@ -39,11 +41,13 @@ javaOptions in Test ++= Seq(
   "-Dfile.encoding=UTF-8"
 )
 
+// TODO is plugins.path needed?
+
 // Disable Parallel exceution - IntelliJ can not support this
 parallelExecution in Test := false
 
 testOptions in Test := Seq(Tests.Filter(s => {
-  true //!s.endsWith("RenameTest") || true
+  true //!s.endsWith("RenameTest")
 }))
 
 // Java tools is only available from the lib JDK folder, and is not accessible over Maven
@@ -51,13 +55,13 @@ testOptions in Test := Seq(Tests.Filter(s => {
 fullClasspath in Test += Attributed.blank(file(System.getProperty("java.home")) / "../lib/tools.jar")
 
 libraryDependencies ++= Seq(
-  // hope some sun.tools are included
+  // TODO May not be required
   "com.sun.xml.bind" % "jaxb-xjc" % "2.2.4-1",
   // Core dependencies
   "net.sf.jung" % "jung-samples" % "2.0.1",
   "org.unitils" % "unitils-core" % "3.3" % "test",
   "info.cukes" % "cucumber-java" % "1.1.5" % "test",
-  // Testing support
+  // Testing support dependency
   "com.novocode" % "junit-interface" % "0.8" % "test->default",
   // IntelliJ dependencies - Note these are generated
   "com.intellij" % "alloy" % "133.139" % "compile",
