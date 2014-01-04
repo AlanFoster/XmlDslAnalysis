@@ -6,7 +6,7 @@ import com.intellij.idea.IdeaTestApplication
 import scala.collection.JavaConverters._
 
 class FooTest extends TestCase {
-  def testJVMArgs() {
+  def ignoreTestJVMArgs() {
     Assert.assertEquals("JVM Arg bar should be set!", "bar", System.getProperty("foo"))
     Assert.assertEquals("JVM idea.home.path should be set!",
       "C:\\Users\\alan\\.IntelliJIdea13\\system\\plugins-sandbox\\test",
