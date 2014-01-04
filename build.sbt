@@ -1,7 +1,18 @@
-// Constants
-val intellijPath = file("C:/Users/alan/.IntelliJIdea13/")
-val ideaHome = intellijPath / "/system/plugins-sandbox/test"
-val pluginsPath = intellijPath / "/system/plugins-sandbox/plugins"
+// Configuration
+// Note these are overridable by passing into command line, for instance "sbt set baz := 'qux'" test`
+lazy val intellijPath = SettingKey[String]("intellijPath")
+
+lazy val ideaHome = SettingKey[String]("ideaHome")
+
+lazy val pluginsPath = SettingKey[String]("pluginsPath")
+
+// It is not possible to override this value within SBT command line... Due to scoping issues.
+intellijPath := System.getenv("intellijPath") // "C:/Users/alan/.IntelliJIdea13"
+
+ideaHome := intellijPath.value + "/system/plugins-sandbox/test"
+
+pluginsPath := intellijPath.value + "/system/plugins-sandbox/plugins"
+
 val pluginid = "foo.initial"
 
 name := "StaticAnalysis"
@@ -23,8 +34,8 @@ javaOptions in Test ++= Seq(
   "-ea",
   "-Dfoo=bar",
   s"-Didea.load.plugins.id=${pluginid}",
-  s"-Didea.home.path=${ideaHome}",
-  s"-Didea.plugins.path=${pluginsPath}",
+  "-Didea.home.path=" + file(ideaHome.value),
+  "-Didea.plugins.path=" + file(pluginsPath.value),
   "-Dfile.encoding=UTF-8"
 )
 
@@ -32,12 +43,12 @@ javaOptions in Test ++= Seq(
 parallelExecution in Test := false
 
 testOptions in Test := Seq(Tests.Filter(s => {
-  !s.endsWith("FooTest") // || true
+  true //!s.endsWith("RenameTest") || true
 }))
 
 // Java tools is only available from the lib JDK folder, and is not accessible over Maven
 // We use the tools lib for debugging related classes for example
-fullClasspath in Test += Attributed.blank(file(System.getProperty("java.home")) / "/lib/tools.jar")
+fullClasspath in Test += Attributed.blank(file(System.getProperty("java.home")) / "../lib/tools.jar")
 
 libraryDependencies ++= Seq(
   // hope some sun.tools are included
