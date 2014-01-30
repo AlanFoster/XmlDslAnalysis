@@ -55,3 +55,12 @@ Example values may be -
   - -Didea.load.plugins.id=yourPlugin
   - -Didea.home.path=C:\Users\alan\.IntelliJIdea13\system\plugins-sandbox\test
   - -Didea.plugins.path=C:\Users\alan\.IntelliJIdea13\system\plugins-sandbox\plugins
+  
+## Converting Module Type
+
+The Module type is required :
+
+```
+	<module type="PLUGIN_MODULE" version="4">
+		<component name="DevKit.ModuleBuildProperties" url="file://$MODULE_DIR$/src/main/resources/META-INF/plugin.xml" />
+```
