@@ -10,6 +10,8 @@ Website
 
 Add description of the EIP icons
 
+Local debug info for plugin dev
+	http://devnet.jetbrains.com/message/5306246#5306246
 
 Graphs
 -------
