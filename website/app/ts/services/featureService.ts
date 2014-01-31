@@ -8,6 +8,11 @@ interface IFeatureService {
      * application
      */
     getAllFeatures(): ng.IPromise<IFeature[]>
+
+    /**
+     * Adds the given feature to the webservice
+     */
+    addFeature(feature: IFeature): ng.IPromise<IFeature>
 };
 
 /**
@@ -39,8 +44,10 @@ docsApp.service("featureService", function($resource: ng.resource.IResourceServi
 
     // Define our service
     var service: IFeatureService = {
-        getAllFeatures: function() {
-            return resource.query().$promise;
+        getAllFeatures: () => resource.query().$promise,
+        addFeature: (feature) => {
+            console.log(feature)
+            return resource.save(feature)
         }
     };
 

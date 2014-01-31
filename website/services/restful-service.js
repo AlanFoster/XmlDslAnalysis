@@ -1,71 +1,23 @@
+/**
+ * Main entry point for creating the NodeJS webservice/FileServing mechanism
+ */
 var express = require("express");
 var app = express();
 var util = require('util');
 // Require Path to perform OS specific path manipulation
 var path = require('path');
 
-// Create our basic API web services
-app.get("/services/restfulTest", function (req, res, next) {
-    res.json({"Hello": "World"});
-});
+// Known services
+var featureService = require("./feature-service.js")
 
-// TODO add to a database
-var TagTypes = {
-    CODE_COMPLETION: "CodeCompletion",
-    REFACTOR: "Refactor"
-};
+/**
+ * Allow middleware to parse the post data of a body
+ * Note - this is defined before all routes
+ */
+app.use(express.bodyParser());
 
-var SupportTypes = {
-    SIMPLE: "Simple",
-    CAMEL: "Camel",
-    JAVA: "Java",
-    XML: "XML"
-};
-
-var features = [
-    {
-        title: "Simple Language Injection",
-        images: [
-            {
-                location: "images/paramInsight.png",
-                title: "Java DSL Injection",
-                description: "Simple Language injection supported within Java DSL"
-            }
-        ],
-        supportTypes: [
-            SupportTypes.SIMPLE,
-            SupportTypes.JAVA,
-            SupportTypes.XML
-        ],
-        tags: [
-            TagTypes.CODE_COMPLETION,
-            TagTypes.REFACTOR
-        ]
-    },
-    {
-        title: "Simple Function Contribution",
-        images: [
-            {
-                location: "images/contribution.png",
-                title: "Simple Function Contribution",
-                description: "Simple Function Contribution"
-            }
-        ],
-        supportTypes: [
-            SupportTypes.SIMPLE,
-            SupportTypes.JAVA,
-            SupportTypes.XML
-        ],
-        tags: [
-            TagTypes.CODE_COMPLETION,
-            TagTypes.REFACTOR
-        ]
-    }
-];
-
-app.get("/services/features", function(req, res, next) {
-    res.json(features);
-});
+// Load our services
+featureService.createRoutes(app);
 
 // Create file serving mechanism
 app.configure(function () {
@@ -94,6 +46,14 @@ app.configure(function () {
 
         next();
     });
+
+    // Create logging middleware
+    app.use(function (req, res, next) {
+        util.puts("Received request :: ", req);
+
+        // Invoke the next item within the chain
+        next();
+    })
 });
 
 exports.main = function () {

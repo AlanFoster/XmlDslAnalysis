@@ -1,3 +1,34 @@
+<div>
+    <div><button class="btn btn-default pull-right" ng-click="isAddFeatureCollapsed = !isAddFeatureCollapsed">{{isAddFeatureCollapsed ? "New Feature" : "Cancel Feature"}}</button></div>
+    <br style="clear: both"/>
+    <div class="well well-lg" collapse="isAddFeatureCollapsed">
+        <form name="newFeatureForm">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" ng-model="newFeature.title" class="form-control" placeholder="Enter Title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="images">Images</label>
+                <input type="text" id="images" ng-model="newFeature.images" class="form-control" placeholder="Enter Title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="supportTypes">Support Types</label>
+                <input type="text" id="supportTypes" ng-model="newFeature.supportTypes" class="form-control" placeholder="Enter Title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="tags">Tags</label>
+                <input type="text" id="tags" ng-model="newFeature.tags" class="form-control" placeholder="Enter Title" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary" ng-click="submit(newFeature, newFeatureForm)" ng-disabled="newEventForm.$invalid">Submit</button>
+            <button type="button" ng-click="cancel()" class="btn btn-default">Cancel</button>
+        </form>
+    </div>
+</div>
+
 <div ng-repeat="feature in features">
     <div class="">
         <h3>{{feature.title}}</h3>

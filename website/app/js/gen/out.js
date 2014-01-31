@@ -23,6 +23,21 @@ docsApp.controller("featuresController", function ($scope, featureService) {
     featureService.getAllFeatures().then(function (callback) {
         return $scope.features = callback;
     });
+
+    $scope.newFeature = {};
+
+    $scope.isAddFeatureCollapsed = false;
+
+    $scope.submit = function (newFeature, newFeatureForm) {
+        if (newFeatureForm.$invalid)
+            return;
+
+        featureService.addFeature(newFeature);
+    };
+
+    $scope.cancel = function () {
+        $scope.newFeature = {};
+    };
 });
 docsApp.controller("overviewController", function ($scope) {
 });
@@ -71,6 +86,10 @@ docsApp.service("featureService", function ($resource, $q) {
     var service = {
         getAllFeatures: function () {
             return resource.query().$promise;
+        },
+        addFeature: function (feature) {
+            console.log(feature);
+            return resource.save(feature);
         }
     };
 
