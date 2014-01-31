@@ -1,11 +1,9 @@
 "use strict";
 
-declare var angular: any;
-
 /**
  * Main Entry point - The router configuration
  */
-var docsApp =
+var docsApp: ng.IModule =
     angular
         .module('docsApp', [
             "ngRoute",
@@ -15,11 +13,16 @@ var docsApp =
         .config(function ($routeProvider, $locationProvider) {
             $routeProvider
                 .when("/", {
-                    template: "It worked!!! :)"
-                })
-                .when("/overview", {
                     templateUrl: "/templates/overview.html",
                     controller:"overviewController"
+                })
+                .when("/features", {
+                    templateUrl: "/templates/features.html",
+                    controller:"featuresController"
+                })
+                .when("/technical", {
+                    templateUrl: "/templates/technical.html",
+                    controller:"technicalController"
                 })
                 .otherwise({redirectTo: "/"})
             // Enabling html5 routing
