@@ -10,7 +10,7 @@ module.exports = function(grunt) {
 			// Note the convention of names "key": => buildConfiguration
 			dev: {
 				// The source typescript files, http://gruntjs.com/configuring-tasks#files
-				src: ["app/ts/**/*.ts", "app/ts.d/**/*.ts"],         
+				src: ["app/ts/**/*.ts", "app/ts.d/**/*.d.ts"],
 				// If specified, generate this file that you can use for your reference management
 				reference: "./app/reference.ts",  
 				// If specified, generate an out.js file which is the merged js file				

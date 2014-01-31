@@ -1,3 +1,10 @@
 .view {
     margin-top: 70px;
 }
+
+.carousel-caption{
+    background: rgba(0,0,0,0.3);
+}
+
+/* ui.bootstrap addition */
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }

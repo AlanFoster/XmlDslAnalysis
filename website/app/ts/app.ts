@@ -6,9 +6,10 @@
 var docsApp: ng.IModule =
     angular
         .module('docsApp', [
+            "ui.bootstrap",
             "ngRoute",
             "ngSanitize",
-            "ngResource"
+            "ngResource",
         ])
         .config(function ($routeProvider, $locationProvider) {
             $routeProvider

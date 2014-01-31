@@ -1,0 +1,6 @@
+<span>
+    <!-- {{source}} -->
+    <span ng-repeat="tag in source track by $index">
+        <a href="#">{{tag}}</a>{{$last ? '' : ', '}}
+    </span>
+</span>
