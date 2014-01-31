@@ -1,3 +1,5 @@
+"use strict";
+
 // Directive interface for menu item scope
 interface MenuItemScope extends ng.IScope {
     href: string

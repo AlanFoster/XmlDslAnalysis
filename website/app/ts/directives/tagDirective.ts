@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Directive for outputting tag information
  */

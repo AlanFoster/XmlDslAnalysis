@@ -12,7 +12,7 @@ var featureService = require("./feature-service.js")
 
 /**
  * Allow middleware to parse the post data of a body
- * Note - this is defined before all routes
+ * Note - this is defined *before* all routes
  */
 app.use(express.bodyParser());
 

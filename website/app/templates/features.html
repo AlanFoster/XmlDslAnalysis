@@ -9,11 +9,6 @@
             </div>
 
             <div class="form-group">
-                <label for="images">Images</label>
-                <input type="text" id="images" ng-model="newFeature.images" class="form-control" placeholder="Enter Title" required>
-            </div>
-
-            <div class="form-group">
                 <label for="supportTypes">Support Types</label>
                 <input type="text" id="supportTypes" ng-model="newFeature.supportTypes" class="form-control" placeholder="Enter Title" required>
             </div>
@@ -23,8 +18,13 @@
                 <input type="text" id="tags" ng-model="newFeature.tags" class="form-control" placeholder="Enter Title" required>
             </div>
 
+            <div class="form-group">
+                <label for="supportTypes">Images</label>
+                <image-uploader images="newFeature.images" ></image-uploader>
+            </div>
+
             <button type="submit" class="btn btn-primary" ng-click="submit(newFeature, newFeatureForm)" ng-disabled="newEventForm.$invalid">Submit</button>
-            <button type="button" ng-click="cancel()" class="btn btn-default">Cancel</button>
+            <button type="button" ng-click="cancel(); isAddFeatureCollapsed = !isAddFeatureCollapsed" class="btn btn-default">Cancel</button>
         </form>
     </div>
 </div>

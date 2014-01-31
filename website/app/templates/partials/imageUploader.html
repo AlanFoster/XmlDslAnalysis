@@ -1,0 +1,46 @@
+<div>
+    <!-- Generate the list of currently selected images -->
+    <form>
+        <div class="row">
+            <div class="col-sm-6 col-md-4" ng-repeat="image in images track by $index">
+                <div class="thumbnail">
+                    <img ng-src="{{image.location}}" alt="Image {{$index}}"/>
+
+                    <div class="caption">
+                        <h3>{{image.title}}</h3>
+
+                        <p>{{image.description}}</p>
+
+                        <!-- Enable Editing button -->
+                        <div class="pull-right" ng-hide="isEditing">
+                            <a ng-click="isEditing = true"><span class="glyphicon glyphicon-pencil"></span></a>
+                        </div>
+
+                        <br class="clearfix"/>
+
+                        <!-- Partial view when editing -->
+                        <div ng-show="isEditing">
+                            <div class="form-group">
+                                <label for="imageTitle">Image Title</label>
+                                <input type="text" id="imageTitle" ng-model="image.title" class="form-control" placeholder="Enter Title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="imageDescription">Image Description</label>
+                                <input type="text" id="imageDescription" ng-model="image.description" class="form-control" placeholder="Enter Description" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" ng-click="isEditing = false">Save</button>
+                            <button type="submit" class="btn btn-danger" ng-click="deleteImage(image)">Delete</button>
+                            <!--<button type="submit" class="btn btn-default" ng-click="isEditing = false">Cancel</button>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- Target Drag/Drop location -->
+    <div class="alert alert-warning target text-center">
+        <strong>Drag Images Here</strong>
+    </div>
+</div>

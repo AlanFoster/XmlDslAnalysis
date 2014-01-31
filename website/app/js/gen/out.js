@@ -43,6 +43,49 @@ docsApp.controller("overviewController", function ($scope) {
 });
 docsApp.controller("technicalController", function ($scope) {
 });
+"use strict";
+
+docsApp.directive("imageUploader", function () {
+    var definition = {
+        restrict: 'EA',
+        scope: {
+            "images": "="
+        },
+        replace: true,
+        templateUrl: "templates/partials/imageUploader.html",
+        link: function (scope, element, attrs) {
+            scope.toggleSelected = function (image) {
+                scope.currentlySelected = image;
+            };
+
+            scope.currentlySelected = undefined;
+
+            scope.images = [
+                {
+                    location: "images/contribution.png",
+                    title: "Title 1",
+                    description: "Description 1"
+                },
+                {
+                    location: "images/paramInsight.png",
+                    title: "Param Insight",
+                    description: "Param Insight Description"
+                }
+            ];
+
+            scope.deleteImage = function (image) {
+                var images = scope.images;
+
+                var index = images.indexOf(image);
+                if (index == -1)
+                    return;
+                images.splice(index, 1);
+            };
+        }
+    };
+    return definition;
+});
+"use strict";
 
 docsApp.directive("menuItem", function ($location) {
     var definition = {
@@ -64,6 +107,7 @@ docsApp.directive("menuItem", function ($location) {
     };
     return definition;
 });
+"use strict";
 docsApp.directive("tags", function ($location) {
     var definition = {
         restrict: 'EA',
