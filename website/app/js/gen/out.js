@@ -18,63 +18,11 @@ var docsApp = angular.module('docsApp', [
 
     $locationProvider.html5Mode(true);
 });
-var TagTypes = {
-    CODE_COMPLETION: "CodeCompletion",
-    REFACTOR: "Refactor"
-};
 
-var SupportTypes = {
-    SIMPLE: "Simple",
-    CAMEL: "Camel",
-    JAVA: "Java",
-    XML: "XML"
-};
-
-;
-
-docsApp.controller("featuresController", function ($scope) {
-    var features = [
-        {
-            title: "Simple Language Injection",
-            images: [
-                {
-                    location: "images/paramInsight.png",
-                    title: "Java DSL Injection",
-                    description: "Simple Language injection supported within Java DSL"
-                }
-            ],
-            supportTypes: [
-                SupportTypes.SIMPLE,
-                SupportTypes.JAVA,
-                SupportTypes.XML
-            ],
-            tags: [
-                TagTypes.CODE_COMPLETION,
-                TagTypes.REFACTOR
-            ]
-        },
-        {
-            title: "Simple Function Contribution",
-            images: [
-                {
-                    location: "images/contribution.png",
-                    title: "Simple Function Contribution",
-                    description: "Simple Function Contribution"
-                }
-            ],
-            supportTypes: [
-                SupportTypes.SIMPLE,
-                SupportTypes.JAVA,
-                SupportTypes.XML
-            ],
-            tags: [
-                TagTypes.CODE_COMPLETION,
-                TagTypes.REFACTOR
-            ]
-        }
-    ];
-
-    $scope.features = features;
+docsApp.controller("featuresController", function ($scope, featureService) {
+    featureService.getAllFeatures().then(function (callback) {
+        return $scope.features = callback;
+    });
 });
 docsApp.controller("overviewController", function ($scope) {
 });
@@ -110,5 +58,22 @@ docsApp.directive("tags", function ($location) {
         templateUrl: "templates/partials/tagPartial.html"
     };
     return definition;
+});
+;
+
+;
+
+;
+
+docsApp.service("featureService", function ($resource, $q) {
+    var resource = $resource("http://localhost:8000/services/features");
+
+    var service = {
+        getAllFeatures: function () {
+            return resource.query().$promise;
+        }
+    };
+
+    return service;
 });
 //# sourceMappingURL=out.js.map
