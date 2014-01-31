@@ -46,6 +46,10 @@ docsApp.controller("technicalController", function ($scope) {
 "use strict";
 
 docsApp.directive("imageUploader", function () {
+    var allowedMimeTypes = [
+        "image/png", "image/jpeg", "image/gif"
+    ];
+
     var definition = {
         restrict: 'EA',
         scope: {
@@ -53,34 +57,80 @@ docsApp.directive("imageUploader", function () {
         },
         replace: true,
         templateUrl: "templates/partials/imageUploader.html",
-        link: function (scope, element, attrs) {
-            scope.toggleSelected = function (image) {
-                scope.currentlySelected = image;
+        controller: function ($scope) {
+            $scope.toggleSelected = function (image) {
+                $scope.currentlySelected = image;
             };
 
-            scope.currentlySelected = undefined;
+            $scope.currentlySelected = undefined;
 
-            scope.images = [
-                {
-                    location: "images/contribution.png",
-                    title: "Title 1",
-                    description: "Description 1"
-                },
-                {
-                    location: "images/paramInsight.png",
-                    title: "Param Insight",
-                    description: "Param Insight Description"
-                }
-            ];
+            $scope.images = [];
 
-            scope.deleteImage = function (image) {
-                var images = scope.images;
+            $scope.deleteImage = function (image) {
+                var images = $scope.images;
 
                 var index = images.indexOf(image);
                 if (index == -1)
                     return;
                 images.splice(index, 1);
             };
+        },
+        link: function (scope, element, attrs) {
+            var targetDragDrop = element.find(".target");
+
+            var bindClass = function (options, e) {
+                var targetClasses = "dragged";
+                e.preventDefault();
+                targetDragDrop[options.isAdd ? "addClass" : "removeClass"](targetClasses);
+            };
+
+            var handlers = {
+                "dragover": function (e) {
+                    bindClass({ isAdd: true }, e);
+                },
+                "dragleave": function (e) {
+                    bindClass({ isAdd: false }, e);
+                },
+                "drop": function (e) {
+                    bindClass({ isAdd: false }, e);
+
+                    var handleFile = function (file) {
+                        if (allowedMimeTypes.indexOf(file.type) === -1) {
+                            console.log("Error file type :: " + file.type);
+                            return;
+                        }
+
+                        var fileReader = new FileReader();
+                        fileReader.onload = function (e) {
+                            var text = e.target.result;
+
+                            console.log("Dropped successfully");
+
+                            scope.$apply(function () {
+                                scope.images.push({
+                                    location: text,
+                                    title: "",
+                                    description: ""
+                                });
+                            });
+                        };
+
+                        fileReader.readAsDataURL(file);
+                    };
+
+                    var files = e.originalEvent.dataTransfer.files;
+
+                    for (var i = 0; i < files.length; i++) {
+                        var file = files[i];
+                        handleFile(file);
+                    }
+                    ;
+                }
+            };
+
+            for (var key in handlers) {
+                targetDragDrop.bind(key, handlers[key]);
+            }
         }
     };
     return definition;

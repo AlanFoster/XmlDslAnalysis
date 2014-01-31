@@ -2,7 +2,7 @@
     <!-- Generate the list of currently selected images -->
     <form>
         <div class="row">
-            <div class="col-sm-6 col-md-4" ng-repeat="image in images track by $index">
+            <div class="col-md-4" ng-repeat="image in images track by $index">
                 <div class="thumbnail">
                     <img ng-src="{{image.location}}" alt="Image {{$index}}"/>
 
@@ -22,11 +22,11 @@
                         <div ng-show="isEditing">
                             <div class="form-group">
                                 <label for="imageTitle">Image Title</label>
-                                <input type="text" id="imageTitle" ng-model="image.title" class="form-control" placeholder="Enter Title" required>
+                                <input type="text" id="imageTitle" ng-model="image.title" class="form-control" placeholder="Enter Title">
                             </div>
                             <div class="form-group">
                                 <label for="imageDescription">Image Description</label>
-                                <input type="text" id="imageDescription" ng-model="image.description" class="form-control" placeholder="Enter Description" required>
+                                <input type="text" id="imageDescription" ng-model="image.description" class="form-control" placeholder="Enter Description">
                             </div>
 
                             <button type="submit" class="btn btn-primary" ng-click="isEditing = false">Save</button>
@@ -40,7 +40,7 @@
     </form>
 
     <!-- Target Drag/Drop location -->
-    <div class="alert alert-warning target text-center">
+    <div class="target alert alert-warning text-center">
         <strong>Drag Images Here</strong>
     </div>
 </div>

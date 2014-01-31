@@ -20,3 +20,8 @@
 .css-form input.ng-valid.ng-dirty {
     background-color: #78FA89;
 }
+
+.dragged {
+    line-height: 180px;
+    height: 200px;
+}
