@@ -3,7 +3,17 @@
 module.exports = function(grunt) {
 	// Load Tasks
 	grunt.loadNpmTasks("grunt-ts");
-	
+
+    grunt.registerTask("runServer", function() {
+        grunt.log.oklns("Starting webserver");
+        grunt.util.spawn({cmd: ".\\run.bat"}, function(error, result, code) {
+            grunt.log.oklns("Webserver closed");
+            if(error) {
+                grunt.log.errorlns("Error - " + result + code);
+            }
+        })
+    })
+
 	// Perform configuration
 	grunt.initConfig({
 		ts: {
@@ -16,11 +26,11 @@ module.exports = function(grunt) {
 				// If specified, generate an out.js file which is the merged js file				
 				out: 'app/js/gen/out.js',         
 				// If specified, watches this directory for changes, and re-runs the current target
-				watch: 'app',                     
-			},
+				watch: 'app'
+			}
 		}
 	});
 	
 	// Register the default task
-	grunt.registerTask("default", ["ts:dev"]);
+	grunt.registerTask("default", ["runServer", "ts:dev"]);
 }
