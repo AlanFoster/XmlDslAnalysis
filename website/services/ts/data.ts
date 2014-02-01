@@ -1,12 +1,9 @@
 /**
  * Raw Data - TODO add to database
  */
-var TagTypes = {
+var DefaultTags = {
     CODE_COMPLETION: "CodeCompletion",
-    REFACTOR: "Refactor"
-};
-
-var SupportTypes = {
+    REFACTOR: "Refactor",
     SIMPLE: "Simple",
     CAMEL: "Camel",
     JAVA: "Java",
@@ -24,14 +21,9 @@ var features = [
                 description: "Simple Language injection supported within Java DSL"
             }
         ],
-        supportTypes: [
-            SupportTypes.SIMPLE,
-            SupportTypes.JAVA,
-            SupportTypes.XML
-        ],
         tags: [
-            TagTypes.CODE_COMPLETION,
-            TagTypes.REFACTOR
+            DefaultTags.CODE_COMPLETION,
+            DefaultTags.REFACTOR
         ]
     },
     {
@@ -44,15 +36,12 @@ var features = [
                 description: "Simple Function Contribution"
             }
         ],
-        supportTypes: [
-            SupportTypes.SIMPLE,
-            SupportTypes.JAVA,
-            SupportTypes.XML
-        ],
         tags: [
-            TagTypes.CODE_COMPLETION,
-            TagTypes.REFACTOR,
-            "Custom"
+            DefaultTags.CODE_COMPLETION,
+            DefaultTags.REFACTOR,
+            DefaultTags.SIMPLE,
+            DefaultTags.JAVA,
+            DefaultTags.XML
         ]
     }
 ];

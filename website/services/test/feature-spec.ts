@@ -97,14 +97,12 @@ describe("Features webservice tests", function() {
                         id: 1,
                         title: "Title 1",
                         images: [],
-                        supportTypes: [],
                         tags: []
                     },
                     {
                         id: 2,
                         title: "Title 2",
                         images: [],
-                        supportTypes: [],
                         tags: []
                     }
                 ];
@@ -128,7 +126,7 @@ describe("Features webservice tests", function() {
 
             it("should give a list of default suggestions", function() {
                 var initialFeatures = [];
-                var expectedTags = ["CodeCompletion", "Refactor"];
+                var expectedTags = ["CodeCompletion", "Refactor", "Simple", "Camel", "Java", "XML"];
                 testFeaturesTagService(initialFeatures, expectedTags);
             })
 
@@ -137,10 +135,9 @@ describe("Features webservice tests", function() {
                     id: 1,
                     title: "Title 1",
                     images: [],
-                    supportTypes: [],
                     tags: ["Custom 1", "Custom 2"]
                 }];
-                var expectedTags = ["CodeCompletion", "Refactor", "Custom 1", "Custom 2"];
+                var expectedTags = ["CodeCompletion", "Refactor", "Simple", "Camel", "Java", "XML", "Custom 1", "Custom 2"];
                 testFeaturesTagService(initialFeatures, expectedTags);
             })
 
@@ -149,17 +146,15 @@ describe("Features webservice tests", function() {
                     id: 1,
                     title: "Title 1",
                     images: [],
-                    supportTypes: [],
                     tags: ["Custom 1", "foo", "CodeCompletion", "Custom 2", "Refactor", "Custom 3", "bar"]
                 },
                 {
                     id: 1,
                     title: "Title 1",
                     images: [],
-                    supportTypes: [],
                     tags: ["Custom 1", "foo", "Refactor", "Custom 3", "bar"]
                 }];
-                var expectedTags = ["CodeCompletion", "Refactor", "Custom 1", "foo", "Custom 2", "Custom 3", "bar"];
+                var expectedTags = ["CodeCompletion", "Refactor", "Simple", "Camel", "Java", "XML", "Custom 1", "foo", "Custom 2", "Custom 3", "bar"];
                 testFeaturesTagService(initialFeatures, expectedTags);
             })
         })

@@ -4,10 +4,15 @@ var util = require('util');
 var arrayShim = require("./arrayShim.js")
 
 // Default list of suggested tags
-var TagTypes = {
+var DefaultTags = {
     CODE_COMPLETION: "CodeCompletion",
-    REFACTOR: "Refactor"
+    REFACTOR: "Refactor",
+    SIMPLE: "Simple",
+    CAMEL: "Camel",
+    JAVA: "Java",
+    XML: "XML"
 };
+
 
 /**
  * Route Creation.
@@ -27,7 +32,7 @@ exports.createRoutes = function(app, features: IFeature[]) {
 
     app.get("/services/features/tags", function(req, res, next) {
         // Return all default tags which should be suggested, and all custom ones as a JSON array
-        var defaultTagValues = [Object.keys(TagTypes).map(function(key) { return TagTypes[key]; })];
+        var defaultTagValues = [Object.keys(DefaultTags).map(function(key) { return DefaultTags[key]; })];
         var distinctTagValues = features.map(function(feature) { return feature.tags; });
         var unionTags = defaultTagValues
             .concat(distinctTagValues)

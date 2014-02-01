@@ -4,7 +4,6 @@
 interface IFeature {
     title: string
     images: Image[]
-    supportTypes: string[]
     tags: string[]
 }
 
