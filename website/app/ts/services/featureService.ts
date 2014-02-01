@@ -13,6 +13,10 @@ interface IFeatureService {
      * Adds the given feature to the webservice
      */
     addFeature(feature: IFeature): ng.IPromise<IFeature>
+    /**
+     * Return the REST url for suggested tags
+     */
+    getSuggestedTags(): String
 };
 
 /**
@@ -24,6 +28,12 @@ interface IFeature {
     supportTypes: string[]
     tags: string[]
 };
+
+
+interface ITag {
+    id: number
+    text: string
+}
 
 /**
  * Represents the details of an associated image
@@ -48,7 +58,8 @@ docsApp.service("featureService", function($resource: ng.resource.IResourceServi
         addFeature: (feature) => {
             console.log(feature)
             return resource.save(feature)
-        }
+        },
+        getSuggestedTags: () => "services/features/tags"
     };
 
     return service;

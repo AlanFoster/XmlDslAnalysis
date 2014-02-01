@@ -7,6 +7,7 @@ var docsApp: ng.IModule =
     angular
         .module('docsApp', [
             "ui.bootstrap",
+            "bootstrap-tagsinput",
             "ngRoute",
             "ngSanitize",
             "ngResource",

@@ -10,7 +10,7 @@ describe("Image uploader directive", function () {
     var ctrl;
 
     beforeEach(module("docsApp"));
-    //beforeEach(module("templates"));
+    //beforeEach(module("templates/partials/imageUploader.html"));
     beforeEach(inject(function ($compile, $rootScope) {
         $scope = $rootScope;
         $scope.images = [];

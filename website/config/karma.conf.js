@@ -4,7 +4,7 @@ module.exports = function (config) {
 
         // Template locations
         preprocessors: {
-            "**/*.html": ["ng-html2js"]
+            "app/templates/**/*.html": 'ng-html2js'
         },
 
         ngHtml2JsPreprocessor: {
@@ -18,13 +18,16 @@ module.exports = function (config) {
             "app/lib/angular/angular.js",
             "app/lib/angular/angular-*.js",
             "test/lib/angular/angular-mocks.js",
+
             // Additional module dependency
             "app/lib/ui.bootstrap/**/*.js",
+
+            // Contains our application
             "app/js/**/*.js",
             "test/unit/**/*.js",
 
             // Templates
-            //"**/*.html"
+            //"app/templates/**/*.html"
         ],
 
         exclude: [

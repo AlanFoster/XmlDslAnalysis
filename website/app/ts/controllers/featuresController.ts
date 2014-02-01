@@ -30,12 +30,23 @@ interface IFeatureScope {
 /**
  * Features controller
  */
-docsApp.controller("featuresController", function($scope: IFeatureScope, featureService: IFeatureService) {
+docsApp.controller("featuresController", function($scope: IFeatureScope, featureService: IFeatureService, $q: ng.IQService, $http: ng.IHttpService) {
     // Access the webservice, and when it update the scope as expected
     featureService.getAllFeatures()
         .then((callback) => $scope.features = callback);
 
-    $scope.newFeature = <IFeature> {};
+    var result = [
+        "Tag #1"
+    ];
+
+    (<any> $scope).getSuggestedTags = featureService.getSuggestedTags;
+    (<any> $scope).getTagClass = () => "label label-info";
+
+    var createBlankFeature = ():IFeature => {
+        return <any> ({ tags: result });
+    };
+
+    $scope.newFeature = createBlankFeature();
 
     // Hide the add feature by default
     $scope.isAddFeatureCollapsed = false;
@@ -56,5 +67,5 @@ docsApp.controller("featuresController", function($scope: IFeatureScope, feature
     /**
      * Cancels the associated new feature addition
      */
-    $scope.cancel = () => { $scope.newFeature = <IFeature> {}; };
+    $scope.cancel = createBlankFeature;
 });

@@ -53,7 +53,8 @@ var features = [
         ],
         tags: [
             TagTypes.CODE_COMPLETION,
-            TagTypes.REFACTOR
+            TagTypes.REFACTOR,
+            "Custom"
         ]
     }
 ];
@@ -77,4 +78,29 @@ exports.createRoutes = function(app) {
     app.post("/services/features", function(req, res, next) {
         features.push(req.body);
     });
+
+    app.get("/services/features/tags", function(req, res, next) {
+        // distinct shim for arrays
+        Array.prototype.distinct = function() {
+            var distinctList = [];
+            for(var i = 0, length = this.length; i < length; i++) {
+                var elem = this[i];
+                if(distinctList.indexOf(elem) === -1) {
+                    distinctList.push(elem)
+                }
+            }
+            return distinctList;
+        }
+
+        // Return all default tags which should be suggested, and all custom ones as a JSON array
+        var defaultTagValues = [Object.keys(TagTypes).map(function(key) { return TagTypes[key]; })];
+        var distinctTagValues = features.map(function(feature) { return feature.tags; });
+        var unionTags = defaultTagValues
+            .concat(distinctTagValues)
+            // flatMap(identity)
+            .reduce(function(a,b) { return a.concat(b); })
+            .distinct();
+
+        res.json(unionTags)
+    })
 };

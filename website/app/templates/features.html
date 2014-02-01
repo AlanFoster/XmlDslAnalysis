@@ -10,12 +10,19 @@
 
             <div class="form-group">
                 <label for="supportTypes">Support Types</label>
-                <input type="text" id="supportTypes" ng-model="newFeature.supportTypes" class="form-control" placeholder="Enter Title" required>
+                <input type="text" id="supportTypes" ng-model="newFeature.supportTypes" data-role="tagsinput" class="form-control" placeholder="Enter Title" required>
             </div>
 
             <div class="form-group">
-                <label for="tags">Tags</label>
-                <input type="text" id="tags" ng-model="newFeature.tags" class="form-control" placeholder="Enter Title" required>
+                <label>Tags</label>
+               <!-- <input type="text"  ng-model="newFeature.tags" class="form-control" data-role="tagsinput" placeholder="Enter Title" required>-->
+                <div class="bs-docs-example">
+                    <bootstrap-tagsinput
+                            ng-model="newFeature.tags"
+                            suggestion-url="getSuggestedTags"
+                            tagclass="getTagClass">
+                    </bootstrap-tagsinput>
+                </div>
             </div>
 
             <div class="form-group">
@@ -29,6 +36,7 @@
     </div>
 </div>
 
+
 <div ng-repeat="feature in features">
     <div class="">
         <h3>{{feature.title}}</h3>
@@ -39,7 +47,6 @@
             Support Types: <tags source="feature.supportTypes" />
         </div>
     </div>
-
 
     <div class="">
         <carousel>

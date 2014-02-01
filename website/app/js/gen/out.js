@@ -1,6 +1,7 @@
 "use strict";
 var docsApp = angular.module('docsApp', [
     "ui.bootstrap",
+    "bootstrap-tagsinput",
     "ngRoute",
     "ngSanitize",
     "ngResource"
@@ -19,12 +20,25 @@ var docsApp = angular.module('docsApp', [
     $locationProvider.html5Mode(true);
 });
 
-docsApp.controller("featuresController", function ($scope, featureService) {
+docsApp.controller("featuresController", function ($scope, featureService, $q, $http) {
     featureService.getAllFeatures().then(function (callback) {
         return $scope.features = callback;
     });
 
-    $scope.newFeature = {};
+    var result = [
+        "Tag 1"
+    ];
+
+    $scope.getSuggestedTags = featureService.getSuggestedTags;
+    $scope.getTagClass = function () {
+        return "label label-info";
+    };
+
+    var createBlankFeature = function () {
+        return ({ tags: result });
+    };
+
+    $scope.newFeature = createBlankFeature();
 
     $scope.isAddFeatureCollapsed = false;
 
@@ -35,9 +49,7 @@ docsApp.controller("featuresController", function ($scope, featureService) {
         featureService.addFeature(newFeature);
     };
 
-    $scope.cancel = function () {
-        $scope.newFeature = {};
-    };
+    $scope.cancel = createBlankFeature;
 });
 docsApp.controller("overviewController", function ($scope) {
 });
@@ -58,8 +70,6 @@ docsApp.directive("imageUploader", function () {
         replace: true,
         templateUrl: "templates/partials/imageUploader.html",
         controller: function ($scope) {
-            console.log("POTATOESSSS");
-
             $scope.images = [];
 
             $scope.deleteImage = function (image) {
@@ -72,8 +82,6 @@ docsApp.directive("imageUploader", function () {
             };
         },
         link: function (scope, element, attrs) {
-            console.log("POTATOESSa35ba53baSS");
-
             var targetDragDrop = element.find(".target");
 
             var bindClass = function (options, e) {
@@ -84,8 +92,6 @@ docsApp.directive("imageUploader", function () {
 
             var handlers = {
                 "dragover": function (e) {
-                    console.log("moooooooo");
-
                     bindClass({ isAdd: true }, e);
                 },
                 "dragleave": function (e) {
@@ -184,6 +190,9 @@ docsApp.service("featureService", function ($resource, $q) {
         addFeature: function (feature) {
             console.log(feature);
             return resource.save(feature);
+        },
+        getSuggestedTags: function () {
+            return "services/features/tags";
         }
     };
 
