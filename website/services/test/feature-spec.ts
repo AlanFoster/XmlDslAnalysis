@@ -123,28 +123,13 @@ describe("Features webservice tests", function() {
         });
 
         describe("The POST: features", function() {
+            var exampleFeature1;
+
             /**
-             * Tests the get features service
-             * @param features The initially constructed features list
-             * @param feature The new feature to add
-             * @param expectedFeatures The list of expected features when the service is called
+             * Test data setup
              */
-            var testPostFeaturesService = (features: IFeature[], feature: IFeature, expectedFeatures: IFeature[]) => {
-                // Mock the main application
-                var mockApp = serviceHelpers.createMockApp();
-                featuresService.createRoutes(mockApp, features);
-
-                // Call the post service
-                var addServiceMock = serviceHelpers.callService(mockApp, "post", "/services/features", feature);
-                expect(addServiceMock.json).toHaveBeenCalled();
-
-                // Ensure that the features service returns the new items
-                var serviceFeaturesMock = serviceHelpers.callService(mockApp, "get", "/services/features");
-                expect(serviceFeaturesMock.json).toHaveBeenCalledWith(expectedFeatures);
-            };
-
-            it("Should add an empty list of features successfully", function () {
-                var newFeature = {
+            beforeEach(function() {
+                exampleFeature1 = {
                     title: "Title 1",
                     images: [
                         {
@@ -154,9 +139,45 @@ describe("Features webservice tests", function() {
                         }
                     ],
                     tags: ["Custom 1", "Custom 2"]
-                };
+                }
+            });
 
-                testPostFeaturesService([], newFeature, [newFeature]);
+            /**
+             * Tests the get features service
+             * @param features The initially constructed features list
+             * @param newFeatures The new feature to add
+             * @param expectedFeatures The list of expected features when the service is called
+             */
+            var testPostFeaturesService = (features: IFeature[], newFeatures: IFeature[], expectedFeatures: IFeature[]) => {
+                // Mock the main application
+                var mockApp = serviceHelpers.createMockApp();
+                featuresService.createRoutes(mockApp, features);
+
+                // Call the post service
+                for(var feature in newFeatures) {
+                    if(!newFeatures.hasOwnProperty(feature)) continue;
+                    var addServiceMock = serviceHelpers.callService(mockApp, "post", "/services/features", newFeatures[feature]);
+                    expect(addServiceMock.json).toHaveBeenCalled();
+                }
+
+                // Ensure that the features service returns the new items
+                var serviceFeaturesMock = serviceHelpers.callService(mockApp, "get", "/services/features");
+                expect(serviceFeaturesMock.json).toHaveBeenCalledWith(expectedFeatures);
+            };
+
+            it("Should work when no features are provided", function () {
+                var newFeatures = [];
+                testPostFeaturesService([], newFeatures, []);
+            });
+
+            it("Should add an empty list of features successfully", function () {
+                var newFeatures = [exampleFeature1];
+                testPostFeaturesService([], newFeatures, [exampleFeature1]);
+            });
+
+            it("Should allow duplicates", function() {
+                var newFeatures = [exampleFeature1, exampleFeature1, exampleFeature1];
+                testPostFeaturesService([], newFeatures, [exampleFeature1, exampleFeature1, exampleFeature1]);
             })
         })
     })
