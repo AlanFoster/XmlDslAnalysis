@@ -2,17 +2,12 @@
 
 var featuresService = require("./../ts/feature-service.js");
 var arrayShim = require("./../ts/arrayShim.js");
+var serviceHelpers = require("./service-helper.js");
 
 /**
  * Tests for ensuring that the features webservice works as expected
  */
 describe("Features webservice tests", function() {
-    /**
-     * Creates a mock app implementation using jasmine
-     */
-    var createMockApp = () => jasmine.createSpyObj("mockApp", ["get", "post"]);
-    var createResMock = () => jasmine.createSpyObj("res", ["json"]);
-
     /**
      * Ensure that the webservices register themselves correctly with the express app
      */
@@ -20,7 +15,7 @@ describe("Features webservice tests", function() {
         var mockApp;
 
         beforeEach(function() {
-            mockApp = createMockApp();
+            mockApp = serviceHelpers.createMockApp();
             featuresService.createRoutes(mockApp, []);
         });
 
@@ -38,38 +33,6 @@ describe("Features webservice tests", function() {
     });
 
     describe("Service implementations", function() {
-        /**
-         * Extracts the given function implementation of the given application mock
-         */
-        var getRouteImplementation = (spy, routeName: String) => {
-            // Find the matching definition
-            var matchingCall = spy.calls.find(call => call.args[0] === routeName);
-            return matchingCall && matchingCall.args[1];
-        };
-
-        /**
-         * Tests a service route
-         *
-         * @param features The initially constructed features list
-         * @param method The method type, ie post/get/put etc
-         * @param servicePath The service path to test
-         * @returns {*|T}
-         */
-        var testServiceImplementation = (features: IFeature[], method: string, servicePath: string): any => {
-            // Mock the main application
-            var mockApp = createMockApp();
-            featuresService.createRoutes(mockApp, features);
-
-            // Extract the route implementation to test a call manually
-            var routeImplementation = <any> getRouteImplementation(mockApp[method], servicePath);
-
-            // Invoke the route implementation
-            var resMock = createResMock();
-            routeImplementation(undefined, resMock, undefined);
-
-            return resMock;
-        }
-
 
         /**
          * Testing the GET: features service
@@ -81,7 +44,7 @@ describe("Features webservice tests", function() {
              * @param expected The list of expected features when the service is called
              */
             var testGetFeaturesService = (features: IFeature[], expected: IFeature[]) => {
-                var resMock = testServiceImplementation(features, "get", "/services/features")
+                var resMock = serviceHelpers.testServiceImplementation(featuresService, features, "get", "/services/features")
 
                 // Assert expectations
                 expect(resMock.json).toHaveBeenCalledWith(expected)
@@ -118,7 +81,7 @@ describe("Features webservice tests", function() {
              * @param expectedTags The expected tags to use
              */
             var testFeaturesTagService = (features: IFeature[], expectedTags: string[]) => {
-                var resMock = testServiceImplementation(features, "get", "/services/features/tags")
+                var resMock = serviceHelpers.testServiceImplementation(featuresService, features, "get", "/services/features/tags")
 
                 // Assert expectations
                 expect(resMock.json).toHaveBeenCalledWith(expectedTags)
