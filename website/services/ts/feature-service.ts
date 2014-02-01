@@ -13,7 +13,6 @@ var DefaultTags = {
     XML: "XML"
 };
 
-
 /**
  * Route Creation.
  * Note this assumes the body parser middleware is used.
@@ -27,7 +26,10 @@ exports.createRoutes = function(app, features: IFeature[]) {
     });
 
     app.post("/services/features", function(req, res, next) {
-        features.push(req.body);
+        var newItem = req.body;
+        features.push(newItem);
+        // Respond with a success
+        res.json({});
     });
 
     app.get("/services/features/tags", function(req, res, next) {

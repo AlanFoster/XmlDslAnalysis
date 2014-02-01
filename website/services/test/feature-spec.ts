@@ -120,6 +120,44 @@ describe("Features webservice tests", function() {
                 var expectedTags = ["CodeCompletion", "Refactor", "Simple", "Camel", "Java", "XML", "Custom 1", "foo", "Custom 2", "Custom 3", "bar"];
                 testFeaturesTagService(initialFeatures, expectedTags);
             })
+        });
+
+        describe("The POST: features", function() {
+            /**
+             * Tests the get features service
+             * @param features The initially constructed features list
+             * @param feature The new feature to add
+             * @param expectedFeatures The list of expected features when the service is called
+             */
+            var testPostFeaturesService = (features: IFeature[], feature: IFeature, expectedFeatures: IFeature[]) => {
+                // Mock the main application
+                var mockApp = serviceHelpers.createMockApp();
+                featuresService.createRoutes(mockApp, features);
+
+                // Call the post service
+                var addServiceMock = serviceHelpers.callService(mockApp, "post", "/services/features", feature);
+                expect(addServiceMock.json).toHaveBeenCalled();
+
+                // Ensure that the features service returns the new items
+                var serviceFeaturesMock = serviceHelpers.callService(mockApp, "get", "/services/features");
+                expect(serviceFeaturesMock.json).toHaveBeenCalledWith(expectedFeatures);
+            };
+
+            it("Should add an empty list of features successfully", function () {
+                var newFeature = {
+                    title: "Title 1",
+                    images: [
+                        {
+                            location: "data:....",
+                            title: "Java DSL Injection",
+                            description: "Simple Language injection supported within Java DSL"
+                        }
+                    ],
+                    tags: ["Custom 1", "Custom 2"]
+                };
+
+                testPostFeaturesService([], newFeature, [newFeature]);
+            })
         })
     })
 });
