@@ -8,7 +8,8 @@ var util = require('util');
 var path = require('path');
 
 // Known services
-var featureService = require("./feature-service.js")
+var featureService = require("./ts/feature-service.js");
+var features = require("./ts/data.js").features;
 
 /**
  * Allow middleware to parse the post data of a body
@@ -17,7 +18,7 @@ var featureService = require("./feature-service.js")
 app.use(express.bodyParser());
 
 // Load our services
-featureService.createRoutes(app);
+featureService.createRoutes(app, features);
 
 // Create file serving mechanism
 app.configure(function () {

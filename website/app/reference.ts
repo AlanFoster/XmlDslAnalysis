@@ -1,3 +1,5 @@
+/// <reference path="../ts.d/features.d.ts" />
+
 //grunt-start
 /// <reference path="ts/app.ts" />
 /// <reference path="ts/controllers/featuresController.ts" />

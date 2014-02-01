@@ -26,7 +26,7 @@ docsApp.controller("featuresController", function ($scope, featureService, $q, $
     });
 
     var result = [
-        "Tag 1"
+        "Tag #1"
     ];
 
     $scope.getSuggestedTags = featureService.getSuggestedTags;
@@ -174,10 +174,6 @@ docsApp.directive("tags", function ($location) {
     };
     return definition;
 });
-;
-
-;
-
 ;
 
 docsApp.service("featureService", function ($resource, $q) {

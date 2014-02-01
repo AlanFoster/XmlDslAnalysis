@@ -9,10 +9,10 @@
     "karma-jasmine": "~0.1",
     "karma-ng-scenario": "~0.1",
     "karma-ng-html2js-preprocessor": "~0.1.0",
-
     "grunt": "~0.4.2",
     "grunt-ts": "~1.6.4",
-
-    "express": "3.x"
+    "express": "3.x",
+    "grunt-jasmine-node": "~0.1.0",
+    "underscore": "1.5.2"
   }
 }
