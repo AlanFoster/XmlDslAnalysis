@@ -42,7 +42,7 @@ var callService = (mockApp, method: string, servicePath: string, input?) => {
 
     // Invoke the route implementation
     var resMock = createResMock();
-    var reqMock = createReqMock(input);
+    var reqMock = <any> createReqMock(input);
     routeImplementation(reqMock, resMock, undefined);
 
     return resMock;
