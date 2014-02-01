@@ -58,11 +58,7 @@ docsApp.directive("imageUploader", function () {
         replace: true,
         templateUrl: "templates/partials/imageUploader.html",
         controller: function ($scope) {
-            $scope.toggleSelected = function (image) {
-                $scope.currentlySelected = image;
-            };
-
-            $scope.currentlySelected = undefined;
+            console.log("POTATOESSSS");
 
             $scope.images = [];
 
@@ -76,6 +72,8 @@ docsApp.directive("imageUploader", function () {
             };
         },
         link: function (scope, element, attrs) {
+            console.log("POTATOESSa35ba53baSS");
+
             var targetDragDrop = element.find(".target");
 
             var bindClass = function (options, e) {
@@ -86,6 +84,8 @@ docsApp.directive("imageUploader", function () {
 
             var handlers = {
                 "dragover": function (e) {
+                    console.log("moooooooo");
+
                     bindClass({ isAdd: true }, e);
                 },
                 "dragleave": function (e) {

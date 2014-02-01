@@ -1,37 +1,54 @@
-module.exports = function(config){
+module.exports = function (config) {
     config.set({
-    basePath : '../',
+        basePath: "../",
 
-    files : [
-      'app/lib/angular/angular.js',
-      'app/lib/angular/angular-*.js',
-      'test/lib/angular/angular-mocks.js',
-      'app/js/**/*.js',
-      'test/unit/**/*.js'
-    ],
+        // Template locations
+        preprocessors: {
+            "**/*.html": ["ng-html2js"]
+        },
 
-    exclude : [
-      'app/lib/angular/angular-loader.js',
-      'app/lib/angular/*.min.js',
-      'app/lib/angular/angular-scenario.js'
-    ],
+        ngHtml2JsPreprocessor: {
+            // strip app from the file path
+            stripPrefix: "app/",
+            // Allows access to beforeEach(module("moduleName")) to simply load all templates
+            moduleName: "templates"
+        },
 
-    autoWatch : true,
+        files: [
+            "app/lib/angular/angular.js",
+            "app/lib/angular/angular-*.js",
+            "test/lib/angular/angular-mocks.js",
+            // Additional module dependency
+            "app/lib/ui.bootstrap/**/*.js",
+            "app/js/**/*.js",
+            "test/unit/**/*.js",
 
-    frameworks: ['jasmine'],
+            // Templates
+            //"**/*.html"
+        ],
 
-    browsers : ['Chrome'],
+        exclude: [
+            "app/lib/angular/angular-loader.js",
+            "app/lib/angular/*.min.js",
+            "app/lib/angular/angular-scenario.js"
+        ],
 
-    plugins : [
-            'karma-junit-reporter',
-            'karma-chrome-launcher',
-            'karma-firefox-launcher',
-            'karma-jasmine'
-            ],
+        autoWatch: true,
 
-    junitReporter : {
-      outputFile: 'test_out/unit.xml',
-      suite: 'unit'
-    }
+        frameworks: ["jasmine"],
 
-})}
+        browsers: ["Chrome"],
+
+        plugins: [
+            "karma-junit-reporter",
+            "karma-chrome-launcher",
+            "karma-firefox-launcher",
+            "karma-jasmine"
+        ],
+
+        junitReporter: {
+            outputFile: "test_out/unit.xml",
+            suite: "unit"
+        }
+    })
+}

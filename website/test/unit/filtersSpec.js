@@ -2,6 +2,7 @@
 
 /* jasmine specs for filters go here */
 
+/*
 describe('filter', function() {
   beforeEach(module('myApp.filters'));
 
@@ -17,3 +18,4 @@ describe('filter', function() {
     }));
   });
 });
+*/

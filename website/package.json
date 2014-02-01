@@ -1,18 +1,18 @@
 {
-  "name": "angularjs-seed",
-  "description": "A starter project for AngularJS",
-  "repository": "https://github.com/angular/angular-seed",
+  "name": "documentation-website",
+  "description": "Angular-JS Documentation for plugin",
+  "repository": "https://github.com/AlanFoster/XmlDslAnalysis",
   "devDependencies": {
-    "phantomjs" : "~1.9",
-    "karma" : "~0.10",
-    "karma-junit-reporter" : "~0.1",
-    "karma-jasmine" : "~0.1",
-    "karma-ng-scenario" : "~0.1",
-	
-	
-	"grunt": "~0.4.2",
-	"grunt-ts": "~1.6.4",
-	
-	"express":"3.x"
+    "phantomjs": "~1.9",
+    "karma": "~0.10",
+    "karma-junit-reporter": "~0.1",
+    "karma-jasmine": "~0.1",
+    "karma-ng-scenario": "~0.1",
+    "karma-ng-html2js-preprocessor": "~0.1.0",
+
+    "grunt": "~0.4.2",
+    "grunt-ts": "~1.6.4",
+
+    "express": "3.x"
   }
 }

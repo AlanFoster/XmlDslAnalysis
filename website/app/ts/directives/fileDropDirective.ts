@@ -27,11 +27,6 @@ docsApp.directive("imageUploader", function () {
         // Raw template
         templateUrl: "templates/partials/imageUploader.html",
         controller: $scope => {
-            $scope.toggleSelected = (image) => {
-                $scope.currentlySelected = image;
-            }
-
-            $scope.currentlySelected = undefined;
 
             // Hardcode path for testing
             $scope.images = [
