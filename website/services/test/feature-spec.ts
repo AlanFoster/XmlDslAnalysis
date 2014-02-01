@@ -1,7 +1,7 @@
 /// <reference path="./../reference.ts" />
 
 var featuresService = require("./../ts/feature-service.js");
-var _ = <UnderscoreStatic> require("underscore");
+var arrayShim = require("./../ts/arrayShim.js");
 
 /**
  * Tests for ensuring that the features webservice works as expected
@@ -43,7 +43,7 @@ describe("Features webservice tests", function() {
          */
         var getRouteImplementation = (spy, routeName: String) => {
             // Find the matching definition
-            var matchingCall = _.find(spy.calls, (call:any) => call.args[0] === routeName);
+            var matchingCall = spy.calls.find(call => call.args[0] === routeName);
             return matchingCall && matchingCall.args[1];
         };
 
@@ -162,8 +162,6 @@ describe("Features webservice tests", function() {
                 var expectedTags = ["CodeCompletion", "Refactor", "Custom 1", "foo", "Custom 2", "Custom 3", "bar"];
                 testFeaturesTagService(initialFeatures, expectedTags);
             })
-
         })
-
     })
 });

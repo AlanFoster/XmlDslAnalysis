@@ -12,7 +12,6 @@
     "grunt": "~0.4.2",
     "grunt-ts": "~1.6.4",
     "express": "3.x",
-    "grunt-jasmine-node": "~0.1.0",
-    "underscore": "1.5.2"
+    "grunt-jasmine-node": "~0.1.0"
   }
 }
