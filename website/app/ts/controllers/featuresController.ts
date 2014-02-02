@@ -63,7 +63,7 @@ docsApp.controller("featuresController", function($scope: IFeatureControllerScop
 
     // Creates a new blank feature
     var createBlankFeature = ():void => {
-        $scope.newFeature = <IFeature> ({ tags: [] });
+        $scope.newFeature = <IFeature> ({ tags: [], images: [] });
         // trigger a digest if required
         if(!$scope.$$phase) {
             $scope.$digest();

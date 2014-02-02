@@ -35,7 +35,7 @@ docsApp.controller("featuresController", function ($scope, featureService, toast
     };
 
     var createBlankFeature = function () {
-        $scope.newFeature = ({ tags: [] });
+        $scope.newFeature = ({ tags: [], images: [] });
 
         if (!$scope.$$phase) {
             $scope.$digest();

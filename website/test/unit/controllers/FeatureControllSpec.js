@@ -69,6 +69,15 @@ describe("Features controller", function () {
             // The feature should be different not
             expect(scope.newFeature).not.toBe(changedFeature);
         })
+
+        it("should leave list objects etc defined", function() {
+            var changedFeature = {};
+            scope.newFeature = changedFeature;
+            scope.cancel();
+            // The feature should be different not
+            expect(scope.newFeature.tags).toBeDefined();
+            expect(scope.newFeature.images).toBeDefined();
+        })
     });
 
     describe("loading the features with a call to getAllFeatures", function() {
