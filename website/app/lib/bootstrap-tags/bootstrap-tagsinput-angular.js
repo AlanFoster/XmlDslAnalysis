@@ -63,15 +63,16 @@ angular.module('bootstrap-tagsinput', [])
             scope.model.splice(idx, 1);
         });
 
+          $('.tt-query').on('blur', function() {
+              $(this).val('');
+          });
+
         // create a shallow copy of model's current state, needed to determine
         // diff when model changes
-        var prev = scope.model.slice();
-        scope.$watch("model", function() {
-          var added = scope.model.filter(function(i) {return prev.indexOf(i) === -1;}),
-              removed = prev.filter(function(i) {return scope.model.indexOf(i) === -1;}),
+        scope.$watch("model", function(newValue, prev) {
+          var added = newValue.filter(function(i) {return prev.indexOf(i) === -1;}),
+              removed = prev.filter(function(i) {return newValue.indexOf(i) === -1;}),
               i;
-
-          prev = scope.model.slice();
 
           // Remove tags no longer in binded model
           for (i = 0; i < removed.length; i++) {
@@ -85,7 +86,10 @@ angular.module('bootstrap-tagsinput', [])
           for (i = 0; i < added.length; i++) {
             select.tagsinput('add', added[i]);
           }
-        }, true);
+
+          select.html("")
+
+        }, false);
       });
     }
   };
