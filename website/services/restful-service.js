@@ -38,23 +38,6 @@ app.configure(function () {
 
     // Handles web service requests as a middle ware
     app.use(html5Middleware(appFolder));
-
-    // Allow CORS - Cross Origin Resource Sharing through express middleware
-    app.use(function (req, res, next) {
-        res.header('Access-Control-Allow-Origin', "*");
-        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-        res.header('Access-Control-Allow-Headers', 'Content-Type');
-
-        next();
-    });
-
-    // Create logging middleware
-    app.use(function (req, res, next) {
-        util.puts("Received request :: ", req);
-
-        // Invoke the next item within the chain
-        next();
-    })
 });
 
 exports.main = function () {
