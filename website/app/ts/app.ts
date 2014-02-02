@@ -11,6 +11,7 @@ var docsApp: ng.IModule =
             "ngRoute",
             "ngSanitize",
             "ngResource",
+            "toaster"
         ])
         .config(function ($routeProvider, $locationProvider) {
             $routeProvider

@@ -12,6 +12,8 @@
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-tags/bootstrap-tagsinput.css" rel="stylesheet">
     <link href="css/typeahead.js/typeahead.css" rel="stylesheet">
+    <link href="css/toaster/toaster.css" rel="stylesheet">
+
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -47,6 +49,7 @@
 
 <div class="container">
     <div class="view">
+        <toaster-container> </toaster-container>
         <ng-view></ng-view>
     </div>
 </div>
@@ -59,6 +62,7 @@
 <script src="lib/angular/angular-sanitize.js"></script>
 <script src="lib/angular/angular-resource.js"></script>
 <script src="lib/angular/angular-route.js"></script>
+<script src="lib/angular/angular-animate.js"></script>
 
 <!-- Bootstrap dependencies -->
 <script src="lib/bootstrap/bootstrap.min.js"></script>
@@ -67,6 +71,7 @@
 <script src="lib/typeahead.js/typeahead.min.js"></script>
 <script src="lib/bootstrap-tags/bootstrap-tagsinput.js"></script>
 <script src="lib/bootstrap-tags/bootstrap-tagsinput-angular.js"></script>
+<script src="lib/toaster/toaster.js"></script>
 
 <!-- Reference the single created file generated from grunt-ts -->
 <script src="js/gen/out.js"></script>

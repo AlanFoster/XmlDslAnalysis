@@ -48,7 +48,7 @@ interface IFeatureControllerScope extends ng.IScope {
 /**
  * Features controller
  */
-docsApp.controller("featuresController", function($scope: IFeatureControllerScope, featureService: IFeatureService) {
+docsApp.controller("featuresController", function($scope: IFeatureControllerScope, featureService: IFeatureService, toaster) {
     // Default to an empty list of features
     $scope.features = [];
 
@@ -57,6 +57,7 @@ docsApp.controller("featuresController", function($scope: IFeatureControllerScop
     featureService.getAllFeatures()
         .then((callback) => $scope.features = callback);
 
+    // Functions required for for bootstrap-tags
     $scope.getSuggestedTags = featureService.getSuggestedTags;
     $scope.getTagClass = (tag) => "label label-info";
 
@@ -74,7 +75,7 @@ docsApp.controller("featuresController", function($scope: IFeatureControllerScop
     var createBlankFeatureAndClose = () => {
         createBlankFeature();
         $scope.isAddFeatureCollapsed = true;
-    }
+    };
 
     // Hide the add feature by default
     $scope.isAddFeatureCollapsed = false;
@@ -100,6 +101,9 @@ docsApp.controller("featuresController", function($scope: IFeatureControllerScop
 
         // Clean up the new feature information
         createBlankFeature();
+
+        // Notify the user
+        toaster.pop("success", "Added", "The new feature definition was succesfully added");
 
         return true;
     };

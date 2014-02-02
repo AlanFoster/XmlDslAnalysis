@@ -4,7 +4,8 @@ var docsApp = angular.module('docsApp', [
     "bootstrap-tagsinput",
     "ngRoute",
     "ngSanitize",
-    "ngResource"
+    "ngResource",
+    "toaster"
 ]).config(function ($routeProvider, $locationProvider) {
     $routeProvider.when("/", {
         templateUrl: "/templates/overview.html",
@@ -21,7 +22,7 @@ var docsApp = angular.module('docsApp', [
 });
 "use strict";
 
-docsApp.controller("featuresController", function ($scope, featureService) {
+docsApp.controller("featuresController", function ($scope, featureService, toaster) {
     $scope.features = [];
 
     featureService.getAllFeatures().then(function (callback) {
@@ -61,6 +62,8 @@ docsApp.controller("featuresController", function ($scope, featureService) {
         $scope.features.push(newFeature);
 
         createBlankFeature();
+
+        toaster.pop("success", "Added", "The new feature definition was succesfully added");
 
         return true;
     };
