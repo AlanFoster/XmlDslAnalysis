@@ -20,11 +20,14 @@ module.exports = function (config) {
             "test/lib/angular/angular-mocks.js",
 
             // Additional module dependency
+            "app/lib/jquery/**/*.js",
             "app/lib/ui.bootstrap/**/*.js",
+            "app/lib/bootstrap-tags/**/*.js",
+            "app/lib/typeahead.js/**/*.js",
 
             // Contains our application
             "app/js/**/*.js",
-            "test/unit/**/*.js",
+            "test/unit/**/*.js"
 
             // Templates
             //"app/templates/**/*.html"

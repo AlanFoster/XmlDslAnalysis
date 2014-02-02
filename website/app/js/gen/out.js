@@ -19,8 +19,11 @@ var docsApp = angular.module('docsApp', [
 
     $locationProvider.html5Mode(true);
 });
+"use strict";
 
-docsApp.controller("featuresController", function ($scope, featureService, $q, $http) {
+docsApp.controller("featuresController", function ($scope, featureService) {
+    $scope.features = [];
+
     featureService.getAllFeatures().then(function (callback) {
         return $scope.features = callback;
     });
@@ -30,7 +33,7 @@ docsApp.controller("featuresController", function ($scope, featureService, $q, $
     ];
 
     $scope.getSuggestedTags = featureService.getSuggestedTags;
-    $scope.getTagClass = function () {
+    $scope.getTagClass = function (tag) {
         return "label label-info";
     };
 
@@ -44,9 +47,9 @@ docsApp.controller("featuresController", function ($scope, featureService, $q, $
 
     $scope.submit = function (newFeature, newFeatureForm) {
         if (newFeatureForm.$invalid)
-            return;
+            return false;
 
-        featureService.addFeature(newFeature);
+        return true;
     };
 
     $scope.cancel = createBlankFeature;
