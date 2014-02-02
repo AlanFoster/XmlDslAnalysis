@@ -49,7 +49,7 @@ docsApp.controller("featuresController", function ($scope, featureService, toast
         $scope.isAddFeatureCollapsed = true;
     };
 
-    $scope.isAddFeatureCollapsed = false;
+    $scope.isAddFeatureCollapsed = true;
 
     $scope.submit = function (newFeature, newFeatureForm) {
         if (newFeatureForm.$invalid)

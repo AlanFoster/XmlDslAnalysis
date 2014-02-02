@@ -78,7 +78,7 @@ docsApp.controller("featuresController", function($scope: IFeatureControllerScop
     };
 
     // Hide the add feature by default
-    $scope.isAddFeatureCollapsed = false;
+    $scope.isAddFeatureCollapsed = true;
 
     /**
      * Creates and persists a new feature definition, if the given form is valid
