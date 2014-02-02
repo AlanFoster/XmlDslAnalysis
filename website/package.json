@@ -12,6 +12,9 @@
     "grunt": "~0.4.2",
     "grunt-ts": "~1.6.4",
     "express": "3.x",
-    "grunt-jasmine-node": "~0.1.0"
+    "grunt-jasmine-node": "~0.1.0",
+    "passport": "~0.2.0",
+    "passport-openid": "~0.3.1",
+    "passport-google": "0.3.0"
   }
 }

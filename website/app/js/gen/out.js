@@ -16,9 +16,16 @@ var docsApp = angular.module('docsApp', [
     }).when("/technical", {
         templateUrl: "/templates/technical.html",
         controller: "technicalController"
+    }).when("/login", {
+        templateUrl: "/templates/login.html",
+        controller: "loginController"
     }).otherwise({ redirectTo: "/" });
 
     $locationProvider.html5Mode(true);
+});
+"use strict";
+
+docsApp.controller("featuresController", function ($scope) {
 });
 "use strict";
 

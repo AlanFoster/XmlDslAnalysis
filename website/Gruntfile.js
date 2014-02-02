@@ -20,7 +20,7 @@ module.exports = function(grunt) {
     grunt.registerTask("services", ["ts:services", "runServer"])
 
     // Client definition - compiles and watches TS code
-    grunt.registerTask("client", ["ts:appDev"]);
+    grunt.registerTask("client", ["ts:client"]);
 
     // Runs tests
     grunt.registerTask("test", ["ts:services", "jasmine_node"])
@@ -29,7 +29,7 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		ts: {
 			// Note the convention of names "key": => buildConfiguration
-			appDev: {
+			client: {
 				// The source typescript files, http://gruntjs.com/configuring-tasks#files
 				src: ["app/ts/**/*.ts", "app/ts.d/**/*.d.ts"],
 				// If specified, generate this file that you can use for your reference management
@@ -40,10 +40,7 @@ module.exports = function(grunt) {
 			},
             services: {
                 src: ["!services/reference.ts", "services/ts.d/**/*.d.ts", "services/test/**/*.ts", "services/ts/**/*.ts"],
-                reference: "./services/reference.ts",
-                options: {
-                    sourceMap: false
-                }
+                reference: "./services/reference.ts"
             }
 		},
         // Services Jasmine Node

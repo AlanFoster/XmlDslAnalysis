@@ -27,6 +27,10 @@ var docsApp: ng.IModule =
                     templateUrl: "/templates/technical.html",
                     controller:"technicalController"
                 })
+                .when("/login", {
+                    templateUrl: "/templates/login.html",
+                    controller:"loginController"
+                })
                 .otherwise({redirectTo: "/"})
             // Enabling html5 routing
             $locationProvider.html5Mode(true)

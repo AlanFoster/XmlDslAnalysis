@@ -2,6 +2,7 @@
 
 //grunt-start
 /// <reference path="ts/app.ts" />
+/// <reference path="ts/controllers/LoginController.ts" />
 /// <reference path="ts/controllers/featuresController.ts" />
 /// <reference path="ts/controllers/overviewController.ts" />
 /// <reference path="ts/controllers/technicalController.ts" />

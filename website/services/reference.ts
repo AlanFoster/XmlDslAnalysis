@@ -9,5 +9,6 @@
 /// <reference path="ts/arrayShim.ts" />
 /// <reference path="ts/data.ts" />
 /// <reference path="ts/feature-service.ts" />
+/// <reference path="ts/security-service.ts" />
 //grunt-end
 
