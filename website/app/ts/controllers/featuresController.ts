@@ -3,7 +3,7 @@
 /**
  * Represents the interface for the feature controller's scope
  */
-interface IFeatureControllerScope {
+interface IFeatureControllerScope extends ng.IScope {
     /**
      * The current list of known features
      */
@@ -38,6 +38,11 @@ interface IFeatureControllerScope {
      * Associates a given tag with a class value
      */
     getTagClass(tag: string): string
+
+    /**
+     * Creates a new blank feature
+     */
+    createBlankFeature(): void
 }
 
 /**
@@ -52,18 +57,24 @@ docsApp.controller("featuresController", function($scope: IFeatureControllerScop
     featureService.getAllFeatures()
         .then((callback) => $scope.features = callback);
 
-    var result = [
-        "Tag #1"
-    ];
-
     $scope.getSuggestedTags = featureService.getSuggestedTags;
     $scope.getTagClass = (tag) => "label label-info";
 
+    // Creates a new blank feature
     var createBlankFeature = ():void => {
-        $scope.isAddFeatureCollapsed = true;
-        $scope.newFeature = <IFeature> ({ tags: result });
+        $scope.newFeature = <IFeature> ({ tags: [] });
+        // trigger a digest if required
+        if(!$scope.$$phase) {
+            $scope.$digest();
+        }
     };
+    $scope.createBlankFeature = createBlankFeature;
     createBlankFeature();
+
+    var createBlankFeatureAndClose = () => {
+        createBlankFeature();
+        $scope.isAddFeatureCollapsed = true;
+    }
 
     // Hide the add feature by default
     $scope.isAddFeatureCollapsed = false;
@@ -96,5 +107,5 @@ docsApp.controller("featuresController", function($scope: IFeatureControllerScop
     /**
      * Cancels the associated new feature addition
      */
-    $scope.cancel = createBlankFeature;
+    $scope.cancel = createBlankFeatureAndClose;
 });

@@ -164,9 +164,9 @@ describe("Features controller", function () {
             expect(mockFeaturesService.addFeature).toHaveBeenCalledWith(newFeature);
         });
 
-        it("should collapse the open dialog on success", function() {
+        it("should not collapse the open dialog on success", function() {
             submitFeature(newFeature);
-            expect(scope.isAddFeatureCollapsed).toBe(true);
+            expect(scope.isAddFeatureCollapsed).toBe(false);
         });
 
         it("should clear the new feature details within the scope", function(){

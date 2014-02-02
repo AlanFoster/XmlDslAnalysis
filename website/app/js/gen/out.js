@@ -28,20 +28,25 @@ docsApp.controller("featuresController", function ($scope, featureService) {
         return $scope.features = callback;
     });
 
-    var result = [
-        "Tag #1"
-    ];
-
     $scope.getSuggestedTags = featureService.getSuggestedTags;
     $scope.getTagClass = function (tag) {
         return "label label-info";
     };
 
     var createBlankFeature = function () {
-        $scope.isAddFeatureCollapsed = true;
-        $scope.newFeature = ({ tags: result });
+        $scope.newFeature = ({ tags: [] });
+
+        if (!$scope.$$phase) {
+            $scope.$digest();
+        }
     };
+    $scope.createBlankFeature = createBlankFeature;
     createBlankFeature();
+
+    var createBlankFeatureAndClose = function () {
+        createBlankFeature();
+        $scope.isAddFeatureCollapsed = true;
+    };
 
     $scope.isAddFeatureCollapsed = false;
 
@@ -60,7 +65,7 @@ docsApp.controller("featuresController", function ($scope, featureService) {
         return true;
     };
 
-    $scope.cancel = createBlankFeature;
+    $scope.cancel = createBlankFeatureAndClose;
 });
 docsApp.controller("overviewController", function ($scope) {
 });
