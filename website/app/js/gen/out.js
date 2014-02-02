@@ -38,16 +38,24 @@ docsApp.controller("featuresController", function ($scope, featureService) {
     };
 
     var createBlankFeature = function () {
-        return ({ tags: result });
+        $scope.isAddFeatureCollapsed = true;
+        $scope.newFeature = ({ tags: result });
     };
-
-    $scope.newFeature = createBlankFeature();
+    createBlankFeature();
 
     $scope.isAddFeatureCollapsed = false;
 
     $scope.submit = function (newFeature, newFeatureForm) {
         if (newFeatureForm.$invalid)
             return false;
+
+        newFeature.date = new Date().getTime();
+
+        featureService.addFeature(newFeature);
+
+        $scope.features.push(newFeature);
+
+        createBlankFeature();
 
         return true;
     };

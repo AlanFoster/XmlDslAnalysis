@@ -61,6 +61,14 @@ describe("Features controller", function () {
         it("should exist", function () {
             expect(scope.cancel).toBeDefined();
         })
+
+        it("should reset the current given new feature details when called", function() {
+            var changedFeature = {};
+            scope.newFeature = changedFeature;
+            scope.cancel();
+            // The feature should be different not
+            expect(scope.newFeature).not.toBe(changedFeature);
+        })
     });
 
     describe("loading the features with a call to getAllFeatures", function() {
@@ -103,10 +111,36 @@ describe("Features controller", function () {
                 expect(scope.features).toBe(fakeData);
             })
         });
-    })
-
+    });
 
     describe("submit functionality", function () {
+        var newFeature;
+
+        /**
+         * Submits the given feature within the controller
+         * @param feature The new feature
+         */
+        var submitFeature = function(feature) {
+            scope.newFeature = feature;
+            scope.submit(newFeature, {$invalid:false});
+        };
+
+        beforeEach(function() {
+            newFeature = {
+                "tags": [
+                    "Tag #1"
+                ],
+                "images": [
+                    {
+                        "location": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABI4AAAJiCAYAAAChPYlaAAAAAXNSR…X1G/VbCY0QERERERERMa5lHRwhIiIiIiIiImK4iZzoD/P/HbjaxmX8qBcAAAAASUVORK5CYII=",
+                        "title": "My Title",
+                        "description": "Hello World"
+                    }
+                ],
+                "title": "My Title"
+            };
+        });
+
         it("should exist", function () {
             expect(scope.submit).toBeDefined();
         });
@@ -120,11 +154,25 @@ describe("Features controller", function () {
         });
 
         it("should call the webservice with the correct information", function() {
-
+            submitFeature(newFeature);
+            expect(scope.features.length).toBe(1);
+            expect(scope.features[0]).toBe(newFeature);
         });
 
         it("should update a local copy, and not make a second call to the getAllFeatures service", function() {
+            submitFeature(newFeature);
+            expect(mockFeaturesService.addFeature).toHaveBeenCalledWith(newFeature);
+        });
 
+        it("should collapse the open dialog on success", function() {
+            submitFeature(newFeature);
+            expect(scope.isAddFeatureCollapsed).toBe(true);
+        });
+
+        it("should clear the new feature details within the scope", function(){
+            submitFeature(newFeature);
+            // Ensure the model has been changed from the previously suggested new feature
+            expect(scope.newFeature).not.toBe(newFeature);
         });
     });
 });

@@ -59,15 +59,14 @@ docsApp.controller("featuresController", function($scope: IFeatureControllerScop
     $scope.getSuggestedTags = featureService.getSuggestedTags;
     $scope.getTagClass = (tag) => "label label-info";
 
-    var createBlankFeature = ():IFeature => {
-        return <any> ({ tags: result });
+    var createBlankFeature = ():void => {
+        $scope.isAddFeatureCollapsed = true;
+        $scope.newFeature = <IFeature> ({ tags: result });
     };
-
-    $scope.newFeature = createBlankFeature();
+    createBlankFeature();
 
     // Hide the add feature by default
     $scope.isAddFeatureCollapsed = false;
-
 
     /**
      * Creates and persists a new feature definition, if the given form is valid
@@ -79,8 +78,17 @@ docsApp.controller("featuresController", function($scope: IFeatureControllerScop
         // Only accept forms which are valid
         if(newFeatureForm.$invalid) return false;
 
+        // Inject the desired creation date
+        newFeature.date = new Date().getTime();
+
         // Call the webservice with our new feature
-        // featureService.addFeature(newFeature);
+        featureService.addFeature(newFeature);
+
+        // Add the feature locally for an immediate update to the UI
+        $scope.features.push(newFeature);
+
+        // Clean up the new feature information
+        createBlankFeature();
 
         return true;
     };

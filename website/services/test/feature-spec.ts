@@ -60,12 +60,14 @@ describe("Features webservice tests", function() {
                         id: 1,
                         title: "Title 1",
                         images: [],
+                        date: 1391305155486,
                         tags: []
                     },
                     {
                         id: 2,
                         title: "Title 2",
                         images: [],
+                        date: 1391305155486,
                         tags: []
                     }
                 ];
@@ -97,6 +99,7 @@ describe("Features webservice tests", function() {
                 var initialFeatures = [{
                     id: 1,
                     title: "Title 1",
+                    date: 1391305155486,
                     images: [],
                     tags: ["Custom 1", "Custom 2"]
                 }];
@@ -108,11 +111,13 @@ describe("Features webservice tests", function() {
                 var initialFeatures = [{
                     id: 1,
                     title: "Title 1",
+                    date: 1391305155480,
                     images: [],
                     tags: ["Custom 1", "foo", "CodeCompletion", "Custom 2", "Refactor", "Custom 3", "bar"]
                 },
                 {
                     id: 1,
+                    date: 1391305155486,
                     title: "Title 1",
                     images: [],
                     tags: ["Custom 1", "foo", "Refactor", "Custom 3", "bar"]
@@ -131,6 +136,7 @@ describe("Features webservice tests", function() {
             beforeEach(function() {
                 exampleFeature1 = {
                     title: "Title 1",
+                    date: 1391305155486,
                     images: [
                         {
                             location: "data:....",

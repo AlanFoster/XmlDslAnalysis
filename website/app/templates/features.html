@@ -26,20 +26,20 @@
             </div>
 
             <button type="submit" class="btn btn-primary" ng-click="submit(newFeature, newFeatureForm)" ng-disabled="newEventForm.$invalid">Submit</button>
-            <button type="button" ng-click="cancel(); isAddFeatureCollapsed = !isAddFeatureCollapsed" class="btn btn-default">Cancel</button>
+            <button type="button" ng-click="cancel();" class="btn btn-default">Cancel</button>
         </form>
     </div>
 </div>
 
 
-<div ng-repeat="feature in features">
+<!--
+   Show all currently known features, in reverse
+-->
+<div ng-repeat="feature in features | orderBy:'date':true ">
     <div class="">
         <h3>{{feature.title}}</h3>
         <div>
-            Tags: <tags source="feature.tags" />
-        </div>
-        <div>
-            Support Types: <tags source="feature.supportTypes" />
+            Tags: <tags source="feature.tags" ></tags>
         </div>
     </div>
 
@@ -57,5 +57,4 @@
         </carousel>
     </div>
     <br style="clear:both"/>
-
 </div>

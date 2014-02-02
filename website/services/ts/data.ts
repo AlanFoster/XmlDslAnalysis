@@ -12,8 +12,8 @@ var DefaultTags = {
 
 var features = [
     {
-        id: 1,
         title: "Simple Language Injection",
+        date: 1391305155486,
         images: [
             {
                 location: "images/paramInsight.png",
@@ -27,8 +27,8 @@ var features = [
         ]
     },
     {
-        id: 2,
         title: "Simple Function Contribution",
+        date: 1391305294892,
         images: [
             {
                 location: "images/contribution.png",
