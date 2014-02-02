@@ -2,6 +2,11 @@ var passport = <any> require("passport");
 var GoogleStrategy = require('passport-google').Strategy;
 var util = require("util");
 
+/**
+ * Volatile list of users
+ */
+var users = {};
+
 
 /**
  * Registers security requirements for using the application
@@ -19,11 +24,11 @@ exports.init = (express, app) => {
         (() => {
             passport.serializeUser(function(user, done) {
                 util.puts("Invoked - serializeUser");
-                done(null, user.identifier);
+                done(null, user);
             });
-            passport.deserializeUser(function(identifier, done) {
+            passport.deserializeUser(function(obj, done) {
                 util.puts("Invoked - deserializeUser");
-                done(null, { identifier: identifier });
+                done(null, obj);
             });
         })();
 
@@ -42,7 +47,17 @@ exports.init = (express, app) => {
             // Called only on success
             (identifier, profile, done) => {
                 util.puts("Successfully Logged on");
-                done(null, {identifier: identifier});
+                // Store the user if it doesn't already exist
+                if(!users[identifier]) {
+                    users[identifier] = { identifier: identifier, verified: true, isAdmin: false};
+                }
+
+                var systemUser = users[identifier];
+                // Update the profile details for this current logging session
+                systemUser.profile = profile;
+
+                // Callback successfully
+                done(null, systemUser);
             }
         ));
 
@@ -57,29 +72,30 @@ exports.init = (express, app) => {
     });
 };
 
-var securityAuthentication = () => (req, res, next) => {
-    util.puts("Successfully called google middleware");
-    passport.authenticate("google", { failureRedirect: "/login" })(req, res, next)
-}
-
-/**
- * Middleware to ensure that the call is authenticated before calling the next operation
- * Otherwise the request is redirected away.
- */
-var securityMiddleware = (req, res, next):any => {
-    util.puts("Attempting to access restricted area")
-
-    util.puts("The user is :: " + req.user);
-
-    if(req.isAuthenticated()) { return next(); }
-    res.redirect("/login");
-};
-
 /**
  * Registers the given routes within the application
  * @param app An instance of the express application
  */
 exports.createRoutes = (app) => {
+    /**
+     * Middleware to authenticate requests
+     */
+    var securityAuthentication = () => (req, res, next) => {
+        util.puts("Successfully called google middleware");
+        passport.authenticate("google", { failureRedirect: "/login" })(req, res, next)
+    }
+
+    /**
+     * Middleware to ensure that the call is authenticated before calling the next operation
+     * Otherwise the request is redirected away.
+     */
+    var authenticationRequired = (req, res, next):any => {
+        util.puts("Attempting to access restricted area")
+
+        if(req.isAuthenticated()) { return next(); }
+        res.redirect("/login")
+    };
+
     app.get("/services/auth", securityAuthentication(), (req, res) => {
         util.puts("Successfully called login");
         res.redirect("/");
@@ -93,8 +109,20 @@ exports.createRoutes = (app) => {
     app.get("/services/auth/logout", (req, res) => {
         util.puts("Calling logout");
         req.logout();
-        res.redirect("/");
+        res.json({success:true});
     });
 
-    app.get("/superSecret", securityMiddleware, (req, res) => res.json({success:true}));
+    /**
+     * Provides details regarding the user's logged in status
+     */
+    app.get("/services/auth/details", (req, res) => {
+        var response = {verified: req.isAuthenticated(), user: req.user}
+        res.json(response);
+    });
+
+    /**
+     * Example of access to a secure area
+     * Note the use of the authenticationRequired processor within the chain
+     */
+    app.get("/superSecret", authenticationRequired, (req, res) => res.json({success:true, user: req.user}));
 };
