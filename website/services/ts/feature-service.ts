@@ -27,7 +27,7 @@ exports.createRoutes = function(app, features: IFeature[]) {
     });
 
     app.post("/services/features", (req, res, next) => {
-        var newItem = req.body;
+        var newItem = <IFeature> req.body;
         features.push(newItem);
         // Respond with a success
         res.json({});

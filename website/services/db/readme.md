@@ -1,0 +1,1 @@
+This directory is associated with performing the initial database migration scripts for this application.

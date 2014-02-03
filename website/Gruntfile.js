@@ -25,10 +25,16 @@ module.exports = function(grunt) {
     // Runs tests
     grunt.registerTask("test", ["ts:services", "jasmine_node"])
 
+    // Initial data migration / seed
+    grunt.registerTask("seed", ["ts:databaseMigration"])
+
     // Perform configuration
 	grunt.initConfig({
+        // Note the convention of names "key": => buildConfiguration
 		ts: {
-			// Note the convention of names "key": => buildConfiguration
+            /**
+             * TypeScript Client compilation
+             */
 			client: {
 				// The source typescript files, http://gruntjs.com/configuring-tasks#files
 				src: ["app/ts/**/*.ts", "app/ts.d/**/*.d.ts"],
@@ -38,8 +44,18 @@ module.exports = function(grunt) {
 				out: 'app/js/gen/out.js',
                 watch: "app"
 			},
+            /**
+             * TypeScript services compilation
+             */
             services: {
                 src: ["!services/reference.ts", "services/ts.d/**/*.d.ts", "services/test/**/*.ts", "services/ts/**/*.ts"],
+                reference: "./services/reference.ts"
+            },
+            /**
+             * TypeScript datbase seed migration
+             */
+            databaseMigration: {
+                src: ["!services/reference.ts", "services/ts.d/**/*.d.ts", "services/db/**/*.ts"],
                 reference: "./services/reference.ts"
             }
 		},
