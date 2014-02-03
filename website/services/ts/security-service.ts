@@ -2,10 +2,20 @@ var passport = <any> require("passport");
 var GoogleStrategy = require('passport-google').Strategy;
 var util = require("util");
 
+
+var adminId = process.env["ADMIN_ID"];
+
 /**
  * Volatile list of users
  */
 var users = {};
+
+// Allow admin mode for this user
+users[adminId] = {
+    "identifier": adminId,
+    "verified": true,
+    "isAdmin": true
+};
 
 
 /**
@@ -31,7 +41,6 @@ exports.init = (express, app) => {
                 done(null, obj);
             });
         })();
-
 
         /**
          * Defines the google strategy to be used within passportjs

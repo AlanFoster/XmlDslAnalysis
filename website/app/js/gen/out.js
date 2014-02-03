@@ -220,4 +220,11 @@ docsApp.service("featureService", function ($resource, $q) {
 
     return service;
 });
+docsApp.run(function ($rootScope, $http) {
+    $http({ method: "get", url: "http://localhost:8000/services/auth/details" }).success(function (serviceResponse) {
+        if (serviceResponse && serviceResponse.verified) {
+            $rootScope.user = serviceResponse.user;
+        }
+    });
+});
 //# sourceMappingURL=out.js.map

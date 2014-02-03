@@ -1,4 +1,4 @@
-<div>
+<div ng-show="user.isAdmin">
     <div><button class="btn btn-default pull-right" ng-click="isAddFeatureCollapsed = !isAddFeatureCollapsed">{{isAddFeatureCollapsed ? "New Feature" : "Cancel Feature"}}</button></div>
     <br style="clear: both"/>
     <div class="well well-lg" collapse="isAddFeatureCollapsed">

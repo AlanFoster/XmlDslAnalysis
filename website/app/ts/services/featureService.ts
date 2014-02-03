@@ -22,7 +22,7 @@ interface IFeatureService {
 /**
  * Create a new service for retrieving feature information
  */
-docsApp.service("featureService", function($resource: ng.resource.IResourceService, $q: ng.IQService) {
+docsApp.service("featureService", ($resource: ng.resource.IResourceService, $q: ng.IQService) => {
     // Create a resource which we can access via our lexical closure
     // TODO See if AngularJS supports configuration - https://npmjs.org/package/grunt-ng-constant
     var resource:any = $resource("http://localhost:8000/services/features");

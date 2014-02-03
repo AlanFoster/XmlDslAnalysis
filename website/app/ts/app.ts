@@ -34,4 +34,4 @@ var docsApp: ng.IModule =
                 .otherwise({redirectTo: "/"})
             // Enabling html5 routing
             $locationProvider.html5Mode(true)
-        })
+        });
