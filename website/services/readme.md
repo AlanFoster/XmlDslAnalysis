@@ -5,8 +5,8 @@ Setting up Mongodb
     - Execute
 
         cd ${YOUR_PATH}\bin
-        mkdir ${YOUR_PATH}\pluginWebsite\data
-        mongod --dbpath ${YOUR_PATH}\pluginWebsite\data
+        mkdir .\..\pluginWebsite\data
+        mongod --dbpath .\..\pluginWebsite\data
 
     - It should be running with `waiting for connections on port XXXXX`
 

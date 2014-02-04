@@ -4,6 +4,7 @@ module.exports = function(grunt) {
 	// Load Tasks
 	grunt.loadNpmTasks("grunt-ts");
     grunt.loadNpmTasks('grunt-jasmine-node');
+    grunt.loadNpmTasks('grunt-execute');
 
     // Running Server task
     grunt.registerTask("runServer", function() {
@@ -17,19 +18,27 @@ module.exports = function(grunt) {
     });
 
     // Compiling services
-    grunt.registerTask("services", ["ts:services", "runServer"])
+    grunt.registerTask("services", ["ts:services", "runServer"]);
 
     // Client definition - compiles and watches TS code
     grunt.registerTask("client", ["ts:client"]);
 
     // Runs tests
-    grunt.registerTask("test", ["ts:services", "jasmine_node"])
+    grunt.registerTask("test", ["ts:services", "jasmine_node"]);
 
     // Initial data migration / seed
-    grunt.registerTask("seed", ["ts:databaseMigration"])
+    grunt.registerTask("seed", ["ts:databaseMigration", "execute:seedDatabase"]);
 
     // Perform configuration
 	grunt.initConfig({
+        /**
+         * Grunt execute, which is used for invoking node.js processes
+         */
+        execute: {
+            seedDatabase: {
+                src: ['services/db/seed.js']
+            }
+        },
         // Note the convention of names "key": => buildConfiguration
 		ts: {
             /**
