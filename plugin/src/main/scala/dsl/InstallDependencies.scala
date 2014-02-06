@@ -1,5 +1,3 @@
-package dsl
-
 import java.io.File
 import sys.process._
 import java.nio.file.{Paths, Path, Files}
@@ -20,14 +18,16 @@ object InstallDependencies {
 
     val configuration = getConfiguration(args)
 
+	println(s"Attempting install with the following information\n\t-version ${configuration.intellijVersion} -intellijPath ${configuration.intellijPath}");
+	
     def installJar(path: Path, groupId: String, artifactId: String, version: String) {
       // Output SBT information
-     println(s""""${groupId}" % "${artifactId}" % "${version}",""")
+      println(s""""${groupId}" % "${artifactId}" % "${version}",""")
 
-      //println(s"Installing .. groupId: ${groupId}, artifactId: ${artifactId}, version: ${version}, path : ${path}")
-      //val mvnCommand = s"""cmd /c mvn install:install-file -Dfile="${path}" -DgroupId=${groupId} -DartifactId=$artifactId -Dversion=${version} -Dpackaging=jar"""
+      println(s"Installing .. groupId: ${groupId}, artifactId: ${artifactId}, version: ${version}, path : ${path}")
+      val mvnCommand = s"""cmd /c mvn install:install-file -Dfile="${path}" -DgroupId=${groupId} -DartifactId=$artifactId -Dversion=${version} -Dpackaging=jar"""
       // Invoke the maven command process
-      //mvnCommand ! CommandLineProcessLogger()
+      mvnCommand ! CommandLineProcessLogger()
     }
 
     configuration match {
@@ -52,30 +52,12 @@ object InstallDependencies {
       // Note, this should never occur
       case _ => println("Unexpected configuration")
     }
-
-    /*    val ()
-
-        println("Installing IntelliJ dependencies...")*/
-
-/*
-    val argumentParser =
-      ArgumentParser[Configuration]("Intellij Install Dependencies Script") {
-
-      }*/
-
-
-/*        Input[Double]("v", "version") required*/
-
-/*
-
-        .input[File]("p", "path")
-*/
   }
 
   def getConfiguration(args: Array[String]) = {
-    Configuration(args[0], args[1])
+    Configuration(args(0), args(1))
+
     //Configuration("133.139", """C:\Program Files (x86)\JetBrains\IntelliJ IDEA 13.0""")
-    //Configuration(args(0), args(1))
   }
 }
 
@@ -127,7 +109,7 @@ object Input {
   def apply[C, T](argNames: String*): InputBuilder[C, T] = new InputBuilder[C, T](argNames.toList)
 }
 
-// Builders - Hopefully
+// Builders
 case class InputBuilder[C, T](
                        argNames: List[String],
                        debugText: String = "",
