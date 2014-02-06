@@ -73,7 +73,8 @@ object InstallDependencies {
   }
 
   def getConfiguration(args: Array[String]) = {
-    Configuration("133.139", """C:\Program Files (x86)\JetBrains\IntelliJ IDEA 13.0""")
+    Configuration(args[0], args[1])
+    //Configuration("133.139", """C:\Program Files (x86)\JetBrains\IntelliJ IDEA 13.0""")
     //Configuration(args(0), args(1))
   }
 }
@@ -88,7 +89,7 @@ object ArgsHandler {
       | Expected Inputs:
       |   -version ${intellijVersion}
       |   -path ${intellijPath}
-      | Example usage: -version "133.139" -path "C:\Program Files (x86)\JetBrains\IntelliJ IDEA 13.0"
+      | Example usage: "133.139" "C:\Program Files (x86)\JetBrains\IntelliJ IDEA 13.0"
       | Notes:
       | This installer places all dependencies under their respective version number.
       | No attempt is made to 'share' common resources, simply due to the lack of meta-data within
