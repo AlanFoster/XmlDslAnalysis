@@ -65,6 +65,11 @@ The Scala Built tool offers the ability to run tests from the command line using
 - intellijPath - Used to denote the root testing location. An example value would be `C:\Users\a\.IntelliJIdea13` 
 
 
+### Running Tests
+
+Tests can be executed both within IntelliJ using JUnit, or externally using `sbt test`. Please see the appropriate [CI documentation](build.md)  for further details on how to use `sbt test`.
+If you are running windows, an important step is to ensure that you have placed the windows file system dlls into the correct directory.
+
 Installation Steps 
 ------------------
 	
@@ -78,9 +83,16 @@ You should now be able to open your project within IntelliJ as a normal project.
 
 By default gen-idea will generate a plugin structure which is a JAVA_MODULE. However, the dev-kit plugin (which brings extra tooling for plugin developers) relies on the module type being PLUGIN_MODULE.
 
+Edit the `./idea_modules/StaticAnalysis.iml` file to contain the following header information. Note - when you edit your iml file within IntelliJ you should be given reload confirmation.
+
+	   <module type="PLUGIN_MODULE" version="4">
+        <component name="DevKit.ModuleBuildProperties" url="file://$MODULE_DIR$/src/main/resources/META-INF/plugin.xml" />
+
 
 ##### Update the JDK
 
 Ensure that you are using the intellij SDK within your project. This menu is accessible with `ctrl+alt+s`
 
 ![Updating JDK](documentation/installSDK.png)
+
+
