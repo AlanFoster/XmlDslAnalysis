@@ -1,9 +1,7 @@
 package foo
 
-import com.intellij.openapi.roots.{ModuleRootManager, ModifiableRootModel}
 import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture
 import java.io.File
-import foo.TestBase
 
 /**
  * A trait which defines common classes which can be used during test scenarios.
