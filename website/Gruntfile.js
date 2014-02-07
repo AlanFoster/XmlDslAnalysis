@@ -29,6 +29,9 @@ module.exports = function(grunt) {
     // Initial data migration / seed
     grunt.registerTask("seed", ["ts:databaseMigration", "execute:seedDatabase"]);
 
+    // Generating markdown -> html
+    grunt.loadNpmTasks('grunt-markdown');
+
     // Perform configuration
 	grunt.initConfig({
         /**
@@ -78,6 +81,18 @@ module.exports = function(grunt) {
                 savePath : "./build/reports/jasmine/",
                 useDotNotation: true,
                 consolidate: true
+            }
+        },
+        // Compiling markdown
+        markdown: {
+            all: {
+                files: [
+                    {
+                        expand: true,
+                        src: './app/docs/*.md',
+                        ext: '.html'
+                    }
+                ]
             }
         }
 	});
