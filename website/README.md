@@ -1,8 +1,8 @@
 # Website
 
-The documentation website associated with this plugin.
+This application is used to view the E2E support provided by this plugin.
 
-This application uses
+In terms of technologies the following tools are used 
 
 - [NodeJS (v0.10.25)](http://nodejs.org/)
 - GruntJS
@@ -13,26 +13,21 @@ This application uses
 - MongoDB (2.4.9)
 - HTML5 / CSS3
 - Twitter Bootstrap
-- NPM
+- npm
 
-# Install Requirements
 
-... 
+## Set-up
 
-# Running
-
-This application consists of both a server and client.
-
-## Server
-
-The server hosts RESTful webservices, which persist to mongodb, for the client to interact with. The server also hosts a file server for the client to request files from.
-
-#### Installing Dependencies
+### Node
 
 Please ensure that you have [NodeJS (v0.10.25)](http://nodejs.org/) installed, as this will allow you to use NPM from the command line.
 
 	> cd .\website
 	> npm install
+
+Ensure that GruntJS cli has been additionally installed globally via NPM, so that it can be used as a global tool via command line
+
+	npm install -g grunt-cli@0.1.13
 
 ### MongoDB
 
@@ -60,10 +55,53 @@ Example commands -
 
 	> db.users.insert({....})
 	> db.users.find().pretty()
+	
+###### Seeding
 
+In order to seed mongodb successfully run the following gruntJS task
+
+	> cd .\website
+	> grunt seed
+	> ...
+	> Done, without errors.
+
+# Running
+
+As this application makes use of GruntJS it is very easy to run both the server/services and the the client application
+
+## Server
+
+The server hosts RESTful webservices, which persist to mongodb, for the client to interact with. The server also hosts a file server for the client to request files from.
+
+It can be started with the command
+
+	> cd .\website
+	> grunt services
+
+
+#### Developing Webstorm
+
+To develop/run/debug the server the following Node configuration can be used.
+
+- `Node Intepreter` - The path to Nodejs
+- `Working Directory` - This should point to the `app` directory, ie `.\website\app`
+- `JavaScript file` - The main entry point for the server application is `.\website\scripts\start-server.js`
+
+*Note* - Ensure that the grunt task `grunt ts:services` has been called prior to running the node server. For instance this may be done as a simple pre-launch execution step using
+
+    cmd.exe /c "grunt ts:services"
 
 ## Client
 
-As this application makes use of GruntJS it is very easy to run the client application once the server has been deployed.
+The client is written as as Single Page Application which uses AngularJS. This can be started with the folowing command
 
-    grunt client
+	> cd .\website
+	> grunt client
+
+Note - this will trigger `grunt-ts` to continually watch the TypeScript files for changes, there is no need for a manual retrigger when developing additional files.
+
+Once successfully hosted the application should be available via
+
+	http://localhost:8000
+
+Note this port is also configurable via `process.env.PORT` 
