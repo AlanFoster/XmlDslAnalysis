@@ -20,54 +20,23 @@ class VariableCompletionTest
   def testVariableContribution() {
     //<editor-fold desc="knownCamelVariables">
     doTest(List(
-      "camelId",
-      "camelContext.OGNL",
-      "exchangeId",
-      "id",
       "body",
-      "in.body",
-      "body.OGNL",
-      "in.body.OGNL",
       "bodyAs",
-      "mandatoryBodyAs",
-      "out.body",
-      "header.foo",
-      "header[foo]",
-      "headers.foo",
-      "headers[foo]",
-      "in.header.foo",
-      "in.header[foo]",
-      "in.headers.foo",
-      "in.headers[foo]",
-      "header.foo[bar]",
-      "in.header.foo[bar]",
-      "in.headers.foo[bar]",
-      "header.foo.OGNL",
-      "in.header.foo.OGNL",
-      "in.headers.foo.OGNL",
-      "out.header.foo",
-      "out.header[foo]",
-      "out.headers.foo",
-      "out.headers[foo]",
+      "camelContext",
+      "camelId",
+      "exception",
+      "exchangeId",
+      "header",
       "headerAs",
       "headers",
-      "in.headers",
-      "property.foo",
-      "property[foo]",
-      "property.foo.OGNL",
-      "sys.foo",
-      "sysenv.foo",
-      "exception",
-      "exception.OGNL",
-      "exception.message",
-      "exception.stacktrace",
-      "date:command:pattern",
-      "bean:bean",
-      "properties:locations:key",
+      "id",
+      "in",
+      "out",
+      "mandatoryBodyAs",
       "routeId",
-      "threadName",
-      "ref:xxx",
-      "type:name.field"
+      "sys",
+      "sysenv",
+      "threadName"
     ))
     //</editor-fold>
   }
@@ -91,6 +60,45 @@ class VariableCompletionTest
    */
   def testFunctionContribution() {
     doTest(List())
+  }
+
+
+  /**
+   * If there are any other existing elements then reference contribution
+   * should not occur.
+   */
+  def testReferenceContributionAfterDot() {
+    doTest(List())
+  }
+
+  /**
+   * Testing to ensure that the psi pattern matches when contributing on a caret
+   * position which is a new identifier psi element
+   */
+  def testReferenceContributionAfterDotAndNewPsiElement() {
+    doTest(List())
+  }
+
+  /**
+   * Test out intellisense
+   */
+  def testOutVariableContribution() {
+    doTest(List(
+      "body",
+      "header",
+      "headers"
+    ))
+  }
+
+  /**
+   * Ensure the user is allowed to access the 'in' variables successfully
+   */
+  def testInVariableContribution() {
+    doTest(List(
+      "body",
+      "header",
+      "headers"
+    ))
   }
 
   /**

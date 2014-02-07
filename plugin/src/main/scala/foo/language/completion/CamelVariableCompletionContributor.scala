@@ -1,13 +1,15 @@
 package foo.language.completion
 
 import com.intellij.codeInsight.completion._
-import com.intellij.patterns.{ElementPattern, PlatformPatterns}
+import com.intellij.patterns._
+import com.intellij.patterns.StandardPatterns.collection
 import com.intellij.util.ProcessingContext
 import com.intellij.codeInsight.lookup.{LookupElement, LookupElementBuilder}
 import com.intellij.psi.PsiElement
 import foo.language.generated.psi.{CamelFunctionArgs, CamelCamelExpression, CamelCamelFunction, CamelCamelFuncBody}
 import foo.language.elements.CamelBaseElementType
 import foo.language.generated.CamelTypes
+import com.intellij.openapi.module.{ModuleUtilCore, ModuleUtil}
 
 /**
  * Provides basic code completion for common camel language variables
@@ -15,6 +17,7 @@ import foo.language.generated.CamelTypes
  * that does not have an explicit Reference - IE useful for keywords etc
  */
 class CamelVariableCompletionContributor extends CompletionContributor {
+
   import PlatformPatterns._
 
   /**
@@ -31,81 +34,117 @@ class CamelVariableCompletionContributor extends CompletionContributor {
    * A variable will be placed between ${..} however, <b>not</b> nested inside a
    * function call, ie ${bodyAs(...)}
    */
-  val VARIABLE = psiElement().inside(classOf[CamelCamelFuncBody])
-          .andNot(psiElement().inside(classOf[CamelFunctionArgs]))
+  def VARIABLE() = {
+    val element = psiElement(CamelTypes.IDENTIFIER)
+    element
+      .inside(classOf[CamelCamelFuncBody])
+      .andNot(element.inside(classOf[CamelFunctionArgs]))
+  }
 
+  def afterVariableObject(variableName: String) =
+    VARIABLE()
+      .and(psiElement().afterLeaf(psiElement(CamelTypes.DOT).afterLeaf(psiElement().withText(variableName))))
+
+  /**
+   * An 'in' variable, will be only available after `in.&gt;caret&lt;`
+   */
+  val IN_VARIABLE = afterVariableObject("in")
+  /**
+   * Matches the 'out' variable
+   */
+  val OUT_VARIABLE = afterVariableObject("out")
 
   val OPERATOR = psiElement().withParent(classOf[CamelCamelExpression])
-    // .withElementType(CamelTypes.CAMEL_EXPRESSION))
+  // .withElementType(CamelTypes.CAMEL_EXPRESSION))
 
-  /*
-  TokenSet.create(
-    CamelTypes.AND_AND,
-    CamelTypes.OR_OR,
-    CamelTypes.EQ_EQ,
-    CamelTypes.GT,
-    CamelTypes.GT_EQ,
-    CamelTypes.LT,
-    CamelTypes.LT_EQ
-  )
+  /**
+   * A pattern which will successfully match in an empty camel func body,
+   * other than itself
    */
+  val EMPTY_VARIABLE = {
+    val variable = VARIABLE()
+    variable
+      .withSuperParent(2,
+        psiElement(classOf[CamelCamelFuncBody])
+          .withChildren(
+            collection(classOf[PsiElement]).size(1)
+          )
+      )
+  }
 
   addCompletion(
-    VARIABLE,
+    IN_VARIABLE,
     List(
-     Completion("camelId"),
-     Completion("camelContext.OGNL"),
-     Completion("exchangeId"),
-     Completion("id"),
-     Completion("body"),
-     Completion("in.body"),
-     Completion("body.OGNL"),
-     Completion("in.body.OGNL"),
-     Completion("bodyAs", "(type)"),
-     Completion("mandatoryBodyAs", "(type)"),
-     Completion("out.body"),
-     Completion("header.foo"),
-     Completion("header[foo]"),
-     Completion("headers.foo"),
-     Completion("headers[foo]"),
-     Completion("in.header.foo"),
-     Completion("in.header[foo]"),
-     Completion("in.headers.foo"),
-     Completion("in.headers[foo]"),
-     Completion("header.foo[bar]"),
-     Completion("in.header.foo[bar]"),
-     Completion("in.headers.foo[bar]"),
-     Completion("header.foo.OGNL"),
-     Completion("in.header.foo.OGNL"),
-     Completion("in.headers.foo.OGNL"),
-     Completion("out.header.foo"),
-     Completion("out.header[foo]"),
-     Completion("out.headers.foo"),
-     Completion("out.headers[foo]"),
-     Completion("headerAs", "(key,type)"),
-     Completion("headers"),
-     Completion("in.headers"),
-     Completion("property.foo"),
-     Completion("property[foo]"),
-     Completion("property.foo.OGNL"),
-     Completion("sys.foo"),
-     Completion("sysenv.foo"),
-     Completion("exception"),
-     Completion("exception.OGNL"),
-     Completion("exception.message"),
-     Completion("exception.stacktrace"),
-     Completion("date:command:pattern"),
-     Completion("bean:bean"),
-     Completion("properties:locations:key"),
-     Completion("routeId"),
-     Completion("threadName"),
-     Completion("ref:xxx"),
-     Completion("type:name.field")
+      Completion("body"),
+      Completion("header"),
+      Completion("headers")
+    )
+  )
+
+  addCompletion(
+    OUT_VARIABLE,
+    List(
+      Completion("body"),
+      Completion("header"),
+      Completion("headers")
+    )
+  )
+
+  /**
+   * Register completion requirements for header access
+   */
+  /*  addCompletion(
+      // HEADER_VARIABLE.or(HEADERS_VARIABLE)
+      EMPTY_VARIABLE,
+      List(
+         // TODO EIP contribution!!
+      )
+    )*/
+
+  /**
+   * Register completion requirements for the exception element
+   */
+  /*  addCompletion(
+      // EXCEPTION_VARIABLE
+      EMPTY_VARIABLE,
+      List(
+        Completion("message"),
+        Completion("stacktrace")
+      )
+    )*/
+
+  addCompletion(
+    EMPTY_VARIABLE,
+    List(
+      Completion("camelId"),
+      Completion("camelContext"),
+      Completion("exchangeId"),
+      Completion("id"),
+      Completion("in"),
+      Completion("out"),
+      Completion("body"),
+      Completion("bodyAs", "(type)"),
+      Completion("mandatoryBodyAs", "(type)"),
+      Completion("headerAs", "(key,type)"),
+      Completion("sys"),
+      Completion("sysenv"),
+      Completion("exception"),
+      Completion("routeId"),
+      Completion("threadName"),
+      Completion("header"),
+      Completion("headers")
+
+      // Grammar does not support the following - currently
+      /*     Completion("date:command:pattern"),
+           Completion("bean:bean"),
+           Completion("properties:locations:key"),
+           Completion("ref:xxx"),
+           Completion("type:name.field")*/
     )
   )
 
   // TODO We potentially have this list already within the camel syntax highlighting
- addCompletion(
+  addCompletion(
     OPERATOR,
     List(
       Completion(CamelBaseElementType.getName(CamelTypes.AND_AND)),
@@ -118,12 +157,6 @@ class CamelVariableCompletionContributor extends CompletionContributor {
     )
   )
 
-/*  override def fillCompletionVariants(parameters: CompletionParameters, result: CompletionResultSet) = {
-    val context = new ProcessingContext()
-    val accepts = psiElement().withParent(classOf[CamelCamelExpression]).accepts(parameters.getPosition, context)
-    super.fillCompletionVariants(parameters, result)
-  }*/
-
   /**
    * Helper function to add the providers code completions for the given elementPattern
    *
@@ -134,20 +167,28 @@ class CamelVariableCompletionContributor extends CompletionContributor {
     extend(CompletionType.BASIC,
       elementPattern,
       new CompletionProvider[CompletionParameters]() {
-
+        /**
+         * Provides the completions available under the given context
+         * @param parameters
+         * @param context
+         * @param result
+         */
         def addCompletions(parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet) {
-          completions.foreach(completion => {
-              val lookupBuilder =
-                LookupElementBuilder
-                  .create(completion.lookupString)
-                  .appendTailText(completion.tail, false)
-                  .withInsertHandler(
-                    if(completion.isFunction) new FunctionInsertHandler()
-                    else null
+          // Convert all available completions to a Lookup Builder that IJ understands
+          completions
+            .map(completion => {
+            val lookupBuilder =
+              LookupElementBuilder
+                .create(completion.lookupString)
+                .appendTailText(completion.tail, false)
+                .withInsertHandler(
+                  if (completion.isFunction) new FunctionInsertHandler()
+                  else null
                 )
-
-             result.addElement(lookupBuilder)
+            lookupBuilder
           })
+            // Register each lookup element
+            .foreach(result.addElement)
         }
       }
     )
