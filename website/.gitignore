@@ -4,3 +4,14 @@ node_modules/
 tmp
 .DS_Store
 .idea
+
+# Ignore service generated js files - as these are generated
+services/db/*.js*
+services/test/*.js*
+services/ts/*.js*
+
+# Ignore Generated reference file
+services/reference.js*
+
+# Ignore temp ts file
+tscommand.tmp.txt
