@@ -54,6 +54,8 @@ class CamelVariableCompletionContributor extends CompletionContributor {
    */
   val OUT_VARIABLE = afterVariableObject("out")
 
+  val EXCEPTION_VARIABLE = afterVariableObject("exception")
+
   val OPERATOR = psiElement().withParent(classOf[CamelCamelExpression])
   // .withElementType(CamelTypes.CAMEL_EXPRESSION))
 
@@ -104,14 +106,13 @@ class CamelVariableCompletionContributor extends CompletionContributor {
   /**
    * Register completion requirements for the exception element
    */
-  /*  addCompletion(
-      // EXCEPTION_VARIABLE
-      EMPTY_VARIABLE,
+    addCompletion(
+      EXCEPTION_VARIABLE,
       List(
         Completion("message"),
         Completion("stacktrace")
       )
-    )*/
+    )
 
   addCompletion(
     EMPTY_VARIABLE,

@@ -90,6 +90,13 @@ class VariableCompletionTest
     ))
   }
 
+  def testExceptionContribution() {
+    doTest(List(
+      "message",
+      "stacktrace"
+    ))
+  }
+
   /**
    * Ensure the user is allowed to access the 'in' variables successfully
    */
