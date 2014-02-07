@@ -19,13 +19,15 @@ var docsApp: ng.IModule =
                     templateUrl: "/templates/overview.html",
                     controller:"overviewController"
                 })
+                .when("/readme", {
+                    templateUrl: "/docs/readme.html"
+                })
                 .when("/features", {
                     templateUrl: "/templates/features.html",
                     controller:"featuresController"
                 })
-                .when("/technical", {
-                    templateUrl: "/templates/technical.html",
-                    controller:"technicalController"
+                .when("/developing", {
+                    templateUrl: "/docs/Developing.html"
                 })
                 .when("/login", {
                     templateUrl: "/templates/login.html",

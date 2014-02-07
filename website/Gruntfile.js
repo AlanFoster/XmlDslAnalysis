@@ -5,6 +5,8 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-ts");
     grunt.loadNpmTasks('grunt-jasmine-node');
     grunt.loadNpmTasks('grunt-execute');
+    grunt.loadNpmTasks('grunt-markdown');
+    grunt.loadNpmTasks('grunt-contrib-copy');
 
     // Running Server task
     grunt.registerTask("runServer", function() {
@@ -17,11 +19,14 @@ module.exports = function(grunt) {
         })
     });
 
+    // Markdown -> html
+    grunt.registerTask("docs", ["copy:docs", "markdown:docs"])
+
     // Compiling services
     grunt.registerTask("services", ["ts:services", "runServer"]);
 
     // Client definition - compiles and watches TS code
-    grunt.registerTask("client", ["ts:client"]);
+    grunt.registerTask("client", ["docs", "ts:client"]);
 
     // Runs tests
     grunt.registerTask("test", ["ts:services", "jasmine_node"]);
@@ -29,8 +34,7 @@ module.exports = function(grunt) {
     // Initial data migration / seed
     grunt.registerTask("seed", ["ts:databaseMigration", "execute:seedDatabase"]);
 
-    // Generating markdown -> html
-    grunt.loadNpmTasks('grunt-markdown');
+
 
     // Perform configuration
 	grunt.initConfig({
@@ -83,14 +87,28 @@ module.exports = function(grunt) {
                 consolidate: true
             }
         },
+        // Copying markdown files into the appropriate website location
+        copy: {
+            docs: {
+                files: [
+                    // Include all markdown files which aren't in the website docs folder already, to stop recursion :)
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: ['!./apps/docs/*', "./../plugin/**/*.md"],
+                        dest: "./app/docs/",
+                        filter: "isFile"}
+                ]
+            }
+        },
         // Compiling markdown
         markdown: {
-            all: {
+            docs: {
                 files: [
                     {
                         expand: true,
-                        src: './app/docs/*.md',
-                        ext: '.html'
+                        src: "./app/docs/*.md",
+                        ext: ".html"
                     }
                 ]
             }
