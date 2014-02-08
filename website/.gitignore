@@ -19,3 +19,5 @@ tscommand.tmp.txt
 # Docs are automatically grouped together and html generated from external locations
 !app/docs/.gitkeep
 app/docs/*
+!app/docs_images/.gitkeep
+app/docs_images/*.png
