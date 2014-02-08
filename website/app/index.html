@@ -43,18 +43,22 @@
                 <menu-item href="/features" text="Features"></menu-item>
                 <menu-item href="/developing" text="Developing"></menu-item>
             </ul>
+            <!-- Show user details -->
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a ng-href="{{!!user ? '#' : '/login'}}">
+                        <span class="glyphicon glyphicon-user"></span>
+                        <span ng-show="!user">Login</span>
+                        <span ng-show="!!user">{{user.profile.displayName}}</span>
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
 
 <div class="container">
     <div class="view">
-        <!-- Show user details -->
-        <div>
-            <div ng-show="!user">You are not currently logged in</div>
-            <div ng-show="!!user">The currently logged in user is {{user.profile.displayName}}</div>
-        </div>
-
         <toaster-container toaster-options="{'position-class': 'toast-bottom-right'}"> </toaster-container>
         <ng-view></ng-view>
     </div>
