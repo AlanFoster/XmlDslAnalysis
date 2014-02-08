@@ -10,6 +10,7 @@
 /// <reference path="ts/directives/tagDirective.ts" />
 /// <reference path="ts/filters.ts" />
 /// <reference path="ts/services/featureService.ts" />
+/// <reference path="ts/services/highlightService.ts" />
 /// <reference path="ts/services/loginService.ts" />
 /// <reference path="ts.d/angularjs/angular-cookies.d.ts" />
 /// <reference path="ts.d/angularjs/angular-mocks.d.ts" />

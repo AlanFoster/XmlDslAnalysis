@@ -219,6 +219,17 @@ docsApp.service("featureService", function ($resource, $q) {
 
     return service;
 });
+docsApp.run(function ($rootScope) {
+    hljs.initHighlightingOnLoad();
+
+    $rootScope.$on("$routeChangeSuccess", function (next, current) {
+        setTimeout(function () {
+            return $('pre code').each(function (i, elem) {
+                return hljs.highlightBlock(elem);
+            });
+        }, 500);
+    });
+});
 docsApp.run(function ($rootScope, $http) {
     $http({ method: "get", url: "http://localhost:8000/services/auth/details" }).success(function (serviceResponse) {
         if (serviceResponse && serviceResponse.verified) {
