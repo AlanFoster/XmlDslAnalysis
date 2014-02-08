@@ -34,7 +34,7 @@ This plugin provides support for the XML DSL provided by Apache Camel, which can
 Within the context of Enterprise Integration Patterns, the above could be visualised as the following - 
 
 <div class="text-center">
-![CBR Example](docs_images/routeExample.png)
+![CBR Example](/docs_images/routeExample.png)
 </div>
 
 Before / After
@@ -45,19 +45,19 @@ By default there is no tooling available for Apache Camel's simple, for instance
 Such a mistake would not be known about until either runtime or deploy time, and the worst time to find out about mistakes is within production!
 
 <div class="text-center">
-	<div>![Broken code - Incorrect arguments](docs_images/codeExample_before.png)</div>
+	<div>![Broken code - Incorrect arguments](/docs_images/codeExample_before.png)</div>
 	*Without the plugin - plain text language support*
 </div>
 
 After the plugin has been installed we can see the problem more clearly with syntax highlighting and type checking working successfully
 
 <div class="text-center">
-	<div>![Broken code - Incorrect arguments](docs_images/CodeExample_typeInformation.png)</div>
+	<div>![Broken code - Incorrect arguments](/docs_images/CodeExample_typeInformation.png)</div>
 	*With the plugin - The argument's type information is wrong!*
 </div>
 
 
 <div class="text-center">
-	<div>![Broken code - Type param](docs_images/CodeExample_typeParam.png)</div>
+	<div>![Broken code - Type param](/docs_images/CodeExample_typeParam.png)</div>
 	*After using `ctrl+p` we can see that our arguments are backwards!*
 </div>
