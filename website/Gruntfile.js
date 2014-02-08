@@ -20,7 +20,7 @@ module.exports = function(grunt) {
     });
 
     // Markdown -> html
-    grunt.registerTask("docs", ["copy:docs", "markdown:docs"])
+    grunt.registerTask("docs", ["copy:docs.images", "copy:docs.md5", "markdown:docs"])
 
     // Compiling services
     grunt.registerTask("services", ["ts:services", "runServer"]);
@@ -33,8 +33,6 @@ module.exports = function(grunt) {
 
     // Initial data migration / seed
     grunt.registerTask("seed", ["ts:databaseMigration", "execute:seedDatabase"]);
-
-
 
     // Perform configuration
 	grunt.initConfig({
@@ -87,17 +85,39 @@ module.exports = function(grunt) {
                 consolidate: true
             }
         },
-        // Copying markdown files into the appropriate website location
+        /**
+         * Copy task - Used to move defined markdown documentation + images into the website on deploy
+         */
         copy: {
-            docs: {
+            // Copying markdown files into the appropriate website location
+            "docs.md5": {
                 files: [
                     // Include all markdown files which aren't in the website docs folder already, to stop recursion :)
                     {
                         expand: true,
                         flatten: true,
-                        src: ['!./apps/docs/*', "./../plugin/**/*.md"],
+                        src: [
+                            // MD files
+                            "!./apps/docs/*", "./../plugin/**/*.md", "./../readme.md",
+                        ],
                         dest: "./app/docs/",
-                        filter: "isFile"}
+                        filter: "isFile"
+                    }
+                ]
+            },
+            "docs.images": {
+                files: [
+                    // Include all markdown files which aren't in the website docs folder already, to stop recursion :)
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: [
+                            // Images
+                            "./../docs_images/**"
+                        ],
+                        dest: "./app/docs_images/",
+                        filter: "isFile"
+                    }
                 ]
             }
         },
@@ -110,7 +130,10 @@ module.exports = function(grunt) {
                         src: "./app/docs/*.md",
                         ext: ".html"
                     }
-                ]
+                ],
+                options: {
+                    template: "./app/markdownTemplate.jst"
+                }
             }
         }
 	});
