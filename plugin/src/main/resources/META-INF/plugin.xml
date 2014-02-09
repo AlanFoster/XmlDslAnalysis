@@ -57,6 +57,12 @@
             -->
             <completion.contributor language="Camel" implementationClass="foo.language.completion.CamelVariableCompletionContributor" />
 
+            <!--
+                Header contributions within the simple language
+            -->
+            <completion.contributor language="Camel" implementationClass="foo.language.completion.HeaderContribution" />
+
+
             <!-- Brace Matching -->
             <lang.braceMatcher language="Camel" implementationClass="foo.language.formatting.CamelBraceMatcher" />
 
