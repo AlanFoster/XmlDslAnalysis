@@ -13,6 +13,9 @@ class FunctionAnnotatorTests
   with JavaJDK1_7TestBase
   with TestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   override def getTestDataPath: String = testDataMapper("/foo/language/annotators/functions")
 
   /**

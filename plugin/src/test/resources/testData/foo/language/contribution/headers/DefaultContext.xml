@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:camel="http://camel.apache.org/schema/blueprint"
+           xsi:schemaLocation="
+       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+    <!--
+        Represents a complex nested route, which is used for each language test.
+        IE each contribution will be the same known set of headers
+    -->
+    <camelContext trace="true" xmlns="http://camel.apache.org/schema/blueprint">
+        <route>
+            <from uri="direct:start"/>
+
+            <setHeader headerName="a">
+                <constant>true</constant>
+            </setHeader>
+
+            <choice>
+                <when>
+                    <constant>true</constant>
+                    <setHeader headerName="b">
+                        <constant>true</constant>
+                    </setHeader>
+                </when>
+                <when>
+                    <constant>false</constant>
+                    <setHeader headerName="c">
+                        <constant>true</constant>
+                    </setHeader>
+                    <choice>
+                        <when>
+                            <constant>true</constant>
+                            <setHeader headerName="d">
+                                <constant>true</constant>
+                            </setHeader>
+
+                            <choice>
+                                <when>
+                                    <constant>true</constant>
+                                    <setHeader headerName="e">
+                                        <constant>true</constant>
+                                    </setHeader>
+                                </when>
+                                <when>
+                                    <constant>true</constant>
+                                    <setHeader headerName="f">
+                                        <constant>true</constant>
+                                    </setHeader>
+                                    <choice>
+                                        <when>
+                                            <constant>true</constant>
+                                            <setHeader headerName="g">
+                                                <constant>true</constant>
+                                            </setHeader>
+                                        </when>
+                                        <when>
+                                            <constant>true</constant>
+                                            <setHeader headerName="h">
+                                                <constant>true</constant>
+                                            </setHeader>
+                                            <choice>
+                                                <when>
+                                                    <constant>true</constant>
+                                                    <setHeader headerName="i">
+                                                        <constant>true</constant>
+                                                    </setHeader>
+                                                    <setHeader headerName="i">
+                                                        <constant>true</constant>
+                                                    </setHeader>
+                                                    <setHeader headerName="i">
+                                                        <constant>true</constant>
+                                                    </setHeader>
+                                                    <setHeader headerName="i">
+                                                        <constant>true</constant>
+                                                    </setHeader>
+                                                </when>
+                                                <when>
+                                                    <constant>true</constant>
+                                                    <setHeader headerName="j">
+                                                        <constant>true</constant>
+                                                    </setHeader>
+                                                </when>
+                                            </choice>
+                                        </when>
+                                    </choice>
+                                </when>
+                            </choice>
+                        </when>
+                        <when>
+                            <constant>false</constant>
+                            <setHeader headerName="k">
+                                <constant>true</constant>
+                            </setHeader>
+                        </when>
+                    </choice>
+                </when>
+            </choice>
+
+            <setHeader headerName="l">
+                <constant>true</constant>
+            </setHeader>
+
+            <!--
+                Performs a simple string replace within tests, as we are testing the language contribution is valid
+                *NOT* the type information
+             -->
+            <setBody>
+                <simple>LANGUAGE_INJECTION_HERE</simple>
+            </setBody>
+        </route>
+    </camelContext>
+</blueprint>
