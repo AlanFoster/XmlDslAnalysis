@@ -8,8 +8,18 @@ import foo.language.generated.CamelTypes
 import foo.language.generated.psi.{CamelCamelExpression, CamelFunctionArgs, CamelCamelFuncBody}
 import foo.language.elements.CamelBaseElementType
 import com.intellij.patterns.StandardPatterns._
-import com.intellij.psi.PsiElement
+import com.intellij.psi.{PsiFile, PsiDocumentManager, PsiElement}
 import Patterns._
+import com.intellij.util.xml.{DomUtil, ConvertContext}
+import foo.dom.Model.ProcessorDefinition
+import foo.dom.DomFileAccessor
+import foo.eip.graph.EipGraphCreator
+import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil
+import com.intellij.xml.util.XmlUtil
+import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.impl.file.PsiFileImplUtil
+import com.intellij.psi.xml.{XmlTag, XmlFile}
+import com.intellij.patterns.XmlPatterns
 
 /**
  * Provides contribution for headers within the relevant places of the camel language
@@ -52,8 +62,32 @@ class HeaderContribution extends CompletionContributor {
        * @param result
        */
       def addCompletions(parameters: CompletionParameters, context: ProcessingContext, result: CompletionResultSet) {
+        val (camelEditor, project) = (parameters.getEditor, parameters.getEditor.getProject)
+        val xmlEditor = InjectedLanguageUtil.getTopLevelEditor(camelEditor)
+
+        val xmlDocument = xmlEditor.getDocument
+        val psiFile: PsiFile = PsiDocumentManager.getInstance(project).getPsiFile(xmlDocument)
+
+        val domFile = DomFileAccessor.getBlueprintDomFile(project, psiFile).get
+        val caretPosition = xmlEditor.getCaretModel.getOffset
+
+        val xmlText = psiFile.findElementAt(caretPosition)
+        println(xmlText.getNode.getElementType)
+
+        val getParentTag = (psiElement: PsiElement) => PsiTreeUtil.getParentOfType(psiElement, classOf[XmlTag], true)
+
+        val simpleTag = getParentTag(xmlText)
+        val outterTag = getParentTag(simpleTag)
+        println("outter tag :: " + outterTag.getText)
+
+        val graph = new EipGraphCreator().createEipGraph(domFile)
+        val headers = graph.vertices.find(_.psiReference.getXmlTag == outterTag).map(_.semantics.headers)
+        val availableHeaders = headers.getOrElse(Map())
+        println(availableHeaders)
+
+
         // Convert all available completions to a Lookup Builder that IJ understands
-        ('a' to 'l').map(_.toString)
+        availableHeaders.map(_._1)
           .map(LookupElementBuilder.create)
           // Register each lookup element
           .foreach(result.addElement)

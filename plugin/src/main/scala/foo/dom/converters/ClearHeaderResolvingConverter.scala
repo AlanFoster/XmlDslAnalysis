@@ -57,6 +57,7 @@ class ClearHeaderResolvingConverter extends ResolvingConverter[ProcessorDefiniti
    * @param context The context
    * @return All known headers within the given context
    */
+  // TODO Merge with HeaderContribution logic if required
   def getAvailableHeaders(context: ConvertContext): Map[String, ProcessorDefinition] = {
     val (project, virtualFile) = (context.getProject, context.getFile)
 

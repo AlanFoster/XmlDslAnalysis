@@ -4,7 +4,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.fileTypes.StdFileTypes
 import com.intellij.util.xml.{DomElement, DomManager}
-import com.intellij.psi.PsiManager
+import com.intellij.psi.{PsiFile, PsiManager}
 import com.intellij.psi.xml.XmlFile
 import foo.dom.Model.Blueprint
 
@@ -24,9 +24,19 @@ object DomFileAccessor {
     else {
       // Extract the given XML file from the VirtualFile
       val psiFile = PsiManager.getInstance(project).findFile(virtualFile)
-      val xmlFile = psiFile.asInstanceOf[XmlFile]
-      getDomFile(project, xmlFile, classOf[Blueprint])
+      getBlueprintDomFile(project, psiFile)
     }
+
+  /**
+   * Attempts to return the associated BlueprintDomDescription with the given PsiFile
+   * @param project The project
+   * @param psiFile The current PsiFile
+   * @return None if the given VirtualFile is not the expected DOM file, otherwise the Some(DomFile)
+   */
+  def getBlueprintDomFile(project: Project, psiFile: PsiFile): Option[Blueprint] = {
+    val xmlFile = psiFile.asInstanceOf[XmlFile]
+    getDomFile(project, xmlFile, classOf[Blueprint])
+  }
 
   /**
    * Attempts to return the associated BlueprintDomDescription with the given xml file file
