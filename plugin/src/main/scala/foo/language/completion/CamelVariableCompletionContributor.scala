@@ -2,14 +2,11 @@ package foo.language.completion
 
 import com.intellij.codeInsight.completion._
 import com.intellij.patterns._
-import com.intellij.patterns.StandardPatterns.collection
 import com.intellij.util.ProcessingContext
-import com.intellij.codeInsight.lookup.{LookupElement, LookupElementBuilder}
+import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.PsiElement
-import foo.language.generated.psi.{CamelFunctionArgs, CamelCamelExpression, CamelCamelFuncBody}
 import foo.language.elements.CamelBaseElementType
 import foo.language.generated.CamelTypes
-import com.intellij.patterns.StandardPatterns.string
 import com.intellij.patterns.StandardPatterns.or
 
 /**
@@ -19,7 +16,7 @@ import com.intellij.patterns.StandardPatterns.or
  */
 class CamelVariableCompletionContributor extends CompletionContributor {
 
-  import PlatformPatterns._
+  import Patterns._
 
   /**
    * Represents a code completion tuple
@@ -32,66 +29,9 @@ class CamelVariableCompletionContributor extends CompletionContributor {
   }
 
   /**
-   * A variable will be placed between ${..} however, <b>not</b> nested inside a
-   * function call, ie ${bodyAs(...)}
+   * Provide access for in and out variable access
    */
-  val VARIABLE = {
-    val element = psiElement(CamelTypes.IDENTIFIER)
-    element
-      .inside(classOf[CamelCamelFuncBody])
-      .andNot(element.inside(classOf[CamelFunctionArgs]))
-  }
-
-  /**
-   * A pattern which ensures that the current node is an identifier, with the previous identifier being
-   * equal to variable name. For instance ${variableName.caret} matches however ${etc.variablename.caret} will not
-   * @param variableName The leading identifier within the expression, ie `in`, `out`
-   * @return the constructed pattern
-   */
-  def afterVariableObject(variableName: String) = {
-    val lexeme = CamelBaseElementType.getName _
-    psiElement(CamelTypes.IDENTIFIER)
-      .withSuperParent(
-        2, psiElement().withText(
-          // Variable access must handle both a.b and a?.b - elvis operator
-          or(
-            string().startsWith(variableName + lexeme(CamelTypes.DOT)),
-            string().startsWith(variableName + lexeme(CamelTypes.QUESTION_MARK) + lexeme(CamelTypes.DOT)))
-          )
-      )
-      .withSuperParent(3, psiElement(CamelTypes.CAMEL_FUNC_BODY)
-    )
-  }
-
-  /**
-   * An 'in' variable, will be only available after `in.&gt;caret&lt;`
-   */
-  val IN_VARIABLE = afterVariableObject("in")
-  /**
-   * Matches the 'out' variable
-   */
-  val OUT_VARIABLE = afterVariableObject("out")
-
-  val EXCEPTION_VARIABLE = afterVariableObject("exception")
-
-  val OPERATOR = psiElement().withParent(classOf[CamelCamelExpression])
-
-  /**
-   * A pattern which will successfully match in an empty camel func body,
-   * other than itself
-   */
-  val EMPTY_VARIABLE =
-      VARIABLE
-        .withSuperParent(2,
-          psiElement(classOf[CamelCamelFuncBody])
-            .withChildren(
-              collection(classOf[PsiElement]).size(1)
-            )
-        )
-
-
   addCompletion(
-    // Union IN and OUT variable patterns
     or(IN_VARIABLE, OUT_VARIABLE),
     List(
       Completion("body"),
@@ -99,17 +39,6 @@ class CamelVariableCompletionContributor extends CompletionContributor {
       Completion("headers")
     )
   )
-
-  /**
-   * Register completion requirements for header access
-   */
-  /*  addCompletion(
-      // HEADER_VARIABLE.or(HEADERS_VARIABLE)
-      EMPTY_VARIABLE,
-      List(
-         // TODO EIP contribution!!
-      )
-    )*/
 
   /**
    * Register completion requirements for the exception element
@@ -122,6 +51,10 @@ class CamelVariableCompletionContributor extends CompletionContributor {
       )
     )
 
+  /**
+   * Provide contribution for when the function body is empty.
+   * IE The default variables/functions that are accessible
+   */
   addCompletion(
     EMPTY_VARIABLE,
     List(
@@ -152,7 +85,9 @@ class CamelVariableCompletionContributor extends CompletionContributor {
     )
   )
 
-  // TODO We potentially have this list already within the camel syntax highlighting
+  /**
+   * Provide operator contribution
+   */
   addCompletion(
     OPERATOR,
     List(
@@ -203,24 +138,4 @@ class CamelVariableCompletionContributor extends CompletionContributor {
     )
   }
 }
-
-/**
- * FunctionInsertHandler which inserts the given lookupstring into the current
- * document, and leaves the caret in the correct position - ie between left/right parens
- */
-class FunctionInsertHandler extends InsertHandler[LookupElement] {
-  def handleInsert(context: InsertionContext, item: LookupElement) {
-    val (document, caretModel) = (context.getDocument, context.getEditor.getCaretModel)
-    val offset = caretModel.getOffset
-
-    // Insert the new function based on the previous lookup string, with zero args
-    val argumentList = "()"
-
-    document.insertString(offset, argumentList)
-
-    // Update the caret position to be placed directly after the first brace
-    caretModel.moveToOffset(offset + 1)
-  }
-}
-
 
