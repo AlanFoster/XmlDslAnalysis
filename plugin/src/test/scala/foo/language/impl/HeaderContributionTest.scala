@@ -27,7 +27,13 @@ class HeaderContributionTest
    * Test scenario descriptions - which contain the file name and assocaited expected headers
    * given the context
    */
-  case class TestContext(testFileName: String, expectedHeaders: List[String])
+  case class TestContext(testFileName: String, expectedHeaders: List[String]) {
+    /**
+     * Creates a new TestContext in which no headers are expected, IE used in
+     * the scenario of no expected contribution
+     */
+    def emptyContribution = TestContext(testFileName, List())
+  }
   val ComplexHeaders = TestContext("ComplexHeaders.xml", ('a' to 'l').map(_.toString).toList)
   val EmptyContext = TestContext("EmptyContext.xml", List())
 
@@ -40,7 +46,7 @@ class HeaderContributionTest
   def testHeaderArrayAccess_ComplexHeaders() {doTest(ComplexHeaders)}
   def testHeaderAs_ComplexHeaders() {doTest(ComplexHeaders)}
   def testHeaderDotAccess_ComplexHeaders() {doTest(ComplexHeaders)}
-  def testHeaderDotHeaderDotAccess_ComplexHeaders() { doTest(TestContext(ComplexHeaders.testFileName, List())) }
+  def testHeaderDotHeaderDotAccess_ComplexHeaders() { doTest(ComplexHeaders.emptyContribution) }
   def testHeaderElvisAccess_ComplexHeaders() {doTest(ComplexHeaders)}
   def testHeadersArrayAccess_ComplexHeaders() {doTest(ComplexHeaders)}
   def testHeadersDotAccess_ComplexHeaders() {doTest(ComplexHeaders)}
@@ -67,7 +73,7 @@ class HeaderContributionTest
 /*  def testHeaderArrayAccess_EmptyContext() {doTest(EmptyContext)}
   def testHeaderAs_EmptyContext() {doTest(EmptyContext)}
   def testHeaderDotAccess_EmptyContext() {doTest(EmptyContext)}
-  def testHeaderDotHeaderDotAccess_EmptyContext() {doTest(TestContext(EmptyContext.testFileName, List()))}
+  def testHeaderDotHeaderDotAccess_EmptyContext() {doTest(ComplexHeaders.emptyContribution)}
   def testHeaderElvisAccess_EmptyContext() {doTest(EmptyContext)}
   def testHeadersArrayAccess_EmptyContext() {doTest(EmptyContext)}
   def testHeadersDotAccess_EmptyContext() {doTest(EmptyContext)}
