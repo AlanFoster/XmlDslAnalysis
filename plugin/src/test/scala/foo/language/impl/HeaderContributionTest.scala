@@ -44,7 +44,7 @@ class HeaderContributionTest
    * Note - separate methods have been provided for JUnit 3 logging compatability
    */
   def testHeaderArrayAccess_ComplexHeaders() {doTest(ComplexHeaders)}
-  def testHeaderAs_ComplexHeaders() {doTest(ComplexHeaders)}
+  def ignoretestHeaderAs_ComplexHeaders() {doTest(ComplexHeaders)}
   def testHeaderDotAccess_ComplexHeaders() {doTest(ComplexHeaders)}
   def testHeaderDotHeaderDotAccess_ComplexHeaders() { doTest(ComplexHeaders.emptyContribution) }
   def testHeaderElvisAccess_ComplexHeaders() {doTest(ComplexHeaders)}
