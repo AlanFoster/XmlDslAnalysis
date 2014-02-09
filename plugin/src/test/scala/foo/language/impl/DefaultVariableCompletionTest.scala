@@ -8,11 +8,11 @@ import foo.TestBase
 /**
  * Tests for variable completion within the apache camel language
  */
-class VariableCompletionTest
+class DefaultVariableCompletionTest
  extends LightCodeInsightFixtureTestCase
  with TestBase {
 
-  override def getTestDataPath: String = testDataMapper("/foo/language/contribution")
+  override def getTestDataPath: String = testDataMapper("/foo/language/contribution/defaultLanguage")
 
   /**
    * Testing that core camel variables are contributed
