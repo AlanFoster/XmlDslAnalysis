@@ -62,6 +62,19 @@ class VariableCompletionTest
     doTest(List())
   }
 
+  /**
+   * Contribution should only occur when the variable is the last in the list
+   */
+  def testRepeatedExceptionAccess() {
+    doTest(List())
+  }
+
+  /**
+   * No default reference contribution should be provided for in.out.etc
+   */
+  def testInBodyContribution() {
+    doTest(List())
+  }
 
   /**
    * If there are any other existing elements then reference contribution
@@ -90,6 +103,17 @@ class VariableCompletionTest
     ))
   }
 
+  /**
+   * Test an empty piece of text after the last DOT provides contribution successfully
+   */
+  def testEmptyInVariable() {
+    doTest(List(
+      "body",
+      "header",
+      "headers"
+    ))
+  }
+
   def testExceptionContribution() {
     doTest(List(
       "message",
@@ -101,6 +125,27 @@ class VariableCompletionTest
    * Ensure the user is allowed to access the 'in' variables successfully
    */
   def testInVariableContribution() {
+    doTest(List(
+      "header",
+      "headers"
+    ))
+  }
+
+  /**
+   * Test to show that elem.startsWith(in) is not enough
+   */
+  def testInInContribution() {
+    doTest(List())
+  }
+
+  def testInInElvisOperatorContribution() {
+    doTest(List())
+  }
+
+  /**
+   * Contribution should work with both a.b and a?.b
+   */
+  def testInElvisOperatorContribution() {
     doTest(List(
       "body",
       "header",

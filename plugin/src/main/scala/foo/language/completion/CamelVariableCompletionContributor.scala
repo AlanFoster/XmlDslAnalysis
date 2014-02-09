@@ -6,10 +6,11 @@ import com.intellij.patterns.StandardPatterns.collection
 import com.intellij.util.ProcessingContext
 import com.intellij.codeInsight.lookup.{LookupElement, LookupElementBuilder}
 import com.intellij.psi.PsiElement
-import foo.language.generated.psi.{CamelFunctionArgs, CamelCamelExpression, CamelCamelFunction, CamelCamelFuncBody}
+import foo.language.generated.psi.{CamelFunctionArgs, CamelCamelExpression, CamelCamelFuncBody}
 import foo.language.elements.CamelBaseElementType
 import foo.language.generated.CamelTypes
-import com.intellij.openapi.module.{ModuleUtilCore, ModuleUtil}
+import com.intellij.patterns.StandardPatterns.string
+import com.intellij.patterns.StandardPatterns.or
 
 /**
  * Provides basic code completion for common camel language variables
@@ -34,16 +35,33 @@ class CamelVariableCompletionContributor extends CompletionContributor {
    * A variable will be placed between ${..} however, <b>not</b> nested inside a
    * function call, ie ${bodyAs(...)}
    */
-  def VARIABLE() = {
+  val VARIABLE = {
     val element = psiElement(CamelTypes.IDENTIFIER)
     element
       .inside(classOf[CamelCamelFuncBody])
       .andNot(element.inside(classOf[CamelFunctionArgs]))
   }
 
-  def afterVariableObject(variableName: String) =
-    VARIABLE()
-      .and(psiElement().afterLeaf(psiElement(CamelTypes.DOT).afterLeaf(psiElement().withText(variableName))))
+  /**
+   * A pattern which ensures that the current node is an identifier, with the previous identifier being
+   * equal to variable name. For instance ${variableName.caret} matches however ${etc.variablename.caret} will not
+   * @param variableName The leading identifier within the expression, ie `in`, `out`
+   * @return the constructed pattern
+   */
+  def afterVariableObject(variableName: String) = {
+    val lexeme = CamelBaseElementType.getName _
+    psiElement(CamelTypes.IDENTIFIER)
+      .withSuperParent(
+        2, psiElement().withText(
+          // Variable access must handle both a.b and a?.b - elvis operator
+          or(
+            string().startsWith(variableName + lexeme(CamelTypes.DOT)),
+            string().startsWith(variableName + lexeme(CamelTypes.QUESTION_MARK) + lexeme(CamelTypes.DOT)))
+          )
+      )
+      .withSuperParent(3, psiElement(CamelTypes.CAMEL_FUNC_BODY)
+    )
+  }
 
   /**
    * An 'in' variable, will be only available after `in.&gt;caret&lt;`
@@ -57,34 +75,24 @@ class CamelVariableCompletionContributor extends CompletionContributor {
   val EXCEPTION_VARIABLE = afterVariableObject("exception")
 
   val OPERATOR = psiElement().withParent(classOf[CamelCamelExpression])
-  // .withElementType(CamelTypes.CAMEL_EXPRESSION))
 
   /**
    * A pattern which will successfully match in an empty camel func body,
    * other than itself
    */
-  val EMPTY_VARIABLE = {
-    val variable = VARIABLE()
-    variable
-      .withSuperParent(2,
-        psiElement(classOf[CamelCamelFuncBody])
-          .withChildren(
-            collection(classOf[PsiElement]).size(1)
-          )
-      )
-  }
+  val EMPTY_VARIABLE =
+      VARIABLE
+        .withSuperParent(2,
+          psiElement(classOf[CamelCamelFuncBody])
+            .withChildren(
+              collection(classOf[PsiElement]).size(1)
+            )
+        )
+
 
   addCompletion(
-    IN_VARIABLE,
-    List(
-      Completion("body"),
-      Completion("header"),
-      Completion("headers")
-    )
-  )
-
-  addCompletion(
-    OUT_VARIABLE,
+    // Union IN and OUT variable patterns
+    or(IN_VARIABLE, OUT_VARIABLE),
     List(
       Completion("body"),
       Completion("header"),
@@ -178,16 +186,16 @@ class CamelVariableCompletionContributor extends CompletionContributor {
           // Convert all available completions to a Lookup Builder that IJ understands
           completions
             .map(completion => {
-            val lookupBuilder =
-              LookupElementBuilder
-                .create(completion.lookupString)
-                .appendTailText(completion.tail, false)
-                .withInsertHandler(
-                  if (completion.isFunction) new FunctionInsertHandler()
-                  else null
-                )
-            lookupBuilder
-          })
+                val lookupBuilder =
+                  LookupElementBuilder
+                    .create(completion.lookupString)
+                    .appendTailText(completion.tail, false)
+                    .withInsertHandler(
+                      if (completion.isFunction) new FunctionInsertHandler()
+                      else null
+                    )
+                lookupBuilder
+              })
             // Register each lookup element
             .foreach(result.addElement)
         }
