@@ -15,17 +15,35 @@ import Patterns._
  * Provides contribution for headers within the relevant places of the camel language
  */
 class HeaderContribution extends CompletionContributor {
-  val HEADER = afterVariableObject("header")
-  val HEADERS = afterVariableObject("header")
+  val HEADER = VariableAccessorTest.afterVariableObject(List("header"), true)
+  val IN_HEADER = VariableAccessorTest.afterVariableObject(List("in", "header"), true)
+  val OUT_HEADER = VariableAccessorTest.afterVariableObject(List("out", "header"), true)
+
+  val HEADERS = VariableAccessorTest.afterVariableObject(List("headers"), true)
+  val IN_HEADERS = VariableAccessorTest.afterVariableObject(List("in", "headers"), true)
+  val OUT_HEADERS = VariableAccessorTest.afterVariableObject(List("out", "headers"), true)
+
+ /* val HEADER_AS =
+    psiElement(CamelTypes.STRING)*/
 
   /**
    * Union all possible header patterns for contribution
    */
-  val unionPattern =
-    or(HEADER, HEADERS)
+   val unionPattern =
+    or(
+      HEADER,
+      IN_HEADER,
+      OUT_HEADER,
+
+      HEADERS,
+      OUT_HEADERS,
+      IN_HEADERS
+
+      //HEADER_AS
+    )
 
   extend(CompletionType.BASIC,
-    psiElement(),
+    unionPattern,
     new CompletionProvider[CompletionParameters]() {
       /**
        * Provides the completions available under the given context

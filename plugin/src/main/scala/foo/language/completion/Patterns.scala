@@ -3,7 +3,6 @@ package foo.language.completion
 import com.intellij.patterns.PlatformPatterns._
 import foo.language.generated.CamelTypes
 import foo.language.generated.psi.{CamelCamelExpression, CamelFunctionArgs, CamelCamelFuncBody}
-import foo.language.elements.CamelBaseElementType
 import com.intellij.patterns.StandardPatterns._
 import com.intellij.psi.PsiElement
 
@@ -28,19 +27,8 @@ object Patterns {
    * @param variableName The leading identifier within the expression, ie `in`, `out`
    * @return the constructed pattern
    */
-  def afterVariableObject(variableName: String) = {
-    val lexeme = CamelBaseElementType.getName _
-    psiElement(CamelTypes.IDENTIFIER)
-      .withSuperParent(
-        2, psiElement().withText(
-          // Variable access must handle both a.b and a?.b - elvis operator
-          or(
-            string().startsWith(variableName + lexeme(CamelTypes.DOT)),
-            string().startsWith(variableName + lexeme(CamelTypes.QUESTION_MARK) + lexeme(CamelTypes.DOT)))
-        )
-      )
-      .withSuperParent(3, psiElement(CamelTypes.CAMEL_FUNC_BODY))
-  }
+  def afterVariableObject(variableName: String, allowArrayAccess:Boolean = false) =
+    VariableAccessorTest.afterVariableObject(List(variableName), allowArrayAccess)
 
   /**
    * An 'in' variable, will be only available after `in.&gt;caret&lt;`
