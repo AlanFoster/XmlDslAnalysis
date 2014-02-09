@@ -34,8 +34,11 @@ object DomFileAccessor {
    * @return None if the given VirtualFile is not the expected DOM file, otherwise the Some(DomFile)
    */
   def getBlueprintDomFile(project: Project, psiFile: PsiFile): Option[Blueprint] = {
-    val xmlFile = psiFile.asInstanceOf[XmlFile]
-    getDomFile(project, xmlFile, classOf[Blueprint])
+    if(psiFile.getFileType != StdFileTypes.XML) None
+    else {
+      val xmlFile = psiFile.asInstanceOf[XmlFile]
+      getDomFile(project, xmlFile, classOf[Blueprint])
+    }
   }
 
   /**

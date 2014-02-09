@@ -65,26 +65,30 @@ class HeaderContribution extends CompletionContributor {
         val (camelEditor, project) = (parameters.getEditor, parameters.getEditor.getProject)
         val xmlEditor = InjectedLanguageUtil.getTopLevelEditor(camelEditor)
 
+        // Extract the relevent PsiFile in order to test if we are contained within an XmlFile
         val xmlDocument = xmlEditor.getDocument
         val psiFile: PsiFile = PsiDocumentManager.getInstance(project).getPsiFile(xmlDocument)
+        val domFileOption = DomFileAccessor.getBlueprintDomFile(project, psiFile)
 
-        val domFile = DomFileAccessor.getBlueprintDomFile(project, psiFile).get
-        val caretPosition = xmlEditor.getCaretModel.getOffset
+        // If the XmlFile was found, create the EipGraph information to suggest the relevent information
+        // Otherwise default to an empty map
+        val availableHeaders:Map[String, ProcessorDefinition] = domFileOption match {
+          case None => Map()
+          case Some(domFile) => {
+            val caretPosition = xmlEditor.getCaretModel.getOffset
 
-        val xmlText = psiFile.findElementAt(caretPosition)
-        println(xmlText.getNode.getElementType)
+            val xmlText = psiFile.findElementAt(caretPosition)
 
-        val getParentTag = (psiElement: PsiElement) => PsiTreeUtil.getParentOfType(psiElement, classOf[XmlTag], true)
+            val getParentTag = (psiElement: PsiElement) => PsiTreeUtil.getParentOfType(psiElement, classOf[XmlTag], true)
 
-        val simpleTag = getParentTag(xmlText)
-        val outterTag = getParentTag(simpleTag)
-        println("outter tag :: " + outterTag.getText)
+            val simpleTag = getParentTag(xmlText)
+            val outterTag = getParentTag(simpleTag)
 
-        val graph = new EipGraphCreator().createEipGraph(domFile)
-        val headers = graph.vertices.find(_.psiReference.getXmlTag == outterTag).map(_.semantics.headers)
-        val availableHeaders = headers.getOrElse(Map())
-        println(availableHeaders)
-
+            val graph = new EipGraphCreator().createEipGraph(domFile)
+            val headers = graph.vertices.find(_.psiReference.getXmlTag == outterTag).map(_.semantics.headers)
+            headers.getOrElse(Map())
+          }
+        }
 
         // Convert all available completions to a Lookup Builder that IJ understands
         availableHeaders.map(_._1)

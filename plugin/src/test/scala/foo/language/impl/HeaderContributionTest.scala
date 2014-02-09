@@ -27,15 +27,16 @@ class HeaderContributionTest
    * Test scenario descriptions - which contain the file name and assocaited expected headers
    * given the context
    */
-  case class TestContext(testFileName: String, expectedHeaders: List[String]) {
+  case class TestContext(testFileName: Option[String], expectedHeaders: List[String]) {
     /**
      * Creates a new TestContext in which no headers are expected, IE used in
      * the scenario of no expected contribution
      */
     def emptyContribution = TestContext(testFileName, List())
   }
-  val ComplexHeaders = TestContext("ComplexHeaders.xml", ('a' to 'l').map(_.toString).toList)
-  val EmptyContext = TestContext("EmptyContext.xml", List())
+  val ComplexHeaders = TestContext(Some("ComplexHeaders.xml"), ('a' to 'l').map(_.toString).toList)
+  val EmptyContext = TestContext(Some("EmptyContext.xml"), List("a"))
+  val Standalone = TestContext(None, List())
 
   /**
    * Perform tests to ensure that the patterns work as expected and provide
@@ -44,6 +45,7 @@ class HeaderContributionTest
    * Note - separate methods have been provided for JUnit 3 logging compatability
    */
   def testHeaderArrayAccess_ComplexHeaders() {doTest(ComplexHeaders)}
+  // TODO Add support for test header as
   def ignoretestHeaderAs_ComplexHeaders() {doTest(ComplexHeaders)}
   def testHeaderDotAccess_ComplexHeaders() {doTest(ComplexHeaders)}
   def testHeaderDotHeaderDotAccess_ComplexHeaders() { doTest(ComplexHeaders.emptyContribution) }
@@ -70,8 +72,9 @@ class HeaderContributionTest
    * Note - these were automatically generated, hence no specific comments
    * Note - separate methods have been provided for JUnit 3 logging compatability
    */
-/*  def testHeaderArrayAccess_EmptyContext() {doTest(EmptyContext)}
-  def testHeaderAs_EmptyContext() {doTest(EmptyContext)}
+  def testHeaderArrayAccess_EmptyContext() {doTest(EmptyContext)}
+  // TODO Add support for test header as
+  def ignoretestHeaderAs_EmptyContext() {doTest(EmptyContext)}
   def testHeaderDotAccess_EmptyContext() {doTest(EmptyContext)}
   def testHeaderDotHeaderDotAccess_EmptyContext() {doTest(ComplexHeaders.emptyContribution)}
   def testHeaderElvisAccess_EmptyContext() {doTest(EmptyContext)}
@@ -88,7 +91,31 @@ class HeaderContributionTest
   def testOutHeaderElvisAccess_EmptyContext() {doTest(EmptyContext)}
   def testOutHeadersArrayAccess_EmptyContext() {doTest(EmptyContext)}
   def testOutHeadersDotAccess_EmptyContext() {doTest(EmptyContext)}
-  def testOutHeadersElvisAccess_EmptyContext() {doTest(EmptyContext)}*/
+  def testOutHeadersElvisAccess_EmptyContext() {doTest(EmptyContext)}
+
+  /**
+   * Ensure that the tests still function when they are not defined within a given
+   * XML File, and are simply stand alone camel files
+   */
+  def testHeaderArrayAccess_Standalone() {doTest(Standalone)}
+  def testHeaderAs_Standalone() {doTest(Standalone)}
+  def testHeaderDotAccess_Standalone() {doTest(Standalone)}
+  def testHeaderDotHeaderDotAccess_Standalone() {doTest(Standalone)}
+  def testHeaderElvisAccess_Standalone() {doTest(Standalone)}
+  def testHeadersArrayAccess_Standalone() {doTest(Standalone)}
+  def testHeadersDotAccess_Standalone() {doTest(Standalone)}
+  def testheadersElvisAcccess_Standalone() {doTest(Standalone)}
+  def testInHeaderDotAccess_Standalone() {doTest(Standalone)}
+  def testInHeaderElvisAccess_Standalone() {doTest(Standalone)}
+  def testInHeadersArrayAccess_Standalone() {doTest(Standalone)}
+  def testInHeadersDotAccess_Standalone() {doTest(Standalone)}
+  def testInHeadersElvisAccess_Standalone() {doTest(Standalone)}
+  def testOutHeaderArrayAccess_Standalone() {doTest(Standalone)}
+  def testOutHeaderDotAccess_Standalone() {doTest(Standalone)}
+  def testOutHeaderElvisAccess_Standalone() {doTest(Standalone)}
+  def testOutHeadersArrayAccess_Standalone() {doTest(Standalone)}
+  def testOutHeadersDotAccess_Standalone() {doTest(Standalone)}
+  def testOutHeadersElvisAccess_Standalone() {doTest(Standalone)}
 
   /**
    * Performs the test, using the convention of test name being associated
@@ -97,7 +124,8 @@ class HeaderContributionTest
   def doTest(testContext: TestContext) {
     // Configure the fixture
     val testData = getTestData(getTestName(false).takeWhile(_ != '_'), testContext.testFileName)
-    myFixture.configureByText("camelTest.xml", testData)
+
+    myFixture.configureByText(testContext.testFileName.getOrElse("camelTest.Camel"), testData)
 
     myFixture.complete(CompletionType.BASIC)
     val suggestedStrings = myFixture.getLookupElementStrings
@@ -108,21 +136,24 @@ class HeaderContributionTest
   /**
    * Provides the test file for the given test.
    * @param testName The test name used - following the convention of loading a file
-   *                 under the testing folder with the given name
+   *                 under the testing folder with the given name.
    */
-  private def getTestData(testName: String, testFileName: String): String = {
+  private def getTestData(testName: String, testFileName: Option[String]): String = {
     // Loads the given file name from the test directory and returns the associated content
     val getFileContent = (fileName: String) => Source.fromFile(new File(getTestDataPath, fileName), "utf-8").getLines().mkString
-
-    // Load the default context for the camel language contribution to occur
-    val defaultContext = getFileContent(testFileName)
 
     // Load our camel file under test
     val camelFile = getFileContent(s"${testName}.${LanguageConstants.extension}")
 
-    // Create our new interpolated file with the given content
-    val interpolatedText = defaultContext.replaceAllLiterally("LANGUAGE_INJECTION_HERE", camelFile)
-
-    interpolatedText
+    // Load the default context for the camel language contribution to occur - if appropriate.
+   testFileName match {
+      case Some(path) => {
+        val defaultContext = getFileContent(path)
+        // Create our new interpolated file with the given content
+        val interpolatedText = defaultContext.replaceAllLiterally("LANGUAGE_INJECTION_HERE", camelFile)
+        interpolatedText
+      }
+      case _ => camelFile
+    }
   }
 }
