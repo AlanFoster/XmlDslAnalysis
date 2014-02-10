@@ -4,3 +4,6 @@ project
 src/main/scala/dsl/build
 target
 *.iml
+gen
+idea-flex.skeleton
+JFlex.jar

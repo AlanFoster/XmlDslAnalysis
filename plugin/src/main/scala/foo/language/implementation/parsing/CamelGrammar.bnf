@@ -48,7 +48,6 @@
     AND_AND="&&"
     OR_OR="||"
 
-
     IDENTIFIER="regexp:[a-zA-Z]([a-zA-Z_0-9])*"
 
     NUMBER="regexp:\d+"
@@ -96,7 +95,10 @@ camel_func_body ::= functionCall | variableAccess
 variableAccess ::=
     (arrayAccess | identifierAccess)
     // Allow for object access to support both a.b and a?.b for null safe access
-    (QUESTION_MARK? DOT variableAccess)*
+    (QUESTION_MARK? DOT variableAccess)* {
+    mixin="foo.language.psi.impl.ACamelVariableAccessImpl"
+    implements="foo.language.psi.IACamelVariableAccess"
+}
 
 // Represents a Camel Function call - IE ${foo(1, ..., n)}
 functionCall ::= functionName LEFT_PAREN functionArgs? RIGHT_PAREN
@@ -122,5 +124,3 @@ private arrayAccess ::=
 
 private arrayOrMapIndices ::=
     LEFT_SQUARE_BRACE (NUMBER | STRING | variableAccess) RIGHT_SQUARE_BRACE
-
-

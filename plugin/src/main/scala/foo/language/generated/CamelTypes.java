@@ -61,7 +61,7 @@ public interface CamelTypes {
         return new CamelExpressionImpl(node);
       }
       else if (type == FQCN) {
-        return new CamelFQCNImpl(node);
+        return new CamelFqcnImpl(node);
       }
       else if (type == FUNCTION_ARG) {
         return new CamelFunctionArgImpl(node);

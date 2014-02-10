@@ -29,3 +29,4 @@ object ElementSplitter {
 
     ranges.filter(t => t._2 != t._3)
   }
+}

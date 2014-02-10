@@ -10,11 +10,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static foo.language.generated.CamelTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import foo.language.psi.impl.ACamelVariableAccessImpl;
 import foo.language.generated.psi.*;
 import foo.language.psi.Util;
 
-public class CamelVariableAccessImpl extends ASTWrapperPsiElement implements CamelVariableAccess {
+public class CamelVariableAccessImpl extends ACamelVariableAccessImpl implements CamelVariableAccess {
 
   public CamelVariableAccessImpl(ASTNode node) {
     super(node);
@@ -29,6 +29,24 @@ public class CamelVariableAccessImpl extends ASTWrapperPsiElement implements Cam
   @NotNull
   public List<CamelVariableAccess> getVariableAccessList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, CamelVariableAccess.class);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getIdentifier() {
+    return findNotNullChildByType(IDENTIFIER);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getNumber() {
+    return findChildByType(NUMBER);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getString() {
+    return findChildByType(STRING);
   }
 
 }

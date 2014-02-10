@@ -27,8 +27,8 @@ public class CamelFunctionArgImpl extends ASTWrapperPsiElement implements CamelF
 
   @Override
   @Nullable
-  public CamelFQCN getFQCN() {
-    return findChildByClass(CamelFQCN.class);
+  public CamelFqcn getFqcn() {
+    return findChildByClass(CamelFqcn.class);
   }
 
   @Override

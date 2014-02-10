@@ -9,4 +9,10 @@ import com.intellij.psi.PsiElement;
 
 public interface CamelLiteral extends PsiElement {
 
+  @Nullable
+  PsiElement getNumber();
+
+  @Nullable
+  PsiElement getString();
+
 }

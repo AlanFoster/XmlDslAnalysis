@@ -9,4 +9,7 @@ import com.intellij.psi.PsiElement;
 
 public interface CamelFunctionName extends PsiElement {
 
+  @NotNull
+  PsiElement getIdentifier();
+
 }

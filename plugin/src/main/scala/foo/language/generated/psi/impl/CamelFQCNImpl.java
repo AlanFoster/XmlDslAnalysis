@@ -14,14 +14,14 @@ import foo.language.psi.impl.CamelJavaFQCN;
 import foo.language.generated.psi.*;
 import foo.language.psi.Util;
 
-public class CamelFQCNImpl extends CamelJavaFQCN implements CamelFQCN {
+public class CamelFqcnImpl extends CamelJavaFQCN implements CamelFqcn {
 
-  public CamelFQCNImpl(ASTNode node) {
+  public CamelFqcnImpl(ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof CamelVisitor) ((CamelVisitor)visitor).visitFQCN(this);
+    if (visitor instanceof CamelVisitor) ((CamelVisitor)visitor).visitFqcn(this);
     else super.accept(visitor);
   }
 

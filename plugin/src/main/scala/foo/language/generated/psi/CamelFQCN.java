@@ -8,6 +8,6 @@ import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 import foo.language.psi.ICamelJavaFQCN;
 
-public interface CamelFQCN extends ICamelJavaFQCN {
+public interface CamelFqcn extends ICamelJavaFQCN {
 
 }

@@ -10,7 +10,7 @@ import com.intellij.psi.PsiElement;
 public interface CamelFunctionArg extends PsiElement {
 
   @Nullable
-  CamelFQCN getFQCN();
+  CamelFqcn getFqcn();
 
   @Nullable
   CamelLiteral getLiteral();

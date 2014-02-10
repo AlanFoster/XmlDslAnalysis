@@ -25,4 +25,10 @@ public class CamelFunctionNameImpl extends ASTWrapperPsiElement implements Camel
     else super.accept(visitor);
   }
 
+  @Override
+  @NotNull
+  public PsiElement getIdentifier() {
+    return findNotNullChildByType(IDENTIFIER);
+  }
+
 }

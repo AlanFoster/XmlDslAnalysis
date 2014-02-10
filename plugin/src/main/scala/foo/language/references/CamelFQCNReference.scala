@@ -8,7 +8,7 @@ import scala.collection.JavaConversions._
 import com.intellij.openapi.roots.impl.DirectoryIndex
 import foo.language.Core.CamelFileType
 import com.intellij.psi.util.PsiTreeUtil
-import foo.language.generated.psi.CamelFQCN
+import foo.language.generated.psi.CamelFqcn
 
 /**
  * Provides the ReferenceContribution for a Fully Qualified Class Name in the Apache Camel
@@ -66,7 +66,7 @@ class CamelFQCNReference(element: PsiElement, range: TextRange)
     val fileText = s"""$${headerAs('temp', ${newText})}"""
     val newPsiFile = PsiFileFactory.getInstance(myElement.getProject)
       .createFileFromText(tempName, CamelFileType, fileText)
-     val newFQCNElem = PsiTreeUtil.findChildOfType(newPsiFile, classOf[CamelFQCN])
+     val newFQCNElem = PsiTreeUtil.findChildOfType(newPsiFile, classOf[CamelFqcn])
     newFQCNElem
   }
 

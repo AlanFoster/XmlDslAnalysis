@@ -25,4 +25,16 @@ public class CamelLiteralImpl extends ASTWrapperPsiElement implements CamelLiter
     else super.accept(visitor);
   }
 
+  @Override
+  @Nullable
+  public PsiElement getNumber() {
+    return findChildByType(NUMBER);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getString() {
+    return findChildByType(STRING);
+  }
+
 }

@@ -1,6 +1,5 @@
 package foo
 
-import foo.language.generated.psi.CamelFQCN
 import com.intellij.psi.tree.IElementType
 import foo.language.generated.CamelTypes
 
