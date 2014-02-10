@@ -3,23 +3,14 @@ package foo.language.completion
 import com.intellij.codeInsight.completion._
 import com.intellij.util.ProcessingContext
 import com.intellij.codeInsight.lookup.LookupElementBuilder
-import com.intellij.patterns.PlatformPatterns._
-import foo.language.generated.CamelTypes
-import foo.language.generated.psi.{CamelCamelExpression, CamelFunctionArgs, CamelCamelFuncBody}
-import foo.language.elements.CamelBaseElementType
 import com.intellij.patterns.StandardPatterns._
 import com.intellij.psi.{PsiFile, PsiDocumentManager, PsiElement}
-import Patterns._
-import com.intellij.util.xml.{DomUtil, ConvertContext}
 import foo.dom.Model.ProcessorDefinition
 import foo.dom.DomFileAccessor
 import foo.eip.graph.EipGraphCreator
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil
-import com.intellij.xml.util.XmlUtil
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.impl.file.PsiFileImplUtil
-import com.intellij.psi.xml.{XmlTag, XmlFile}
-import com.intellij.patterns.XmlPatterns
+import com.intellij.psi.xml.XmlTag
 
 /**
  * Provides contribution for headers within the relevant places of the camel language
