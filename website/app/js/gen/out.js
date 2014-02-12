@@ -11,15 +11,21 @@ var docsApp = angular.module('docsApp', [
         templateUrl: "/templates/overview.html",
         controller: "overviewController"
     }).when("/readme", {
-        templateUrl: "/docs/readme.html"
+        templateUrl: "/docs/readme-core.html"
     }).when("/features", {
         templateUrl: "/templates/features.html",
         controller: "featuresController"
-    }).when("/developing", {
-        templateUrl: "/docs/Developing.html"
+    }).when("/contributing", {
+        templateUrl: "/templates/contributing.html"
     }).when("/login", {
         templateUrl: "/templates/login.html",
         controller: "loginController"
+    }).when("/pluginDocumentation", {
+        templateUrl: "/docs/Developing-plugin.html"
+    }).when("/continuousIntegration", {
+        templateUrl: "/docs/build-plugin.html"
+    }).when("/websiteDocumentation", {
+        templateUrl: "/docs/readme-website.html"
     }).otherwise({ redirectTo: "/" });
 
     $locationProvider.html5Mode(true);

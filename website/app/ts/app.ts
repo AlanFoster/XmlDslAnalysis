@@ -20,19 +20,34 @@ var docsApp: ng.IModule =
                     controller:"overviewController"
                 })
                 .when("/readme", {
-                    templateUrl: "/docs/readme.html"
+                    templateUrl: "/docs/readme-core.html"
                 })
                 .when("/features", {
                     templateUrl: "/templates/features.html",
                     controller:"featuresController"
                 })
-                .when("/developing", {
-                    templateUrl: "/docs/Developing.html"
+                .when("/contributing", {
+                    templateUrl: "/templates/contributing.html"
                 })
                 .when("/login", {
                     templateUrl: "/templates/login.html",
                     controller:"loginController"
                 })
+                /**
+                 * Developer documentation resources
+                 */
+                .when("/pluginDocumentation", {
+                    templateUrl: "/docs/Developing-plugin.html"
+                })
+                .when("/continuousIntegration", {
+                    templateUrl: "/docs/build-plugin.html"
+                })
+                .when("/websiteDocumentation", {
+                    templateUrl: "/docs/readme-website.html"
+                })
+                /**
+                 * Fall back value
+                 */
                 .otherwise({redirectTo: "/"})
             // Enabling html5 routing
             $locationProvider.html5Mode(true)
