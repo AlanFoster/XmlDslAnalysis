@@ -14,6 +14,7 @@ import foo.dom.Model.ProcessorDefinition
 import com.intellij.psi.util.{PsiUtilBase, PsiTreeUtil}
 import com.intellij.psi.xml.XmlTag
 import foo.eip.graph.EipGraphCreator
+import com.intellij.lang.injection.InjectedLanguageManager
 
 /**
  * Provides PsiReferences for apache camel's simple language when accessing header
@@ -58,10 +59,7 @@ class CamelHeaderReferenceContributor extends PsiReferenceContributor {
           val isMatch = unionPattern.accepts(identifier, context)
 
           if(isMatch) {
-            val psiFile = InjectedLanguageUtil.getTopLevelFile(element)
-            val caretPosition = PsiUtilBase.findEditor(psiFile).getCaretModel.getOffset
-
-            Array(new CamelHeaderReference(identifier, caretPosition, new TextRange(identifier.getStartOffsetInParent, identifier.getTextLength)))
+            Array(new CamelHeaderReference(identifier, new TextRange(identifier.getStartOffsetInParent, identifier.getTextLength)))
           } else {
             PsiReference.EMPTY_ARRAY
           }
@@ -72,9 +70,9 @@ class CamelHeaderReferenceContributor extends PsiReferenceContributor {
   }
 }
 
-class CamelHeaderReference(element: PsiElement, caretPosition: Int, range: TextRange)
+class CamelHeaderReference(element: PsiElement, range: TextRange)
   // Note this reference is a soft reference, ie if it doesn't resolve, it is *not* an error!
-  extends PsiReferenceBase[PsiElement](element, range, false) {
+  extends PsiReferenceBase[PsiElement](element, range, true) {
 
   override def getVariants: Array[AnyRef] = {
     val project = element.getProject
@@ -88,13 +86,13 @@ class CamelHeaderReference(element: PsiElement, caretPosition: Int, range: TextR
     val availableHeaders:Map[String, ProcessorDefinition] = domFileOption match {
       case None => Map()
       case Some(domFile) => {
-        // Calculate the caret offset, from the Editor of the topmost Psi file
-
-        val xmlText = psiFile.findElementAt(caretPosition)
+        // Extract the injected host xml element using the InjectedLanguageManager
+        val hostXmlText = InjectedLanguageManager.getInstance(psiFile.getProject)
+          .getInjectionHost(element)
 
         // Extract the outter tag
         val getParentTag = (psiElement: PsiElement) => PsiTreeUtil.getParentOfType(psiElement, classOf[XmlTag], true)
-        val simpleTag = getParentTag(xmlText)
+        val simpleTag = getParentTag(hostXmlText)
         val outterTag = getParentTag(simpleTag)
 
         // Calculate graph and headers
