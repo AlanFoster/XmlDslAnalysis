@@ -1,5 +1,18 @@
 "use strict";
 
+/**
+ * Access path for GruntJS renaming files when copying markdown files
+ * @type {"path"}
+ */
+var path = require("path");
+var util = require("util");
+
+/**
+ * Export module definition for grunt to access. Registers tasks and
+ * expected configuration for GruntJs to perform actions upon.
+ *
+ * @param grunt GruntJS reference
+ */
 module.exports = function(grunt) {
 	// Load Tasks
 	grunt.loadNpmTasks("grunt-ts");
@@ -95,13 +108,57 @@ module.exports = function(grunt) {
                     // Include all markdown files which aren't in the website docs folder already, to stop recursion :)
                     {
                         expand: true,
-                        flatten: true,
+                        // Note - we don't allow grunt-contrib to flatten our path, as we need that information
+                        // to rename in the format ${fileName}-${directory}.${fileExtension}
+                        flatten: false,
                         src: [
                             // MD files
-                            "!./apps/docs/*", "./../plugin/**/*.md", "./../readme.md",
+                            "!./apps/docs/*",
+                            "./../plugin/**/*.md",
+                            "./../readme.md"
                         ],
                         dest: "./app/docs/",
-                        filter: "isFile"
+                        filter: "isFile",
+                        /**
+                         *  Note - we require additional renaming when copying files, as
+                         *  there may be multiple readme.md files - which will simply replace
+                         *  the existing files if there are not renamed properly.
+                         */
+                        rename: function(dest, src, args) {
+                            // Normalize the path before attempting to analyse
+                            src = path.normalize(src);
+
+                            // Extract the relevant information to create a new file
+                            // name format of ${fileName}-${directory}.${fileExtension}
+                            var fileExtension = path.extname(src);
+                            var dirName = path.dirname(src).split(path.sep).pop();
+                            // When the dirname is the root directory, ie `..` substitute it
+                            dirName = dirName == ".." ? "core" : dirName;
+
+                            var previousFileName = path.basename(src, ".md")
+                            var newFileName = util.format("%s-%s%s", previousFileName, dirName, fileExtension);
+
+                            // Construct the new path from the union of the original destination file
+                            // And the newly created file name
+                            var newPath = path.join(dest, newFileName);
+
+                            // Provide statistics when copying our files
+                            var values = {
+                                fileExtension: fileExtension,
+                                dirName: dirName,
+                                previousFileName: previousFileName,
+                                newFileName: newFileName,
+                                newPath: newPath
+                            };
+
+                            var debug = Object.keys(values).map(function(key) {
+                                return key + " = " + values[key];
+                            }).join("\n")
+
+                            grunt.log.debug(debug);
+
+                            return newPath;
+                        }
                     }
                 ]
             },
