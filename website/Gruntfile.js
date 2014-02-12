@@ -114,6 +114,7 @@ module.exports = function(grunt) {
                         src: [
                             // MD files
                             "!./apps/docs/*",
+                            "./readme.md",
                             "./../plugin/**/*.md",
                             "./../readme.md"
                         ],
@@ -132,8 +133,15 @@ module.exports = function(grunt) {
                             // name format of ${fileName}-${directory}.${fileExtension}
                             var fileExtension = path.extname(src);
                             var dirName = path.dirname(src).split(path.sep).pop();
-                            // When the dirname is the root directory, ie `..` substitute it
-                            dirName = dirName == ".." ? "core" : dirName;
+
+                            // Provide additional renaming
+                            switch(dirName) {
+                                // Replace the current directory marker with the actual directory name
+                                case ".": dirName = path.resolve(".").split(path.sep).pop(); break;
+                                // When the dirname is the root directory, ie `..` substitute it
+                                case "..": dirName = "core"; break;
+                                default: break;
+                            }
 
                             var previousFileName = path.basename(src, ".md")
                             var newFileName = util.format("%s-%s%s", previousFileName, dirName, fileExtension);
