@@ -77,7 +77,7 @@ docsApp.controller("featuresController", function ($scope, featureService, toast
 
         createBlankFeature();
 
-        toaster.pop("success", "Added", "The new feature definition was succesfully added");
+        toaster.pop("success", "Added", "The new feature definition was successfully added");
 
         return true;
     };

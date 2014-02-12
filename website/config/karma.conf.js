@@ -25,6 +25,7 @@ module.exports = function (config) {
             "app/lib/bootstrap-tags/**/*.js",
             "app/lib/typeahead.js/**/*.js",
             "app/lib/toaster/**/*.js",
+            "app/lib/highlight/**/*.js",
 
             // Contains our application
             "app/js/**/*.js",

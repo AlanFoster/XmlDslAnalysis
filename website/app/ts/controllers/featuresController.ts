@@ -103,7 +103,7 @@ docsApp.controller("featuresController", function($scope: IFeatureControllerScop
         createBlankFeature();
 
         // Notify the user
-        toaster.pop("success", "Added", "The new feature definition was succesfully added");
+        toaster.pop("success", "Added", "The new feature definition was successfully added");
 
         return true;
     };

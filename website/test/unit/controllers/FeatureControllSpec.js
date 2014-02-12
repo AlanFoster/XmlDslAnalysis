@@ -35,7 +35,9 @@ describe("Features controller", function () {
     /**
      * Extract the controller before each test - providing mocks for the appropriate services
      */
-    beforeEach(inject(function ($controller, $rootScope, _$q_) {
+    beforeEach(inject(function ($controller, $rootScope, _$q_, $httpBackend) {
+        $httpBackend.whenGET("/services/auth/details").respond({});
+
         $q = _$q_;
 
         scope = $rootScope.$new();
@@ -175,7 +177,7 @@ describe("Features controller", function () {
 
         it("should not collapse the open dialog on success", function() {
             submitFeature(newFeature);
-            expect(scope.isAddFeatureCollapsed).toBe(false);
+            expect(scope.isAddFeatureCollapsed).toBe(true);
         });
 
         it("should clear the new feature details within the scope", function(){
