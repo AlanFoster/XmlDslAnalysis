@@ -208,7 +208,7 @@ docsApp.directive("tags", function ($location) {
 ;
 
 docsApp.service("featureService", function ($resource, $q) {
-    var resource = $resource("http://localhost:8000/services/features");
+    var resource = $resource("/services/features");
 
     var service = {
         getAllFeatures: function () {
@@ -237,7 +237,7 @@ docsApp.run(function ($rootScope) {
     });
 });
 docsApp.run(function ($rootScope, $http) {
-    $http({ method: "get", url: "http://localhost:8000/services/auth/details" }).success(function (serviceResponse) {
+    $http({ method: "get", url: "/services/auth/details" }).success(function (serviceResponse) {
         if (serviceResponse && serviceResponse.verified) {
             $rootScope.user = serviceResponse.user;
         }

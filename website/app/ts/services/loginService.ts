@@ -5,7 +5,7 @@
  */
 docsApp.run(($rootScope: ng.IRootScopeService, $http: ng.IHttpService) => {
     // TODO See if AngularJS supports configuration - https://npmjs.org/package/grunt-ng-constant
-    $http({method: "get", url: "http://localhost:8000/services/auth/details"})
+    $http({method: "get", url: "/services/auth/details"})
         .success((serviceResponse) => {
             if(serviceResponse && serviceResponse.verified) {
                 (<any> $rootScope).user = serviceResponse.user;
