@@ -1,11 +1,6 @@
 package foo.language.impl.headers
 
-import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import foo.{TestBase, JavaJDK1_7TestBase}
-import foo.language.Core.LanguageConstants
 import com.intellij.codeInsight.completion.CompletionType
-import java.io.File
-import scala.io.Source
 import scala.collection.JavaConverters._
 import org.unitils.reflectionassert.ReflectionAssert._
 import org.unitils.reflectionassert.ReflectionComparatorMode._
@@ -14,6 +9,11 @@ import org.unitils.reflectionassert.ReflectionComparatorMode._
  * Tests to ensure that contribution is performed within the expected areas
  */
 class HeaderContributionTest extends HeaderTests {
+
+  /**
+   * {@inheritdoc}
+   */
+  override def getTestDataPath: String = testDataMapper("/foo/language/contribution/headers/contribution")
 
   /**
    * Perform tests to ensure that the patterns work as expected and provide
@@ -107,30 +107,8 @@ class HeaderContributionTest extends HeaderTests {
     myFixture.complete(CompletionType.BASIC)
     val suggestedStrings = myFixture.getLookupElementStrings
 
-    assertReflectionEquals(testContext.expectedHeaders.asJava, suggestedStrings, LENIENT_ORDER)
+    assertReflectionEquals(testContext.availableHeaders.asJava, suggestedStrings, LENIENT_ORDER)
   }
 
-  /**
-   * Provides the test file for the given test.
-   * @param testName The test name used - following the convention of loading a file
-   *                 under the testing folder with the given name.
-   */
-  private def getTestData(testName: String, testFileName: Option[String]): String = {
-    // Loads the given file name from the test directory and returns the associated content
-    val getFileContent = (fileName: String) => Source.fromFile(new File(getTestDataPath, fileName), "utf-8").getLines().mkString
 
-    // Load our camel file under test
-    val camelFile = getFileContent(s"${testName}.${LanguageConstants.extension}")
-
-    // Load the default context for the camel language contribution to occur - if appropriate.
-   testFileName match {
-      case Some(path) => {
-        val defaultContext = getFileContent(path)
-        // Create our new interpolated file with the given content
-        val interpolatedText = defaultContext.replaceAllLiterally("LANGUAGE_INJECTION_HERE", camelFile)
-        interpolatedText
-      }
-      case _ => camelFile
-    }
-  }
 }

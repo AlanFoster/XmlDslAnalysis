@@ -11,10 +11,11 @@ import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil
 import foo.dom.DomFileAccessor
 import foo.dom.Model.ProcessorDefinition
-import com.intellij.psi.util.{PsiUtilBase, PsiTreeUtil}
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlTag
 import foo.eip.graph.EipGraphCreator
 import com.intellij.lang.injection.InjectedLanguageManager
+import com.intellij.util.xml.ElementPresentationManager
 
 /**
  * Provides PsiReferences for apache camel's simple language when accessing header
@@ -70,11 +71,46 @@ class CamelHeaderReferenceContributor extends PsiReferenceContributor {
   }
 }
 
+/**
+ * A concrete implementation of a CamelHeaderReference
+ * @param element The target PsiElement to be provided reference to
+ * @param range The range within the parent element in which to provide a reference for
+ */
 class CamelHeaderReference(element: PsiElement, range: TextRange)
   // Note this reference is a soft reference, ie if it doesn't resolve, it is *not* an error!
   extends PsiReferenceBase[PsiElement](element, range, true) {
 
+  /**
+   * Creates the list of known possible headers within the current position of the XmlDocument
+   * @return The list of known sets, with duplicates filtered.
+   */
   override def getVariants: Array[AnyRef] = {
+    // Convert all available completions to a Lookup Builder that IJ understands
+    getAvailableHeaders
+      .map({
+        case (headerName, processor) =>
+          val psiElement = processor.getXmlElement
+          LookupElementBuilder.create(psiElement, headerName)
+              .withIcon(ElementPresentationManager.getIcon(processor))
+      })
+      .toArray
+  }
+
+  /**
+   * Resolves to the last definition of this header, if it exists.
+   * @return The PsiElement which correlates to this value, null otherwise.
+   */
+  override def resolve(): PsiElement = {
+    val resolvedHeader =
+      getAvailableHeaders
+      .find({ case (headerName, processor) => headerName == element.getText })
+      .map(_._2.getXmlElement)
+      .getOrElse(null)
+
+    resolvedHeader
+  }
+
+  def getAvailableHeaders = {
     val project = element.getProject
 
     // Extract the relevent PsiFile in order to test if we are contained within an XmlFile
@@ -83,7 +119,7 @@ class CamelHeaderReference(element: PsiElement, range: TextRange)
 
     // If the XmlFile was found, create the EipGraph information to suggest the relevant information
     // Otherwise default to an empty map
-    val availableHeaders:Map[String, ProcessorDefinition] = domFileOption match {
+    val availableHeaders: Map[String, ProcessorDefinition] = domFileOption match {
       case None => Map()
       case Some(domFile) => {
         // Extract the injected host xml element using the InjectedLanguageManager
@@ -102,11 +138,7 @@ class CamelHeaderReference(element: PsiElement, range: TextRange)
       }
     }
 
-    // Convert all available completions to a Lookup Builder that IJ understands
-    availableHeaders.map(_._1)
-      .map(LookupElementBuilder.create)
-      .toArray
+    availableHeaders
   }
 
-  override def resolve(): PsiElement = null
 }
