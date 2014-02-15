@@ -1,4 +1,4 @@
-package foo.language.impl
+package foo.language.impl.headers
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import foo.{TestBase, JavaJDK1_7TestBase}
@@ -13,30 +13,7 @@ import org.unitils.reflectionassert.ReflectionComparatorMode._
 /**
  * Tests to ensure that contribution is performed within the expected areas
  */
-class HeaderContributionTest
-  extends LightCodeInsightFixtureTestCase
-  with JavaJDK1_7TestBase
-  with TestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  override def getTestDataPath: String = testDataMapper("/foo/language/contribution/headers")
-
-  /**
-   * Test scenario descriptions - which contain the file name and assocaited expected headers
-   * given the context
-   */
-  case class TestContext(testFileName: Option[String], expectedHeaders: List[String]) {
-    /**
-     * Creates a new TestContext in which no headers are expected, IE used in
-     * the scenario of no expected contribution
-     */
-    def emptyContribution = TestContext(testFileName, List())
-  }
-  val ComplexHeaders = TestContext(Some("ComplexHeaders.xml"), ('a' to 'l').map(_.toString).toList)
-  val EmptyContext = TestContext(Some("EmptyContext.xml"), List("a"))
-  val Standalone = TestContext(None, List())
+class HeaderContributionTest extends HeaderTests {
 
   /**
    * Perform tests to ensure that the patterns work as expected and provide
