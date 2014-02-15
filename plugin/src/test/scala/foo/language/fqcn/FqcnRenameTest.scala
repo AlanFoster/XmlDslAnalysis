@@ -6,7 +6,7 @@ import foo.{CommonTestClasses, JavaJDK1_7TestBase}
 /**
  * Tests to ensure that elements can be renamed as expected
  */
-class RenameTest
+class FqcnRenameTest
   extends LightCodeInsightFixtureTestCase
   with JavaJDK1_7TestBase
   with CommonTestClasses {
