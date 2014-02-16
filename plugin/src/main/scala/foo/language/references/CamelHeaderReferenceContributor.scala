@@ -16,6 +16,8 @@ import com.intellij.psi.xml.XmlTag
 import foo.eip.graph.EipGraphCreator
 import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.util.xml.ElementPresentationManager
+import foo.language.Core.CamelFileType
+import foo.language.generated.CamelTypes
 
 /**
  * Provides PsiReferences for apache camel's simple language when accessing header
@@ -110,6 +112,10 @@ class CamelHeaderReference(element: PsiElement, range: TextRange)
     resolvedHeader
   }
 
+  /**
+   * Gets the available headers within this context
+   * @return The Map of available headers within the given context
+   */
   def getAvailableHeaders = {
     val project = element.getProject
 
@@ -139,6 +145,33 @@ class CamelHeaderReference(element: PsiElement, range: TextRange)
     }
 
     availableHeaders
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+/*  override def handleElementRename(newElementName: String): PsiElement = {*/
+/*    val newElement = getRangeInElement.replace(myElement.getText, newElementName)
+    val newReplacementElem = createReplacementElement(newElement, myElement)
+
+    // Force a replacement of the current elem - Note this also returns our response.
+    myElement.replace(newReplacementElem)*/
+/*    CamelTypes.Factory.createElement(CamelT)
+
+    element
+  }*/
+
+  /**
+   * Creates a new PsiElement to replace the existing element
+   */
+  def createReplacementElement(newText: String, existingElement: PsiElement) = {
+    val tempName = s"__${newText}_${existingElement.getContainingFile.getName}_replace.Camel"
+    val fileText = s"""$${headerAs('temp', ${newText})}"""
+    val newPsiFile = PsiFileFactory.getInstance(myElement.getProject)
+      .createFileFromText(tempName, CamelFileType, fileText)
+    val newFQCNElem = PsiTreeUtil.findChildOfType(null, null)
+    newFQCNElem
   }
 
 }

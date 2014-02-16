@@ -21,8 +21,12 @@ class CamelFQCNReference(element: PsiElement, range: TextRange)
   extends PsiReferenceBase[PsiElement](element, range, false)
   with PsiPolyVariantReference {
 
+  /**
+   * {@inheritdoc}
+   */
   def multiResolve(incompleteCode: Boolean): Array[ResolveResult] = {
     val text = element.getText.substring(0, getRangeInElement.getEndOffset)
+    // Filter all which are not relevent to the currently typed code
     val packages = availablePackagesAndClasses().filter({
       case psiClass: PsiClass => psiClass.getQualifiedName.equals(text)
       case directory: PsiPackage => directory.getQualifiedName.equals(text)
@@ -59,7 +63,9 @@ class CamelFQCNReference(element: PsiElement, range: TextRange)
     myElement.replace(newElem)
   }
 
-  // IntelliJ allows you to create new elements by simply creating new temp files which are lexed/parsed etc
+    /**
+     * IntelliJ allows you to create new elements by simply creating new temp files which are lexed/parsed etc
+     */
   // TODO Is there any functional composition gained from this ATM
   def createReplacementFQCN(newText: String, existingElement: PsiElement) = {
     val tempName = s"__${newText}_${existingElement.getContainingFile.getName}_replace.Camel"
@@ -125,6 +131,9 @@ class CamelFQCNReference(element: PsiElement, range: TextRange)
     packages ++ classes
   }
 
+  /**
+   * {@inheritdoc}
+   */
   def resolve(): PsiElement = {
     val results = multiResolve(incompleteCode = false)
     // TODO Multi-resolve as required

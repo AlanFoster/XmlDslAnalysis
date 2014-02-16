@@ -41,7 +41,7 @@ class HeaderTests
    */
   def getTestData(testName: String, testFileName: Option[String]): String = {
     // Loads the given file name from the test directory and returns the associated content
-    val getFileContent = (fileName: String) => Source.fromFile(new File(getTestDataPath, fileName), "utf-8").getLines().mkString
+    val getFileContent = (fileName: String) => Source.fromFile(new File(getTestDataPath, fileName), "utf-8").getLines().mkString("\n")
 
     // Load our camel file under test
     val camelFile = getFileContent(s"${testName}.${LanguageConstants.extension}")

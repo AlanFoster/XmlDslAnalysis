@@ -85,6 +85,11 @@
             <psi.referenceContributor implementation="foo.language.references.CamelHeaderReferenceContributor"/>
 
 
+            <!--
+                Allows inplace renaming of identity elements
+            -->
+            <lang.refactoringSupport language="Camel" implementationClass="foo.language.references.CamelRefactoringSupportProvider"/>
+
       <!-- End Apache Camel Language Support -->
 
       <!--
