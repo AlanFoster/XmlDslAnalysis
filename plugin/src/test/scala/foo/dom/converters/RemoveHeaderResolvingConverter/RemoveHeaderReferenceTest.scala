@@ -16,7 +16,7 @@ import scala.util.Try
  * with an id of 'expectedReference'. If this is not found then it is assumed the
  * given reference does not exist.
  */
-class ReferenceTest
+class RemoveHeaderReferenceTest
   extends LightCodeInsightFixtureTestCase
   with TestBase {
 
