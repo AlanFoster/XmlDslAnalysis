@@ -2,9 +2,7 @@ package foo.language.impl.headers
 
 import foo.{JavaJDK1_7TestBase, TestBase}
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import scala.io.Source
-import java.io.File
-import foo.language.Core.LanguageConstants
+import foo.language.impl.TestDataInterpolator
 
 /**
  * Represents the base class for tests which are intended to be ran
@@ -13,7 +11,8 @@ import foo.language.Core.LanguageConstants
 abstract class HeaderTests
   extends LightCodeInsightFixtureTestCase
   with JavaJDK1_7TestBase
-  with TestBase {
+  with TestBase
+  with TestDataInterpolator {
 
   /**
    * Test scenario descriptions - which contain the file name and assocaited expected headers
@@ -33,28 +32,4 @@ abstract class HeaderTests
   val NoHeaders = TestContext(Some("NoHeaders.xml"), List())
 
   val Standalone = TestContext(None, List())
-
-  /**
-   * Provides the test file for the given test.
-   * @param testName The test name used - following the convention of loading a file
-   *                 under the testing folder with the given name.
-   */
-  def getTestData(testName: String, testFileName: Option[String]): String = {
-    // Loads the given file name from the test directory and returns the associated content
-    val getFileContent = (fileName: String) => Source.fromFile(new File(getTestDataPath, fileName), "utf-8").getLines().mkString("\n")
-
-    // Load our camel file under test
-    val camelFile = getFileContent(s"${testName}.${LanguageConstants.extension}")
-
-    // Load the default context for the camel language contribution to occur - if appropriate.
-    testFileName match {
-      case Some(path) => {
-        val defaultContext = getFileContent("../" + path)
-        // Create our new interpolated file with the given content
-        val interpolatedText = defaultContext.replaceAllLiterally("LANGUAGE_INJECTION_HERE", camelFile)
-        interpolatedText
-      }
-      case _ => camelFile
-    }
-  }
 }

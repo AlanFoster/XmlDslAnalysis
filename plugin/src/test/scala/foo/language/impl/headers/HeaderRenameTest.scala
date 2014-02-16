@@ -29,7 +29,7 @@ class HeaderRenameTest
     val testFileName = testContext.testFileName.getOrElse("camelTest.Camel")
     // Configure the fixture
     val rawTestName = getTestName(false).takeWhile(_ != '_')
-    val testData = getTestData(rawTestName, testContext.testFileName)
+    val testData = getTestData(rawTestName, testContext.testFileName, getTestDataPath)
     myFixture.configureByText(testFileName, testData)
 
     myFixture.renameElementAtCaret(newHeaderName)

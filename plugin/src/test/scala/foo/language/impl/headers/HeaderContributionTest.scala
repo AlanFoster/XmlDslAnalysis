@@ -100,7 +100,7 @@ class HeaderContributionTest extends HeaderTests {
    */
   def doTest(testContext: TestContext) {
     // Configure the fixture
-    val testData = getTestData(getTestName(false).takeWhile(_ != '_'), testContext.testFileName)
+    val testData = getTestData(getTestName(false).takeWhile(_ != '_'), testContext.testFileName, getTestDataPath)
 
     myFixture.configureByText(testContext.testFileName.getOrElse("camelTest.Camel"), testData)
 

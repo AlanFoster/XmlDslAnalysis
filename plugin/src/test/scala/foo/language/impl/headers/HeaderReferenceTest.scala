@@ -42,7 +42,7 @@ class HeaderReferenceTest
    */
   def doTest(testContext: TestContext, expectedHeaderName: Option[String]) {
     // Configure the fixture
-    val testData = getTestData(getTestName(false).takeWhile(_ != '_'), testContext.testFileName)
+    val testData = getTestData(getTestName(false).takeWhile(_ != '_'), testContext.testFileName, getTestDataPath)
     myFixture.configureByText(testContext.testFileName.getOrElse("camelTest.Camel"), testData)
 
     val reference = Try(myFixture.getElementAtCaret).getOrElse(null)
