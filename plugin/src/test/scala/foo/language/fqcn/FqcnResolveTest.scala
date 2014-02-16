@@ -8,7 +8,7 @@ import foo.{CommonTestClasses, JavaJDK1_7TestBase}
 /**
  * Tests to ensure that FQCNs are resolved as expected
  */
-class ResolveTest
+class FqcnResolveTest
   extends LightCodeInsightFixtureTestCase
   with JavaJDK1_7TestBase
   with CommonTestClasses {

@@ -11,7 +11,7 @@ import foo.JavaJDK1_7TestBase
  * Tests for ensuring that variant contribution for FQCN classes in camel
  * are as expected
  */
-class VariantsTest
+class FqcnVariantsTest
   extends LightCodeInsightFixtureTestCase
   with JavaJDK1_7TestBase {
 

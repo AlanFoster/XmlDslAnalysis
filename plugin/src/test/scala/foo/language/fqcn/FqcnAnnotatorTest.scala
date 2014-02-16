@@ -6,7 +6,7 @@ import foo.JavaJDK1_7TestBase
 /**
  * Tests to ensure that unresolved references are highlighted as red
  */
-class AnnotatorTest
+class FqcnAnnotatorTest
   extends LightCodeInsightFixtureTestCase
   with JavaJDK1_7TestBase {
 
