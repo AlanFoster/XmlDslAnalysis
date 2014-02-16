@@ -149,7 +149,8 @@ class DefaultVariableCompletionTest
     doTest(List(
       "body",
       "header",
-      "headers"
+      "headers",
+      "breakCI"
     ))
   }
 
