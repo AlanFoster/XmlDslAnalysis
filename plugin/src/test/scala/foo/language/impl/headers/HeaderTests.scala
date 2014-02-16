@@ -10,7 +10,7 @@ import foo.language.Core.LanguageConstants
  * Represents the base class for tests which are intended to be ran
  * to test the header language within the apache camel simple language
  */
-class HeaderTests
+abstract class HeaderTests
   extends LightCodeInsightFixtureTestCase
   with JavaJDK1_7TestBase
   with TestBase {

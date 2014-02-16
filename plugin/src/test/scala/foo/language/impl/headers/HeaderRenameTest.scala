@@ -17,6 +17,10 @@ class HeaderRenameTest
    */
   def ignoretestInHeadersArrayA_ComplexResolve() { doTest(ComplexHeaders,"hello") }
 
+  def testTrue() {
+    assert(true == true)
+  }
+
   /**
    * Performs the test, using the convention of test name being associated
    * with the relevent test file to use
