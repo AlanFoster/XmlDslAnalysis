@@ -1,5 +1,7 @@
-/*
- * Warning - Please do not edit manually
+/*
+
+ * Warning - Please do not edit manually
+
  */
 package foo.language.generated.psi.impl;
 
