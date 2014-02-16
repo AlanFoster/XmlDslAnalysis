@@ -27,8 +27,6 @@ class CamelSimpleLanguageInjector extends com.intellij.psi.LanguageInjector {
     injectDOM(host, injectionPlacesRegistrar)
   }
 
-  break CI
-
   /**
    * Injects the apache camel language into all Camel DSL simple method calls
    * @param host The PsiElement host which will have the simple language possibly injected into it
