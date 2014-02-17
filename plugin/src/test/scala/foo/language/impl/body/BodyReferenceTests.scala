@@ -37,20 +37,32 @@ class BodyReferenceTests
   }
 
   val JavaLangObject = TestScenario(Some("BodyIsJavaLangObject.xml"), List("java.lang.Object"))
+  val JavaLangObject_NoResolvedReferences = JavaLangObject.withExpectedReferences(List())
 
-  def testBodyAccess_JavaLangObject() {
-    doTest(JavaLangObject)
-  }
+  /**
+   * Tests which should successfully resolve as expected
+   */
+  def testBodyAccess_JavaLangObject() { doTest(JavaLangObject) }
+  def testInBodyAccess_JavaLangObject() { doTest(JavaLangObject) }
+  def testOutBodyAccess_JavaLangObject() { doTest(JavaLangObject) }
 
-  def testMultipleAccess_JavaLangObject() {
-    doTest(JavaLangObject.withExpectedReferences(List()))
-  }
+  /**
+   * References which should *not* resolve - IE caret is in the 'wrong' position
+   */
+  def testMultipleAccess_NoResolvedReferences() { doTest(JavaLangObject_NoResolvedReferences) }
+  def testInAccessOnly_NoResolvedReferences() { doTest(JavaLangObject_NoResolvedReferences)}
+  def testOutAccessOnly_NoResolvedReferences() { doTest(JavaLangObject_NoResolvedReferences) }
 
+  /**
+   * Performs the main test scenario with the given data
+   *
+   * @param testScenario The test scenario outline, IE what XML file to load and
+   *                     what are the expected references to be provided
+   */
   def doTest(testScenario: TestScenario) {
     val testName = getTestName(false).takeWhile(_ != '_')
     val testData = getTestData(testName, testScenario.fileName, getTestDataPath)
     myFixture.configureByText(testScenario.fileName.getOrElse("camelTest.Camel"), testData)
-
 
     val element = Try(myFixture.getElementAtCaret).toOption
     element match {

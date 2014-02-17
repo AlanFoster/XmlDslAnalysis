@@ -41,14 +41,12 @@ class CamelBodyReferenceContributor extends PsiReferenceContributor {
         // Only provide a reference if body is within our split text sections
         // Obviously this implementation is wrong, since more tests are required
         // to fail this implementation :)
-        if(splitSections.map(_._1).find(_ == "body").isEmpty) {
-          PsiReference.EMPTY_ARRAY
-        } else {
-          splitSections.map({ case (_, start, end) =>
+        splitSections
+          .filter(_._1 == "body")
+          .map({ case (_, start, end) =>
             new CamelBodyReference(originalElement, new TextRange(start, end))
           }).toArray
         }
-      }
     })
   }
 }
