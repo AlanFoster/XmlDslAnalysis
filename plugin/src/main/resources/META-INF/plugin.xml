@@ -80,10 +80,15 @@
             <quoteHandler fileType="Camel" className="foo.language.formatting.CamelQuoteHandler" />
 
             <!--
-                Header referenece contributions within the simple language
+                Header reference contributions within the simple language
             -->
             <psi.referenceContributor implementation="foo.language.references.CamelHeaderReferenceContributor"/>
 
+
+            <!--
+                Body Reference within camel, ie ${in.body<caret>} support
+            -->
+            <psi.referenceContributor implementation="foo.language.references.CamelBodyReferenceContributor" />
 
             <!--
                 Allows inplace renaming of identity elements
