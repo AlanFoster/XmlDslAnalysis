@@ -7,6 +7,7 @@ import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiElement;
 import foo.language.psi.ICamelJavaFQCN;
+import foo.language.psi.ICamelCamelFuncBody;
 import foo.language.psi.IACamelVariableAccess;
 
 public class CamelVisitor extends PsiElementVisitor {
@@ -20,7 +21,7 @@ public class CamelVisitor extends PsiElementVisitor {
   }
 
   public void visitCamelFuncBody(@NotNull CamelCamelFuncBody o) {
-    visitPsiElement(o);
+    visitICamelCamelFuncBody(o);
   }
 
   public void visitCamelFunction(@NotNull CamelCamelFunction o) {
@@ -60,6 +61,10 @@ public class CamelVisitor extends PsiElementVisitor {
   }
 
   public void visitIACamelVariableAccess(@NotNull IACamelVariableAccess o) {
+    visitElement(o);
+  }
+
+  public void visitICamelCamelFuncBody(@NotNull ICamelCamelFuncBody o) {
     visitElement(o);
   }
 

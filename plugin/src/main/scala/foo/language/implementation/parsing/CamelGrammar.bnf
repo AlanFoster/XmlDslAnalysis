@@ -90,7 +90,11 @@ private binary_operator ::=
 camel_function ::= FUNC_BEGIN camel_func_body FUNC_END
 
 // A camel function ${...} which can support the notation such as variable Access, function calls, bean ref etc
-camel_func_body ::= functionCall | variableAccess
+camel_func_body ::= functionCall | variableAccess {
+    // Provide a mixin for this PSI element -- affects code generation
+    mixin="foo.language.psi.impl.ICamelCamelFuncBodyImpl"
+    implements="foo.language.psi.ICamelCamelFuncBody"
+}
 
 variableAccess ::=
     (arrayAccess | identifierAccess)

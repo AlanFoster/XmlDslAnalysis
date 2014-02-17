@@ -6,8 +6,9 @@ package foo.language.generated.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import foo.language.psi.ICamelCamelFuncBody;
 
-public interface CamelCamelFuncBody extends PsiElement {
+public interface CamelCamelFuncBody extends ICamelCamelFuncBody {
 
   @Nullable
   CamelFunctionCall getFunctionCall();

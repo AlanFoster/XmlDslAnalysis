@@ -15,6 +15,7 @@ import foo.eip.graph.EipGraphCreator
 import java.util.Collections
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.openapi.module.ModuleUtilCore
+import foo.language.psi.impl.ElementSplitter
 
 /**
  * Provides reference contribution for the apache camel language, using
@@ -24,29 +25,33 @@ class CamelBodyReferenceContributor extends PsiReferenceContributor {
   /**
    * Psi Patterns that this contribution applies to
    */
-  val BODY_PATTERN = {
-    val element = psiElement(classOf[CamelVariableAccess])
+  val VARIABLE_ACCESS_PATTERN = {
+    val element = psiElement(classOf[CamelCamelFuncBody])
     element
-      .inside(classOf[CamelCamelFuncBody])
-      .andNot(element.inside(classOf[CamelFunctionArgs]))
-      .withText("body")
+      .andNot(element.withChild(psiElement(classOf[CamelFunctionArgs])))
   }
 
-  /**
-   * The union of all possible patterns that can be matched by this contribution
-   */
-  val BODY_PATTERNS_UNIONED = StandardPatterns.or(BODY_PATTERN)
-
   override def registerReferenceProviders(registrar: PsiReferenceRegistrar): Unit = {
-    registrar.registerReferenceProvider(BODY_PATTERN, new PsiReferenceProvider {
+    registrar.registerReferenceProvider(VARIABLE_ACCESS_PATTERN, new PsiReferenceProvider {
       override def getReferencesByElement(element: PsiElement, context: ProcessingContext): Array[PsiReference] = {
-        Array(new CamelBodyReference(element, new TextRange(element.getStartOffsetInParent, element.getTextLength)))
+        val originalElement = element.getOriginalElement
+        val text = originalElement.getText
+        val splitSections = ElementSplitter.split(text)
+
+        // Only provide a reference if body is within our split text sections
+        // Obviously this implementation is wrong, since more tests are required
+        // to fail this implementation :)
+        if(splitSections.map(_._1).find(_ == "body").isEmpty) {
+          PsiReference.EMPTY_ARRAY
+        } else {
+          splitSections.map({ case (_, start, end) =>
+            new CamelBodyReference(originalElement, new TextRange(start, end))
+          }).toArray
+        }
       }
     })
   }
 }
-
-
 
 class CamelBodyReference(element: PsiElement, range: TextRange)
 // Note this reference is a soft reference, ie if it doesn't resolve, it is *not* an error!
@@ -110,7 +115,5 @@ class CamelBodyReference(element: PsiElement, range: TextRange)
 
     availableBodyTypes
   }
-
-
 }
 
