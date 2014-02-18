@@ -98,7 +98,12 @@ class BodyReferenceTests
         if(testScenario.expectedReferences.isEmpty) {
           fail("The element should not have resolved to any element, instead was :: " + reference)
         }
-        assertEquals("The head contribution should be valid as expected", reference.getQualifiedName, testScenario.expectedReferences(0))
+        // Assert expected references
+        for(expectedReference <- testScenario.expectedReferences) {
+          assertEquals("The head contribution should be valid as expected",
+            reference.getQualifiedName,
+            expectedReference)
+        }
     }
   }
 
