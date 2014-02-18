@@ -6,6 +6,10 @@ import foo.language.impl.TestDataInterpolator
 import scala.util.Try
 import com.intellij.psi.PsiClass
 import junit.framework.Assert._
+import com.intellij.codeInsight.completion.CompletionType
+import org.unitils.reflectionassert.ReflectionAssert._
+import org.unitils.reflectionassert.ReflectionComparatorMode._
+import scala.Some
 
 /**
  * Tests associated with going from a body reference to the PsiClass it is associated withd
@@ -26,32 +30,43 @@ class BodyReferenceTests
    * @param fileName The name of the file. None implies that the Camel
    *                 file should not be embedded within an Xml context
    * @param expectedReferences The expected body types to be inferred
+   * @param expectedContributions The expected contributions.
+   *                              This should always be null, other than non-body acess.
+   *                              IE in the scenario of ${in<caret>.body}
    */
-  case class TestScenario(fileName: Option[String], expectedReferences: List[String]) {
+  case class TestScenario(fileName: Option[String], expectedReferences: List[String], expectedContributions: List[String] = null) {
     /**
      * Creates a new instance of the TestScenario with a configured expectedBodyType
      * @return
      */
     def withExpectedReferences(expectedReferences: List[String]) =
       copy(expectedReferences = expectedReferences)
+
+    /**
+     * Creates a new instance of the TestScenario with a configured expected contribution list
+     * @param expectedContributions
+     */
+    def withExpectedContributions(expectedContributions: List[String]) =
+      copy(expectedContributions = expectedContributions)
   }
 
   val JavaLangObject = TestScenario(Some("BodyIsJavaLangObject.xml"), List("java.lang.Object"))
   val JavaLangObject_NoResolvedReferences = JavaLangObject.withExpectedReferences(List())
 
   /**
-   * Tests which should successfully resolve as expected
+   * Tests which should successfully resolve as expected.
+   * Note these tests should expect a valid contribution to be performed
    */
-  def testBodyAccess_JavaLangObject() { doTest(JavaLangObject) }
+  def testBodyAccess_JavaLangObject() { doTest(JavaLangObject.withExpectedContributions(List())) }
   def testInBodyAccess_JavaLangObject() { doTest(JavaLangObject) }
   def testOutBodyAccess_JavaLangObject() { doTest(JavaLangObject) }
 
   /**
    * References which should *not* resolve - IE caret is in the 'wrong' position
    */
-  def testMultipleAccess_NoResolvedReferences() { doTest(JavaLangObject_NoResolvedReferences) }
+  def testMultipleAccess_NoResolvedReferences() { doTest(JavaLangObject_NoResolvedReferences.withExpectedContributions(List())) }
   def testInAccessOnly_NoResolvedReferences() { doTest(JavaLangObject_NoResolvedReferences)}
-  def testOutAccessOnly_NoResolvedReferences() { doTest(JavaLangObject_NoResolvedReferences) }
+  def testOutAccessOnly_NoResolvedReferences() { doTest(JavaLangObject_NoResolvedReferences.withExpectedContributions(List("out", "routeId"))) }
 
   /**
    * Performs the main test scenario with the given data
@@ -64,6 +79,15 @@ class BodyReferenceTests
     val testData = getTestData(testName, testScenario.fileName, getTestDataPath)
     myFixture.configureByText(testScenario.fileName.getOrElse("camelTest.Camel"), testData)
 
+    // Ensure that contributions are as expected - Note only tested in non body-only access tests
+    myFixture.complete(CompletionType.BASIC)
+    val lookupStrings = myFixture.getLookupElementStrings
+
+    assertReflectionEquals(
+      Option(testScenario.expectedContributions).map(_.toArray).getOrElse(null),
+      lookupStrings, LENIENT_ORDER)
+
+    // Attempt reference contribution
     val element = Try(myFixture.getElementAtCaret).toOption
     element match {
       case None =>
