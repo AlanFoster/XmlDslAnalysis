@@ -43,22 +43,34 @@ class CamelBodyReferenceContributor extends PsiReferenceContributor {
         val text = originalElement.getText
         val splitSections = ElementSplitter.split(text).reverse
 
-        // Only provide a reference if body is within our split text sections
-        // Obviously this implementation is wrong, since more tests are required
-        // to fail this implementation :)
-        val validSections = splitSections
-          .dropWhile(_._1 != "body");
-
-        validSections
-          .map({ case (string, start, end) =>
-            val textRange = new TextRange(start, end)
-            if(string == "body") {
-              new CamelBodyReference(originalElement, textRange)
-            } else {
-              new CamelMethodReference(originalElement, textRange)
-            }
-        }).toArray
+        splitSections match {
+          case ("in", _, _) :: (body@("body", _, _)) :: xs => createReferences(originalElement, body, xs)
+          case ("out", _, _) :: (body@("body", _, _)) :: xs => createReferences(originalElement, body, xs)
+          case (body@("body", _, _)) :: xs => createReferences(originalElement, body, xs)
+          case _ => PsiReference.EMPTY_ARRAY
         }
+      }
+
+      /**
+       * Creates and references the list of known PsiReferences for the camel body notation
+       * @param element The parent element to register within
+       * @param bodyReference The text tuple which is associated with a body reference
+       * @param methodContributions The remainder split text contributions which should resolve
+       *                            to methods
+       * @return The created array of `PsiReferences[PsiElement]`s
+       */
+      def createReferences(element: PsiElement,
+                           bodyReference: (String, Int, Int),
+                           methodContributions: List[(String, Int, Int)]): Array[PsiReference] = {
+        val createTextRange = (tuple: (String, Int, Int)) => new TextRange(tuple._2, tuple._3)
+        val references = {
+          new CamelBodyReference(
+            element,
+            createTextRange(bodyReference)
+          ) :: methodContributions.map(tuple => new CamelMethodReference(element, createTextRange(tuple)))
+        }
+        references.toArray
+      }
     })
   }
 }

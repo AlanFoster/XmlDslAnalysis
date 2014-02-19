@@ -1,19 +1,18 @@
-/*
-
- * Warning - Please do not edit manually
-
+/*
+ * Warning - Please do not edit manually
  */
 package foo.language.generated.psi.impl;
 
+import java.util.List;
+import org.jetbrains.annotations.*;
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
-import foo.language.generated.psi.CamelCamelFuncBody;
-import foo.language.generated.psi.CamelFunctionCall;
-import foo.language.generated.psi.CamelVariableAccess;
-import foo.language.generated.psi.CamelVisitor;
+import com.intellij.psi.util.PsiTreeUtil;
+import static foo.language.generated.CamelTypes.*;
 import foo.language.psi.impl.ICamelCamelFuncBodyImpl;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import foo.language.generated.psi.*;
+import foo.language.psi.Util;
 
 public class CamelCamelFuncBodyImpl extends ICamelCamelFuncBodyImpl implements CamelCamelFuncBody {
 

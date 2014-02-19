@@ -49,6 +49,10 @@ class MethodResolveTests
     doTest(BodyIsJavaLangObject.withExpectedMethodName(null))
   }
 
+  def testBodyAccessInvalidOperationBody() {
+    doTest(BodyIsJavaLangObject.withExpectedMethodName(null))
+  }
+
   // TODO Implement when the type information can be unioned successfully
   // TODO Implement a test for numbers in the method name
   /*def testBodyAccessGetter() {
@@ -70,6 +74,11 @@ class MethodResolveTests
     element match {
       case None => assertNull("There should be no matching reference for this scenario", testScenario.expectedMethodName)
       case Some(reference) =>
+        // If a reference has been provided, we must fail it.
+        if(testScenario.expectedMethodName == null) {
+          fail("No reference element should be provided, instead got " + reference)
+        }
+
         assertTrue("The reference should be a PsiMethod - instead got " + reference, reference.isInstanceOf[PsiMethod])
         assertEquals(
           "The Psi method should successfully match the expected method name",
