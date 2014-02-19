@@ -3,11 +3,9 @@ package foo.language.impl.body
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import foo.{TestBase, JavaJDK1_7TestBase}
 import foo.language.impl.TestDataInterpolator
-import scala.util.Try
-import junit.framework.Assert._
 import scala.Some
-import com.intellij.psi.PsiClass
 import com.intellij.codeInsight.completion.CompletionType
+import scala.collection.JavaConverters._
 import org.unitils.reflectionassert.ReflectionAssert._
 import org.unitils.reflectionassert.ReflectionComparatorMode._
 
@@ -50,10 +48,6 @@ class MethodContributionTests
   }*/
 
   def doTest(testScenario: TestScenario) {
-    import scala.collection.JavaConverters._
-    import org.unitils.reflectionassert.ReflectionAssert._
-    import org.unitils.reflectionassert.ReflectionComparatorMode._
-
     // Load the file
     val testName = getTestName(false).takeWhile(_ != '_')
     val testData = getTestData(testName, testScenario.fileName, getTestDataPath)
