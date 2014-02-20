@@ -42,6 +42,20 @@ class BodyTypePropagationTests
   }
 
   /**
+   * Test to ensure that an invalid reference id does not result in NPE
+   */
+  def InvalidPipelineRef() {
+    doTest()
+  }
+
+  /**
+   * Test to ensure that an invalid method doesn't retsult in an NPE
+   */
+  def InvalidPipelineMethodCall() {
+    doTest()
+  }
+
+  /**
    * Ensures the test is valid
    */
   def doTest() {
