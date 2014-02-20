@@ -1,6 +1,7 @@
 package foo.dom.Model
 
-import com.intellij.util.xml.{SubTag, DomElement}
+import com.intellij.util.xml.{SubTagList, SubTag, DomElement}
+import org.jetbrains.annotations.NotNull
 
 /**
  * Blueprint root element.
@@ -10,4 +11,8 @@ import com.intellij.util.xml.{SubTag, DomElement}
 trait Blueprint extends DomElement {
   @SubTag("camelContext")
   def getCamelContext: CamelContext
+
+  @NotNull
+  @SubTagList(value = "bean")
+  def getBlueprintBeans: java.util.List[BlueprintBean]
 }

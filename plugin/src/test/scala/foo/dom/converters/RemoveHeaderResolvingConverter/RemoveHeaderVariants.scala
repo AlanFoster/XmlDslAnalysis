@@ -3,6 +3,9 @@ package foo.dom.converters.RemoveHeaderResolvingConverter
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import foo.TestBase
 import com.intellij.codeInsight.completion.CompletionType
+import scala.collection.JavaConverters._
+import org.unitils.reflectionassert.ReflectionAssert._
+import org.unitils.reflectionassert.ReflectionComparatorMode._
 
 /**
  * Tests for ensuring that clear header contributions are completed as expected
@@ -41,10 +44,6 @@ class RemoveHeaderVariants
    * @param expectedStrings The list of expected string sto assert against
    */
   def doTest(expectedStrings: List[String]) {
-    import scala.collection.JavaConverters._
-    import org.unitils.reflectionassert.ReflectionAssert._
-    import org.unitils.reflectionassert.ReflectionComparatorMode._
-
     val testData = s"${getTestName(false)}.xml"
     myFixture.configureByFile(testData)
     myFixture.complete(CompletionType.BASIC)

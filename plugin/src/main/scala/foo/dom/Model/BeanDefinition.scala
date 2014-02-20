@@ -1,12 +1,14 @@
 package foo.dom.Model
 
-import com.intellij.util.xml.{GenericAttributeValue, Attribute, DomElement}
+import com.intellij.util.xml._
 import org.jetbrains.annotations.NotNull
+import foo.dom.converters.BlueprintBeanConverter
 
 trait BeanDefinition extends DomElement with ProcessorDefinition {
-  @NotNull
-  @Attribute("ref")
-  def getRef: GenericAttributeValue[String]
+  @SubTag("ref")
+  @Required(value = true, nonEmpty = true, identifier = false)
+  @Convert(value = classOf[BlueprintBeanConverter], soft = false)
+  def getRef: GenericAttributeValue[BlueprintBean]
 
   @NotNull
   @Attribute("method")
