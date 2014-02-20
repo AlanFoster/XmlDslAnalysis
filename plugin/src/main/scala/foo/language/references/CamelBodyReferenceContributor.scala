@@ -43,6 +43,7 @@ class CamelBodyReferenceContributor extends PsiReferenceContributor {
         val text = originalElement.getText
         val splitSections = ElementSplitter.split(text).reverse
 
+        // Match any section as long as it is one of ${in.body...} ${out.body...} or ${body...}
         splitSections match {
           case ("in", _, _) :: (body@("body", _, _)) :: xs => createReferences(originalElement, body, xs)
           case ("out", _, _) :: (body@("body", _, _)) :: xs => createReferences(originalElement, body, xs)
@@ -172,18 +173,16 @@ class CamelMethodReference(element: PsiElement, range: TextRange)
    * @param methods
    * @return
    */
-  private def createAvailableVariants(methods: Array[PsiMethod]): Array[(PsiMethod, String)] = {
-    // TODO Rewrite with fold left
-    {
-      methods.map(method => (method, method.getName))
-    }
-    .union
-    {
-      methods.map(method => (method, convertGetterName(method.getName)))
-        .filter(_._2.isDefined)
-        .map(tuple => tuple.copy(_2 = tuple._2.get))
-    }
-  }
+  private def createAvailableVariants(methods: Array[PsiMethod]): Array[(PsiMethod, String)] =
+    methods.foldLeft(List[(PsiMethod, String)]())((acc, method) => {
+      // Additionally unions an OGNL expression variant if it is applicable
+      def unionOgnlGetter(list: List[(PsiMethod, String)]) = convertGetterName(method.getName) match {
+        case None => list
+        case Some(ognlGetterName) => (method, ognlGetterName) :: list
+      }
+
+      unionOgnlGetter((method, method.getName) :: acc)
+    }).toArray
 
   /**
    * Populates the list of public methods, minus the constructor, which
