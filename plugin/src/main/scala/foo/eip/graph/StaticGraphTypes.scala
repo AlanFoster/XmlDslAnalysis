@@ -1,5 +1,7 @@
 package foo.eip.graph
 
+import foo.eip.graph.model.EipComponent
+
 /**
  * Helper class which provides type aliasing for an EipGraph.
  */

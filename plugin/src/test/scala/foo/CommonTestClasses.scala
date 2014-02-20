@@ -14,6 +14,7 @@ trait CommonTestClasses
   def loadAllCommon(fixture: JavaCodeInsightTestFixture) {
     loadCommon(fixture, "/foo/models/OrderModel.java")
     loadCommon(fixture, "/foo/processors/OrderProcessor.java")
+    loadCommon(fixture, "/foo/factory/OrderFactory.java")
   }
 
   def commonFile = new File(testRoot, "/commonClasses")

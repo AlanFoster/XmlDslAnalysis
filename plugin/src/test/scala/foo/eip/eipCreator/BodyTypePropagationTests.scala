@@ -3,7 +3,7 @@ package foo.eip.eipCreator
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import foo.eip.serializers.BodyTypeEipDagSerializer
 import foo.eip.EipDagAssert
-import foo.TestBase
+import foo.{CommonTestClasses, TestBase}
 
 /**
  * Type inference tests for ensuring the validity of the EipCreator interface which converts a Dom tree into
@@ -13,7 +13,8 @@ import foo.TestBase
  */
 class BodyTypePropagationTests
   extends LightCodeInsightFixtureTestCase
-  with TestBase{
+  with TestBase
+  with CommonTestClasses {
 
   override def getTestDataPath: String = testDataMapper("/foo/eip/eipCreator/types/body")
 
@@ -33,9 +34,20 @@ class BodyTypePropagationTests
   }
 
   /**
+   * Ensure that body information is propagated successfully when a calling a method
+   * in which the type information is obvious
+   */
+  def testValidPipelineMethodCall() {
+    doTest()
+  }
+
+  /**
    * Ensures the test is valid
    */
   def doTest() {
+    // Ensure we have added all of the required testing
+    loadAllCommon(myFixture)
+
     EipDagAssert.doTest(myFixture, getTestName(false), new BodyTypeEipDagSerializer)
   }
 }

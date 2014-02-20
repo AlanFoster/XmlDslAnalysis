@@ -23,6 +23,7 @@ import edu.uci.ics.jung.algorithms.layout.{StaticLayout, TreeLayout}
 import javax.swing.border.LineBorder
 
 import foo.eip.graph.ADT.EmptyDAG
+import foo.eip.graph.model.EipComponent
 
 /**
  * Class used to represent a visual representation of the the given EipDAG.

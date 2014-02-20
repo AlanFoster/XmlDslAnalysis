@@ -5,6 +5,8 @@ import foo.eip.graph.StaticGraphTypes.EipDAG
 import scala.collection.JavaConverters._
 import foo.dom.Model._
 import foo.eip.graph.ADT.EmptyDAG
+import foo.eip.graph.model.{CamelType, CamelTypeSemantics, EipComponent}
+import com.intellij.psi.CommonClassNames
 
 /**
  * EIP Graph Creator class.
@@ -97,7 +99,10 @@ class EipGraphCreator {
     }
 
     case (bean: BeanDefinition) :: tail => {
-      val component = EipComponent(createId(bean), "to", bean.getRef.getStringValue, unionTypes(previous),  bean)
+      // Extract the bean reference
+      val typeInformation = getMutatedTypeInformation(bean)
+      val newTypeInformation = replaceBody(previous, typeInformation)
+      val component = EipComponent(createId(bean), "to", bean.getRef.getStringValue, newTypeInformation,  bean)
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
@@ -143,6 +148,25 @@ class EipGraphCreator {
     }
   }
 
+  def getMutatedTypeInformation(bean: BeanDefinition) = {
+    val beanReference = bean.getRef.getValue
+    val methodName = bean.getMethod.getStringValue
+
+    // Extract the PsiMethod information
+    val psiClassOption = Option(beanReference.getPsiClass.getValue)
+    val methodType = {
+      for {
+        psiClass <- psiClassOption
+        methods = psiClass.getAllMethods
+        method <- methods.find(_.getName == methodName)
+        returnType = method.getReturnType
+      } yield returnType.getCanonicalText
+    }.getOrElse(CommonClassNames.JAVA_LANG_OBJECT)
+
+    CamelTypeSemantics(Set(methodType), Map())
+  }
+
+
   /**
    * Attempts to extract the ID from the given processor definition.
    * @param processorDefinition The dom processor definition element
@@ -155,6 +179,16 @@ class EipGraphCreator {
     else idAttribute.hashCode.toString
   }
 
+
+  /**
+   * Replaces the current body type information, IE used when the type information
+   * for the body is updated within a pipeline
+   */
+  def replaceBody(previous: List[EipComponent],
+                   current: CamelTypeSemantics = CamelType()) = {
+    unionTypes(previous, current).copy(possibleBodyTypes = current.possibleBodyTypes)
+  }
+
   /**
    * Unions all given type information together.
    * @param previous The list of all known previous EipComponents
@@ -162,7 +196,7 @@ class EipGraphCreator {
    * @return A union of all type information
    */
   def unionTypes(previous: List[EipComponent],
-                 current: CamelType = CamelType()) = {
+                 current: CamelTypeSemantics = CamelType()) = {
     // Note, we fold *right* in order to ensure that the newest type information is only shown
      previous
        .map(_.semantics)
