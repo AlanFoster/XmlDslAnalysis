@@ -92,12 +92,6 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
 
     val minimumSpanningForest = GraphGlue.newMinimumSpanningForest(graph)
 
-/*    val roots = TreeUtils.getRoots(minimumSpanningForest.getForest)
-    for {
-      root <- roots
-    } {
-    }*/
-
     val treeLayout = new TreeLayout(minimumSpanningForest.getForest, 125, 125)
     val staticLayout = new StaticLayout(graph, treeLayout)
 
@@ -110,37 +104,6 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
     satelliteViewer.setBorder(LineBorder.createBlackLineBorder())
 
     mainViewer.setLayout(new BorderLayout())
-
-
-    // Help Window
-/*    val helpLayer = new JLayeredPane
-
-    val helpPanel = new JPanel()
-    helpPanel.setLayout(new FlowLayout())
-    helpPanel.setBackground(Color.WHITE)
-    helpPanel.add(new JLabel("howdy!"))
-
-    helpLayer.setLayout(new FlowLayout(FlowLayout.CENTER))
-    helpLayer.add(helpPanel, BorderLayout.CENTER)
-
-    mainViewer.add(helpLayer, BorderLayout.CENTER)*/
-
-    // settings button handling
-/*    val button = new JButton(load("/eip/settings-32.png"))
-    button.setBorder(BorderFactory.createEmptyBorder())
-    button.setBackground(Color.WHITE)
-    button.setContentAreaFilled(false)
-    button.addActionListener (new ActionListener {
-      def actionPerformed(e: ActionEvent): Unit = {
-        helpLayer.setVisible(true)
-      }
-    })*/
-
-/*    val settingsLayer = new JLayeredPane
-    settingsLayer.setLayout(new FlowLayout(FlowLayout.RIGHT))
-    settingsLayer.add(button, BorderLayout.LINE_END)
-    mainViewer.add(settingsLayer, BorderLayout.NORTH)*/
-
 
     // Satellite View
     val rightHandSideBoxLayer = new JLayeredPane
@@ -300,101 +263,3 @@ class DebugGraphToXmlPlugin(eipDag: EipDAG) extends AbstractPopupGraphMousePlugi
     popUp.show(viewer, e.getX, e.getY)
   }
 }
-
-// Simple manual testing, note the DefaultIconLoader mixin
-object Starter {
-  def fakeGraph() = {
-    val graph = new DirectedSparseMultigraph[String, Integer]()
-
-    val edgeFactory = new Factory[Integer] {
-      var i = 1
-      def create(): Integer = {
-        i = i + 1
-        i
-      }
-    }
-
-    val a0 = "A0"
-    val b0 = "B0"
-    val b1 = "B1"
-    val c1 = "c1"
-    val d1 = "d1"
-
-    graph.addVertex(a0)
-    graph.addVertex(b0)
-    graph.addVertex(b1)
-    graph.addVertex(c1)
-    graph.addVertex(d1)
-
-    graph.addEdge(edgeFactory.create(), a0, b0, EdgeType.DIRECTED)
-    graph.addEdge(edgeFactory.create(), a0, b1, EdgeType.DIRECTED)
-    graph.addEdge(edgeFactory.create(), b0, c1, EdgeType.DIRECTED)
-    graph.addEdge(edgeFactory.create(), b1, c1, EdgeType.DIRECTED)
-    graph.addEdge(edgeFactory.create(), c1, d1, EdgeType.DIRECTED)
-
-    graph
-  }
-
-  def main(args: Array[String]) {
-    val jframe = new JFrame()
-    jframe.setSize(500, 700)
-
-    jframe.getContentPane.add(JUNG())
-
-
-    jframe.setVisible(true)
-    jframe.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-  }
-
-  def JUNG() = {
-    import EipGraphCreator._
-
-    val from = EipComponent("from", "from", "from", CamelType(), null)
-    val choice = EipComponent("choice", "choice", "choice", CamelType(), null)
-
-    val when1 = EipComponent("when1", "when", "when1", CamelType(), null)
-    val foo = EipComponent("foo", "to", "foo", CamelType(), null)
-
-    val when2 = EipComponent("when2", "when", "when2", CamelType(), null)
-    val bar = EipComponent("bar", "to", "bar", CamelType(), null)
-
-    val afterChoice = EipComponent("afterChoice", "to", "afterChoice", CamelType(), null)
-
-    val eipDag = EmptyDAG[EipComponent, String]()
-      .linkComponents(List(), from)
-      .linkComponents(from, choice)
-      .linkComponents(choice, when1)
-      .linkComponents(when1, foo)
-      .linkComponents(choice, when2)
-      .linkComponents(when2, bar)
-      .linkComponents(List(foo, bar), afterChoice)
-
-    val component = (new VisualEipGraph(eipDag) with DefaultIconLoader).createScrollableViewer
-
-    // val graph = fakeGraph()
-    /*
-        val delegateForest = new DelegateForest(graph)
-        val layout = new TreeLayout(delegateForest, 100, 100)
-        val viewer = new VisualizationViewer(layout)
-        val component = new GraphZoomScrollPane(viewer)
-    */
-    /*    val minimumSpanningForest = GraphGlue.newMinimumSpanningForest(graph)
-        val treeLayout = new StaticLayout(graph, new TreeLayout(minimumSpanningForest.getForest))
-        val viewer = new VisualizationViewer(treeLayout)
-
-        mutate(viewer)(_.getRenderContext.setEdgeShapeTransformer(new EdgeShape.Line))
-
-        val graphMouse = new DefaultModalGraphMouse[EipComponent, String]()
-        viewer.setGraphMouse(graphMouse)
-
-        graphMouse.setMode(ModalGraphMouse.Mode.PICKING)
-
-        val component = new GraphZoomScrollPane(viewer)*/
-
-
-    component
-  }
-
-}
-
-

@@ -93,43 +93,10 @@ class EipEditor(project: Project, virtualFile: VirtualFile) extends UserDataHold
     if(!isValid(blueprintDom)) {
       val message = "Note - At least one route, with one From definition is required."
 
-/*  There doesn't seem a way to get the current editor tab ? :/
-      val foo =
-        WindowManager.getInstance()
-          .getIdeFrame(project).asInstanceOf[IdeFrameImpl]
-          .getRootPane.asInstanceOf[IdeRootPane]
-          .getToolWindowsPane
-      foo.getTool
-
-      val ids = ToolWindowManager.getInstance(project).getToolWindowIds
-      */
-
-     // val statusBar = WindowManager.getInstance().getStatusBar(project).getComponent
-
-/*
-      val editorManager = FileEditorManagerEx.getInstanceEx(project)
-      val splitters = editorManager.getSplitters
-
-    val windows = editorManager.getWindows
-      val first  = windows.head
-      val foo = first.getTabbedPane.getTabs.getTabAt(0).getComponent
-      foo.setBackground(Color.red)
-*/
-
       JBPopupFactory.getInstance()
         .createHtmlTextBalloonBuilder(message, MessageType.WARNING, null)
         .createBalloon()
         .show(RelativePoint.getSouthEastOf(graphContainer), Balloon.Position.above)
-
-
-
-
-/*      Notifications.Bus.notify(new Notification(
-        "groupId",
-        "TopHeading", "Bottom Heading",
-        NotificationType.WARNING), project)*/
-
-
     }
 
     // Create the EipGraph if 'all is well'

@@ -5,7 +5,7 @@ import foo.dom.Model.ProcessorDefinition
 /**
  * Represents a basic class which can be represented within the context of an
  * EIP diagram
- * @param id The unique vakue of this component
+ * @param id The unique value of this component
  * @param eipType The EIP type, string for possible expansion - however the loss of type information is obvious
  * @param text The text associated with this component, for instance an expression
  */
