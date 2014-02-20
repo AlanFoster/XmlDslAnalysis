@@ -7,7 +7,7 @@ import com.intellij.codeInsight.completion.CompletionType
 /**
  * Tests for ensuring that clear header contributions are completed as expected
  */
-class Variants
+class RemoveHeaderVariants
   extends LightCodeInsightFixtureTestCase
   with TestBase {
 
