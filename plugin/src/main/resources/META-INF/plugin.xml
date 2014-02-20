@@ -82,13 +82,13 @@
             <!--
                 Header reference contributions within the simple language
             -->
-            <psi.referenceContributor implementation="foo.language.references.CamelHeaderReferenceContributor"/>
+            <psi.referenceContributor implementation="foo.language.references.header.CamelHeaderReferenceContributor"/>
 
 
             <!--
                 Body Reference within camel, ie ${in.body<caret>} support
             -->
-            <psi.referenceContributor implementation="foo.language.references.CamelBodyReferenceContributor" />
+            <psi.referenceContributor implementation="foo.language.references.body.CamelBodyReferenceContributor" />
 
             <!--
                 Allows inplace renaming of identity elements

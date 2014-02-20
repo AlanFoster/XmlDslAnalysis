@@ -27,6 +27,9 @@ class CamelBraceMatcher extends PairedBraceMatcher {
   def getCodeConstructStart(file: PsiFile, openingBraceOffset: Int): Int = openingBraceOffset
 }
 
+/**
+ * Defines the BracePair pairs within the apache camel simple language
+ */
 object CamelBraceMatcher {
   val BracePair = Array[BracePair](
     new BracePair(CamelTypes.FUNC_BEGIN, CamelTypes.FUNC_END, true),

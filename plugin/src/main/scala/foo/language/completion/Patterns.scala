@@ -28,7 +28,7 @@ object Patterns {
    * @return the constructed pattern
    */
   def afterVariableObject(variableName: String, allowArrayAccess:Boolean = false) =
-    VariableAccessorTest.afterVariableObject(List(variableName), allowArrayAccess)
+    VariableAccessorConstructor.afterVariableObject(List(variableName), allowArrayAccess)
 
   /**
    * An 'in' variable, will be only available after `in.&gt;caret&lt;`

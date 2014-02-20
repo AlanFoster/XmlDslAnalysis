@@ -13,6 +13,10 @@ import foo.language.generated.CamelTypes
  * rather than adding another literal character again.
  */
 class CamelQuoteHandler extends SimpleTokenSetQuoteHandler(CamelQuoteHandler.StringTokenSet)
+
+/**
+ * Defines the quote tokens within the apache camel simple language
+ */
 object CamelQuoteHandler {
   val StringTokenSet = TokenSet.create(CamelTypes.STRING)
 }

@@ -13,6 +13,9 @@ import com.intellij.lang.ASTNode
  * IE provides semantic analysis for the camel functions, and highlights errors.
  */
 class CamelArgumentAnnotator extends Annotator {
+  /**
+   * {@inheritdoc}
+   */
   def annotate(element: PsiElement, holder: AnnotationHolder) {
     // Only accept psiElements which are a CamelFunctionArg
     val isAccepted = psiElement(classOf[CamelFunctionArg]).accepts(element)

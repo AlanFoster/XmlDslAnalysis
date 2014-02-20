@@ -8,8 +8,18 @@ import com.intellij.psi.PsiElement
 import com.intellij.patterns.PsiElementPattern
 import scala.annotation.tailrec
 
-object VariableAccessorTest {
+/**
+ * Constructs and creates the required patterns for variable contribution
+ * within the Apache Camel Simple language
+ */
+object VariableAccessorConstructor {
 
+  /**
+   * Creates a new PsiPattern which matches the given variable name prefixes
+   * @param variableNames The required variable name prefixes, for instance List("in") etc
+   * @param allowArrayAccess Defines whether or not object access allows array notation access
+   * @return The constructed PsiPattern
+   */
   def afterVariableObject(variableNames: List[String], allowArrayAccess: Boolean = false) = {
 
     val reversedNames = variableNames.reverse
@@ -18,6 +28,16 @@ object VariableAccessorTest {
     constructParentPattern(identifierPattern, reversedNames, 2, allowArrayAccess)
   }
 
+  /**
+   * Recursively constructs the parent pattern
+   * @param parent The associated parent PsiElement pattern
+   * @param reverseElems The remaining elements, which are reversed, as the tree structure
+   *                     is backwards when creating the elements
+   * @param depth The current depth of traversal, for instance how many super parents to
+   *              match
+   * @param allowArrayAccess Defines whether or not object access allows array notation access
+   * @return The constructed PsiPattern
+   */
   @tailrec
   def constructParentPattern(
                              parent: PsiElementPattern.Capture[PsiElement],
@@ -33,6 +53,13 @@ object VariableAccessorTest {
     }
   }
 
+  /**
+   * Provides the PsiPattern definition which will successfully match a given variable within
+   * the apache camel language
+   * @param variableName The variable name to match
+   * @param allowArrayAccess Defines whether or not object access allows array notation access
+   * @return The constructed PsiPattern
+   */
   def getDefinition(variableName: String, allowArrayAccess: Boolean) = {
     val lexeme = CamelBaseElementType.getName _
     val matchingText = {

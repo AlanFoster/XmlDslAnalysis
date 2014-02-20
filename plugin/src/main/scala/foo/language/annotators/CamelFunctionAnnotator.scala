@@ -10,6 +10,9 @@ import foo.CamelFunction
  * Ensures that the given function name exists within the camel language
  */
 class CamelFunctionAnnotator extends Annotator {
+  /**
+   * {@inheritdoc}
+   */
   def annotate(element: PsiElement, holder: AnnotationHolder) {
     // Only accept psiElements which are a CamelFunction
     val isAccepted = psiElement(classOf[CamelFunctionCall]).accepts(element)

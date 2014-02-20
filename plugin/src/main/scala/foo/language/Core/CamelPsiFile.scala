@@ -20,7 +20,13 @@ class CamelPsiFile(viewProvider: FileViewProvider) extends PsiFileBase(viewProvi
    */
   def getFileType: FileType = CamelFileType
 
+  /**
+   * {@inheritdoc}
+   */
   override def getIcon(flags: Int): Icon = LanguageConstants.icon
 
+  /**
+   * {@inheritdoc}
+   */
   override def toString: String = s"{CamelPsiFile ${super.toString}}"
 }
