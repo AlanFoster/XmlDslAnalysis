@@ -1,7 +1,7 @@
 package foo.language.impl.body
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import foo.{TestBase, JavaJDK1_7TestBase}
+import foo.{CommonTestClasses, TestBase, JavaJDK1_7TestBase}
 import foo.language.impl.TestDataInterpolator
 import com.intellij.psi.PsiClass
 import junit.framework.Assert._
@@ -18,6 +18,7 @@ class BodyReferenceTests
   extends LightCodeInsightFixtureTestCase
   with JavaJDK1_7TestBase
   with TestBase
+  with CommonTestClasses
   with TestDataInterpolator {
 
   /**
@@ -51,6 +52,9 @@ class BodyReferenceTests
   }
 
   val JavaLangObject = TestScenario(Some("BodyIsJavaLangObject.xml"), List("java.lang.Object"))
+  val PipelineOrderFactory = TestScenario(Some("BodyPipelineOrderFactory.xml"), List("foo.models.OrderModel"))
+  val InvalidPipelineReference = TestScenario(Some("InvalidPipelineReference.xml"), List("java.lang.Object"))
+  val MultiplePipeline = TestScenario(Some("MultiplePipeline.xml"), List("foo.models.PersonModel"))
   val JavaLangObject_NoResolvedReferences = JavaLangObject.withExpectedReferences(List())
 
   /**
@@ -59,7 +63,28 @@ class BodyReferenceTests
    */
   def testBodyAccess_JavaLangObject() { doTest(JavaLangObject.withExpectedContributions(List())) }
   def testInBodyAccess_JavaLangObject() { doTest(JavaLangObject) }
-  def testOutBodyAccess_JavaLangObject() { doTest(JavaLangObject) }
+  def testOutBodyAccess_JavaLangObject() { doTest(JavaLangObject)  }
+
+  /**
+   * Tests to ensure that in a pipeline the body resolves successfully
+   */
+  def testBodyAccess_PipelineOrderFactory() { doTest(PipelineOrderFactory.withExpectedContributions(List())) }
+  def testInBodyAccess_PipelineOrderFactory() { doTest(PipelineOrderFactory) }
+  def testOutBodyAccess_PipelineOrderFactory() { doTest(PipelineOrderFactory)  }
+
+  /**
+   * Tests to ensure there are no NPEs when there is an invalid reference
+   */
+  def testBodyAccess_InvalidPipelineReference() { doTest(InvalidPipelineReference.withExpectedContributions(List())) }
+  def testInBodyAccess_InvalidPipelineReference() { doTest(InvalidPipelineReference) }
+  def testOutBodyAccess_InvalidPipelineReference() { doTest(InvalidPipelineReference)  }
+
+  /**
+   * Tests to ensure that the latest pipeline body type is used
+   */
+  def testBodyAccess_MultiplePipeline() { doTest(MultiplePipeline.withExpectedContributions(List())) }
+  def testInBodyAccess_MultiplePipeline() { doTest(MultiplePipeline) }
+  def testOutBodyAccess_MultiplePipeline() { doTest(MultiplePipeline)  }
 
   /**
    * References which should *not* resolve - IE caret is in the 'wrong' position
@@ -75,6 +100,8 @@ class BodyReferenceTests
    *                     what are the expected references to be provided
    */
   def doTest(testScenario: TestScenario) {
+    loadAllCommon(myFixture)
+
     val testName = getTestName(false).takeWhile(_ != '_')
     val testData = getTestData(testName, testScenario.fileName, getTestDataPath)
     myFixture.configureByText(testScenario.fileName.getOrElse("camelTest.Camel"), testData)

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:camel="http://camel.apache.org/schema/blueprint"
+           xsi:schemaLocation="
+       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+    <bean class="foo.factory.OrderFactory" id="orderFactory" />
+    <bean class="foo.factory.PersonFactory" id="personFactory" />
+    <bean class="invalidClass" id="invalidFactory" />
+
+    <!--
+        Test to ensure that the body type information propagates successfully,
+        under 'happy path' in which all references are valid.
+    -->
+    <camelContext trace="true" xmlns="http://camel.apache.org/schema/blueprint">
+        <route>
+            <from id="from" uri="direct:start"/>
+
+            <bean id="beanOne" ref="orderFactory" method="createOrder" />
+
+            <setHeader id="headerOne" headerName="a">
+                <constant>true</constant>
+            </setHeader>
+
+            <bean id="beanTwo" ref="orderFactory" method="createOrder" />
+
+            <setHeader id="headerTwo" headerName="b">
+                <constant>true</constant>
+            </setHeader>
+
+
+            <bean id="beanTwoInvalid" ref="" method="createPerson" />
+
+            <setBody id="setBodyInvalid">
+                <simple>${body}</simple>
+            </setBody>
+
+            <bean id="beanThree" ref="personFactory" method="createPerson" />
+
+            <setHeader id="headerThree" headerName="c">
+                <constant>true</constant>
+            </setHeader>
+
+            <bean id="beanThreeInvalid" method="invalidClass" />
+
+            <setHeader id="headerFour" headerName="b">
+                <constant>true</constant>
+            </setHeader>
+
+            <bean id="beanFour" ref="orderFactory" method="createOrder" />
+
+            <setHeader id="headerFive" headerName="a">
+                <constant>true</constant>
+            </setHeader>
+
+            <bean id="beanFive" ref="personFactory" method="createPerson" />
+
+            <setHeader id="headerSix" headerName="d">
+                <constant>true</constant>
+            </setHeader>
+
+        </route>
+    </camelContext>
+</blueprint>

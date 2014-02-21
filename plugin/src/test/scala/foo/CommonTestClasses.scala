@@ -12,9 +12,19 @@ trait CommonTestClasses
   extends TestBase {
 
   def loadAllCommon(fixture: JavaCodeInsightTestFixture) {
+    // Models
     loadCommon(fixture, "/foo/models/OrderModel.java")
+    loadCommon(fixture, "/foo/models/PersonModel.java")
+    loadCommon(fixture, "/foo/models/ComplexModel.java")
+    loadCommon(fixture, "/foo/models/BaseSimpleModel.java")
+
+    // Processors
     loadCommon(fixture, "/foo/processors/OrderProcessor.java")
+
+    // Factories
     loadCommon(fixture, "/foo/factory/OrderFactory.java")
+    loadCommon(fixture, "/foo/factory/PersonFactory.java")
+    loadCommon(fixture, "/foo/factory/ComplexModelFactory.java")
   }
 
   def commonFile = new File(testRoot, "/commonClasses")

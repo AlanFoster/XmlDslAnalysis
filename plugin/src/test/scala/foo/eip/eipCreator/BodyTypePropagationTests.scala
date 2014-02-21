@@ -44,14 +44,29 @@ class BodyTypePropagationTests
   /**
    * Test to ensure that an invalid reference id does not result in NPE
    */
-  def InvalidPipelineRef() {
+  def testInvalidPipelineRef() {
     doTest()
   }
 
   /**
-   * Test to ensure that an invalid method doesn't retsult in an NPE
+   * Test to ensure that an invalid method doesn't result in an NPE
    */
-  def InvalidPipelineMethodCall() {
+  def testInvalidPipelineMethodCall() {
+    doTest()
+  }
+
+  /**
+   * Tests to ensure that pipelines are treated as expected when using custom types
+   */
+  def testMultipleValidPipeline() {
+    doTest()
+  }
+
+  /**
+   * Ensure type information propagates as expected, and defaults to Object when type
+   * can not successfully be inferred
+   */
+  def testMultipleMixedInvalidPipeline() {
     doTest()
   }
 

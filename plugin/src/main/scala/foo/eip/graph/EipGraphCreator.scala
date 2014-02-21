@@ -148,20 +148,20 @@ class EipGraphCreator {
     }
   }
 
+  /**
+   * Infers expression type information for a BeanDefinition reference.
+   * Note this does not currently perform any data flow analysis
+   *
+   * @param bean The bean definition reference
+   * @return The calculated return type qualified information, otherwise
+   *         a dafault of java.lang.Object
+   */
   def getMutatedTypeInformation(bean: BeanDefinition) = {
-    val beanReference = Option(bean.getRef.getValue)
-    val methodName = bean.getMethod.getStringValue
-
-    // Extract the PsiMethod information
-    val psiClassOption = beanReference.map(_.getPsiClass.getValue)
-    val methodType = {
-      for {
-        psiClass <- psiClassOption
-        methods = psiClass.getAllMethods
-        method <- methods.find(_.getName == methodName)
-        returnType = method.getReturnType
-      } yield returnType.getCanonicalText
-    }.getOrElse(CommonClassNames.JAVA_LANG_OBJECT)
+    // Extract the PsiMethod information - return type FQCN
+    val methodType =
+      Option(bean.getMethod.getValue)
+        .map(_.getReturnType.getCanonicalText)
+        .getOrElse(CommonClassNames.JAVA_LANG_OBJECT)
 
     CamelTypeSemantics(Set(methodType), Map())
   }

@@ -1,0 +1,35 @@
+<eipDag>
+    <vertices>
+        <vertex id="headerSix" eipType="translator" text="d -&gt; true" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="beanFive" eipType="to" text="personFactory" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="headerFive" eipType="translator" text="a -&gt; true" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="beanFour" eipType="to" text="orderFactory" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="headerFour" eipType="translator" text="b -&gt; true" inferredType="{java.lang.Object}"/>
+        <vertex id="beanThreeInvalid" eipType="to" inferredType="{java.lang.Object}"/>
+        <vertex id="headerThree" eipType="translator" text="c -&gt; true" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="beanThree" eipType="to" text="personFactory" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="setBodyInvalid" eipType="translator" text="${body}" inferredType="{java.lang.Object}"/>
+        <vertex id="beanTwoInvalid" eipType="to" text="" inferredType="{java.lang.Object}"/>
+        <vertex id="headerTwo" eipType="translator" text="b -&gt; true" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="beanTwo" eipType="to" text="orderFactory" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="headerOne" eipType="translator" text="a -&gt; true" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="beanOne" eipType="to" text="orderFactory" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
+    </vertices>
+    <edges>
+        <edge source="beanFive" target="headerSix" edgeConnection="beanFive_headerSix13"/>
+        <edge source="headerFive" target="beanFive" edgeConnection="headerFive_beanFive12"/>
+        <edge source="beanFour" target="headerFive" edgeConnection="beanFour_headerFive11"/>
+        <edge source="headerFour" target="beanFour" edgeConnection="headerFour_beanFour10"/>
+        <edge source="beanThreeInvalid" target="headerFour" edgeConnection="beanThreeInvalid_headerFour9"/>
+        <edge source="headerThree" target="beanThreeInvalid" edgeConnection="headerThree_beanThreeInvalid8"/>
+        <edge source="beanThree" target="headerThree" edgeConnection="beanThree_headerThree7"/>
+        <edge source="setBodyInvalid" target="beanThree" edgeConnection="setBodyInvalid_beanThree6"/>
+        <edge source="beanTwoInvalid" target="setBodyInvalid" edgeConnection="beanTwoInvalid_setBodyInvalid5"/>
+        <edge source="headerTwo" target="beanTwoInvalid" edgeConnection="headerTwo_beanTwoInvalid4"/>
+        <edge source="beanTwo" target="headerTwo" edgeConnection="beanTwo_headerTwo3"/>
+        <edge source="headerOne" target="beanTwo" edgeConnection="headerOne_beanTwo2"/>
+        <edge source="beanOne" target="headerOne" edgeConnection="beanOne_headerOne1"/>
+        <edge source="from" target="beanOne" edgeConnection="from_beanOne0"/>
+    </edges>
+</eipDag>
