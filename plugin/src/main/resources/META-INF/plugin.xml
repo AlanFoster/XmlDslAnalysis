@@ -109,6 +109,15 @@
             implementationClass="foo.dom.Model.impl.ExpressionDefinitionImpl" />
 
       <!--
+        Provide error highlighting within the DOM model.
+        Note this hooks into the DOM model metadata, ie annotations such as @Required etc.
+      -->
+      <localInspection
+              language="XML" enabledByDefault="true" level="ERROR"
+              groupName="Blueprint" displayName="Blueprint Basic Error Highlighting"
+              implementationClass="foo.dom.inspections.BlueprintDomElementInspector"/>
+
+      <!--
           Represents the EIP Editor functionality within a Dom tree
         -->
       <fileEditorProvider implementation="foo.eip.editor.EipEditorProvider" />
