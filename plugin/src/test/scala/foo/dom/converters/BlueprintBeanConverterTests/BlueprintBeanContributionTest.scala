@@ -19,7 +19,7 @@ class BlueprintBeanContributionTest
   /**
    * {@inheritdoc}
    */
-  override def getTestDataPath: String = testDataMapper("/foo/dom.converters.BlueprintBeanConverter/contribution")
+  override def getTestDataPath: String = testDataMapper("/foo/dom/converters/BlueprintBeanConverter/contribution")
 
   /**
    * Base case in which no reference contribution is possible

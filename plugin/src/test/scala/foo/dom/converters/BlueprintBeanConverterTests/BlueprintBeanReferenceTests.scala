@@ -1,10 +1,11 @@
 package foo.dom.converters.BlueprintBeanConverterTests
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import foo.TestBase
-import scala.util.Try
+import foo.{JavaJDK1_7TestBase, TestBase}
+import scala.util.{Failure, Success, Try}
 import junit.framework.Assert._
 import foo.dom.Model.BlueprintBean
+import com.intellij.util.xml.DomUtil
 
 /**
  * Tests to ensure that the convert provides references as expected within
@@ -12,7 +13,8 @@ import foo.dom.Model.BlueprintBean
  */
 class BlueprintBeanReferenceTests
   extends LightCodeInsightFixtureTestCase
-  with TestBase {
+  with TestBase
+  with JavaJDK1_7TestBase {
 
   /**
    * {@inheritdoc}
@@ -53,13 +55,26 @@ class BlueprintBeanReferenceTests
     val testName = s"${getTestName(false)}.xml"
     myFixture.configureByFile(testName)
 
-    val reference = Try(myFixture.getElementAtCaret).getOrElse(null)
+    // Attempt to extract the element information if it is valid
+    // TODO Place into rich myFixture
+    val reference = Try(myFixture.getElementAtCaret) match {
+      case Success(elem) => elem
+      case Failure(error)
+        if error.isInstanceOf[AssertionError]
+          && error.getMessage.contains("element not found in file") =>
+        null
+    }
 
     if(expectedReferenceName == null) {
       assertNull("The contributed reference should be null, instead got :: " + reference, reference)
     } else {
+      val domElement = DomUtil.findDomElement(reference, classOf[BlueprintBean], false)
+      assertNotNull(
+        "The reference should be of type BlueprintBean, instead got " + reference,
+        domElement)
+
       assertEquals("The reference name should be as expected",
-        reference.asInstanceOf[BlueprintBean].getId.getStringValue,
+        domElement.getId.getStringValue,
         expectedReferenceName)
     }
   }

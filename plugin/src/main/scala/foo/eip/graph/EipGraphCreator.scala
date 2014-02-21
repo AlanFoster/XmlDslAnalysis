@@ -149,11 +149,11 @@ class EipGraphCreator {
   }
 
   def getMutatedTypeInformation(bean: BeanDefinition) = {
-    val beanReference = bean.getRef.getValue
+    val beanReference = Option(bean.getRef.getValue)
     val methodName = bean.getMethod.getStringValue
 
     // Extract the PsiMethod information
-    val psiClassOption = Option(beanReference.getPsiClass.getValue)
+    val psiClassOption = beanReference.map(_.getPsiClass.getValue)
     val methodType = {
       for {
         psiClass <- psiClassOption
