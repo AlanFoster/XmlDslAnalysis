@@ -10,6 +10,7 @@ import scala.Some
 import com.intellij.util.xml.ElementPresentationManager
 import scala.util.Try
 import foo.language.references.EipReference
+import foo.traversal.MethodTraversal
 
 /**
  * Represents a concrete implementation of a reference which is used within
@@ -44,7 +45,7 @@ class CamelMethodReference(element: PsiElement, range: TextRange)
     if(bodyType == null) return Array()
 
     // Access all public methods - minus constructors
-    val publicMethods = getPublicMethods(bodyType)
+    val publicMethods = MethodTraversal.getAllPublicMethods(bodyType)
     val availableVariants = createAvailableVariants(publicMethods)
 
     availableVariants
@@ -56,10 +57,10 @@ class CamelMethodReference(element: PsiElement, range: TextRange)
    * Note this method is which performs and takes into consideration the ability
    * to create the list of variants containing as-is method names, and
    * to create the list of OGNL variants, filtering any non 'getter' methods
-   * @param methods
-   * @return
+   * @param methods The known list of psi methods to perform variants for
+   * @return The list of known OGNL variants and method names
    */
-  private def createAvailableVariants(methods: Array[PsiMethod]): Array[(PsiMethod, String)] =
+  private def createAvailableVariants(methods: List[PsiMethod]): Array[(PsiMethod, String)] =
     methods.foldLeft(List[(PsiMethod, String)]())((acc, method) => {
       // Additionally unions an OGNL expression variant if it is applicable
       def unionOgnlGetter(list: List[(PsiMethod, String)]) = convertGetterName(method.getName) match {
@@ -69,21 +70,6 @@ class CamelMethodReference(element: PsiElement, range: TextRange)
 
       unionOgnlGetter((method, method.getName) :: acc)
     }).toArray
-
-  /**
-   * Populates the list of public methods, minus the constructor, which
-   * is available within this psi class
-   * @param psiClass The given Psi Class
-   * @return The list of PsiMethods which hold true to thie predicate
-   */
-  private def getPublicMethods(psiClass: PsiClass): Array[PsiMethod] = {
-    psiClass
-      .getAllMethods
-      // Public accessors only
-      .filter(_.getModifierList.hasModifierProperty(PsiModifier.PUBLIC))
-      // We shouldn't suggest constructors
-      .filter(!_.isConstructor)
-  }
 
   /**
    * Creates the lookup elements for the given variants

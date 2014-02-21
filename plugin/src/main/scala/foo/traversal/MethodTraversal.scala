@@ -1,6 +1,6 @@
 package foo.traversal
 
-import com.intellij.psi.{PsiClass, PsiMethod}
+import com.intellij.psi.{PsiModifier, PsiClass, PsiMethod}
 
 /**
  * Provides functions which are associated with method traversal within psi classes
@@ -19,5 +19,19 @@ object MethodTraversal {
     // Ensure duplicates are removed
     val uniqueIdentifiers = allMethods.groupBy(_.getName).map(_._2.head).toList
     uniqueIdentifiers
+  }
+
+  /**
+   * Populates the list of public methods, minus the constructor, which
+   * is available within this psi class
+   * @param psiClass The given Psi Class
+   * @return The list of PsiMethods which hold true to thie predicate
+   */
+  def getAllPublicMethods(psiClass: PsiClass): List[PsiMethod] = {
+    MethodTraversal.getAllMethods(psiClass)
+      // Public accessors only
+      .filter(_.getModifierList.hasModifierProperty(PsiModifier.PUBLIC))
+      // We shouldn't suggest constructors
+      .filter(!_.isConstructor)
   }
 }

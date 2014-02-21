@@ -33,7 +33,7 @@ class MethodContributionTests
   val BodyIsJavaLangObject =
     TestScenario(
       Some("BodyIsJavaLangObject.xml"),
-      List("class", "equals", "getClass", "hashCode", "notify", "notifyAll", "toString", "wait", "wait", "wait"))
+      List("class", "equals", "getClass", "hashCode", "notify", "notifyAll", "toString", "wait"))
 
   def testDotAccessAfterBody() {
     doTest(BodyIsJavaLangObject)
@@ -57,7 +57,7 @@ class MethodContributionTests
     myFixture.complete(CompletionType.BASIC)
     val suggestedStrings = myFixture.getLookupElementStrings
 
-    assertReflectionEquals(testScenario.expectedHeaders.asJava, suggestedStrings, LENIENT_ORDER)
+    assertReflectionEquals(testScenario.expectedHeaders.asJava, suggestedStrings)
   }
 
 }
