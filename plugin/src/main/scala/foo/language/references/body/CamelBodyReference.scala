@@ -31,7 +31,8 @@ class CamelBodyReference(element: PsiElement, range: TextRange)
    * @return The resolved PsiClass, otherwise null.
    */
   override def resolve(): PsiElement = {
-    getBodyType(element)
+    // TODO Multiple resolve
+    getBodyTypes(element).headOption.getOrElse(null)
   }
 }
 

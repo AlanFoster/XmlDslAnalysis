@@ -52,6 +52,18 @@ class MethodContributionTests
       "id", "notify", "notifyAll", "setAdditionalInformation", "setId", "toString", "wait")
   )
 
+  val ChoicePipeline = TestScenario(
+    Some("ChoicePipeline.xml"),
+     List("additionalInformation", "age", "class", "class", "class", "customerId", "equals", "equals", "equals", "f",
+       "firstName", "getAdditionalInformation", "getAge", "getClass", "getClass", "getClass", "getCustomerId", "getF",
+       "getFirstName", "getId", "getId", "getLastName", "getNumber", "getOrderId", "getOrderType", "hashCode", "hashCode",
+       "hashCode", "id", "id", "lastName", "notify", "notify", "notify", "notifyAll", "notifyAll", "notifyAll", "number",
+       "orderId", "orderType", "setAdditionalInformation", "setAge", "setCustomerId", "setF", "setFirstName", "setId",
+       "setId", "setLastName", "setNumber", "setOrderId", "setOrderType", "toString", "toString", "toString", "wait",
+       "wait", "wait"
+     )
+  )
+
   def testDotAccessAfterBody_BodyIsJavaLangObject() {
     doTest(BodyIsJavaLangObject)
   }
@@ -62,6 +74,10 @@ class MethodContributionTests
 
   def testDotAccessAfterBody_ComplexModel() {
     doTest(ComplexModel)
+  }
+
+  def testDotAccessAfterBody_ChoicePipeline() {
+    doTest(ChoicePipeline)
   }
 
 /*  def testElvisAccessAfterBody() {

@@ -22,7 +22,7 @@ trait EipReference {
    *         not being able to infer the body type. For instance if
    *         language injection is performed within the context of a Java DSL.
    */
-  def getBodyType(element: PsiElement):PsiClass = {
+  def getBodyTypes(element: PsiElement):Set[PsiClass] = {
     // Define the class resolver and scope in which this body could possibly reference
     val module = ModuleUtilCore.findModuleForPsiElement(element)
     val searchScope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)
@@ -31,14 +31,12 @@ trait EipReference {
         .getInstance(element.getProject)
         .findClass(className, searchScope)
 
-    // Attempt to find the matching body type to resolve to
-    val resolvedBody =
-      getBodyTypes(element)
+    // Attempt to find the matching body types and resolve them
+    val resolvedBodies =
+      getBodyTypeFqcns(element)
         .map(classResolver)
-        .headOption
-        .getOrElse(null)
 
-    resolvedBody
+    resolvedBodies
   }
 
 
@@ -47,9 +45,9 @@ trait EipReference {
    * the given PsiElement
    *
    * @param element The PsiElement to provide type inference for
-   * @return The Map of available headers within the given context
+   * @return The set of known body types. This will never be null.
    */
-  def getBodyTypes(element: PsiElement): Set[String] = {
+  def getBodyTypeFqcns(element: PsiElement): Set[String] = {
     val project = element.getProject
 
     // Extract the relevant PsiFile in order to test if we are contained within an XmlFile

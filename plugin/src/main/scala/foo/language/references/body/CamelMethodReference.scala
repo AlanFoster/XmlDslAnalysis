@@ -32,23 +32,26 @@ class CamelMethodReference(element: PsiElement, range: TextRange)
     val availableVariants = foo()
 
     // Create lookups for method access *and* the OGNL getter notation
-    val lookUpElements = createLookupElements(availableVariants)
+    val lookUpElements = availableVariants.map(createLookupElements)
 
     // Create the array of variants
-    val providedVariants = lookUpElements.asInstanceOf[Array[AnyRef]]
+    val providedVariants = lookUpElements.flatten.toArray[AnyRef]
     providedVariants
   }
 
-  private def foo(): Array[(PsiMethod, String)] = {
-    val bodyType = getBodyType(element)
+  private def foo(): Set[Array[(PsiMethod, String)]] = {
+    val bodyTypes = getBodyTypes(element)
 
-    if(bodyType == null) return Array()
+    val unionAvailableVariants = for {
+      bodyType <- bodyTypes
+    } yield {
+      // Access all public methods - minus constructors
+      val publicMethods = MethodTraversal.getAllPublicMethods(bodyType)
+      val availableVariants = createAvailableVariants(publicMethods)
+      availableVariants
+    }
 
-    // Access all public methods - minus constructors
-    val publicMethods = MethodTraversal.getAllPublicMethods(bodyType)
-    val availableVariants = createAvailableVariants(publicMethods)
-
-    availableVariants
+    unionAvailableVariants
   }
 
   /**
@@ -83,6 +86,7 @@ class CamelMethodReference(element: PsiElement, range: TextRange)
       case (method, variantName) =>
         LookupElementBuilder.create(psiElement, variantName)
           .withIcon(ElementPresentationManager.getIcon(method))
+          .withTypeText(method.getContainingClass.getName)
     })
 
   /**
@@ -95,7 +99,9 @@ class CamelMethodReference(element: PsiElement, range: TextRange)
     methodName match {
       case None => null
       case Some(value) =>
+        // TODO Multiple resolve
         foo()
+          .flatten
           .find(_._2 == value)
           .map(_._1)
           .getOrElse(null)

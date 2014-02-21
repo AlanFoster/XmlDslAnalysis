@@ -41,8 +41,6 @@ class CamelMethodConverterContributionTests
     myFixture.complete(CompletionType.BASIC)
     val suggestedStrings = myFixture.getLookupElementStrings
 
-    println(suggestedStrings.asScala.mkString(", "))
-
     assertReflectionEquals(expectedHeaders.asJava, suggestedStrings, LENIENT_ORDER)
   }
 }
