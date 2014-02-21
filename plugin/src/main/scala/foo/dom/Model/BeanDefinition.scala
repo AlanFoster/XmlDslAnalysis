@@ -2,7 +2,8 @@ package foo.dom.Model
 
 import com.intellij.util.xml._
 import org.jetbrains.annotations.NotNull
-import foo.dom.converters.BlueprintBeanConverter
+import foo.dom.converters.{CamelMethodConverter, BlueprintBeanConverter}
+import com.intellij.psi.PsiMethod
 
 trait BeanDefinition extends DomElement with ProcessorDefinition {
   @SubTag("ref")
@@ -12,5 +13,6 @@ trait BeanDefinition extends DomElement with ProcessorDefinition {
 
   @NotNull
   @Attribute("method")
-  def getMethod: GenericAttributeValue[String]
+  @Convert(value = classOf[CamelMethodConverter], soft = false)
+  def getMethod: GenericAttributeValue[PsiMethod]
 }
