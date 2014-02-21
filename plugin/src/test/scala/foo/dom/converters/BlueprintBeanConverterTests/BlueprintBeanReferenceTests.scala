@@ -6,6 +6,7 @@ import scala.util.{Failure, Success, Try}
 import junit.framework.Assert._
 import foo.dom.Model.BlueprintBean
 import com.intellij.util.xml.DomUtil
+import foo.RichTestFixture.toRichTestFixture
 
 /**
  * Tests to ensure that the convert provides references as expected within
@@ -56,26 +57,25 @@ class BlueprintBeanReferenceTests
     myFixture.configureByFile(testName)
 
     // Attempt to extract the element information if it is valid
-    // TODO Place into rich myFixture
-    val reference = Try(myFixture.getElementAtCaret) match {
-      case Success(elem) => elem
-      case Failure(error)
-        if error.isInstanceOf[AssertionError]
-          && error.getMessage.contains("element not found in file") =>
-        null
-    }
+    val referenceOption = myFixture.getElementAtCaretSafe
 
-    if(expectedReferenceName == null) {
-      assertNull("The contributed reference should be null, instead got :: " + reference, reference)
-    } else {
-      val domElement = DomUtil.findDomElement(reference, classOf[BlueprintBean], false)
-      assertNotNull(
-        "The reference should be of type BlueprintBean, instead got " + reference,
-        domElement)
+    referenceOption match {
+      // Failure if expected name is null, and the reference is not null
+      case Some(reference) if expectedReferenceName == null =>
+        assertNull("The contributed reference should be null, instead got :: " + referenceOption, reference)
 
-      assertEquals("The reference name should be as expected",
-        domElement.getId.getStringValue,
-        expectedReferenceName)
+      // Ensure that the element was as expected
+      case Some(reference) =>
+        val domElement = DomUtil.findDomElement(reference, classOf[BlueprintBean], false)
+        assertNotNull(
+          "The reference should be of type BlueprintBean, instead got " + reference,
+          domElement)
+
+        assertEquals("The reference name should be as expected",
+          domElement.getId.getStringValue,
+          expectedReferenceName)
+
+      case None => assertNull(expectedReferenceName)
     }
   }
 }

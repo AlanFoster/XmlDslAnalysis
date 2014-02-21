@@ -4,7 +4,7 @@ import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import foo.{TestBase, JavaJDK1_7TestBase}
 import foo.language.impl.TestDataInterpolator
 import scala.Some
-import scala.util.Try
+import foo.RichTestFixture._
 import junit.framework.Assert._
 import com.intellij.psi.PsiMethod
 
@@ -70,8 +70,8 @@ class MethodResolveTests
     myFixture.configureByText(testScenario.fileName.getOrElse("camelTest.Camel"), testData)
 
     // Ensure that our Psi method is referenced as expected
-    val element = Try(myFixture.getElementAtCaret).toOption
-    element match {
+    val referenceOption = myFixture.getElementAtCaretSafe
+    referenceOption match {
       case None => assertNull("There should be no matching reference for this scenario", testScenario.expectedMethodName)
       case Some(reference) =>
         // If a reference has been provided, we must fail it.

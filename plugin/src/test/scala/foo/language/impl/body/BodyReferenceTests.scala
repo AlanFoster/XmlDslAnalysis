@@ -3,13 +3,13 @@ package foo.language.impl.body
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import foo.{TestBase, JavaJDK1_7TestBase}
 import foo.language.impl.TestDataInterpolator
-import scala.util.Try
 import com.intellij.psi.PsiClass
 import junit.framework.Assert._
 import com.intellij.codeInsight.completion.CompletionType
 import org.unitils.reflectionassert.ReflectionAssert._
 import org.unitils.reflectionassert.ReflectionComparatorMode._
 import scala.Some
+import foo.RichTestFixture.toRichTestFixture
 
 /**
  * Tests associated with going from a body reference to the PsiClass it is associated withd
@@ -88,8 +88,8 @@ class BodyReferenceTests
       lookupStrings, LENIENT_ORDER)
 
     // Attempt reference contribution
-    val element = Try(myFixture.getElementAtCaret).toOption
-    element match {
+    val referenceOption = myFixture.getElementAtCaretSafe
+    referenceOption match {
       case None =>
         if(testScenario.expectedReferences.nonEmpty) {
           fail("The element should have resolved to at least one of the following " + testScenario.expectedReferences)

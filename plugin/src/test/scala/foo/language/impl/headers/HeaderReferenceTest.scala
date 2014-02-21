@@ -4,7 +4,7 @@ import junit.framework.Assert._
 import foo.dom.Model.SetHeaderProcessorDefinition
 import com.intellij.util.xml.DomManager
 import com.intellij.psi.xml.XmlTag
-import scala.util.Try
+import foo.RichTestFixture.toRichTestFixture
 
 
 /**
@@ -38,19 +38,21 @@ class HeaderReferenceTest
 
   /**
    * Performs the test, using the convention of test name being associated
-   * with the relevent test file to use
+   * with the relevant test file to use
    */
   def doTest(testContext: TestContext, expectedHeaderName: Option[String]) {
     // Configure the fixture
     val testData = getTestData(getTestName(false).takeWhile(_ != '_'), testContext.testFileName, getTestDataPath)
     myFixture.configureByText(testContext.testFileName.getOrElse("camelTest.Camel"), testData)
 
-    val reference = Try(myFixture.getElementAtCaret).getOrElse(null)
+    val referenceOption = myFixture.getElementAtCaretSafe
 
     // Ensure we have resolved successfully, if it is expected
-    expectedHeaderName match {
-      case None => assertNull("No reference should be resolved for this scenario, instead found :: " + reference, reference)
-      case Some(headerName) =>
+    (expectedHeaderName, referenceOption) match {
+      case (None, None) =>
+      case (None, Some(_)) =>
+        fail("No reference should be resolved for this scenario, instead found :: " + referenceOption)
+      case (Some(expected), Some(reference)) =>
         assertTrue("The contributed element should be an Xml Element", reference.isInstanceOf[XmlTag])
         val xmlTag = reference.asInstanceOf[XmlTag]
         val domElement = DomManager.getDomManager(getProject).getDomElement(xmlTag)
@@ -58,7 +60,7 @@ class HeaderReferenceTest
         assertTrue("The contributed dom element should be a SetHeaderProcessorDefinition", domElement.isInstanceOf[SetHeaderProcessorDefinition])
 
         val headerElement = domElement.asInstanceOf[SetHeaderProcessorDefinition]
-        assertEquals("The header name should be as expected for this scenario", headerName, headerElement.getHeaderName.getStringValue)
+        assertEquals("The header name should be as expected for this scenario", expected, headerElement.getHeaderName.getStringValue)
     }
   }
 }
