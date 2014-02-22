@@ -1,7 +1,7 @@
 package foo.language.annotators
 
 import com.intellij.lang.annotation.{AnnotationHolder, Annotator}
-import com.intellij.psi.PsiElement
+import com.intellij.psi.{PsiPolyVariantReference, PsiElement}
 import foo.language.Core.CamelFileType
 import com.intellij.openapi.util.TextRange
 import com.intellij.openapi.editor.markup.TextAttributes
@@ -31,7 +31,16 @@ class UnresolvedReferenceAnnotator extends Annotator {
     // IE elements which should be highlighted as invalid if not resolved
     val missingHardReferences =
       element.getReferences
+        // Filter hard references which resolve to null
         .filter(reference => !reference.isSoft && reference.resolve == null)
+        // We should handle the fact that although elements can resolve to null
+        // This may be because they are psi poly variant references, and simply
+        // can not resolve to a *single* PsiElement - we should not highlight
+        // these as errors
+        .filter {
+          case reference: PsiPolyVariantReference => reference.multiResolve(false).isEmpty
+          case _ => true
+        }
 
     // ForEach missing hard reference, create an error annotation within its text range
     missingHardReferences.foreach {

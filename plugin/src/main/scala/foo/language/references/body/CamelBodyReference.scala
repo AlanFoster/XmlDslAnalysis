@@ -1,6 +1,6 @@
 package foo.language.references.body
 
-import com.intellij.psi.{PsiReference, PsiReferenceBase, PsiElement}
+import com.intellij.psi._
 import com.intellij.openapi.util.TextRange
 import foo.language.MethodConverter
 import foo.language.references.EipReference
@@ -8,7 +8,11 @@ import foo.language.references.EipReference
 /**
  * Represents a CamelBodyReference, IE the element within ${body}.
  * This implementation provides no variant completion and should purely
- * resolve to the inferred body type within the EIP graph
+ * resolve to the inferred body type within the EIP graph.
+ *
+ * Note this class is a PsiPolyVariantReference implementation as it is possible
+ * that the body type is more than one inferred type, ie in the case of
+ * performing a choice statement
  *
  * @param element The parent element, presumably func body
  * @param range The text range within the parent element to provide references for
@@ -16,6 +20,7 @@ import foo.language.references.EipReference
 class CamelBodyReference(element: PsiElement, range: TextRange)
 // Note this reference is a soft reference, ie if it doesn't resolve, it is *not* an error!
   extends PsiReferenceBase[PsiElement](element, range, false)
+  with PsiPolyVariantReference
   with MethodConverter
   with EipReference {
 
@@ -31,8 +36,18 @@ class CamelBodyReference(element: PsiElement, range: TextRange)
    * @return The resolved PsiClass, otherwise null.
    */
   override def resolve(): PsiElement = {
-    // TODO Multiple resolve
-    getBodyTypes(element).headOption.getOrElse(null)
+    val bodyTypes = getBodyTypes(element)
+    if(bodyTypes.size == 1) bodyTypes.head
+    else null
+  }
+
+  /**
+   * Returns all possible body type references applicable
+   */
+  override def multiResolve(incompleteCode: Boolean): Array[ResolveResult] = {
+    getBodyTypes(element)
+      .map(new PsiElementResolveResult(_))
+      .toArray
   }
 }
 
