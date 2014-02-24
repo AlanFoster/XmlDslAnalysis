@@ -9,8 +9,9 @@
         <vertex id="from" eipType="from" text="direct:start"/>
     </vertices>
     <edges>
-        <edge source="foo" target="afterChoice" edgeConnection="foo_afterChoice6"/>
-        <edge source="bar" target="afterChoice" edgeConnection="bar_afterChoice5"/>
+        <edge source="foo" target="afterChoice" edgeConnection="foo_afterChoice7"/>
+        <edge source="bar" target="afterChoice" edgeConnection="bar_afterChoice6"/>
+        <edge source="choice" target="afterChoice" edgeConnection="choice_afterChoice5"/>
         <edge source="when2" target="bar" edgeConnection="when2_bar4"/>
         <edge source="choice" target="when2" edgeConnection="choice_when23"/>
         <edge source="when1" target="foo" edgeConnection="when1_foo2"/>

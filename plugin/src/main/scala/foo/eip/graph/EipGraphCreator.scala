@@ -135,8 +135,9 @@ class EipGraphCreator {
         }
       })
 
+      // TODO Should only link the choice node to the next node, IF, and only if, there is no otherwise statement
       // TODO need to link all generated nodes to graph, IE Some(choiceComponent) isn't valid, it's Some(List[Choices]) possibly
-      createEipGraph(previousDefinitions, tail, completedWhenGraph)
+      createEipGraph(choiceComponent :: previousDefinitions, tail, completedWhenGraph)
     }
 
     // Fall through case, hitting a node we don't understand

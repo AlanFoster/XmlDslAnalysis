@@ -1,0 +1,30 @@
+<eipDag>
+    <vertices>
+        <vertex id="to" eipType="to" text="direct:start" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
+        <vertex id="beanTwo" eipType="to" text="complexModelFactory" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="when3" eipType="when" text="true" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel}"/>
+        <vertex id="choice3" eipType="choice" text="choice" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel}"/>
+        <vertex id="beanThree" eipType="to" text="personFactory" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="when2" eipType="when" text="true" inferredType="{java.lang.Object, foo.models.OrderModel}"/>
+        <vertex id="choice2" eipType="choice" text="choice" inferredType="{java.lang.Object, foo.models.OrderModel}"/>
+        <vertex id="beanOne" eipType="to" text="orderFactory" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="when1" eipType="when" text="true" inferredType="{java.lang.Object}"/>
+        <vertex id="choice1" eipType="choice" text="choice" inferredType="{java.lang.Object}"/>
+        <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
+    </vertices>
+    <edges>
+        <edge source="beanTwo" target="to" edgeConnection="beanTwo_to12"/>
+        <edge source="choice3" target="to" edgeConnection="choice3_to11"/>
+        <edge source="when3" target="beanTwo" edgeConnection="when3_beanTwo10"/>
+        <edge source="choice3" target="when3" edgeConnection="choice3_when39"/>
+        <edge source="beanThree" target="choice3" edgeConnection="beanThree_choice38"/>
+        <edge source="choice2" target="choice3" edgeConnection="choice2_choice37"/>
+        <edge source="when2" target="beanThree" edgeConnection="when2_beanThree6"/>
+        <edge source="choice2" target="when2" edgeConnection="choice2_when25"/>
+        <edge source="beanOne" target="choice2" edgeConnection="beanOne_choice24"/>
+        <edge source="choice1" target="choice2" edgeConnection="choice1_choice23"/>
+        <edge source="when1" target="beanOne" edgeConnection="when1_beanOne2"/>
+        <edge source="choice1" target="when1" edgeConnection="choice1_when11"/>
+        <edge source="from" target="choice1" edgeConnection="from_choice10"/>
+    </edges>
+</eipDag>

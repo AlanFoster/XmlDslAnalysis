@@ -16,10 +16,13 @@
         <vertex id="first" eipType="from" text="direct:start" headers="{}"/>
     </vertices>
     <edges>
-        <edge source="afterOuterChoice" target="endProcessor" edgeConnection="afterOuterChoice_endProcessor14"/>
-        <edge source="afterOuterChoice" target="endProcessor" edgeConnection="afterOuterChoice_endProcessor13"/>
-        <edge source="innerChoiceWhen1Header" target="afterOuterChoice" edgeConnection="innerChoiceWhen1Header_afterOuterChoice12"/>
-        <edge source="afterInnerHeader" target="afterOuterChoice" edgeConnection="afterInnerHeader_afterOuterChoice11"/>
+        <edge source="afterOuterChoice" target="endProcessor" edgeConnection="afterOuterChoice_endProcessor17"/>
+        <edge source="afterOuterChoice" target="endProcessor" edgeConnection="afterOuterChoice_endProcessor16"/>
+        <edge source="afterOuterChoice" target="endProcessor" edgeConnection="afterOuterChoice_endProcessor15"/>
+        <edge source="outerChoice" target="endProcessor" edgeConnection="outerChoice_endProcessor14"/>
+        <edge source="innerChoiceWhen1Header" target="afterOuterChoice" edgeConnection="innerChoiceWhen1Header_afterOuterChoice13"/>
+        <edge source="afterInnerHeader" target="afterOuterChoice" edgeConnection="afterInnerHeader_afterOuterChoice12"/>
+        <edge source="innerChoice" target="afterOuterChoice" edgeConnection="innerChoice_afterOuterChoice11"/>
         <edge source="innerChoiceWhen2Header" target="afterInnerHeader" edgeConnection="innerChoiceWhen2Header_afterInnerHeader10"/>
         <edge source="beforeInnerHeader" target="innerChoiceWhen2Header" edgeConnection="beforeInnerHeader_innerChoiceWhen2Header9"/>
         <edge source="innerChoiceWhen2" target="beforeInnerHeader" edgeConnection="innerChoiceWhen2_beforeInnerHeader8"/>

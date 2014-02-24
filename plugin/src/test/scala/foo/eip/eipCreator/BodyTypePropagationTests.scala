@@ -71,6 +71,20 @@ class BodyTypePropagationTests
   }
 
   /**
+   * Ensure type information propagates as expected after a choice statement
+   */
+  def testSingleChoice() {
+    doTest()
+  }
+
+  /**
+   * Ensure information is able to union as expected multiple times
+   */
+  def testMultipleChoice() {
+    doTest()
+  }
+
+  /**
    * Ensures the test is valid
    */
   def doTest() {

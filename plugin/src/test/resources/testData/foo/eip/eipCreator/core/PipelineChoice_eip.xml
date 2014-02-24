@@ -7,7 +7,8 @@
         <vertex id="from" eipType="from" text="direct:start"/>
     </vertices>
     <edges>
-        <edge source="foo" target="afterChoice" edgeConnection="foo_afterChoice3"/>
+        <edge source="foo" target="afterChoice" edgeConnection="foo_afterChoice4"/>
+        <edge source="choice" target="afterChoice" edgeConnection="choice_afterChoice3"/>
         <edge source="when" target="foo" edgeConnection="when_foo2"/>
         <edge source="choice" target="when" edgeConnection="choice_when1"/>
         <edge source="from" target="choice" edgeConnection="from_choice0"/>

@@ -5,24 +5,18 @@ import java.awt._
 import org.apache.commons.collections15.Transformer
 import javax.swing._
 import java.awt.geom.Rectangle2D
-import edu.uci.ics.jung.visualization.decorators.EdgeShape
 import edu.uci.ics.jung.visualization.control._
 import java.awt.event._
 
-import org.apache.commons.collections15.Factory
 
 import foo.FunctionalUtil._
-import foo.eip.graph.loaders.{DefaultIconLoader, IconLoader}
+import foo.eip.graph.loaders.IconLoader
 import foo.eip.graph.Visualisation.EipGraphVisualisation
 import foo.eip.graph.StaticGraphTypes.EipDAG
-import foo.eip.serializers.{CompleteEipDagSerializer, BodyTypeEipDagSerializer}
-import edu.uci.ics.jung.graph.DirectedSparseMultigraph
-import edu.uci.ics.jung.graph.util.EdgeType
-import scala.List
+import foo.eip.serializers.CompleteEipDagSerializer
 import edu.uci.ics.jung.algorithms.layout.{StaticLayout, TreeLayout}
 import javax.swing.border.LineBorder
 
-import foo.eip.graph.ADT.EmptyDAG
 import foo.eip.graph.model.EipComponent
 
 /**

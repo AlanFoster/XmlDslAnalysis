@@ -73,7 +73,7 @@ class BodyReferenceTests
   val MultiplePipeline = TestScenario(Some("MultiplePipeline.xml"), Some("foo.models.PersonModel"))
   val ChoicePipeline = TestScenario(
     Some("ChoicePipeline.xml"), None, null,
-    Some(List("foo.models.ComplexModel", "foo.models.PersonModel", "foo.models.OrderModel"))
+    Some(List("java.lang.Object", "foo.models.ComplexModel", "foo.models.PersonModel", "foo.models.OrderModel"))
   )
   val JavaLangObject_NoResolvedReferences = JavaLangObject.withExpectedResolve(None)
 

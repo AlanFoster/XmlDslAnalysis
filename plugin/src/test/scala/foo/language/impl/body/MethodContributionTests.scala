@@ -54,13 +54,14 @@ class MethodContributionTests
 
   val ChoicePipeline = TestScenario(
     Some("ChoicePipeline.xml"),
-     List("additionalInformation", "age", "class", "class", "class", "customerId", "equals", "equals", "equals", "f",
-       "firstName", "getAdditionalInformation", "getAge", "getClass", "getClass", "getClass", "getCustomerId", "getF",
-       "getFirstName", "getId", "getId", "getLastName", "getNumber", "getOrderId", "getOrderType", "hashCode", "hashCode",
-       "hashCode", "id", "id", "lastName", "notify", "notify", "notify", "notifyAll", "notifyAll", "notifyAll", "number",
-       "orderId", "orderType", "setAdditionalInformation", "setAge", "setCustomerId", "setF", "setFirstName", "setId",
-       "setId", "setLastName", "setNumber", "setOrderId", "setOrderType", "toString", "toString", "toString", "wait",
-       "wait", "wait"
+     List("additionalInformation", "age", "class", "class", "class", "class", "customerId", "equals", "equals",
+       "equals", "equals", "f", "firstName", "getAdditionalInformation", "getAge", "getClass", "getClass",
+       "getClass", "getClass", "getCustomerId", "getF", "getFirstName", "getId", "getId", "getLastName", "getNumber",
+       "getOrderId", "getOrderType", "hashCode", "hashCode", "hashCode", "hashCode", "id", "id", "lastName", "notify",
+       "notify", "notify", "notify", "notifyAll", "notifyAll", "notifyAll", "notifyAll", "number", "orderId",
+       "orderType", "setAdditionalInformation", "setAge", "setCustomerId", "setF", "setFirstName", "setId",
+       "setId", "setLastName", "setNumber", "setOrderId", "setOrderType", "toString", "toString", "toString",
+       "toString", "wait", "wait", "wait", "wait"
      )
   )
 

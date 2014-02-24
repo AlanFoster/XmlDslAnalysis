@@ -15,9 +15,10 @@
         <vertex id="from" eipType="from" text="direct:start" headers="{}"/>
     </vertices>
     <edges>
-        <edge source="id4" target="id13" edgeConnection="id4_id1313"/>
-        <edge source="id10" target="id13" edgeConnection="id10_id1312"/>
-        <edge source="id12" target="id13" edgeConnection="id12_id1311"/>
+        <edge source="id4" target="id13" edgeConnection="id4_id1314"/>
+        <edge source="id10" target="id13" edgeConnection="id10_id1313"/>
+        <edge source="id12" target="id13" edgeConnection="id12_id1312"/>
+        <edge source="id2" target="id13" edgeConnection="id2_id1311"/>
         <edge source="id11" target="id12" edgeConnection="id11_id1210"/>
         <edge source="id8" target="id11" edgeConnection="id8_id119"/>
         <edge source="id9" target="id10" edgeConnection="id9_id108"/>

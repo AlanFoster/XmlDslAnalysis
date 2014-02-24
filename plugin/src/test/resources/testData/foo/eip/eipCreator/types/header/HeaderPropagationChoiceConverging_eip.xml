@@ -15,9 +15,10 @@
         <vertex id="from" eipType="from" text="direct:start" headers="{}"/>
     </vertices>
     <edges>
-        <edge source="a" target="afterChoice" edgeConnection="a_afterChoice13"/>
-        <edge source="bar" target="afterChoice" edgeConnection="bar_afterChoice12"/>
-        <edge source="c" target="afterChoice" edgeConnection="c_afterChoice11"/>
+        <edge source="a" target="afterChoice" edgeConnection="a_afterChoice14"/>
+        <edge source="bar" target="afterChoice" edgeConnection="bar_afterChoice13"/>
+        <edge source="c" target="afterChoice" edgeConnection="c_afterChoice12"/>
+        <edge source="choice" target="afterChoice" edgeConnection="choice_afterChoice11"/>
         <edge source="baz" target="c" edgeConnection="baz_c10"/>
         <edge source="b" target="baz" edgeConnection="b_baz9"/>
         <edge source="when3" target="b" edgeConnection="when3_b8"/>
