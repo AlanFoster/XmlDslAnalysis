@@ -15,6 +15,7 @@ import foo.traversal.MethodTraversal
 /**
  * Represents a concrete implementation of a reference which is used within
  * the apache camel simple language, when accessing an object with methods.
+ *
  * @param element The parent element that this reference is bound to
  * @param range The text range within the parent element that this reference
  *              should be provided for

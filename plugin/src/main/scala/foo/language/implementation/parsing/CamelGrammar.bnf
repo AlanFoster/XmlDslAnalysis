@@ -60,7 +60,7 @@
   ]
 }
 
-// The main entry point to the grammar
+// The main entry point to the grammar - Note doesn't support arbitrary english/string interpolation
 camel_file ::= camelInterpolation*
 
 // A valid camel string is an interpolation of normal text plus camel expressions  - ie `Hello ${body.name}
