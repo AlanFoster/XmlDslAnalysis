@@ -47,6 +47,7 @@
             -->
             <lang.syntaxHighlighterFactory key="Camel" implementationClass="foo.language.Highlighting.CamelSyntaxHighlighterFactory" />
 
+
             <!--
                 Color Highlighting editing
             -->
@@ -65,12 +66,13 @@
             <codeInsight.parameterInfo language="Camel" implementationClass="foo.language.CamelParameterInfoHandler" />
 
             <!--
-                Annotatora for camel functions are called as expected
+                Annotators for camel functions are called as expected
             -->
             <annotator language="Camel" implementationClass="foo.language.annotators.CamelArgumentAnnotator"/>
             <annotator language="Camel" implementationClass="foo.language.annotators.CamelFunctionAnnotator"/>
+            <annotator language="Camel" implementationClass="foo.language.Highlighting.CamelComplexElementAnnotator"/>
 
-            <!-- Language Injector - Ensure that we have injected the camel language into the appropaite places -->
+            <!-- Language Injector - Ensure that we have injected the camel language into the appropriate places -->
             <languageInjector implementation="foo.language.CamelSimpleLanguageInjector" />
 
             <!-- Annotator for unresolved class names -->
@@ -94,6 +96,11 @@
                 Allows inplace renaming of identity elements
             -->
 <!--            <lang.refactoringSupport language="Camel" implementationClass="foo.language.references.CamelRefactoringSupportProvider"/>-->
+
+        <!-- Providing attributes for schemes -->
+        <additionalTextAttributes scheme="Default" file="colorSchemes/CamelDefaultTextAttributes.xml" />
+
+
 
       <!-- End Apache Camel Language Support -->
 

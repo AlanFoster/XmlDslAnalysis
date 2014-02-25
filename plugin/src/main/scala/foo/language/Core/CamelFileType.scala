@@ -1,7 +1,11 @@
 package foo.language.Core
 
-import com.intellij.openapi.fileTypes.LanguageFileType
+import com.intellij.openapi.fileTypes.{FileType, EditorHighlighterProvider, FileTypeEditorHighlighterProviders, LanguageFileType}
 import javax.swing.Icon
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.editor.colors.EditorColorsScheme
+import com.intellij.openapi.editor.highlighter.EditorHighlighter
 
 /**
  * Represents the FileType associated with the Apache Camel Language.

@@ -14,7 +14,7 @@ import foo.language.implementation.lexing.CamelLanguageLexer
  * camel language
  */
 class CamelColorSettingsPage extends ColorSettingsPage {
-  def getAttributeDescriptors: Array[AttributesDescriptor] = CamelSyntaxHighlighter.descriptors
+  def getAttributeDescriptors: Array[AttributesDescriptor] = CamelAttributeKeyDescriptions.descriptors
 
   def getColorDescriptors: Array[ColorDescriptor] = ColorDescriptor.EMPTY_ARRAY
 
@@ -34,7 +34,34 @@ class CamelColorSettingsPage extends ColorSettingsPage {
                               |    && ${body.address.location} == 'London'
                               |    && ${body.order.items} < 5
                               |    && ${bodyAs(java.lang.String)} == 'Employer'
+                              |    && ${bodyAs(not.found.Model)}
                               |    && ${headerAs("isValid", java.lang.String)}""".stripMargin.replaceAll("\r", "")
 
   def getAdditionalHighlightingTagToDescriptorMap: util.Map[String, TextAttributesKey] = null
+}
+
+/**
+ * Defines the known set of configurable camel attribute key descriptions
+ */
+object CamelAttributeKeyDescriptions {
+
+  /**
+   * Defines the AttributesDescriptors - which pairs a piece of human readable text
+   * with a given TextAttributesKey.
+   *
+   * Note this TextAttributesKey is used for syntax highlighting with both annotators
+   * and within basic token highlighting.
+   */
+  val descriptors: Array[AttributesDescriptor] = Array(
+    new AttributesDescriptor("Operator", CamelTextAttributeKeys.OPERATION_SIGN),
+    new AttributesDescriptor("Square Braces", CamelTextAttributeKeys.SQUARE_BRACES),
+    new AttributesDescriptor("Parenthesis", CamelTextAttributeKeys.PARENTHESES),
+    new AttributesDescriptor("Text", CamelTextAttributeKeys.TEXT),
+    new AttributesDescriptor("String", CamelTextAttributeKeys.STRING),
+    new AttributesDescriptor("Number", CamelTextAttributeKeys.NUMBER),
+    new AttributesDescriptor("Error", CamelTextAttributeKeys.BAD_CHARACTER),
+    new AttributesDescriptor("Constant", CamelTextAttributeKeys.CONSTANT),
+    new AttributesDescriptor("FQCN", CamelTextAttributeKeys.FQCN),
+    new AttributesDescriptor("Camel Function", CamelTextAttributeKeys.CAMEL_FUNC)
+  )
 }
