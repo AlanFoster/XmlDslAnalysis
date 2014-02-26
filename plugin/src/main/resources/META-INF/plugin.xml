@@ -98,7 +98,7 @@
 <!--            <lang.refactoringSupport language="Camel" implementationClass="foo.language.references.CamelRefactoringSupportProvider"/>-->
 
         <!-- Providing attributes for schemes -->
-        <additionalTextAttributes scheme="Default" file="colorSchemes/CamelDefaultTextAttributes.xml" />
+        <additionalTextAttributes scheme="Default" file="colorSchemes/CamelDefault.xml" />
 
 
 

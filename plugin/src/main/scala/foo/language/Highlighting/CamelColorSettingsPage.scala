@@ -62,6 +62,7 @@ object CamelAttributeKeyDescriptions {
     new AttributesDescriptor("Error", CamelTextAttributeKeys.BAD_CHARACTER),
     new AttributesDescriptor("Constant", CamelTextAttributeKeys.CONSTANT),
     new AttributesDescriptor("FQCN", CamelTextAttributeKeys.FQCN),
-    new AttributesDescriptor("Camel Function", CamelTextAttributeKeys.CAMEL_FUNC)
+    new AttributesDescriptor("Camel Function", CamelTextAttributeKeys.CAMEL_FUNC),
+    new AttributesDescriptor("Function Expression Bounds", CamelTextAttributeKeys.FUNC_BRACES)
   )
 }

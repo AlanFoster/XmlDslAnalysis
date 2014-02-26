@@ -7,6 +7,7 @@ import com.intellij.psi.tree.IElementType
 import com.intellij.lexer.Lexer
 import foo.language.implementation.lexing.CamelLanguageLexerAdapter
 import com.intellij.psi.TokenType
+
 /**
  * Represents a CamelSyntaxHighlighter
  */
@@ -41,15 +42,17 @@ object CamelSyntaxHighlighter {
 
     // Braces
     CamelTextAttributeKeys.SQUARE_BRACES -> List(
-      CamelTypes.FUNC_BEGIN,
-      CamelTypes.FUNC_END,
-
       CamelTypes.LEFT_SQUARE_BRACE,
       CamelTypes.RIGHT_SQUARE_BRACE
     ),
 
     CamelTextAttributeKeys.FQCN -> List(
       CamelTypes.FQCN
+    ),
+
+    CamelTextAttributeKeys.FUNC_BRACES -> List(
+      CamelTypes.FUNC_BEGIN,
+      CamelTypes.FUNC_END
     ),
 
     CamelTextAttributeKeys.TEXT -> List(

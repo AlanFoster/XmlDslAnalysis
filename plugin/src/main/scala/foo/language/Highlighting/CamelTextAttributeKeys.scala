@@ -18,44 +18,48 @@ import com.intellij.openapi.editor.{HighlighterColors, DefaultLanguageHighlighte
  * and within basic token highlighting.
  */
 object CamelTextAttributeKeys {
+  var FUNC_BRACES = createTextAttributesKey(
+    camelId("FUNC_BRACES"),
+    KEYWORD
+  )
 
   def FQCN: TextAttributesKey = createTextAttributesKey(
-    id("STATIC_FIELD"),
+    camelId("STATIC_FIELD"),
     DefaultLanguageHighlighterColors.STATIC_FIELD
   )
 
   def CONSTANT: TextAttributesKey = createTextAttributesKey(
-    id("CONSTANT"),
+    camelId("CONSTANT"),
     DefaultLanguageHighlighterColors.CONSTANT
   )
 
   def BAD_CHARACTER: TextAttributesKey = createTextAttributesKey(
-    id("BAD_CHARACTER"),
+    camelId("BAD_CHARACTER"),
     HighlighterColors.BAD_CHARACTER
   )
 
   def NUMBER: TextAttributesKey = createTextAttributesKey(
-    id("NUMBER"),
+    camelId("NUMBER"),
     DefaultLanguageHighlighterColors.NUMBER
   )
 
   def STRING: TextAttributesKey = createTextAttributesKey(
-    id("STRING"),
+    camelId("STRING"),
     DefaultLanguageHighlighterColors.STRING
   )
 
   def TEXT: TextAttributesKey = createTextAttributesKey(
-    id("TEXT"),
+    camelId("TEXT"),
     HighlighterColors.TEXT
   )
 
   def PARENTHESES: TextAttributesKey = createTextAttributesKey(
-    id("PARENTHESES"),
+    camelId("PARENTHESES"),
     DefaultLanguageHighlighterColors.PARENTHESES
   )
 
   def SQUARE_BRACES: TextAttributesKey = createTextAttributesKey(
-    id("BRACES"),
+    camelId("BRACES"),
     DefaultLanguageHighlighterColors.BRACES
   )
 
@@ -63,7 +67,7 @@ object CamelTextAttributeKeys {
    * Camel operator text attributes key, such as || etc
    */
   val OPERATION_SIGN: TextAttributesKey = createTextAttributesKey(
-    id("OPERATION_SIGN"),
+    camelId("OPERATION_SIGN"),
     DefaultLanguageHighlighterColors.OPERATION_SIGN
   )
 
@@ -72,10 +76,12 @@ object CamelTextAttributeKeys {
   /**
    * Represents the key for camel function names is `headerAs`(...)
    */
-  val CAMEL_FUNC = createTextAttributesKey(
-    id("CAMEL_FUNC"),
-    KEYWORD
-  )
+  val CAMEL_FUNC = {
+    createTextAttributesKey(
+      camelId("CAMEL_FUNC"),
+      FUNCTION_CALL
+    )
+  }
 
   /**
    * Creates a new unique id associated with the camel language.
@@ -85,5 +91,5 @@ object CamelTextAttributeKeys {
    * @param id The initial ID
    * @return A unique id associated with the language and the given id
    */
-  private def id(id: String) = s"${LanguageConstants.languageName}_${id}"
+  private def camelId(id: String) = s"${LanguageConstants.languageName.toUpperCase}_${id}"
 }
