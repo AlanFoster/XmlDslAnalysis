@@ -219,8 +219,8 @@ module.exports = function(grunt) {
                 createServerConfig("windows")
             ],
             linux_env: [
-/*                createClientConfig("linux"),
-                createServerConfig("linux")*/
+                createClientConfig("linux"),
+                createServerConfig("linux")
             ]
         }
 	});
