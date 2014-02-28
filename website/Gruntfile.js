@@ -20,6 +20,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-execute');
     grunt.loadNpmTasks('grunt-markdown');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-ng-constant');
 
     // Running Server task
     grunt.registerTask("runServer", function() {
@@ -86,7 +87,9 @@ module.exports = function(grunt) {
                 reference: "./services/reference.ts"
             }
 		},
-        // Services Jasmine Node
+        /**
+         * Services Jasmine Node
+         */
         jasmine_node: {
             projectRoot: "./services",
             requirejs: false,
@@ -143,7 +146,7 @@ module.exports = function(grunt) {
                                 default: break;
                             }
 
-                            var previousFileName = path.basename(src, ".md")
+                            var previousFileName = path.basename(src, ".md");
                             var newFileName = util.format("%s-%s%s", previousFileName, dirName, fileExtension);
 
                             // Construct the new path from the union of the original destination file
@@ -186,7 +189,9 @@ module.exports = function(grunt) {
                 ]
             }
         },
-        // Compiling markdown
+        /**
+         * Compiling markdown
+         */
         markdown: {
             docs: {
                 files: [
@@ -200,14 +205,41 @@ module.exports = function(grunt) {
                     template: "./app/markdownTemplate.jst"
                 }
             }
+        },
+        /**
+         * Angularjs Configuration - Compiles an AngularJS module to be used for configuration
+         */
+        ngconstant: {
+            // Define the default options for the plugin - overriding the default template and providing default constants
+            options: {
+                templatePath: "env/constant.tpl.ejs",
+                constants: {
+                    appConfig: grunt.file.readJSON("env/constants.json")
+                }
+            },
+            windows_env: {
+                dest: "app/js/gen/constants.js",
+                name: "appConfig",
+                constants: {
+                    appConfig: grunt.file.readJSON("env/windows.json")
+                }
+            },
+            linux_env: {
+
+            }
         }
 	});
-	
-	// By default grunt will run generate the services and run the web server, and listen to client compilation
-    grunt.registerTask("default", [
+
+    // B generate the services and run the web server, and listen to client compilation
+    grunt.registerTask("windowsEnv", [
+        "ngconstant:windows_env",
+
         // Generate initial TS code for the services
         "services",
         // Listen to client changes
         "client"
     ]);
+
+    // by default grunt will assume a local dev machine of windows
+    grunt.registerTask("default", ["windowsEnd"]);
 };

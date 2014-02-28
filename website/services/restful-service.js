@@ -52,7 +52,7 @@ app.configure(function () {
  * Main entry point for creating the webserver and RESTful services
  */
 exports.main = function () {
-    var port = process.env.PORT || 8000;
+    var port = process.env.PORT || 8001;
 
     app.listen(port);
     util.puts("REST running on " + port)

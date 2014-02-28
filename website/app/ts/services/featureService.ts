@@ -17,24 +17,20 @@ interface IFeatureService {
      * Return the REST url for suggested tags
      */
     getSuggestedTags(): string
-};
+}
 
 /**
  * Create a new service for retrieving feature information
  */
-docsApp.service("featureService", ($resource: ng.resource.IResourceService, $q: ng.IQService) => {
+docsApp.service("featureService", ($resource: ng.resource.IResourceService, $q: ng.IQService, appConfig) => {
     // Create a resource which we can access via our lexical closure
-    // TODO See if AngularJS supports configuration - https://npmjs.org/package/grunt-ng-constant
-    var resource:any = $resource("/services/features");
+    var resource:any = $resource( appConfig.serviceUrl + "/services/features");
 
     // Define our service
     var service: IFeatureService = {
         getAllFeatures: () => resource.query().$promise,
-        addFeature: (feature) => {
-            console.log(feature)
-            return resource.save(feature)
-        },
-        getSuggestedTags: () => "services/features/tags"
+        addFeature: (feature) => resource.save(feature),
+        getSuggestedTags: () => appConfig.serviceUrl + "/services/features/tags"
     };
 
     return service;

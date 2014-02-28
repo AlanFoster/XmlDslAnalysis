@@ -20,6 +20,7 @@
     "monk": "~0.7.1",
     "grunt-execute": "~0.1.5",
     "grunt-markdown": "~0.5.0",
-    "grunt-contrib-copy": "~0.5.0"
+    "grunt-contrib-copy": "~0.5.0",
+    "grunt-ng-constant": "~0.4.8"
   }
 }

@@ -28,19 +28,7 @@ docsApp.directive("imageUploader", function () {
         templateUrl: "templates/partials/imageUploader.html",
         controller: $scope => {
 
-            // Hardcode path for testing
-            $scope.images = [
-/*                {
-                    location: "images/contribution.png",
-                    title: "Title 1",
-                    description: "Description 1"
-                },
-                {
-                    location: "images/paramInsight.png",
-                    title: "Param Insight",
-                    description: "Param Insight Description"
-                }*/
-            ];
+            $scope.images = [ ];
 
             $scope.deleteImage = (image) => {
                 var images = $scope.images;

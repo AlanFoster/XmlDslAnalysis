@@ -207,19 +207,18 @@ docsApp.directive("tags", function ($location) {
 });
 ;
 
-docsApp.service("featureService", function ($resource, $q) {
-    var resource = $resource("/services/features");
+docsApp.service("featureService", function ($resource, $q, appConfig) {
+    var resource = $resource(appConfig.serviceUrl + "/services/features");
 
     var service = {
         getAllFeatures: function () {
             return resource.query().$promise;
         },
         addFeature: function (feature) {
-            console.log(feature);
             return resource.save(feature);
         },
         getSuggestedTags: function () {
-            return "services/features/tags";
+            return appConfig.serviceUrl + "/services/features/tags";
         }
     };
 
@@ -236,8 +235,9 @@ docsApp.run(function ($rootScope) {
         }, 500);
     });
 });
-docsApp.run(function ($rootScope, $http) {
-    $http({ method: "get", url: "/services/auth/details" }).success(function (serviceResponse) {
+docsApp.run(function ($rootScope, $http, appConfig) {
+    var userDetailsUrl = appConfig.serviceUrl + "/services/auth/details";
+    $http({ method: "get", url: userDetailsUrl }).success(function (serviceResponse) {
         if (serviceResponse && serviceResponse.verified) {
             $rootScope.user = serviceResponse.user;
         }
