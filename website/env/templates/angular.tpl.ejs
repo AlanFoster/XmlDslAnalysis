@@ -1,0 +1,10 @@
+<% // Generates an AngularJS constant service this.partial({url:  "header.tpl.ejs"}) %>
+/**
+* This file was generated - do *not* manually edit this file
+* Generated At: <%= new Date() %>
+*/
+docsApp
+<% constants.forEach(function(constant) { %>
+.constant("<%- constant.name %>", <%= constant.value %>)
+<% }) %>
+;

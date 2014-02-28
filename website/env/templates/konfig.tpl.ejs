@@ -1,0 +1,9 @@
+<%// Generates the config file for Konfig within NodeJS applications %>
+{
+    "WARNING":
+        "This file was generated - do *not* manually edit this file. Generated At: <%= new Date() %>",
+    "default":
+        <% constants.forEach(function(constant) { %>
+        <%= constant.value %>
+        <% }) %>
+}

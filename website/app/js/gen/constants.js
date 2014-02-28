@@ -1,8 +1,12 @@
-// Generated with https://github.com/werk85/grunt-ng-constant/blob/master/tasks/constant.tpl.ejs
+
+/**
+* This file was generated - do *not* manually edit this file
+* Generated At: Fri Feb 28 2014 19:28:05 GMT+0000 (GMT Standard Time)
+*/
 docsApp
 
 .constant("appConfig", {
-	"serviceUrl": "http://localhost:8001"
+	"serviceUrl": "http://localhost:3000"
 })
 
 ;

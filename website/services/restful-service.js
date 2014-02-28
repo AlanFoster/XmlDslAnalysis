@@ -3,8 +3,14 @@
  */
 var express = require("express");
 var app = express();
-var util = require('util');
-var path = require('path');
+var util = require("util");
+var path = require("path");
+
+// Define a config as a global option
+global.config = require("konfig")({
+    // Override the default path, relative to the app directory
+    path:"../services/config"
+});
 
 // Known services
 var featureService = require("./ts/feature-service.js");
@@ -52,7 +58,7 @@ app.configure(function () {
  * Main entry point for creating the webserver and RESTful services
  */
 exports.main = function () {
-    var port = process.env.PORT || 8001;
+    var port = process.env.PORT || config.app.port;
 
     app.listen(port);
     util.puts("REST running on " + port)

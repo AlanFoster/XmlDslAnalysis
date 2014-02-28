@@ -15,12 +15,7 @@ var util = require("util");
  */
 module.exports = function(grunt) {
 	// Load Tasks
-	grunt.loadNpmTasks("grunt-ts");
-    grunt.loadNpmTasks('grunt-jasmine-node');
-    grunt.loadNpmTasks('grunt-execute');
-    grunt.loadNpmTasks('grunt-markdown');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-ng-constant');
+    require("load-grunt-tasks")(grunt);
 
     // Running Server task
     grunt.registerTask("runServer", function() {
@@ -212,23 +207,53 @@ module.exports = function(grunt) {
         ngconstant: {
             // Define the default options for the plugin - overriding the default template and providing default constants
             options: {
-                templatePath: "env/constant.tpl.ejs",
                 constants: {
-                    appConfig: grunt.file.readJSON("env/constants.json")
+                //    appConfig: grunt.file.readJSON("env/constants.json")
                 }
             },
-            windows_env: {
-                dest: "app/js/gen/constants.js",
-                name: "appConfig",
-                constants: {
-                    appConfig: grunt.file.readJSON("env/windows.json")
-                }
-            },
-            linux_env: {
-
-            }
+            /**
+             * Define the environment configuration for both client and server
+             */
+            windows_env: [
+                createClientConfig("windows"),
+                createServerConfig("windows")
+            ],
+            linux_env: [
+/*                createClientConfig("linux"),
+                createServerConfig("linux")*/
+            ]
         }
 	});
+
+    /**
+     * Creates the ngconstant configuration for the given environment location client
+     * @param environment The environment folder to create configuration for
+     */
+    function createClientConfig(environment) {
+        return {
+            dest: "app/js/gen/constants.js",
+            name: "appConfig",
+            templatePath: "env/templates/angular.tpl.ejs",
+            constants: {
+                appConfig: grunt.file.readJSON("env/" + environment + "/client.json")
+            }
+        };
+    };
+
+    /**
+     * Creates the ngconstant configuration for the given environment location server
+     * @param environment The environment folder to create configuration for
+     */
+    function createServerConfig(environment) {
+        return {
+            dest: "services/config/app.json",
+            name: "serverConfig",
+            templatePath: "env/templates/konfig.tpl.ejs",
+            constants: {
+                appConfig: grunt.file.readJSON("env/" + environment + "/server.json")
+            }
+        }
+    };
 
     // B generate the services and run the web server, and listen to client compilation
     grunt.registerTask("windowsEnv", [

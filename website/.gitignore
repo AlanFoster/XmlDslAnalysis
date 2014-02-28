@@ -21,3 +21,7 @@ tscommand.tmp.txt
 app/docs/*
 !app/docs_images/.gitkeep
 app/docs_images/*.png
+
+# Ignore potentially classified configuration files
+services/config/*
+!services/config/readme.md

@@ -1,0 +1,1 @@
+Note this folder will have files automatically placed here as part of the grunt compile stage.
