@@ -2,7 +2,10 @@ var passport = <any> require("passport");
 var GoogleStrategy = require('passport-google').Strategy;
 var util = require("util");
 
+var config = global.config;
 
+var realm = config.realm;
+var sessionSecret =  config.sessionSecret;
 var adminId = process.env["ADMIN_ID"];
 
 /**
@@ -23,7 +26,7 @@ users[adminId] = {
  * @param express Express reference
  * @param app An instance of the express application
  */
-exports.init = (express, app) => {
+exports.init = <any> ((express, app) => {
     app.configure(function() {
 
         /**
@@ -33,11 +36,11 @@ exports.init = (express, app) => {
          */
         (() => {
             passport.serializeUser(function(user, done) {
-                util.puts("Invoked - serializeUser");
+                util.debug("Invoked - serializeUser");
                 done(null, user);
             });
             passport.deserializeUser(function(obj, done) {
-                util.puts("Invoked - deserializeUser");
+                util.debug("Invoked - deserializeUser");
                 done(null, obj);
             });
         })();
@@ -49,9 +52,9 @@ exports.init = (express, app) => {
             // Configuration
             {
                 // The 'callback' URL which will be invoked by google when success/fail
-                returnURL: "http://localhost:8000/services/auth/return",
+                returnURL: realm + "/services/auth/return",
                 // The realm that our login applies to
-                realm: "http://localhost:8000/"
+                realm: realm
             },
             // Called only on success
             (identifier, profile, done) => {
@@ -72,14 +75,14 @@ exports.init = (express, app) => {
 
         app.use(express.cookieParser());
         app.use(express.methodOverride());
-        app.use(express.session({ secret: 'yqXk4NRPyikH6x3ZnC7NXNaUKtCKvbxKpV9YIINsAH5w8Av4pGGD9fPrMq' }));
+        app.use(express.session({ secret: sessionSecret }));
 
         // passport.session() middleware could be used also - but not required
         app.use(passport.initialize());
 
         app.use(passport.session());
     });
-};
+});
 
 /**
  * Registers the given routes within the application
@@ -90,7 +93,7 @@ exports.createRoutes = (app) => {
      * Middleware to authenticate requests
      */
     var securityAuthentication = () => (req, res, next) => {
-        util.puts("Successfully called google middleware");
+        util.debug("Successfully called google middleware");
         passport.authenticate("google", { failureRedirect: "/login" })(req, res, next)
     }
 
@@ -99,19 +102,19 @@ exports.createRoutes = (app) => {
      * Otherwise the request is redirected away.
      */
     var authenticationRequired = (req, res, next):any => {
-        util.puts("Attempting to access restricted area")
+        util.debug("Attempting to access restricted area")
 
         if(req.isAuthenticated()) { return next(); }
         res.redirect("/login")
     };
 
     app.get("/services/auth", securityAuthentication(), (req, res) => {
-        util.puts("Successfully called login");
+        util.debug("Successfully called login");
         res.redirect("/");
     });
 
     app.get("/services/auth/return", securityAuthentication(), (req, res) => {
-        util.puts("Successfully returned and logged in");
+        util.debug("Successfully returned and logged in");
         res.redirect("/")
     });
 
@@ -128,10 +131,4 @@ exports.createRoutes = (app) => {
         var response = {verified: req.isAuthenticated(), user: req.user}
         res.json(response);
     });
-
-    /**
-     * Example of access to a secure area
-     * Note the use of the authenticationRequired processor within the chain
-     */
-    app.get("/superSecret", authenticationRequired, (req, res) => res.json({success:true, user: req.user}));
 };

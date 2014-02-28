@@ -10,7 +10,28 @@ var path = require("path");
 global.config = require("konfig")({
     // Override the default path, relative to the app directory
     path:"../services/config"
-});
+}).app;
+
+/**
+ * Explicitly ensure that the config has defined required configuration.
+ * This is to avoid 'undefined' being set as required fields, for instance
+ * an 'undefined' value may lead to security issues etc.
+ */
+(function(config) {
+    // The list of required fields which should be defined
+    var requiredKeys = [
+        "realm",
+        "port",
+        "sessionSecret"
+    ];
+
+    // Ensure that each required field is contained within the configuration
+    requiredKeys.forEach(function(key) {
+        if(!config[key]) {
+            throw new Error("The configuration did not contain the required field " + key);
+        }
+    })
+})(global.config);
 
 // Known services
 var featureService = require("./ts/feature-service.js");
@@ -58,7 +79,7 @@ app.configure(function () {
  * Main entry point for creating the webserver and RESTful services
  */
 exports.main = function () {
-    var port = process.env.PORT || config.app.port;
+    var port = process.env.PORT || config.port;
 
     app.listen(port);
     util.puts("REST running on " + port)
