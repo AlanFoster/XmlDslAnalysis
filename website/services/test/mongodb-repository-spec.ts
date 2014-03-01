@@ -58,7 +58,7 @@ describe("MongoDB Repositorys", () => {
             db.get(featureRepository.collectionName).drop();
         });
 
-        (<any> async).it("Should be empty by default", function(done) {
+        (<any> async).it("should be empty by default", function(done) {
             featureRepository.all()
                 .success((documents) => {
                     expect(documents).toBeDefined();
@@ -68,8 +68,26 @@ describe("MongoDB Repositorys", () => {
                 .error(errorHandler(done))
         });
 
-        it("should allow for new elements to be inserted successfully", () => {
-            // featureRepository.insert({ ])
+        (<any> async).it("should allow for new elements to be inserted successfully", (done) => {
+            var exampleFeature1 = {
+                title: "Title 1",
+                date: 1391305155486,
+                images: [
+                    {
+                        location: "data:....",
+                        title: "Java DSL Injection",
+                        description: "Simple Language injection supported within Java DSL"
+                    }
+                ],
+                tags: ["Custom 1", "Custom 2"]
+            };
+             featureRepository.insert(exampleFeature1);
+             featureRepository.all()
+                 .success((features) => {
+                     expect(features).toEqual([exampleFeature1])
+                     done();
+                 })
+                 .error(errorHandler(done))
         });
     })
 });
