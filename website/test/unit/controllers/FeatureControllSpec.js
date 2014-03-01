@@ -35,8 +35,8 @@ describe("Features controller", function () {
     /**
      * Extract the controller before each test - providing mocks for the appropriate services
      */
-    beforeEach(inject(function ($controller, $rootScope, _$q_, $httpBackend) {
-        $httpBackend.whenGET("/services/auth/details").respond({});
+    beforeEach(inject(function ($controller, $rootScope, _$q_, $httpBackend, appConfig) {
+        $httpBackend.whenGET(appConfig.serviceUrl + "/services/auth/details").respond({});
 
         $q = _$q_;
 

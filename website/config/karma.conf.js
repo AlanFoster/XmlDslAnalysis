@@ -28,6 +28,7 @@ module.exports = function (config) {
             "app/lib/highlight/**/*.js",
 
             // Contains our application
+            "app/js/gen/out.js",
             "app/js/**/*.js",
             "test/unit/**/*.js"
 
