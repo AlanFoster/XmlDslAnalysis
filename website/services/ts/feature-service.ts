@@ -2,6 +2,7 @@
 
 var util = require("util");
 var arrayShim = require("./arrayShim")
+import repo = require("./DataModelTest")
 
 /**
  * Default list of suggested tags
@@ -23,7 +24,7 @@ var DefaultTags = {
  * @param app The express JS app
  * @param features The feature dataset - IE Dependency injection
  */
-exports.createRoutes = function(app, repository) {
+exports.createRoutes = function(app, repository: repo.IFeatureRepository) {
     /**
      * Represents a generic error handler which can be used within this
      * service. Errors are logged to debug console and an error response

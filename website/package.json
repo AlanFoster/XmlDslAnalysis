@@ -18,6 +18,7 @@
     "karma-jasmine": "~0.1",
     "karma-ng-scenario": "~0.1",
     "karma-ng-html2js-preprocessor": "~0.1.0",
+    "jasmine-async": "~0.0.1",
     "grunt": "~0.4.2",
     "grunt-jasmine-node": "~0.1.0",
     "grunt-execute": "~0.1.5",

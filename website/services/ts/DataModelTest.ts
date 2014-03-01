@@ -34,9 +34,21 @@ export interface IRepository<T> {
     all(): IPromise<T[]>
 }
 
-export interface IPromise<T> {
-    success(element: T)
-    error(error: Error)
+/**
+ * Represents the basic interface of a Promise
+ */
+export interface IPromise<U> {
+    /**
+     * Only called when a promise has been kept and is successful
+     * @param handle The callback function to handle this situation
+     */
+    success(handle: (result: U) => void)
+
+    /**
+     * Called on error
+     * @param handle The callback function to handle this situation
+     */
+    error(handle: (error: Error) => void)
 }
 
 /**

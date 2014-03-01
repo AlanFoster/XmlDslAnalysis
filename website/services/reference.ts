@@ -6,6 +6,7 @@
 /// <reference path="ts.d/node/node.d.ts" />
 /// <reference path="ts.d/underscore/underscore.d.ts" />
 /// <reference path="test/feature-spec.ts" />
+/// <reference path="test/mongodb-repository-spec.ts" />
 /// <reference path="test/service-helper.ts" />
 /// <reference path="ts/DataModelTest.ts" />
 /// <reference path="ts/arrayShim.ts" />
