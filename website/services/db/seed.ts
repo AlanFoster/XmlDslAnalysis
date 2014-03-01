@@ -4,16 +4,15 @@
 import configLoader = require("./../ts/config");
 var config = configLoader.loadConfig();
 
-/**
- * Load the required data - Note this scripts contain only JSON definitions
- * and /not/ the concrete database connection methods
- */
+// Access seed repositories
+import repo = require("../ts/DataModelTest");
 import userSeed = require("./UserSeed");
+import featureSeed = require("./FeatureSeed");
+
+// Access the database
 var mongo = <any> require("mongodb");
 var monk = <any> require("monk");
 var db = <any> monk(config.databaseUrl);
-
-import repo = require("../ts/DataModelTest");
 
 /**
  * Generic error handler - IE stop on any failure.
@@ -31,12 +30,19 @@ var errorHandler = (err, doc) => {
  * Teardown all existing DBs
  */
 db.get("users").drop();
+db.get("features").drop();
 
 /**
  * Populate users
  */
 var userRepository = new repo.MongodbUserRepository(db);
-userSeed.seedUsers(userRepository);
+userSeed.seed(userRepository);
+
+/**
+ * Populate features
+ */
+var featureRepository = new repo.MongodbFeatureRepository(db);
+featureSeed.seed(featureRepository);
 
 /**
  * Close the database connection

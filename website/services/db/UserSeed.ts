@@ -10,6 +10,6 @@ var initialUsers = <any> [{
  * Allows for the creation of user details within the database system
  * @param repository The repository to populate
  */
-export function seedUsers(repository) {
+export function seed(repository) {
     repository.insert(initialUsers);
 }

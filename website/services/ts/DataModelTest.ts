@@ -140,3 +140,17 @@ export class MongodbUserRepository extends MongoDbRepository<IUser> {
         super(db, "users")
     }
 }
+
+/**
+ * Provides a concrete implementation of the IRepository interface for features
+ */
+export class MongodbFeatureRepository extends MongoDbRepository<IFeature> {
+    /**
+     * Creates a new instance of a MongoDb Repository with the
+     * given db access
+     * @param db
+     */
+        constructor(db: any) {
+        super(db, "features")
+    }
+}
