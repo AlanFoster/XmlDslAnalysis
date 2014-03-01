@@ -1,3 +1,5 @@
+var util = require("util")
+
 /**
  * Represents the base interface of a generic Data Access Object.
  */
@@ -6,7 +8,7 @@ export interface IRepository<T> {
      * Adds an element to the repository
      * @param elem The element of type Td
      */
-    insert(elem:T)
+    insert(elem:T): IPromise<T>
 
     /**
      * Attempts to update the element within the repository
@@ -89,14 +91,16 @@ export class MongoDbRepository<T> implements IRepository<T> {
     /**
      * {@inheritdoc}
      */
-    insert(elem:T) {
-        this.collection().insert(elem)
+    insert(elem:T): IPromise<T> {
+        util.debug("Inserting element")
+        return this.collection().insert(elem)
     }
 
     /**
      * {@inheritdoc}
      */
     update(elem:T) {
+        util.debug("update element")
         // noop
     }
 
@@ -104,6 +108,7 @@ export class MongoDbRepository<T> implements IRepository<T> {
      * {@inheritdoc}
      */
     remove(elem:T) {
+        util.debug("remove element")
         this.collection().remove({ _id: (<any> elem).id });
     }
 
@@ -118,6 +123,7 @@ export class MongoDbRepository<T> implements IRepository<T> {
      * {@inheritdoc}
      */
     all():IPromise<T[]> {
+        util.debug("all elements")
         //return this.collection().find({});
         return this.db.get("features").find()
     }
@@ -151,6 +157,8 @@ export class MongoDbFeatureRepository extends MongoDbRepository<IFeature> implem
      * {@inheritdoc}
      */
     getTags():IPromise<string[]> {
+        util.debug("Accessing Tags")
+
         // Monk doesn't support a wrapper for 'distinct' - this implements it instead
         var collection = this.collection();
         var promise = new Promise(collection, "distinct");
@@ -162,7 +170,7 @@ export class MongoDbFeatureRepository extends MongoDbRepository<IFeature> implem
          */
         this.collection()
             .col
-            .distinct("tags", {}, promise.fulfill)
+            .distinct("tags", {}, promise.fulfill);
 
         return promise;
     }

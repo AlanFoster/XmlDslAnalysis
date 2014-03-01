@@ -1,3 +1,7 @@
+/// <reference path="./../seed-reference.ts" />
+
+import repo = require("./../ts/DataModelTest");
+
 /**
  * Creates a mock app implementation using jasmine
  */
@@ -61,7 +65,7 @@ var callService = (mockApp, method: string, servicePath: string, input?) => {
 var testServiceImplementation = (featuresService, features: IFeature[], method: string, servicePath: string): any => {
     // Mock the main application
     var mockApp = createMockApp();
-    featuresService.createRoutes(mockApp, features);
+    featuresService(mockApp, features);
 
     var resMock = callService(mockApp, method, servicePath)
 

@@ -68,6 +68,7 @@ exports.createRoutes = function(app, repository: repo.IFeatureRepository) {
 
         repository.getTags()
             .success((tags) => {
+                util.debug("Successfully received tags response");
                 var unionTags = defaultTagValues
                     .concat(tags)
                     .reduce((a,b) => a.concat(b)) // flatMap(identity)

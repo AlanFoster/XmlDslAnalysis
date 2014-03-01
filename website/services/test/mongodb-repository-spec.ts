@@ -7,7 +7,7 @@ import repo = require("./../ts/DataModelTest");
 /**
  * Tests to ensure that the repository pattern for MongoDB works as expected
  */
-describe("MongoDB Repositorys", () => {
+xdescribe("MongoDB Repositories", () => {
     /**
      * Grants access to the DB as expected
      */
