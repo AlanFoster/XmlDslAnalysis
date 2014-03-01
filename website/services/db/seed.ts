@@ -1,13 +1,21 @@
-/// <reference path="./../reference.ts" />
+/// <reference path="./../seed-reference.ts" />
 
 /**
  * Load the required data - Note this scripts contain only JSON definitions
  * and /not/ the concrete database connection methods
  */
-var userSeed = require("./UserSeed.js");
+import userSeed = require("./UserSeed");
 var mongo = <any> require("mongodb");
 var monk = <any> require("monk");
-var db = <any> monk("http://localhost:27017/pluginWebsite"); // TODO Provide configuration for the database URL
+var db = <any> monk(
+    "http://localhost:27017/pluginWebsite",
+    {},
+    function() {
+        console.log(Object.keys(arguments))
+    }
+); // TODO Provide configuration for the database URL
+
+import repo = require("../ts/DataModelTest");
 
 /**
  * Generic error handler - IE stop on any failure.
@@ -22,20 +30,15 @@ var errorHandler = (err, doc) => {
 
 
 /**
- * Define our known collections
+ * Teardown all existing DBs
  */
-var usersCollection = db.get("users");
+db.get("users").drop();
 
 /**
- * Teardown
+ * Populate users
  */
-usersCollection.drop();
-
-/**
- * User population
- */
-var initialUsers = userSeed.initialusers;
-initialUsers.forEach(user => usersCollection.insert(user, errorHandler));
+var userRepository = new repo.MongodbUserRepository(db);
+userSeed.seedUsers(userRepository);
 
 /**
  * Close the database connection

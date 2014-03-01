@@ -41,7 +41,7 @@ module.exports = function(grunt) {
     grunt.registerTask("test", ["ts:services", "jasmine_node"]);
 
     // Initial data migration / seed
-    grunt.registerTask("seed", ["ts:databaseMigration", "execute:seedDatabase"]);
+    grunt.registerTask("seed", ["ts:services", "ts:databaseMigration", "execute:seedDatabase"]);
 
     // Perform configuration
 	grunt.initConfig({
@@ -72,14 +72,22 @@ module.exports = function(grunt) {
              */
             services: {
                 src: ["!services/reference.ts", "services/ts.d/**/*.d.ts", "services/test/**/*.ts", "services/ts/**/*.ts"],
-                reference: "./services/reference.ts"
+                reference: "./services/reference.ts",
+                // Use CommonJs implementation when generating module definitions for node
+                options: {
+                    module: "commonjs"
+                }
             },
             /**
-             * TypeScript datbase seed migration
+             * TypeScript database seed migration
              */
             databaseMigration: {
-                src: ["!services/reference.ts", "services/ts.d/**/*.d.ts", "services/db/**/*.ts"],
-                reference: "./services/reference.ts"
+                src: ["services/ts.d/**/*.d.ts", "services/db/**/*.ts"],
+                reference: "./services/seed-reference.ts",
+                // Use CommonJs implementation when generating module definitions for node
+                options: {
+                    module: "commonjs"
+                }
             }
 		},
         /**

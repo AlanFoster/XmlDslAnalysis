@@ -1,10 +1,4 @@
-/// <reference path="./../reference.ts" />
-
-interface IUser {
-    identity: string
-    verified: boolean
-    isAdmin: boolean
-}
+/// <reference path="./../seed-reference.ts" />
 
 var initialUsers = <any> [{
     identity: "test3",
@@ -12,4 +6,14 @@ var initialUsers = <any> [{
     isAdmin: false
 }];
 
-exports.initialusers = <any> initialUsers;
+/**
+ * Allows for the creation of user details within the database system
+ * @param repository The repository to populate
+ */
+export function seedUsers(repository) {
+    repository.insert({
+        identity: "test5",
+        verified: true,
+        isAdmin: false
+    });
+}
