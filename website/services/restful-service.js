@@ -10,6 +10,14 @@ var path = require("path");
 var configLoader = require("./ts/config.js");
 configLoader.loadConfig(global);
 
+// Create a DB Connection and repositories for later DI
+var dbPool = require("./db/Core");
+var db = dbPool.createDb(config);
+
+var repo = require("./ts/DataModelTest");
+var userRepository = new repo.MongodbUserRepository(db);
+var featureRepository = new repo.MongoDbFeatureRepository(db);
+
 // Known services
 var featureService = require("./ts/feature-service.js");
 var securityService = require("./ts/security-service.js");
@@ -21,16 +29,16 @@ var featuresData = require("./ts/data.js").features;
  */
 app.configure(function() {
     app.use(express.bodyParser());
-})
+});
 app.configure("debug", function() {
     app.use(express.logger());
-})
+});
 
 // Load and init our services
 securityService.init(express, app);
 securityService.createRoutes(app);
 
-featureService.createRoutes(app, featuresData);
+featureService.createRoutes(app, featuresData, featureRepository);
 
 // Create file serving mechanism
 app.configure(function () {

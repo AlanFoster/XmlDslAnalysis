@@ -26,12 +26,17 @@ export interface IRepository<T> {
      *
      * @param id The unique id of the element to be found
      */
-    find(id:Number): T
+    find(id:Number): IPromise<T>
 
     /**
-     * Returns all records within the current database.
+     * Returns all records within the current database as a promise.
      */
-    all(): T[]
+    all(): IPromise<T[]>
+}
+
+export interface IPromise<T> {
+    success(element: T)
+    error(error: Error)
 }
 
 /**
@@ -43,7 +48,7 @@ export interface IFeatureRepository extends IRepository<IFeature> {
      * Gets all unique tags associated with features within
      * this repository
      */
-    getTags(): string[]
+    getTags(): IPromise<string[]>
 }
 
 export class MongoDbRepository<T> implements IRepository<T> {
@@ -56,7 +61,7 @@ export class MongoDbRepository<T> implements IRepository<T> {
     /**
      * Represents the collection name that this repository has access to
      */
-    private collectionName: String;
+    collectionName: String;
 
     /**
      * Creates a new instance of a MongoDb Repository with the
@@ -93,15 +98,16 @@ export class MongoDbRepository<T> implements IRepository<T> {
     /**
      * {@inheritdoc}
      */
-    find(id:Number):T {
+    find(id:Number):IPromise<T> {
         return this.collection().find({ _id: id })
     }
 
     /**
      * {@inheritdoc}
      */
-    all():T[] {
-        return this.collection().find();
+    all():IPromise<T[]> {
+        //return this.collection().find({});
+        return this.db.get("features").find()
     }
 
     /**
@@ -114,16 +120,39 @@ export class MongoDbRepository<T> implements IRepository<T> {
     }
 }
 
+var Promise = require("monk").Promise;
+
 /**
  * Provides a concrete implementation of the IFeatureRepository interface.
  */
 export class MongoDbFeatureRepository extends MongoDbRepository<IFeature> implements IFeatureRepository {
     /**
+     * Creates a new instance of a MongoDb Repository with the
+     * given db access
+     * @param db
+     */
+        constructor(db: any) {
+        super(db, "features")
+    }
+
+    /**
      * {@inheritdoc}
      */
-    getTags():string[] {
-        //this.collection().
-        return undefined;
+    getTags():IPromise<string[]> {
+        // Monk doesn't support a wrapper for 'distinct' - this implements it instead
+        var collection = this.collection();
+        var promise = new Promise(collection, "distinct");
+
+        /**
+         * Similarly accessible via
+         *         this.collection().driver.db
+         *               .collection(this.collectionName)
+         */
+        this.collection()
+            .col
+            .distinct("tags", {}, promise.fulfill)
+
+        return promise;
     }
 }
 
@@ -138,19 +167,5 @@ export class MongodbUserRepository extends MongoDbRepository<IUser> {
      */
     constructor(db: any) {
         super(db, "users")
-    }
-}
-
-/**
- * Provides a concrete implementation of the IRepository interface for features
- */
-export class MongodbFeatureRepository extends MongoDbRepository<IFeature> {
-    /**
-     * Creates a new instance of a MongoDb Repository with the
-     * given db access
-     * @param db
-     */
-        constructor(db: any) {
-        super(db, "features")
     }
 }

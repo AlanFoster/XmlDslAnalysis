@@ -58,7 +58,7 @@ exports.init = <any> ((express, app) => {
             },
             // Called only on success
             (identifier, profile, done) => {
-                util.puts("Successfully Logged on");
+                util.debug("Successfully Logged on");
                 // Store the user if it doesn't already exist
                 if(!users[identifier]) {
                     users[identifier] = { identifier: identifier, verified: true, isAdmin: false};
@@ -119,7 +119,7 @@ exports.createRoutes = (app) => {
     });
 
     app.get("/services/auth/logout", (req, res) => {
-        util.puts("Calling logout");
+        util.debug("Calling logout");
         req.logout();
         res.json({success:true});
     });

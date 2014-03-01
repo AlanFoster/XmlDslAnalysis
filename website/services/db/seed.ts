@@ -4,27 +4,14 @@
 import configLoader = require("./../ts/config");
 var config = configLoader.loadConfig();
 
+// Create a DB Connection
+import dbPool = require("./Core")
+var db = dbPool.createDb(config);
+
 // Access seed repositories
 import repo = require("../ts/DataModelTest");
 import userSeed = require("./UserSeed");
 import featureSeed = require("./FeatureSeed");
-
-// Access the database
-var mongo = <any> require("mongodb");
-var monk = <any> require("monk");
-var db = <any> monk(config.databaseUrl);
-
-/**
- * Generic error handler - IE stop on any failure.
- * MongoDB does not allow transactions/ACID, so there isnt much
- * that we can do here unfortunately...
- */
-var errorHandler = (err, doc) => {
-    if(err) {
-        throw err;
-    }
-};
-
 
 /**
  * Teardown all existing DBs
@@ -41,7 +28,7 @@ userSeed.seed(userRepository);
 /**
  * Populate features
  */
-var featureRepository = new repo.MongodbFeatureRepository(db);
+var featureRepository = new repo.MongoDbFeatureRepository(db);
 featureSeed.seed(featureRepository);
 
 /**
