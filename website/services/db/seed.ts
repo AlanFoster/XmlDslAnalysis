@@ -1,5 +1,9 @@
 /// <reference path="./../seed-reference.ts" />
 
+// Provide access configuration files
+import configLoader = require("./../ts/config");
+var config = configLoader.loadConfig();
+
 /**
  * Load the required data - Note this scripts contain only JSON definitions
  * and /not/ the concrete database connection methods
@@ -7,13 +11,7 @@
 import userSeed = require("./UserSeed");
 var mongo = <any> require("mongodb");
 var monk = <any> require("monk");
-var db = <any> monk(
-    "http://localhost:27017/pluginWebsite",
-    {},
-    function() {
-        console.log(Object.keys(arguments))
-    }
-); // TODO Provide configuration for the database URL
+var db = <any> monk(config.databaseUrl);
 
 import repo = require("../ts/DataModelTest");
 

@@ -1,7 +1,7 @@
 /// <reference path="./../seed-reference.ts" />
 
 var initialUsers = <any> [{
-    identity: "test3",
+    identity: "testAccount",
     verified: true,
     isAdmin: false
 }];
@@ -11,9 +11,5 @@ var initialUsers = <any> [{
  * @param repository The repository to populate
  */
 export function seedUsers(repository) {
-    repository.insert({
-        identity: "test5",
-        verified: true,
-        isAdmin: false
-    });
+    repository.insert(initialUsers);
 }

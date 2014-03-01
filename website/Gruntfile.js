@@ -40,8 +40,11 @@ module.exports = function(grunt) {
     // Runs tests
     grunt.registerTask("test", ["ts:services", "jasmine_node"]);
 
+    // Performs the task of configuration - currently defaulted to windows env
+    grunt.registerTask("config", ["ngconstant:windows_env"]);
+
     // Initial data migration / seed
-    grunt.registerTask("seed", ["ts:services", "ts:databaseMigration", "execute:seedDatabase"]);
+    grunt.registerTask("seed", ["config", "ts:services", "ts:databaseMigration", "execute:seedDatabase"]);
 
     // Perform configuration
 	grunt.initConfig({
@@ -50,6 +53,9 @@ module.exports = function(grunt) {
          */
         execute: {
             seedDatabase: {
+                options: {
+                    cwd: "./app"
+                },
                 src: ['services/db/seed.js']
             }
         },
@@ -265,7 +271,7 @@ module.exports = function(grunt) {
 
     // B generate the services and run the web server, and listen to client compilation
     grunt.registerTask("windowsEnv", [
-        "ngconstant:windows_env",
+        "config",
 
         // Generate initial TS code for the services
         "services",

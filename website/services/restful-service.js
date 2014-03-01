@@ -6,32 +6,9 @@ var app = express();
 var util = require("util");
 var path = require("path");
 
-// Define a config as a global option
-global.config = require("konfig")({
-    // Override the default path, relative to the app directory
-    path:"../services/config"
-}).app;
-
-/**
- * Explicitly ensure that the config has defined required configuration.
- * This is to avoid 'undefined' being set as required fields, for instance
- * an 'undefined' value may lead to security issues etc.
- */
-(function(config) {
-    // The list of required fields which should be defined
-    var requiredKeys = [
-        "realm",
-        "port",
-        "sessionSecret"
-    ];
-
-    // Ensure that each required field is contained within the configuration
-    requiredKeys.forEach(function(key) {
-        if(!config[key]) {
-            throw new Error("The configuration did not contain the required field " + key);
-        }
-    })
-})(global.config);
+// Provide access to global config
+var configLoader = require("./ts/config.js");
+configLoader.loadConfig(global);
 
 // Known services
 var featureService = require("./ts/feature-service.js");

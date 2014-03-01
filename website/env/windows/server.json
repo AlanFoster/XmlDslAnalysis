@@ -1,5 +1,6 @@
 {
     "port": "3000",
     "realm": "http://localhost:3000",
-    "sessionSecret": "yqXk4NRPyikH6x3ZnC7NXNaUKtCKvbxKpV9YIINsAH5w8Av4pGGD9fPrMq"
+    "sessionSecret": "yqXk4NRPyikH6x3ZnC7NXNaUKtCKvbxKpV9YIINsAH5w8Av4pGGD9fPrMq",
+    "databaseUrl": "http://localhost:27017/pluginWebsite"
 }
