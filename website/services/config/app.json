@@ -1,0 +1,14 @@
+
+{
+    "WARNING":
+        "This file was generated - do *not* manually edit this file. Generated At: Sat Mar 01 2014 04:27:56 GMT+0000 (GMT Standard Time)",
+    "default":
+        
+        {
+	"port": "3000",
+	"realm": "http://localhost:3000",
+	"sessionSecret": "yqXk4NRPyikH6x3ZnC7NXNaUKtCKvbxKpV9YIINsAH5w8Av4pGGD9fPrMq",
+	"databaseUrl": "http://localhost:27017/pluginWebsite"
+}
+        
+}

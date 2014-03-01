@@ -21,7 +21,6 @@ var featureRepository = new repo.MongoDbFeatureRepository(db);
 // Known services
 var featureService = require("./ts/feature-service.js");
 var securityService = require("./ts/security-service.js");
-var featuresData = require("./ts/data.js").features;
 
 /**
  * Allow middleware to parse the post data of a body
@@ -38,7 +37,7 @@ app.configure("debug", function() {
 securityService.init(express, app);
 securityService.createRoutes(app);
 
-featureService.createRoutes(app, featuresData, featureRepository);
+featureService.createRoutes(app, featureRepository);
 
 // Create file serving mechanism
 app.configure(function () {
