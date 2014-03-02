@@ -50,16 +50,16 @@ describe("Features webservice tests", function() {
             featuresService.createRoutes(mockApp, []);
         });
 
-        it("should a GET: features service", function() {
+        it("should have a GET: features service", function() {
             expect(mockApp.get).toHaveBeenCalledWith("/services/features", jasmine.any(Function));
         });
 
-        it("should a GET: features tag service", function() {
+        it("should have a GET: features tag service", function() {
             expect(mockApp.get).toHaveBeenCalledWith("/services/features/tags", jasmine.any(Function));
         });
 
-        it("should a POST: features service", function() {
-            expect(mockApp.post).toHaveBeenCalledWith("/services/features", jasmine.any(Function));
+        it("should have a POST: features service", function() {
+            expect(mockApp.post).toHaveBeenCalledWith("/services/features", jasmine.any(Function), jasmine.any(Function));
         })
     });
 
@@ -135,7 +135,11 @@ describe("Features webservice tests", function() {
              * @param expectedTags The expected tags to use
              */
             var testFeaturesTagService = (features: IFeature[], expectedTags: string[]) => {
-                var resMock = serviceHelpers.testServiceImplementation(createFeatureService, features, "get", "/services/features/tags")
+                // Mock the main application
+                var mockApp = serviceHelpers.createMockApp();
+                createFeatureService(mockApp, features)
+
+                var resMock = serviceHelpers.callService(mockApp, "get", "/services/features/tags")
 
                 // Wait for the async call to our spy
                 waitsFor(() => resMock.json.wasCalled);
@@ -222,10 +226,11 @@ describe("Features webservice tests", function() {
                 var mockApp = serviceHelpers.createMockApp();
                 createFeatureService(mockApp, features)
 
-                // Call the post service
                 for(var feature in newFeatures) {
                     if(!newFeatures.hasOwnProperty(feature)) continue;
-                    var addServiceMock = serviceHelpers.callService(mockApp, "post", "/services/features", newFeatures[feature]);
+                    var addServiceMock = serviceHelpers.callService(mockApp, "post", "/services/features", newFeatures[feature], 2);
+                    // Ensure this mechanism is restricted to authenticated users only
+
                     // Wait for the async call to our spy
                     waitsFor(() => addServiceMock.json.wasCalled);
                     runs(() => {

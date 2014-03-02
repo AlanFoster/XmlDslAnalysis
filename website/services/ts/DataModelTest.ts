@@ -208,7 +208,7 @@ export class MongodbUserRepository extends MongoDbRepository<IUser> implements I
             // Query
             { identity: user.identity },
             // Insert logic
-            { $set: user },
+            { $setOnInsert: user },
             // Options - new and upsert as expected
             { "new" : true, upsert: true }
         );

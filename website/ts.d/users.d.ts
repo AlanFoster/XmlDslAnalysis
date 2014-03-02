@@ -17,4 +17,9 @@ interface IUser {
      * rights within the system
      */
     isAdmin: boolean
+
+    /**
+     * Contains additional misc details related to this user
+     */
+    profile?: any
 }

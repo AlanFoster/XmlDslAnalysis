@@ -3,6 +3,7 @@
 var util = require("util");
 var arrayShim = require("./arrayShim")
 import repo = require("./DataModelTest")
+var security = require("./Security-service")
 
 /**
  * Default list of suggested tags
@@ -49,8 +50,11 @@ exports.createRoutes = function(app, repository: repo.IFeatureRepository) {
 
     /**
      * Adds the given feature to the webservice
+     * This route is **secured**
      */
-    app.post("/services/features", (req, res, next) => {
+    app.post("/services/features",
+        security.authenticationRequired,
+        (req, res, next) => {
         util.debug("Recieved request for operation /services/features");
         var newItem = <IFeature> req.body;
         repository.insert(newItem)

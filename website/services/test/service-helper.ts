@@ -21,10 +21,10 @@ var createReqMock = (value?) => ({"body": value});
 /**
  * Extracts the given function implementation of the given application mock
  */
-var getRouteImplementation = (spy, routeName: String) => {
+var getRouteImplementation = (spy, routeName: String, index) => {
     // Find the matching definition
     var matchingCall = spy.calls.find(call => call.args[0] === routeName);
-    return matchingCall && matchingCall.args[1];
+    return matchingCall && matchingCall.args[index];
 };
 
 /**
@@ -35,9 +35,10 @@ var getRouteImplementation = (spy, routeName: String) => {
  * @param servicePath The service path to test
  * @param input The input of the given method, which will be sent as the request body
  */
-var callService = (mockApp, method: string, servicePath: string, input?) => {
+var callService = (mockApp, method: string, servicePath: string, input?, index?) => {
     // Extract the route implementation to test a call manually
-    var routeImplementation = <any> getRouteImplementation(mockApp[method], servicePath);
+    index = (typeof index === 'undefined') ? 1 : index;
+    var routeImplementation = <any> getRouteImplementation(mockApp[method], servicePath, index || 1);
 
     // Ensure that the given route exists as expected
     if(!routeImplementation) {

@@ -4,10 +4,22 @@ var passport = <any> require("passport");
 var GoogleStrategy = require('passport-google').Strategy;
 var util = require("util");
 import repo = require("./DataModelTest");
-var config = global.config;
 
-var realm = config.realm;
-var sessionSecret =  config.sessionSecret;
+
+/**
+ * Middleware to ensure that the call is authenticated before calling the next operation
+ * Otherwise the request is redirected away.
+ */
+var authenticationRequired = (req, res, next):any => {
+    var isAuthenticated = req.isAuthenticated()
+    util.debug("Attempting to access restricted area, isAuthenticated="+isAuthenticated);
+
+    if(isAuthenticated) {return next(); }
+    res.redirect("/login")
+};
+
+// Allow this middleware to be accessible throughout all services
+exports.authenticationRequired = authenticationRequired;
 
 /**
  * Registers security requirements for using the application
@@ -15,6 +27,10 @@ var sessionSecret =  config.sessionSecret;
  * @param app An instance of the express application
  */
 exports.init = <any> ((express, app, userRepository: repo.IUserRepository) => {
+    var config = global.config;
+    var realm = config.realm;
+    var sessionSecret =  config.sessionSecret;
+
     app.configure(function() {
 
         /**
@@ -45,23 +61,26 @@ exports.init = <any> ((express, app, userRepository: repo.IUserRepository) => {
                 realm: realm
             },
             // Called only on success
-            (identifier, profile, done) => {
+            (identifier: String, profile, done) => {
                 util.debug("Successfully Logged on");
 
-                userRepository.all()
-                    .success((users) => {
-                        console.log("Got All users :: " + users);
-                        done(null, profile);
+                // Enrich the model to a system model user
+                var user = <IUser> {
+                    identity: identifier,
+                    verified: true,
+                    isAdmin: false,
+                    profile: profile
+                };
+                userRepository.insertIfNew(user)
+                    .success((systemUser) => {
+                        // Update the profile in the case of an upsert scenario
+                        systemUser.profile = profile;
+                        done(null, systemUser);
                     })
-
-                // Store the user if it doesn't already exist
-/*                if(!users[identifier]) {
-                    users[identifier] = { identifier: identifier, verified: true, isAdmin: false};
-                }
-
-                var systemUser = users[identifier];
-                // Update the profile details for this current logging session
-                systemUser.profile = profile;*/
+                    .error(err => {
+                        util.error("Failed to insert user successfully :: " + err);
+                        done(err, null);
+                    });
         }
         ));
 
@@ -87,17 +106,6 @@ exports.createRoutes = (app) => {
     var securityAuthentication = () => (req, res, next) => {
         util.debug("Successfully called google middleware");
         passport.authenticate("google", { failureRedirect: "/login" })(req, res, next)
-    };
-
-    /**
-     * Middleware to ensure that the call is authenticated before calling the next operation
-     * Otherwise the request is redirected away.
-     */
-    var authenticationRequired = (req, res, next):any => {
-        util.debug("Attempting to access restricted area")
-
-        if(req.isAuthenticated()) { return next(); }
-        res.redirect("/login")
     };
 
     /**
