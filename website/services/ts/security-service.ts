@@ -79,7 +79,7 @@ exports.init = <any> ((express, app, userRepository: repo.IUserRepository) => {
                     })
                     .error(err => {
                         util.error("Failed to insert user successfully :: " + err);
-                        done(err, null);
+                        done(new Error("Could not successfully log in."), null);
                     });
         }
         ));
