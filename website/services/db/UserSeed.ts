@@ -1,7 +1,10 @@
 /// <reference path="./../seed-reference.ts" />
 
+// Allow a single admin user within this application by default
+var ADMIN_ID = process.env["ADMIN_ID"] || (() => { throw new Error("ADMIN_ID missing environment variable") })();
+
 var initialUsers = <any> [{
-    identity: "testAccount",
+    identity: ADMIN_ID,
     verified: true,
     isAdmin: false
 }];

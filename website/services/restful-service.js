@@ -34,7 +34,7 @@ app.configure("debug", function() {
 });
 
 // Load and init our services
-securityService.init(express, app);
+securityService.init(express, app, userRepository);
 securityService.createRoutes(app);
 
 featureService.createRoutes(app, featureRepository);

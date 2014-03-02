@@ -92,8 +92,8 @@ export class MongoDbRepository<T> implements IRepository<T> {
      * {@inheritdoc}
      */
     insert(elem:T): IPromise<T> {
-        util.debug("Inserting element")
-        return this.collection().insert(elem)
+        util.debug("Inserting element");
+        return this.collection().insert(elem);
     }
 
     /**
@@ -149,7 +149,7 @@ export class MongoDbFeatureRepository extends MongoDbRepository<IFeature> implem
      * given db access
      * @param db
      */
-        constructor(db: any) {
+    constructor(db: any) {
         super(db, "features")
     }
 
@@ -168,7 +168,7 @@ export class MongoDbFeatureRepository extends MongoDbRepository<IFeature> implem
          *         this.collection().driver.db
          *               .collection(this.collectionName)
          */
-        this.collection()
+        collection
             .col
             .distinct("tags", {}, promise.fulfill);
 
@@ -176,10 +176,19 @@ export class MongoDbFeatureRepository extends MongoDbRepository<IFeature> implem
     }
 }
 
+export interface IUserRepository extends IRepository<IUser> {
+    /**
+     * Attempts to add a new user if it doesn't exist already based on
+     * its unique identity value
+     * @param user The user to idempotently add to the system
+     */
+    insertIfNew(user: IUser): IPromise<IUser>
+}
+
 /**
  * Provides a concrete implementation of the IRepository interface for users
  */
-export class MongodbUserRepository extends MongoDbRepository<IUser> {
+export class MongodbUserRepository extends MongoDbRepository<IUser> implements IRepository<IUser> {
     /**
      * Creates a new instance of a MongoDb Repository with the
      * given db access
@@ -187,5 +196,21 @@ export class MongodbUserRepository extends MongoDbRepository<IUser> {
      */
     constructor(db: any) {
         super(db, "users")
+    }
+
+    /**
+     * Attempts to add a new user if it doesn't exist already based on
+     * its unique identity value
+     * @param user The user to idempotently add to the system
+     */
+    insertIfNew(user: IUser): IPromise<IUser> {
+        return this.collection().findAndModify(
+            // Query
+            { identity: user.identity },
+            // Insert logic
+            { $set: user },
+            // Options - new and upsert as expected
+            { "new" : true, upsert: true }
+        );
     }
 }

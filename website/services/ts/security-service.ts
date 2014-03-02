@@ -1,32 +1,20 @@
+/// <reference path="./../reference.ts" />
+
 var passport = <any> require("passport");
 var GoogleStrategy = require('passport-google').Strategy;
 var util = require("util");
-
+import repo = require("./DataModelTest");
 var config = global.config;
 
 var realm = config.realm;
 var sessionSecret =  config.sessionSecret;
-var adminId = process.env["ADMIN_ID"];
-
-/**
- * Volatile list of users
- */
-var users = {};
-
-// Allow admin mode for this user
-users[adminId] = {
-    "identifier": adminId,
-    "verified": true,
-    "isAdmin": true
-};
-
 
 /**
  * Registers security requirements for using the application
  * @param express Express reference
  * @param app An instance of the express application
  */
-exports.init = <any> ((express, app) => {
+exports.init = <any> ((express, app, userRepository: repo.IUserRepository) => {
     app.configure(function() {
 
         /**
@@ -59,18 +47,22 @@ exports.init = <any> ((express, app) => {
             // Called only on success
             (identifier, profile, done) => {
                 util.debug("Successfully Logged on");
+
+                userRepository.all()
+                    .success((users) => {
+                        console.log("Got All users :: " + users);
+                        done(null, profile);
+                    })
+
                 // Store the user if it doesn't already exist
-                if(!users[identifier]) {
+/*                if(!users[identifier]) {
                     users[identifier] = { identifier: identifier, verified: true, isAdmin: false};
                 }
 
                 var systemUser = users[identifier];
                 // Update the profile details for this current logging session
-                systemUser.profile = profile;
-
-                // Callback successfully
-                done(null, systemUser);
-            }
+                systemUser.profile = profile;*/
+        }
         ));
 
         app.use(express.cookieParser());
@@ -95,7 +87,7 @@ exports.createRoutes = (app) => {
     var securityAuthentication = () => (req, res, next) => {
         util.debug("Successfully called google middleware");
         passport.authenticate("google", { failureRedirect: "/login" })(req, res, next)
-    }
+    };
 
     /**
      * Middleware to ensure that the call is authenticated before calling the next operation
@@ -108,16 +100,27 @@ exports.createRoutes = (app) => {
         res.redirect("/login")
     };
 
+    /**
+     * Attempts to log in the current user - this will be handled by the
+     * passportjs middleware, and subsequently the redirect will occur
+     * as expected
+     */
     app.get("/services/auth", securityAuthentication(), (req, res) => {
         util.debug("Successfully called login");
         res.redirect("/");
     });
 
+    /**
+     * Called as a get request when Google successfully logs in as expected
+     */
     app.get("/services/auth/return", securityAuthentication(), (req, res) => {
         util.debug("Successfully returned and logged in");
         res.redirect("/")
     });
 
+    /**
+     * Logs out the currently logged in user within the system
+     */
     app.get("/services/auth/logout", (req, res) => {
         util.debug("Calling logout");
         req.logout();

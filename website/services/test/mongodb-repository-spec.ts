@@ -7,7 +7,7 @@ import repo = require("./../ts/DataModelTest");
 /**
  * Tests to ensure that the repository pattern for MongoDB works as expected
  */
-xdescribe("MongoDB Repositories", () => {
+describe("MongoDB Repositories", () => {
     /**
      * Grants access to the DB as expected
      */
@@ -38,6 +38,99 @@ xdescribe("MongoDB Repositories", () => {
     afterEach(() => {
         db.close();
     });
+
+    /**
+     * Splices a mongo db id for testing
+     * @param obj The mongodb entity
+     * @returns The mongodb entity
+     */
+    var spliceId = function(obj) {
+        expect(obj["_id"]).toBeDefined();
+        delete obj["_id"];
+        return obj;
+    };
+
+    describe("User Repository", function() {
+        var async = new AsyncSpec(this);
+        var userRepository : repo.MongodbUserRepository;
+
+        /**
+         * Create a new instance of the feature repository for each test
+         */
+        beforeEach(() => {
+            userRepository = new repo.MongodbUserRepository(db);
+        });
+
+        /**
+         * Tear down as expected in order to remove any stale state within
+         * the tests
+         */
+        afterEach(() => {
+            db.get(userRepository.collectionName).drop();
+        });
+
+        /**
+         * Creates a new instance of a basic user within the system
+         */
+        var createExpectedUser = (id?) => JSON.parse(JSON.stringify({
+            identity: "UniqueId" + (id || "1"),
+            verified: true,
+            isAdmin: false
+        }));
+
+        (<any> async).it("should allow a new user to be added for the first time", function(done) {
+            userRepository.insertIfNew(createExpectedUser())
+                .success((user) => {
+                    expect((<any> user)._id).toBeDefined();
+                    expect(spliceId(user)).toEqual(createExpectedUser());
+                    done();
+                })
+                .error(errorHandler(done))
+        });
+
+        (<any> async).it("should upsert if it exists already", function(done) {
+            userRepository.insertIfNew(createExpectedUser())
+                .success((user) => {
+                    var initialId = (<any> user)._id;
+                    expect(initialId).toBeDefined();
+                    expect(spliceId(user)).toEqual(createExpectedUser());
+
+                   userRepository.insertIfNew(createExpectedUser())
+                        .success((user) => {
+                            var newId = (<any> user)._id;
+                            expect(newId).toEqual(initialId);
+                            expect(spliceId(user)).toEqual(createExpectedUser());
+                            done();
+                        })
+                        .error(errorHandler(done))
+
+                    done()
+                })
+                .error(errorHandler(done))
+        });
+
+        (<any> async).it("should allow multiple inserts", function(done) {
+            userRepository.insertIfNew(createExpectedUser(1))
+                .success((user) => {
+                    var initialId = (<any> user)._id;
+                    expect(initialId).toBeDefined();
+                    expect(spliceId(user)).toEqual(createExpectedUser());
+
+                    userRepository.insertIfNew(createExpectedUser(2))
+                        .success((user) => {
+                            var newId = (<any> user)._id;
+                            expect(newId).not.toEqual(initialId);
+                            expect(spliceId(user)).toEqual(createExpectedUser(2));
+                            done();
+                        })
+                        .error(errorHandler(done))
+
+                    done()
+                })
+                .error(errorHandler(done))
+        });
+    });
+
 
     describe("Feature Repository", function() {
         var async = new AsyncSpec(this);
