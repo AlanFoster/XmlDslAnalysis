@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Plugin Documentation</title>
 
+    <script>
+        document.write('<base href="' + document.location + '" />');
+    </script>
+
     <link rel="stylesheet" href="css/app.css"/>
 
     <!-- Bootstrap -->
@@ -39,14 +43,14 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <!-- Use a custom directive to generate LI elements -->
-                <menu-item href="/" text="Home"></menu-item>
-                <menu-item href="/features" text="Features"></menu-item>
-                <menu-item href="/contributing" text="Contributing"></menu-item>
+                <menu-item href="#/" text="Home"></menu-item>
+                <menu-item href="#/features" text="Features"></menu-item>
+                <menu-item href="#/contributing" text="Contributing"></menu-item>
             </ul>
             <!-- Show user details -->
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a ng-href="{{!!user ? '#' : '/login'}}">
+                    <a ng-href="{{!!user ? '#' : '#/login'}}">
                         <span class="glyphicon glyphicon-user"></span>
                         <span ng-show="!user">Login</span>
                         <span ng-show="!!user">{{user.profile.displayName}}</span>

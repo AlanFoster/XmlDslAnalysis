@@ -44,20 +44,20 @@ By default there is no tooling available for Apache Camel's simple, for instance
 
 Such a mistake would not be known about until either runtime or deploy time, and the worst time to find out about mistakes is within production!
 
-<div class="text-center">
-	<div><img src="/docs_images/codeExample_before.png" alt="Broken code - Incorrect arguments" /></div>
+<div style="text-align:center" class="text-center">
+	<div><img src="docs_images/codeExample_before.png" alt="Broken code - Incorrect arguments" /></div>
 	*Without the plugin - plain text language support*
 </div>
 
 After the plugin has been installed we can see the problem more clearly with syntax highlighting and type checking working successfully
 
-<div class="text-center">
+<div style="text-align:center" class="text-center">
 	<div><img alt="Broken code - Incorrect arguments" src="docs_images/CodeExample_typeInformation.png" /></div>
 	*With the plugin - The argument's type information is wrong!*
 </div>
 
 
-<div class="text-center">
-	<div><img alt="Broken code - Type param" src="/docs_images/CodeExample_typeParam.png" /></div>
+<div style="text-align:center" class="text-center">
+	<div><img alt="Broken code - Type param" src="docs_images/CodeExample_typeParam.png" /></div>
 	*After using `ctrl+p` we can see that our arguments are backwards!*
 </div>
