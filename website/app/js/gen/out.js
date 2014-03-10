@@ -32,7 +32,8 @@ var docsApp = angular.module('docsApp', [
 });
 "use strict";
 
-docsApp.controller("featuresController", function ($scope) {
+docsApp.controller("loginController", function ($scope, appConfig) {
+    $scope.loginUrl = appConfig.serviceUrl + "/services/auth";
 });
 "use strict";
 
