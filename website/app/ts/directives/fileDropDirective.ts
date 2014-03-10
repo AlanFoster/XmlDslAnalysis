@@ -85,7 +85,7 @@ docsApp.directive("imageUploader", function () {
                                     description: ""
                                 });
                             });
-                        }
+                        };
 
                         fileReader.readAsDataURL(file);
                     };

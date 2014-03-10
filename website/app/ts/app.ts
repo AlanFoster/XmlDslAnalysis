@@ -16,34 +16,34 @@ var docsApp: ng.IModule =
         .config(function ($routeProvider, $locationProvider) {
             $routeProvider
                 .when("/", {
-                    templateUrl: "/templates/overview.html",
+                    templateUrl: "templates/overview.html",
                     controller:"overviewController"
                 })
                 .when("/readme", {
-                    templateUrl: "/docs/readme-core.html"
+                    templateUrl: "docs/readme-core.html"
                 })
                 .when("/features", {
-                    templateUrl: "/templates/features.html",
+                    templateUrl: "templates/features.html",
                     controller:"featuresController"
                 })
                 .when("/contributing", {
-                    templateUrl: "/templates/contributing.html"
+                    templateUrl: "templates/contributing.html"
                 })
                 .when("/login", {
-                    templateUrl: "/templates/login.html",
+                    templateUrl: "templates/login.html",
                     controller:"loginController"
                 })
                 /**
                  * Developer documentation resources
                  */
                 .when("/pluginDocumentation", {
-                    templateUrl: "/docs/Developing-plugin.html"
+                    templateUrl: "docs/Developing-plugin.html"
                 })
                 .when("/continuousIntegration", {
-                    templateUrl: "/docs/build-plugin.html"
+                    templateUrl: "docs/build-plugin.html"
                 })
                 .when("/websiteDocumentation", {
-                    templateUrl: "/docs/readme-website.html"
+                    templateUrl: "docs/readme-website.html"
                 })
                 /**
                  * Fall back value
