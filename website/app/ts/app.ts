@@ -48,7 +48,7 @@ var docsApp: ng.IModule =
                 /**
                  * Fall back value
                  */
-                .otherwise({redirectTo: "/"})
+                .otherwise({redirectTo: "/"});
             // Enabling html5 routing
             $locationProvider.html5Mode(true)
         });

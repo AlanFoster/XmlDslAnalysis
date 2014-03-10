@@ -34,7 +34,7 @@ This plugin provides support for the XML DSL provided by Apache Camel, which can
 Within the context of Enterprise Integration Patterns, the above could be visualised as the following - 
 
 <div class="text-center">
-    <img src="/docs_images/routeExample.png" alt="CBR Example" />
+    <img src="docs_images/routeExample.png" alt="CBR Example" />
 </div>
 
 Before / After

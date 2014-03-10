@@ -1,9 +1,9 @@
 /// <reference path="./../reference.ts" />
 
 var util = require("util");
-var arrayShim = require("./arrayShim")
-import repo = require("./DataModelTest")
-var security = require("./Security-service")
+var arrayShim = require("./arrayShim");
+import repo = require("./DataModelTest");
+var security = require("./security-service");
 
 /**
  * Default list of suggested tags

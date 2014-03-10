@@ -17,7 +17,8 @@ export function loadConfig(parent?: any) {
     var requiredKeys = [
         "realm",
         "port",
-        "sessionSecret"
+        "sessionSecret",
+        "databaseUrl"
     ];
 
     // Ensure that each required field is contained within the configuration
