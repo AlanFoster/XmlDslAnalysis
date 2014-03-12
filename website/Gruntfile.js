@@ -40,14 +40,25 @@ module.exports = function(grunt) {
     // Runs tests
     grunt.registerTask("test", ["ts:services", "jasmine_node"]);
 
-    // Performs the task of configuration - currently defaulted to windows env
-    grunt.registerTask("config", ["ngconstant:windows_env"]);
+    // Performs the task of configuration with the given environment config
+    grunt.registerTask("config", function() {
+        var env = grunt.option("env") || grunt.config.get("env");
+        grunt.log.writeln("Creating configuration for env : " + env);
+        grunt.task.run(["ngconstant:" + env + "_env"]);
+    });
 
     // Initial data migration / seed
     grunt.registerTask("seed", ["config", "ts:services", "ts:databaseMigration", "execute:seedDatabase"]);
 
+
     // Perform configuration
 	grunt.initConfig({
+        /**
+         * The default environment that is currently being deployed/ran on
+         * Configurable via grunt command line with --env="linux"
+         */
+        "env": "windows",
+
         /**
          * Grunt execute, which is used for invoking node.js processes
          */
@@ -269,8 +280,8 @@ module.exports = function(grunt) {
         }
     };
 
-    // B generate the services and run the web server, and listen to client compilation
-    grunt.registerTask("windowsEnv", [
+    // generate the services and run the web server, and listen to client compilation
+    grunt.registerTask("all", [
         "config",
 
         // Generate initial TS code for the services
@@ -279,6 +290,6 @@ module.exports = function(grunt) {
         "client"
     ]);
 
-    // by default grunt will assume a local dev machine of windows
-    grunt.registerTask("default", ["windowsEnd"]);
+    // by default grunt will assume a local dev machine of windows if not overridden with --env="linux" in command line
+    grunt.registerTask("default", ["all"]);
 };
