@@ -5,13 +5,15 @@ var GoogleStrategy = require('passport-google').Strategy;
 var util = require("util");
 import repo = require("./DataModelTest");
 
+var config = global.config;
+var realm = config.realm;
 
 /**
  * Middleware to ensure that the call is authenticated before calling the next operation
  * Otherwise the request is redirected away.
  */
 var authenticationRequired = (req, res, next):any => {
-    var isAuthenticated = req.isAuthenticated()
+    var isAuthenticated = req.isAuthenticated();
     util.debug("Attempting to access restricted area, isAuthenticated="+isAuthenticated);
 
     if(isAuthenticated) {return next(); }
@@ -27,8 +29,6 @@ exports.authenticationRequired = authenticationRequired;
  * @param app An instance of the express application
  */
 exports.init = <any> ((express, app, userRepository: repo.IUserRepository) => {
-    var config = global.config;
-    var realm = config.realm;
     var sessionSecret =  config.sessionSecret;
 
     app.configure(function() {
@@ -62,7 +62,7 @@ exports.init = <any> ((express, app, userRepository: repo.IUserRepository) => {
             },
             // Called only on success
             (identifier: String, profile, done) => {
-                util.debug("Successfully Logged on");
+                util.debug("Successfully Logged on to realm : " + realm);
 
                 // Enrich the model to a system model user
                 var user = <IUser> {
@@ -123,7 +123,7 @@ exports.createRoutes = (app) => {
      */
     app.get("/services/auth/return", securityAuthentication(), (req, res) => {
         util.debug("Successfully returned and logged in");
-        res.redirect("/")
+        res.redirect(realm)
     });
 
     /**
