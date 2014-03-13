@@ -7,7 +7,11 @@
     <title>Plugin Documentation</title>
 
     <script>
-        document.write('<base href="' + document.location + '" />');
+        // Ensure that AngularJS is aware of the base url, so links are relatively operated on as expected
+        (function() {
+            var baseUrl = document.location.toString().split("#").reverse().pop();
+            document.write('<base href="' + baseUrl  + '" />');
+        })();
     </script>
 
     <link rel="stylesheet" href="css/app.css"/>
