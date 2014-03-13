@@ -18,8 +18,9 @@ import foo.eip.graph.EipGraphCreator
  * @param range The range within the parent element in which to provide a reference for
  */
 class CamelHeaderReference(element: PsiElement, range: TextRange)
-  // Note this reference is a soft reference, ie if it doesn't resolve, it is *not* an error!
-  extends PsiReferenceBase[PsiElement](element, range, true) {
+  // Note this reference is a hard reference, ie if it doesn't resolve, it is an error - however the
+  // syntax highlighting may decide that this will not be FF0000 for instance.
+  extends PsiReferenceBase[PsiElement](element, range, false) {
 
   /**
    * Creates the list of known possible headers within the current position of the XmlDocument

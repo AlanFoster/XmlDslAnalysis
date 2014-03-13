@@ -18,47 +18,76 @@ import com.intellij.openapi.editor.{HighlighterColors, DefaultLanguageHighlighte
  * and within basic token highlighting.
  */
 object CamelTextAttributeKeys {
-  var FUNC_BRACES = createTextAttributesKey(
+  /**
+   * Represents the text such as ${ and }
+   */
+  val FUNC_BRACES = createTextAttributesKey(
     camelId("FUNC_BRACES"),
     KEYWORD
   )
 
-  def FQCN: TextAttributesKey = createTextAttributesKey(
+  /**
+   * Represents a fully qualified class name
+   */
+  val FQCN: TextAttributesKey = createTextAttributesKey(
     camelId("STATIC_FIELD"),
     DefaultLanguageHighlighterColors.STATIC_FIELD
   )
 
-  def CONSTANT: TextAttributesKey = createTextAttributesKey(
+  /**
+   * Represents constants - white space
+   */
+  val CONSTANT: TextAttributesKey = createTextAttributesKey(
     camelId("CONSTANT"),
     DefaultLanguageHighlighterColors.CONSTANT
   )
 
-  def BAD_CHARACTER: TextAttributesKey = createTextAttributesKey(
+  /**
+   * Represents an invalid token which hasn't successfully met the grammar as
+   * expected
+   */
+  val BAD_CHARACTER: TextAttributesKey = createTextAttributesKey(
     camelId("BAD_CHARACTER"),
     HighlighterColors.BAD_CHARACTER
   )
 
-  def NUMBER: TextAttributesKey = createTextAttributesKey(
+  /**
+   * Represents constant numbers
+   */
+  val NUMBER: TextAttributesKey = createTextAttributesKey(
     camelId("NUMBER"),
     DefaultLanguageHighlighterColors.NUMBER
   )
 
-  def STRING: TextAttributesKey = createTextAttributesKey(
+  /**
+   * Represents strings
+   */
+  val STRING: TextAttributesKey = createTextAttributesKey(
     camelId("STRING"),
     DefaultLanguageHighlighterColors.STRING
   )
 
-  def TEXT: TextAttributesKey = createTextAttributesKey(
+  /**
+   * Represents text for identifiers, and currently accessor notation
+   * dot and elvis operator
+   */
+  val TEXT: TextAttributesKey = createTextAttributesKey(
     camelId("TEXT"),
     HighlighterColors.TEXT
   )
 
-  def PARENTHESES: TextAttributesKey = createTextAttributesKey(
+  /**
+   * Represents parenthesis
+   */
+  val PARENTHESES: TextAttributesKey = createTextAttributesKey(
     camelId("PARENTHESES"),
     DefaultLanguageHighlighterColors.PARENTHESES
   )
 
-  def SQUARE_BRACES: TextAttributesKey = createTextAttributesKey(
+  /**
+   * Represents square braces
+   */
+  val SQUARE_BRACES: TextAttributesKey = createTextAttributesKey(
     camelId("BRACES"),
     DefaultLanguageHighlighterColors.BRACES
   )
@@ -71,17 +100,33 @@ object CamelTextAttributeKeys {
     DefaultLanguageHighlighterColors.OPERATION_SIGN
   )
 
-  //val CAMEL_OPERATOR = TextAttributesKey.createTextAttributesKey()
-
   /**
    * Represents the key for camel function names is `headerAs`(...)
    */
-  val CAMEL_FUNC = {
+  val CAMEL_FUNC =
     createTextAttributesKey(
       camelId("CAMEL_FUNC"),
       FUNCTION_CALL
     )
-  }
+
+
+  /**
+   * Represents a resolved reference within the camel language
+   */
+  val RESOLVED_REFERENCE =
+    createTextAttributesKey(
+      camelId("RESOLVED_REFERENCE"),
+      FUNCTION_CALL
+    )
+
+  /**
+   * Represents unresolved references within the camel language
+   */
+  val UNRESOLVED_REFERENCE =
+    createTextAttributesKey(
+      camelId("UNRESOLVED_REFERENCE"),
+      FUNCTION_CALL
+    )
 
   /**
    * Creates a new unique id associated with the camel language.

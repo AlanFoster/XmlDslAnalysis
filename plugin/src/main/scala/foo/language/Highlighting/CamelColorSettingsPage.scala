@@ -63,6 +63,8 @@ object CamelAttributeKeyDescriptions {
     new AttributesDescriptor("Constant", CamelTextAttributeKeys.CONSTANT),
     new AttributesDescriptor("FQCN", CamelTextAttributeKeys.FQCN),
     new AttributesDescriptor("Camel Function", CamelTextAttributeKeys.CAMEL_FUNC),
-    new AttributesDescriptor("Function Expression Bounds", CamelTextAttributeKeys.FUNC_BRACES)
+    new AttributesDescriptor("Function Expression Bounds", CamelTextAttributeKeys.FUNC_BRACES),
+    new AttributesDescriptor("Resolved References", CamelTextAttributeKeys.RESOLVED_REFERENCE),
+    new AttributesDescriptor("Unresolved References", CamelTextAttributeKeys.UNRESOLVED_REFERENCE)
   )
 }

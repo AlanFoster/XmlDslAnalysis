@@ -1,4 +1,21 @@
 <?xml version="1.0"?>
+<!--
+    There appears to be no documentation on what option names are available,
+    however some references are
+
+        FONT_TYPE
+            0 -> Normal
+            1 -> Bold
+            2 -> Italics
+
+        EFFECT_TYPE
+            0 -> Outside Border,
+            1 -> Straight Underlined,
+            2 -> Underline Wave
+
+    The code for handling this appears to be here however
+        com.intellij.openapi.editor.markup.TextAttributes.Externalizable
+-->
 <list>
     <option name="CAMEL_CAMEL_FUNC">
         <value>
@@ -6,6 +23,23 @@
             <option name="BACKGROUND"/>
             <option name="EFFECT_COLOR"/>
             <option name="FONT_TYPE" value="1"/>
+        </value>
+    </option>
+    <option name="CAMEL_RESOLVED_REFERENCE">
+        <value>
+            <option name="FOREGROUND"/>
+            <option name="BACKGROUND"/>
+            <option name="EFFECT_COLOR"/>
+            <option name="FONT_TYPE" value="1"/>
+        </value>
+    </option>
+    <option name="CAMEL_UNRESOLVED_REFERENCE">
+        <value>
+            <option name="FOREGROUND" />
+            <option name="BACKGROUND"  />
+            <option name="EFFECT_COLOR" value="666666"/>
+            <option name="EFFECT_TYPE" value="2"/>
+            <option name="FONT_TYPE" value="2"/>
         </value>
     </option>
 </list>
