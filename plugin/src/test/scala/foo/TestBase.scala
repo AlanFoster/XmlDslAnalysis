@@ -1,6 +1,7 @@
 package foo
 
 import java.io.File
+import collection.JavaConverters._
 
 /**
  * A trait which represent the common methods within a testing class.
@@ -27,4 +28,12 @@ trait TestBase {
    * @return The absolute path of the source root folder of the project
    */
   def sourceRoot = new File(classOf[TestBase].getResource("/").getPath)
+
+  /**
+   * Creates a single readable string of the given lookup elements
+   * @param list The list of look up elements
+   * @return A human readable form of the given elements
+   */
+def debugLookupElements(list: java.util.List[String]) =
+    list.asScala.map("\"" + _ + "\"").mkString(", ")
 }

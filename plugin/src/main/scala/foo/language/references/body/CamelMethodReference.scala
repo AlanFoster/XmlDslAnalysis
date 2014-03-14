@@ -84,6 +84,7 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
       returnType = psiMethod.getReturnType
     } yield returnType
 
+    // Resolve the class via the PsiClassType information
     val resolvedClass = for {
       returnType <- someReturnType
       boxedReturnType <- tryBoxPrimitiveType(returnType, project)
@@ -107,7 +108,7 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
    * @return The associated PsiClassType information, otherwise None
    */
   private def tryBoxPrimitiveType(psiType: PsiType, project: Project): Option[PsiClassType] = psiType match {
-    case primitive: PsiPrimitiveType =>
+    case primitive: PsiPrimitiveType if psiType != PsiType.VOID =>
       val someBoxedName = Option(primitive.getBoxedTypeName)
       // Create a new PsiClassType reference if the type successfully matches and is a boxed value
       someBoxedName

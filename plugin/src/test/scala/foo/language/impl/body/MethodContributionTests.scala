@@ -47,20 +47,20 @@ class MethodContributionTests
    */
   val ComplexModel = TestScenario(
     Some("ComplexModel.xml"),
-    List("additionalInformation", "class", "equals", "getAdditionalInformation", "getClass", "getId", "hashCode",
-      "id", "notify", "notifyAll", "setAdditionalInformation", "setId", "toString", "wait")
+    List("additionalInformation", "class", "equals", "getAdditionalInformation", "getClass", "getId", "getSelf",
+      "hashCode", "id", "notify", "notifyAll", "self", "setAdditionalInformation", "setId", "toString", "voidReturn", "wait")
   )
 
   val ChoicePipeline = TestScenario(
     Some("ChoicePipeline.xml"),
      List("additionalInformation", "age", "class", "class", "class", "class", "customerId", "equals", "equals",
-       "equals", "equals", "f", "firstName", "getAdditionalInformation", "getAge", "getClass", "getClass",
-       "getClass", "getClass", "getCustomerId", "getF", "getFirstName", "getId", "getId", "getLastName", "getNumber",
-       "getOrderId", "getOrderType", "hashCode", "hashCode", "hashCode", "hashCode", "id", "id", "lastName", "notify",
-       "notify", "notify", "notify", "notifyAll", "notifyAll", "notifyAll", "notifyAll", "number", "orderId",
-       "orderType", "setAdditionalInformation", "setAge", "setCustomerId", "setF", "setFirstName", "setId",
-       "setId", "setLastName", "setNumber", "setOrderId", "setOrderType", "toString", "toString", "toString",
-       "toString", "wait", "wait", "wait", "wait"
+       "equals", "equals", "f", "firstName", "getAdditionalInformation", "getAge", "getClass", "getClass", "getClass",
+       "getClass", "getCustomerId", "getF", "getFirstName", "getId", "getId", "getLastName", "getNumber", "getOrderId",
+       "getOrderType", "getSelf", "hashCode", "hashCode", "hashCode", "hashCode", "id", "id", "lastName", "notify",
+       "notify", "notify", "notify", "notifyAll", "notifyAll", "notifyAll", "notifyAll", "number", "orderId", "orderType",
+       "self", "setAdditionalInformation", "setAge", "setCustomerId", "setF", "setFirstName", "setId", "setId",
+       "setLastName", "setNumber", "setOrderId", "setOrderType", "toString", "toString", "toString", "toString",
+       "voidReturn", "wait", "wait", "wait", "wait"
      )
   )
 

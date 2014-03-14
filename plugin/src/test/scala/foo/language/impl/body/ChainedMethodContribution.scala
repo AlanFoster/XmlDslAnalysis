@@ -74,6 +74,10 @@ class ChainedMethodContribution
     doTest(ComplexModel.withMethods(INTEGER_SUGGESTIONS))
   }
 
+  def testVoidReturnTypeDotAccessAfterBody_MultiplePipeline() {
+    doTest(ComplexModel.withMethods(Nil))
+  }
+
   /**
    * Performs the given test scenario under the test instance
    * @param testScenario The information about the current test to run

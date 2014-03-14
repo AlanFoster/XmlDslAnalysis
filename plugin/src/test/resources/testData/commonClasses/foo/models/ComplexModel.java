@@ -15,7 +15,10 @@ public class ComplexModel extends BaseSimpleModel {
         this.additionalInformation = additionalInformation;
     }
 
+    // No return type information
+    public void voidReturn() { }
+
     // Recursive type definition
-//    public ComplexModel getSelf() { return this; }
+    public ComplexModel getSelf() { return this; }
 }
 
