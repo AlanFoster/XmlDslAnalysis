@@ -13,6 +13,13 @@ class FqcnAnnotatorTest
   override def getTestDataPath: String = testDataMapper("/foo/language/fqcn/annotator")
 
   /**
+   * Ensure that no highlighing occurs when the class/package is valid
+   */
+  def testValidFQCNNotMarkedInvalid() {
+    doTest()
+  }
+
+  /**
    * Ensure highlighting is correct when the last class/package element does not exist
    */
   def testEndTokenFQCNUnresolved() {

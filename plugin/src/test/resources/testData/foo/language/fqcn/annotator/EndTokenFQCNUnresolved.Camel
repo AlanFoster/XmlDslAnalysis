@@ -1,1 +1,1 @@
-${bodyAs(java.lang.<error descr="Unresolved Reference">MissingReference</error>)}
+${bodyAs(java.lang.<weak_warning descr="Unresolved Reference - Potentially valid">MissingReference</weak_warning>)}

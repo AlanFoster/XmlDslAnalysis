@@ -80,7 +80,7 @@ class UnresolvedReferenceAnnotator extends Annotator {
     // can not resolve to a *single* PsiElement - we should not highlight
     // these as errors
     val isMultiResolved = psiReference match {
-      case reference: PsiPolyVariantReference => reference.multiResolve(false).isEmpty
+      case reference: PsiPolyVariantReference => reference.multiResolve(false).nonEmpty
       case _ => false
     }
 
