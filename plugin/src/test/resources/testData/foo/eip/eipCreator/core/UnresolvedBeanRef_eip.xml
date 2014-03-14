@@ -1,0 +1,9 @@
+<eipDag>
+    <vertices>
+        <vertex id="bean" eipType="to" text=""/>
+        <vertex id="from" eipType="from" text="direct:start"/>
+    </vertices>
+    <edges>
+        <edge source="from" target="bean" edgeConnection="from_bean0"/>
+    </edges>
+</eipDag>

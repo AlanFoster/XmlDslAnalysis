@@ -47,9 +47,10 @@ class CamelMethodConverter extends ResolvingConverter[PsiMethod] {
    * @return All possible methods available within this context
    */
   private def getAllMethods(context:ConvertContext): List[PsiMethod] = {
-    val camelBean = DomUtil.findDomElement(context.getXmlElement, classOf[BeanDefinition], false)
+    val camelBeanOption = Option(DomUtil.findDomElement(context.getXmlElement, classOf[BeanDefinition], false))
     val allMethods: List[PsiMethod] = {
       for {
+        camelBean <- camelBeanOption
         blueprintBean <- Option(camelBean.getRef.getValue)
         psiClass <- Option(blueprintBean.getPsiClass.getValue)
         methods = MethodTraversal.getAllMethods(psiClass)

@@ -71,6 +71,14 @@ class CoreEipCreatorTests
   def testPipelineChoiceMultipleWhen() {
     doTest()
   }
+
+  /**
+   * Test to ensure that an unresolved bean ref is handled successfully
+   */
+  def testUnresolvedBeanRef() {
+    doTest()
+  }
+
   /**
    * Ensures the test is valid
    */
