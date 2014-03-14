@@ -7,7 +7,6 @@ import scala.Some
 import com.intellij.codeInsight.completion.CompletionType
 import scala.collection.JavaConverters._
 import org.unitils.reflectionassert.ReflectionAssert._
-import org.unitils.reflectionassert.ReflectionComparatorMode._
 
 /**
  * Tests to ensure that method contribution works as expected within the camel simple language
@@ -27,9 +26,9 @@ class MethodContributionTests
   /**
    * Definitions for test
    * @param fileName Test file name
-   * @param expectedHeaders The expected names of variants provided
+   * @param expectedMethods The expected names of variants provided
    */
-  case class TestScenario(fileName: Option[String], expectedHeaders: List[String])
+  case class TestScenario(fileName: Option[String], expectedMethods: List[String])
 
   val BodyIsJavaLangObject =
     TestScenario(
@@ -100,7 +99,7 @@ class MethodContributionTests
     myFixture.complete(CompletionType.BASIC)
     val suggestedStrings = myFixture.getLookupElementStrings
 
-    assertReflectionEquals(testScenario.expectedHeaders.asJava, suggestedStrings)
+    assertReflectionEquals(testScenario.expectedMethods.asJava, suggestedStrings)
   }
 
 }

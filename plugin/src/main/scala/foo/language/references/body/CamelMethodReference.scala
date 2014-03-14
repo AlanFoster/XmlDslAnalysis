@@ -20,7 +20,7 @@ import foo.traversal.MethodTraversal
  * @param range The text range within the parent element that this reference
  *              should be provided for
  */
-class CamelMethodReference(element: PsiElement, range: TextRange)
+class CamelMethodReference(element: PsiElement, range: TextRange, previousReference: Option[PsiReference])
   // Note this reference is a soft reference, ie if it doesn't resolve, it is *not* an error!
   extends PsiReferenceBase[PsiElement](element, range, false)
   with MethodConverter

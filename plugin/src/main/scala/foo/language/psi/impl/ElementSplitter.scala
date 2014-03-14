@@ -9,15 +9,14 @@ object ElementSplitter {
    * @return The list of substrings ie foo, bar, baz
    *         and the relevent indices within the original text string
    */
-  // TODO More FP way of doing this!!
-  def split(text:String): List[((String, Int, Int))] = {
+  def split(text:String): List[SplitTextRange] = {
     var start = 0
     var end = 0
-    var ranges = List[(String, Int, Int)]()
+    var ranges = List[SplitTextRange]()
     while(text.lift(end).isDefined) {
 
       if(text(end) == '.') {
-        ranges ::= (text.substring(start, end), start, end)
+        ranges ::= SplitTextRange(text.substring(start, end), start, end)
         end = end + 1
         start = end
       } else
@@ -25,8 +24,8 @@ object ElementSplitter {
       end = end + 1
     }
 
-    ranges ::= (text.substring(start, end), start, end)
+    ranges ::= SplitTextRange(text.substring(start, end), start, end)
 
-    ranges.filter(t => t._2 != t._3)
+    ranges.filter(t => t.start != t.end)
   }
 }

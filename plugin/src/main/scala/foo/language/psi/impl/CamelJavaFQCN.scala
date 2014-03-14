@@ -23,7 +23,7 @@ class CamelJavaFQCN(node: ASTNode) extends ASTWrapperPsiElement(node) with ICame
     // Provide a reference contribution for each possible split section within the CamelJavaFQCN text
     val references = {
       for { splitSection <- splitSections }
-        yield new CamelFQCNReference(this, new TextRange(splitSection._2, splitSection._3))
+        yield new CamelFQCNReference(this, new TextRange(splitSection.start, splitSection.end))
     }
 
     references.toArray
