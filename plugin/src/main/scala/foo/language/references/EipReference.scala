@@ -39,6 +39,9 @@ trait EipReference {
     resolvedBodies
   }
 
+/*  def getMethodReturnType(psiMethod: PsiMethod): String = {
+    psiMethod.getContainingClass //.getName
+  }*/
 
   /**
    * Gets the available body classes which can be inferred under this context for

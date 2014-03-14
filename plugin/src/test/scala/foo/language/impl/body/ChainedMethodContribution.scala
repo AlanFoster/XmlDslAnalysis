@@ -33,18 +33,26 @@ class ChainedMethodContribution
       copy(expectedMethods = expected)
   }
 
+  val STRING_SUGGESTIONS =
+    List("bytes", "charAt", "class", "codePointAt", "codePointBefore", "codePointCount", "compareTo",
+      "compareToIgnoreCase", "concat", "contains", "contentEquals", "copyValueOf", "endsWith", "equals",
+      "equalsIgnoreCase", "format", "getBytes", "getClass", "hashCode", "indexOf", "intern", "lastIndexOf",
+      "length", "matches", "notify", "notifyAll", "offsetByCodePoints", "regionMatches", "replace",
+      "replaceAll", "replaceFirst", "split", "startsWith", "subSequence", "substring", "toCharArray",
+      "toLowerCase", "toString", "toUpperCase", "trim", "valueOf", "wait"
+    )
+
+  val INTEGER_SUGGESTIONS = List("bitCount", "byteValue", "class", "compareTo", "decode", "doubleValue", "equals",
+    "floatValue", "getClass", "getInteger", "hashCode", "highestOneBit", "integer", "intValue", "longValue",
+    "lowestOneBit", "notify", "notifyAll", "numberOfLeadingZeros", "numberOfTrailingZeros", "parseInt", "reverse",
+    "reverseBytes", "rotateLeft", "rotateRight", "shortValue", "signum", "toBinaryString", "toHexString",
+    "toOctalString", "toString", "valueOf", "wait")
+
   /**
    * Contribution should access super methods
    */
   val ComplexModel = TestScenario(Some("ComplexModel.xml"))
-    .withMethods(
-      List("bytes", "charAt", "class", "codePointAt", "codePointBefore", "codePointCount", "compareTo",
-        "compareToIgnoreCase", "concat", "contains", "contentEquals", "copyValueOf", "endsWith", "equals",
-        "equalsIgnoreCase", "format", "getBytes", "getClass", "hashCode", "indexOf", "intern", "lastIndexOf",
-        "length", "matches", "notify", "notifyAll", "offsetByCodePoints", "regionMatches", "replace",
-        "replaceAll", "replaceFirst", "split", "startsWith", "subSequence", "substring", "toCharArray",
-        "toLowerCase", "toString", "toUpperCase", "trim", "valueOf", "wait")
-    )
+    .withMethods(STRING_SUGGESTIONS)
 
   def testFirstMethodSuccessDotAccessAfterBody_MultiplePipeline() {
     doTest(ComplexModel)
@@ -54,6 +62,22 @@ class ChainedMethodContribution
     doTest(ComplexModel.withMethods(Nil))
   }
 
+  def testMultipleChainedDotAccessAfterBody_MultiplePipeline() {
+    doTest(ComplexModel.withMethods(STRING_SUGGESTIONS))
+  }
+
+  def testMultipleChainedWithUnresolvedDotAccessAfterBody_MultiplePipeline() {
+    doTest(ComplexModel.withMethods(Nil))
+  }
+
+  def testPrimitiveIntCallDotAccessAfterBody_MultiplePipeline() {
+    doTest(ComplexModel.withMethods(INTEGER_SUGGESTIONS))
+  }
+
+  /**
+   * Performs the given test scenario under the test instance
+   * @param testScenario The information about the current test to run
+   */
   def doTest(testScenario: TestScenario) {
     loadAllCommon(myFixture)
     // Load the file

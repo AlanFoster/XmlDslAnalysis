@@ -14,5 +14,8 @@ public class ComplexModel extends BaseSimpleModel {
     public void setAdditionalInformation(String additionalInformation) {
         this.additionalInformation = additionalInformation;
     }
+
+    // Recursive type definition
+//    public ComplexModel getSelf() { return this; }
 }
 

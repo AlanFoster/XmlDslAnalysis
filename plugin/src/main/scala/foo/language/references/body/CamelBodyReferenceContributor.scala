@@ -20,6 +20,9 @@ class CamelBodyReferenceContributor extends PsiReferenceContributor {
       .andNot(element.withChild(psiElement(classOf[CamelFunctionArgs])))
   }
 
+  /**
+   * {@inheritdoc}
+   */
   override def registerReferenceProviders(registrar: PsiReferenceRegistrar): Unit = {
     registrar.registerReferenceProvider(VARIABLE_ACCESS_PATTERN, new PsiReferenceProvider {
       override def getReferencesByElement(element: PsiElement, context: ProcessingContext): Array[PsiReference] = {
