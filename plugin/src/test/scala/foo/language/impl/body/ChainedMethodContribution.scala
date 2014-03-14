@@ -33,18 +33,25 @@ class ChainedMethodContribution
       copy(expectedMethods = expected)
   }
 
-
   /**
    * Contribution should access super methods
    */
   val ComplexModel = TestScenario(Some("ComplexModel.xml"))
     .withMethods(
-      List("toUpperCase", "toLowerCase")
+      List("bytes", "charAt", "class", "codePointAt", "codePointBefore", "codePointCount", "compareTo",
+        "compareToIgnoreCase", "concat", "contains", "contentEquals", "copyValueOf", "endsWith", "equals",
+        "equalsIgnoreCase", "format", "getBytes", "getClass", "hashCode", "indexOf", "intern", "lastIndexOf",
+        "length", "matches", "notify", "notifyAll", "offsetByCodePoints", "regionMatches", "replace",
+        "replaceAll", "replaceFirst", "split", "startsWith", "subSequence", "substring", "toCharArray",
+        "toLowerCase", "toString", "toUpperCase", "trim", "valueOf", "wait")
     )
 
-
-  def testDotAccessAfterBody_MultiplePipeline() {
+  def testFirstMethodSuccessDotAccessAfterBody_MultiplePipeline() {
     doTest(ComplexModel)
+  }
+
+  def testFirstMethodFailDotAccessAfterBody_MultiplePipeline() {
+    doTest(ComplexModel.withMethods(Nil))
   }
 
   def doTest(testScenario: TestScenario) {

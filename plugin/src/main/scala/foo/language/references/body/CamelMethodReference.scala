@@ -11,6 +11,7 @@ import com.intellij.util.xml.ElementPresentationManager
 import scala.util.Try
 import foo.language.references.EipReference
 import foo.traversal.MethodTraversal
+import com.intellij.psi.util.PsiTypesUtil
 
 /**
  * Represents a concrete implementation of a reference which is used within
@@ -30,7 +31,7 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
    * No variants are possible within this reference
    */
   override def getVariants: Array[AnyRef] = {
-    val availableVariants = foo()
+    val availableVariants = contributeAvailableVariants()
 
     // Create lookups for method access *and* the OGNL getter notation
     val lookUpElements = availableVariants.map(createLookupElements)
@@ -40,19 +41,52 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
     providedVariants
   }
 
-  private def foo(): Set[Array[(PsiMethod, String)]] = {
-    val bodyTypes = getBodyTypes(element)
+  /**
+   * Computes the available variants available under the given method context
+   * @return The Set of possible variants available
+   */
+  private def contributeAvailableVariants(): Set[Array[(PsiMethod, String)]] = {
+    val psiClasses =
+      // If we do not have a previous reference, then we are simply the first method call
+      // And we should compute the inferred type information from the EIP graph
+      if(previousReference.isEmpty) getInferredBodyTypes(element)
+      // otherwise we must resolve the reference, and provide the contributions from that
+      else resolveMethod(previousReference.get)
 
     val unionAvailableVariants = for {
-      bodyType <- bodyTypes
+      psiClass <- psiClasses
     } yield {
       // Access all public methods - minus constructors
-      val publicMethods = MethodTraversal.getAllPublicMethods(bodyType)
+      val publicMethods = MethodTraversal.getAllPublicMethods(psiClass)
       val availableVariants = createAvailableVariants(publicMethods)
       availableVariants
     }
 
     unionAvailableVariants
+  }
+
+  /**
+   * Attempts to resolve the associated reference, which should return a PsiMethod
+   * with the relevent type information to infer the available PsiClasses which can
+   * be suggested ot the user
+   * @param reference the PsiReference that this CamelMethodReference depends on
+   * @return The set of possible PsiClasses that can be inferred currently
+   */
+  def resolveMethod(reference: PsiReference): Set[PsiClass] = {
+    val someResolved = Option(reference.resolve())
+
+    // Attempt to resolve the current class, handling null scenarios with monads
+    val resolvedClass = for {
+      resolved <- someResolved
+      psiMethod <- Try(resolved.asInstanceOf[PsiMethod]).toOption
+      psiClass = PsiTypesUtil.getPsiClass(psiMethod.getReturnType)
+    } yield psiClass
+
+    // Handle the scenario in which we have not resolved succesfully
+    resolvedClass match {
+      case Some(psiClass) => Set(psiClass)
+      case None => Set[PsiClass]()
+    }
   }
 
   /**
@@ -101,7 +135,7 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
       case None => null
       case Some(value) =>
         // TODO Multiple resolve
-        foo()
+        contributeAvailableVariants()
           .flatten
           .find(_._2 == value)
           .map(_._1)

@@ -36,7 +36,7 @@ class CamelBodyReference(element: PsiElement, range: TextRange)
    * @return The resolved PsiClass, otherwise null.
    */
   override def resolve(): PsiElement = {
-    val bodyTypes = getBodyTypes(element)
+    val bodyTypes = getInferredBodyTypes(element)
     if(bodyTypes.size == 1) bodyTypes.head
     else null
   }
@@ -45,7 +45,7 @@ class CamelBodyReference(element: PsiElement, range: TextRange)
    * Returns all possible body type references applicable
    */
   override def multiResolve(incompleteCode: Boolean): Array[ResolveResult] = {
-    getBodyTypes(element)
+    getInferredBodyTypes(element)
       .map(new PsiElementResolveResult(_))
       .toArray
   }

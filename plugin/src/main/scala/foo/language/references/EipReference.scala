@@ -22,7 +22,7 @@ trait EipReference {
    *         not being able to infer the body type. For instance if
    *         language injection is performed within the context of a Java DSL.
    */
-  def getBodyTypes(element: PsiElement):Set[PsiClass] = {
+  def getInferredBodyTypes(element: PsiElement):Set[PsiClass] = {
     // Define the class resolver and scope in which this body could possibly reference
     val module = ModuleUtilCore.findModuleForPsiElement(element)
     val searchScope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)
