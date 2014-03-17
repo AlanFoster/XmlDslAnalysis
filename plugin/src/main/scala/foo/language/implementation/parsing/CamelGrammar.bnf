@@ -64,10 +64,10 @@
 camel_file ::= camelInterpolation*
 
 // A valid camel string is an interpolation of normal text plus camel expressions  - ie `Hello ${body.name}
-private camelInterpolation ::=  camel_expression
+private camelInterpolation ::=  expression
 
 // A top level expression, IE useful as a RHS of a binary expression ie ${body} == RHS
-expression ::= camel_expression | literal
+expression ::=  camel_expression | literal
 
 // Represents literals, ie numbers, strings
 literal ::= NUMBER | STRING

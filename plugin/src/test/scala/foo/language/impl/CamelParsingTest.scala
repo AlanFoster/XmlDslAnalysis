@@ -41,7 +41,20 @@ class CamelParsingTest
     doTest(true)
   }
 
-  override def skipSpaces(): Boolean = false
-  override def includeRanges(): Boolean = true
+  /**
+   * Test a Number literal by itself
+   */
+  def testNumberLiteral() {
+    doTest(true)
+  }
 
+  /**
+   * {@inheritdoc}
+   */
+  override def skipSpaces(): Boolean = false
+
+  /**
+   * {@inheritdoc}
+   */
+  override def includeRanges(): Boolean = true
 }

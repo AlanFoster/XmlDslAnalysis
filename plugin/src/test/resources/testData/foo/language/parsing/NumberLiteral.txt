@@ -1,0 +1,4 @@
+{CamelPsiFile FILE}(0,2)
+  CamelExpressionImpl(EXPRESSION)(0,2)
+    CamelLiteralImpl(LITERAL)(0,2)
+      PsiElement({CamelTokenType NUMBER})('42')(0,2)

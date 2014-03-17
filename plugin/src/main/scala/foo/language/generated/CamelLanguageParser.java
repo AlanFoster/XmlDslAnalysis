@@ -161,9 +161,9 @@ public class CamelLanguageParser implements PsiParser {
   }
 
   /* ********************************************************** */
-  // camel_expression
+  // expression
   static boolean camelInterpolation(PsiBuilder builder_, int level_) {
-    return camel_expression(builder_, level_ + 1);
+    return expression(builder_, level_ + 1);
   }
 
   /* ********************************************************** */
