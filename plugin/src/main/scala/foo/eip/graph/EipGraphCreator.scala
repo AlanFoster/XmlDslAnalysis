@@ -89,7 +89,10 @@ class EipGraphCreator {
     }
 
     case (setBody: SetBodyProcessorDefinition) :: tail => {
-      val component = EipComponent(createId(setBody), "translator", setBody.getExpression.getValue, unionTypes(previous), setBody)
+      val expression = setBody.getExpression
+      val expressionTypeInformation = inferExpressionTypeInformation(expression)
+      val newTypeInformation = replaceBody(previous, expressionTypeInformation)
+      val component = EipComponent(createId(setBody), "translator", expression.getValue, newTypeInformation, setBody)
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
@@ -147,6 +150,33 @@ class EipGraphCreator {
       val component = EipComponent("", "to", "Error", unionTypes(previous), unmatched)
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
+  }
+
+  /**
+   * Attempts to extract the semantic information from the expression language used
+   * @param expression
+   * @return
+   */
+  def inferExpressionTypeInformation(expression: Expression) = expression match {
+    case constant: ConstantExpression => CamelTypeSemantics(Set(CommonClassNames.JAVA_LANG_STRING), Map())
+
+    case simple: SimpleExpression =>
+      // By default we should take priority of the attribute value
+      val resultTypeAttribute = simple.getResultType
+      val fqcnOption =
+        if(resultTypeAttribute.isValid && resultTypeAttribute.exists())
+          Some(resultTypeAttribute.getXmlAttributeValue.getValue)
+        else None
+
+      fqcnOption match {
+        case None =>
+          CamelTypeSemantics(Set(), Map())
+        case Some(fqcn) =>
+          CamelTypeSemantics(Set(fqcn), Map())
+      }
+
+    // By default we should supply no known type information for unknown type expressions
+    case _ => CamelTypeSemantics(Set(), Map())
   }
 
   /**

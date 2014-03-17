@@ -1,0 +1,13 @@
+<eipDag>
+    <vertices>
+        <vertex id="end" eipType="to" text="direct:end" inferredType="{java.lang.String}"/>
+        <vertex id="setBody" eipType="translator" text="${body.id}" inferredType="{java.lang.String}"/>
+        <vertex id="beanRef" eipType="to" text="complexModelFactory" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
+    </vertices>
+    <edges>
+        <edge source="setBody" target="end" edgeConnection="setBody_end2"/>
+        <edge source="beanRef" target="setBody" edgeConnection="beanRef_setBody1"/>
+        <edge source="from" target="beanRef" edgeConnection="from_beanRef0"/>
+    </edges>
+</eipDag>

@@ -15,6 +15,9 @@ class HeaderTypePropagationTests
   extends LightCodeInsightFixtureTestCase
   with TestBase{
 
+  /**
+   * {@inheritdoc}
+   */
   override def getTestDataPath: String = testDataMapper("/foo/eip/eipCreator/types/header")
 
   /**

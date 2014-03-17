@@ -13,6 +13,9 @@ class CoreEipCreatorTests
   extends LightCodeInsightFixtureTestCase
   with TestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   override def getTestDataPath: String = testDataMapper("/foo/eip/eipCreator/core")
 
   /**

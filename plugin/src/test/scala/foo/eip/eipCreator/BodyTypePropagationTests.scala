@@ -16,6 +16,9 @@ class BodyTypePropagationTests
   with TestBase
   with CommonTestClasses {
 
+  /**
+   * {@inheritdoc}
+   */
   override def getTestDataPath: String = testDataMapper("/foo/eip/eipCreator/types/body")
 
   /**
