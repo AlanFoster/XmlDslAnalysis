@@ -126,5 +126,6 @@ private identifierAccess ::=
 private arrayAccess ::=
     IDENTIFIER arrayOrMapIndices
 
+// Can be written as LEFT_SQUARE_BRACE (identifierAccess | expression)
 private arrayOrMapIndices ::=
     LEFT_SQUARE_BRACE (NUMBER | STRING | variableAccess) RIGHT_SQUARE_BRACE
