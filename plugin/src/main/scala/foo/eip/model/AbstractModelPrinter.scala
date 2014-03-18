@@ -1,10 +1,25 @@
 package foo.eip.model
 
+/**
+ * Provides a concrete implementation for printing the abstract model processor classes
+ * in a human readable way
+ */
 object AbstractModelPrinter {
+  /**
+   * Prints the given processor definition in a human-readable way
+   * @param root The root node
+   * @return A human readable representation of the processor and children
+   */
   def print(root: Processor):String = {
     print(root, 0)
   }
 
+  /**
+   * Prints the given processor definition in a human-readable way
+   * @param processor The current processor node
+   * @param depth The level of traversal with the tree
+   * @return A human readable representation of the processor and children
+   */
   private def print(processor: Processor, depth: Int):String = processor match {
     case Route(children) =>
       printWrapper("Route", children, depth)
@@ -19,6 +34,13 @@ object AbstractModelPrinter {
       fillWhitespace(depth) + default.toString
   }
 
+  /**
+   * Creates a topmost node output within the tree
+   * @param rootName The root node to use
+   * @param children The children processors
+   * @param depth The level of traversal with the tree
+   * @return The formatted string with the rootName wrapper as the starting text
+   */
   private def printWrapper(rootName: String, children: List[Processor], depth: Int): String = {
     val parentWhitespace = fillWhitespace(depth)
     // Create the formatted children as expected
@@ -41,5 +63,4 @@ object AbstractModelPrinter {
    */
   private def fillWhitespace(depth: Int): String =
     List.fill(depth)("     ").mkString
-
 }
