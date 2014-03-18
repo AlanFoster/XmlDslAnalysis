@@ -82,6 +82,19 @@ class DomConverter extends Converter[List[DomElement]] {
 
       SetHeader(headerName, expression)
 
+    // Handle bean references <bean ref="..." method="..." />
+    case bean: BeanDefinition =>
+      val ref = Option(bean.getRef.getStringValue)
+      val method = Option(bean.getMethod.getStringValue)
+
+      Bean(ref, method)
+
+    // Handle <setBody><expression>...</expression></setBody>
+    case setBody: SetBodyProcessorDefinition =>
+      val expression = convertExpression(setBody.getExpression)
+      SetBody(expression)
+
+    // Handle the <choice><when>...</when>*</choice> notation which can contain arbitary children
     case choice: ChoiceProcessorDefinition =>
      val domChildren = choice.getWhenClauses.asScala
      val abstractChildren = domChildren.map(convertWhenClause).toList
@@ -104,15 +117,21 @@ class DomConverter extends Converter[List[DomElement]] {
     // case otherwise:
   }
 
+  def convertExpression(expression: DomExpression): Expression = {
+    val isValid = expression.isValid && expression.exists()
 
-  def convertExpression(expression: DomExpression): Expression = expression match {
-    case constant: ConstantExpression => CamelTypeSemantics(Set(CommonClassNames.JAVA_LANG_STRING), Map())
-      Constant(constant.getValue)
-    case simple: SimpleExpression =>
-      Simple(simple.getValue, Option(simple.getResultType.getStringValue))
-    // By default we should supply no known type information for unknown type expressions
-    case _ =>
-      UnknownExpression()
+    expression match {
+      // Handle a malformed/non-existent DOM element explicitly
+      case _ if !isValid => UnknownExpression()
+
+      case constant: ConstantExpression => CamelTypeSemantics(Set(CommonClassNames.JAVA_LANG_STRING), Map())
+        Constant(constant.getValue)
+      case simple: SimpleExpression =>
+        Simple(simple.getValue, Option(simple.getResultType.getStringValue))
+      // By default we should supply no known type information for unknown type expressions
+      case _ =>
+        UnknownExpression()
+    }
   }
 
 }

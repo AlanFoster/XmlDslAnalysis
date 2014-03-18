@@ -51,6 +51,27 @@ class DomAbstractionModelTests
   }
 
   /**
+   * Ensure that bean information propagates as expected
+   */
+  def testBeanReference() {
+    doTest()
+  }
+
+  /**
+   * Test a more complex scenario with arbitarily nested components etc
+   */
+  def testComplexNestedChoice() {
+    doTest()
+  }
+
+  /**
+   * Ensure that setBody expression works as expected
+   */
+  def testSetBodySimple() {
+    doTest()
+  }
+
+  /**
    * Ensures the test is valid - using the test name as the configuration file
    */
   // TODO Could merge with the EipDagAssert class

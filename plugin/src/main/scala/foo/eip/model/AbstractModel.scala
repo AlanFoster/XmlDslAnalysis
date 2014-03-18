@@ -23,6 +23,7 @@ case class SetHeader(headerName: String, expression: Expression) extends Process
 case class Choice(whens: List[When]) extends Processor
 case class When(expression: Expression, children: List[Processor]) extends Processor
 case class Otherwise(children: List[Processor]) extends Processor
+case class Bean(ref: Option[String], method:  Option[String]) extends Processor
 
 object MainTest {
   def main(args: Array[String]) {

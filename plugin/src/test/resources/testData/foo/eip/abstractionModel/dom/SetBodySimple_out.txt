@@ -1,0 +1,7 @@
+Route(
+     From(direct:start)
+     To(direct:foo)
+     SetBody(Simple(${body},None))
+     SetBody(Constant(hello world))
+     SetBody(UnknownExpression())
+)
