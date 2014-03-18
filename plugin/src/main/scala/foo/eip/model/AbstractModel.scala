@@ -7,7 +7,10 @@ import foo.eip.graph.ADT.EmptyDAG
 trait Expression
 
 case class Constant(value: String) extends Expression
+// TODO Maybe result type should be more statically typed instead of a string
 case class Simple(value: String, resultType: Option[String]) extends Expression
+// An expression language not currently handled by the plugin
+case class UnknownExpression() extends Expression
 
 trait Processor
 
@@ -17,8 +20,10 @@ case class From(uri: String) extends Processor
 case class To(uri: String) extends Processor
 case class BeanReference(reference: String, method: String) extends Processor
 case class SetBody(expression: Expression) extends Processor
+case class SetHeader(headerName: String, expression: Expression) extends Processor
 case class Choice(whens: List[When]) extends Processor
 case class When(expression: Expression, children: List[Processor]) extends Processor
+
 
 object MainTest {
   def main(args: Array[String]) {

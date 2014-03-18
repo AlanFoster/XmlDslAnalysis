@@ -1,0 +1,1 @@
+Route(List(From(direct:start), To(direct:foo), SetHeader(firstHeader,Constant(true)), SetHeader(secondHeader,Simple(${body},None)), SetHeader(thirdHeader,Simple(${body},Some(java.lang.String))), To(direct:bar)))

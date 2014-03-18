@@ -1,6 +1,6 @@
 package foo.dom.Model
 
-import com.intellij.util.xml.{TagValue, Required, DomElement}
+import com.intellij.util.xml.{TagValue, DomElement}
 
 trait Expression extends DomElement {
   @TagValue
