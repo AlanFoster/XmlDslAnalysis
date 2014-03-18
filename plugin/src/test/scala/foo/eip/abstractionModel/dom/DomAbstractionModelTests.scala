@@ -8,6 +8,7 @@ import foo.dom.DomFileAccessor
 import foo.eip.graph.EipGraphCreator
 import junit.framework.Assert
 import foo.eip.converter.DomConverter
+import foo.eip.model.AbstractModelPrinter
 
 /**
  * Tests to ensure that the DOM can successfully be converted into an intermediate representation
@@ -43,6 +44,13 @@ class DomAbstractionModelTests
   }
 
   /**
+   * Attempts to create the abstract representation of a simple choice
+   */
+  def testSimpleChoice() {
+    doTest()
+  }
+
+  /**
    * Ensures the test is valid - using the test name as the configuration file
    */
   // TODO Could merge with the EipDagAssert class
@@ -56,7 +64,7 @@ class DomAbstractionModelTests
 
     // Create and pretty print the produced Eip DAG for the given DOM file
     val route = new DomConverter().createAbstraction(loadedDomFile)
-    val serialized = route.toString
+    val serialized = AbstractModelPrinter.print(route)
 
     // Assert Equals - Note, IntelliJ will provide a nice comparison tool in failure scenarios
     Assert.assertEquals("the given and expected EipDag should be equal", expectedModel, serialized)

@@ -14,7 +14,6 @@ case class UnknownExpression() extends Expression
 
 trait Processor
 
-// Not currently needed
 case class Route(children: List[Processor]) extends Processor
 case class From(uri: String) extends Processor
 case class To(uri: String) extends Processor
@@ -23,7 +22,7 @@ case class SetBody(expression: Expression) extends Processor
 case class SetHeader(headerName: String, expression: Expression) extends Processor
 case class Choice(whens: List[When]) extends Processor
 case class When(expression: Expression, children: List[Processor]) extends Processor
-
+case class Otherwise(children: List[Processor]) extends Processor
 
 object MainTest {
   def main(args: Array[String]) {

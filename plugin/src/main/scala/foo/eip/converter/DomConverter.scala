@@ -11,6 +11,16 @@ import foo.eip.model.Route
 import foo.eip.graph.model.CamelTypeSemantics
 import foo.eip.model.Expression
 import foo.eip.model.To
+import foo.eip.model.Choice
+import foo.eip.model.Constant
+import foo.eip.model.Simple
+import foo.eip.model.When
+import foo.eip.model.SetHeader
+import foo.eip.model.From
+import foo.eip.model.Route
+import foo.eip.graph.model.CamelTypeSemantics
+import foo.eip.model.UnknownExpression
+import foo.eip.model.To
 
 /**
  * Concrete implementation of the Converter trait which will convert a Dom
@@ -57,19 +67,43 @@ class DomConverter extends Converter[List[DomElement]] {
    *         a To processor
    */
   def convert(domElement: DomElement): Processor = domElement match {
+    // Handle the <from uri="..." /> DomElement
     case from: FromProcessorDefinition =>
       From(from.getUri.getStringValue)
+
+    // Handle the <to uri="..."/> DomElement
     case to: ToProcessorDefinition =>
       To(to.getUri.getStringValue)
+
+    // Handle the <setHeader headerName="..."><expression>...</expression></setHeader> element
     case setHeader: SetHeaderProcessorDefinition =>
       val headerName = setHeader.getHeaderName.getStringValue
       val expression = convertExpression(setHeader.getExpression)
 
       SetHeader(headerName, expression)
+
+    case choice: ChoiceProcessorDefinition =>
+     val domChildren = choice.getWhenClauses.asScala
+     val abstractChildren = domChildren.map(convertWhenClause).toList
+     Choice(abstractChildren)
+
     // Ensure we fall through in case there is a node we do not understand
     case _ =>
       To("error:unexpected")
   }
+
+  def convertWhenClause(whenDefinition: WhenDefinition): When = whenDefinition match {
+    // Handle the When case - note we need to recursively apply the function
+    // to our children also
+    case when: WhenDefinition =>
+      val expression = convertExpression(when.getExpression)
+      val children = when.getComponents.asScala.map(convert).toList
+
+      When(expression, children)
+
+    // case otherwise:
+  }
+
 
   def convertExpression(expression: DomExpression): Expression = expression match {
     case constant: ConstantExpression => CamelTypeSemantics(Set(CommonClassNames.JAVA_LANG_STRING), Map())

@@ -22,21 +22,21 @@ class SimpleBodyTypePropagationTests
   /**
    * The result type attribute should  be applied and propagated as expected
    */
-  def testStringToStringResultTypeAttribute() {
+  def ignoretestStringToStringResultTypeAttribute() {
     doTest()
   }
 
   /**
    * Type 'coercion' should be applied
    */
-  def testIntegerToStringResultTypeAttribute() {
+  def ignoretestIntegerToStringResultTypeAttribute() {
     doTest()
   }
 
   /**
    * Type 'coercion' should be applied
    */
-  def testStringToBooleanResultTypeAttribute() {
+  def ignoretestStringToBooleanResultTypeAttribute() {
     doTest()
   }
 

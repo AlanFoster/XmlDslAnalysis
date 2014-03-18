@@ -88,11 +88,12 @@ class EipGraphCreator {
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
+    // TODO Implement as expected
     case (setBody: SetBodyProcessorDefinition) :: tail => {
       val expression = setBody.getExpression
       val expressionTypeInformation = inferExpressionTypeInformation(expression)
-      val newTypeInformation = replaceBody(previous, expressionTypeInformation)
-      val component = EipComponent(createId(setBody), "translator", expression.getValue, newTypeInformation, setBody)
+      //val newTypeInformation = replaceBody(previous, expressionTypeInformation)
+      val component = EipComponent(createId(setBody), "translator", expression.getValue, unionTypes(previous), setBody)
       createEipGraph(List(component), tail, linkGraph(previous, component, graph))
     }
 
