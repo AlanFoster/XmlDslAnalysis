@@ -40,6 +40,10 @@ class SimpleBodyTypePropagationTests
     doTest()
   }
 
+  def testTODO() {
+    // Noop test to stop JUnit3 from reporting test failure...
+  }
+
   /**
    * Performs the main test scenario- using the test method name the configuration
    * file to run
