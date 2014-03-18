@@ -50,7 +50,7 @@ class HeaderTypePropagationTests
   }
 
   /**
-   * Ensures the test is valid
+   * Ensures the test is valid - using the test name as the configuration file
    */
   def doTest() {
     EipDagAssert.doTest(myFixture, getTestName(false), new HeaderTypeEipDagSerializer)

@@ -1,6 +1,6 @@
 package foo.dom.Model
 
-import com.intellij.util.xml.{GenericAttributeValue, Convert, Attribute, DomElement}
+import com.intellij.util.xml._
 import org.jetbrains.annotations.NotNull
 import com.intellij.psi.PsiClass
 
