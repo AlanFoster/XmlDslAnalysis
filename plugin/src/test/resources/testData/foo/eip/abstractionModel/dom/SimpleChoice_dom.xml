@@ -16,7 +16,7 @@
                     <to id="firstChoiceProcessor" uri="uri:firstChoiceProcessor" />
                 </when>
                 <when>
-                    <simple resultType="java.lang.Boolean">false</simple>
+                    <simple>false</simple>
                     <to id="secondChoiceProcessor" uri="uri:secondChoiceProcessor" />
                     <to id="thirdChoiceProcessor" uri="uri:thirdChoiceProcessor" />
                 </when>

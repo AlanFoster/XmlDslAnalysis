@@ -1,1 +1,5 @@
-Route(List(From(direct:start), To(direct:foo), To(direct:bar)))
+Route(
+     From(direct:start)
+     To(direct:foo)
+     To(direct:bar)
+)

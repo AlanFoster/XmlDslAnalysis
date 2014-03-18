@@ -1,1 +1,14 @@
-Route(List(From(direct:start), To(direct:foo), Choice(List(When(Simple(true,Some(java.lang.Boolean)),List(To(uri:firstChoiceProcessor))), When(Simple(false,Some(java.lang.Boolean)),List(To(uri:secondChoiceProcessor), To(uri:thirdChoiceProcessor))))), To(direct:bar)))
+Route(
+     From(direct:start)
+     To(direct:foo)
+     Choice(
+          When(Simple(true,Some(java.lang.Boolean)))(
+               To(uri:firstChoiceProcessor)
+          )
+          When(Simple(false,None))(
+               To(uri:secondChoiceProcessor)
+               To(uri:thirdChoiceProcessor)
+          )
+     )
+     To(direct:bar)
+)
