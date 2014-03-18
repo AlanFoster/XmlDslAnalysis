@@ -1,10 +1,8 @@
 package foo.eip
 
-import foo.eip.graph.StaticGraphTypes._
-import scala.xml.{PrettyPrinter, Elem}
 import foo.eip.graph.EipGraphCreator
 import junit.framework.Assert
-import com.intellij.testFramework.fixtures.{CodeInsightTestFixture, JavaCodeInsightTestFixture}
+import com.intellij.testFramework.fixtures.CodeInsightTestFixture
 import foo.eip.serializers.EipDagSerializer
 import foo.dom.DomFileAccessor
 

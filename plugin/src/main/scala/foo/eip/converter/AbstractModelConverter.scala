@@ -7,7 +7,7 @@ import foo.eip.model.Route
  * into the Abstract model representation of the same data
  * @tparam T The data format of the input type
  */
-trait Converter[T] {
+trait AbstractModelConverter[T] {
   /**
    * Converts the given data model into an abstract representation
    * @param input The input data model

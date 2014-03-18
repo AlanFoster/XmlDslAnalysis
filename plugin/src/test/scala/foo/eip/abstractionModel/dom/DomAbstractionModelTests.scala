@@ -1,13 +1,10 @@
-package foo.eip.eipCreator
+package foo.eip.abstractionModel.dom
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import foo.eip.serializers.CoreEipDagSerializer
-import foo.eip.EipDagAssert
 import foo.TestBase
 import foo.dom.DomFileAccessor
-import foo.eip.graph.EipGraphCreator
 import junit.framework.Assert
-import foo.eip.converter.DomConverter
+import foo.eip.converter.DomAbstractModelConverter
 import foo.eip.model.AbstractModelPrinter
 
 /**
@@ -84,7 +81,7 @@ class DomAbstractionModelTests
     val expectedModel = myFixture.configureByFile(s"${getTestName(false)}_out.txt").getText
 
     // Create and pretty print the produced Eip DAG for the given DOM file
-    val route = new DomConverter().createAbstraction(loadedDomFile)
+    val route = new DomAbstractModelConverter().createAbstraction(loadedDomFile)
     val serialized = AbstractModelPrinter.print(route)
 
     // Assert Equals - Note, IntelliJ will provide a nice comparison tool in failure scenarios

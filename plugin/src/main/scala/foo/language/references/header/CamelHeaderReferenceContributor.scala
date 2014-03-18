@@ -7,16 +7,6 @@ import com.intellij.util.ProcessingContext
 import com.intellij.patterns.PlatformPatterns
 import foo.language.generated.psi.CamelVariableAccess
 import com.intellij.openapi.util.TextRange
-import com.intellij.codeInsight.lookup.LookupElementBuilder
-import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil
-import foo.dom.DomFileAccessor
-import foo.dom.Model.ProcessorDefinition
-import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.xml.XmlTag
-import foo.eip.graph.EipGraphCreator
-import com.intellij.lang.injection.InjectedLanguageManager
-import com.intellij.util.xml.ElementPresentationManager
-import foo.language.Core.CamelFileType
 
 /**
  * Provides PsiReferences for apache camel's simple language when accessing header

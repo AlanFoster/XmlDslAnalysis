@@ -4,13 +4,8 @@ import scala.collection.JavaConverters._
 import com.intellij.util.xml.DomElement
 import foo.dom.Model._
 import foo.eip.model._
-import foo.eip.graph.model.CamelTypeSemantics
 import com.intellij.psi.CommonClassNames
-import foo.eip.model.From
-import foo.eip.model.Route
-import foo.eip.graph.model.CamelTypeSemantics
 import foo.eip.model.Expression
-import foo.eip.model.To
 import foo.eip.model.Choice
 import foo.eip.model.Constant
 import foo.eip.model.Simple
@@ -26,7 +21,7 @@ import foo.eip.model.To
  * Concrete implementation of the Converter trait which will convert a Dom
  * structure into an abstract representation
  */
-class DomConverter extends Converter[List[DomElement]] {
+class DomAbstractModelConverter extends AbstractModelConverter[List[DomElement]] {
   type DomExpression = foo.dom.Model.Expression
 
   /**
@@ -105,6 +100,11 @@ class DomConverter extends Converter[List[DomElement]] {
       To("error:unexpected")
   }
 
+  /**
+   * Converts the when clause Dom Elements to the relevent expressions as expected
+   * @param whenDefinition The current when definition DomElement
+   * @return The appropriate abstract model associated with this DomElement
+   */
   def convertWhenClause(whenDefinition: WhenDefinition): When = whenDefinition match {
     // Handle the When case - note we need to recursively apply the function
     // to our children also
@@ -117,6 +117,16 @@ class DomConverter extends Converter[List[DomElement]] {
     // case otherwise:
   }
 
+  /**
+   * Converts the given Dom Element expression into the abstract model
+   * @param expression The DomExpression to convert
+   * @return The relevent Abstract model.
+   *         Note in the scenario of not matching a DomElement successfully,
+   *         this implementation will return an 'UnknownExpression()' element
+   *         rather than throw an error etc.
+   *         This in essence should represent the 'Null' pattern, and should
+   *         be considered appropriately when propagating type information.
+   */
   def convertExpression(expression: DomExpression): Expression = {
     val isValid = expression.isValid && expression.exists()
 
