@@ -1,7 +1,6 @@
 package foo.eip.converter
 
 import scala.collection.JavaConverters._
-import com.intellij.util.xml.DomElement
 import foo.dom.Model._
 import foo.eip.model._
 import com.intellij.psi.CommonClassNames
@@ -21,7 +20,11 @@ import foo.eip.model.To
  * Concrete implementation of the Converter trait which will convert a Dom
  * structure into an abstract representation
  */
-class DomAbstractModelConverter extends AbstractModelConverter[List[DomElement]] {
+class DomAbstractModelConverter extends AbstractModelConverter[List[ProcessorDefinition]] {
+  /**
+   * Provide a type alias for the Dom expresions, so that 'Expression' can simply
+   * refer to our abstract model instead.
+   */
   type DomExpression = foo.dom.Model.Expression
 
   /**
@@ -33,7 +36,7 @@ class DomAbstractModelConverter extends AbstractModelConverter[List[DomElement]]
     // Extract the given camel routes and create an empty EipDAG
     val domRoutes = root.getCamelContext.getRoutes.asScala
     // There is no need to traverse the given routes if there are no processor definitions
-    if (domRoutes.isEmpty || !domRoutes.head.getFrom.exists) Route(Nil)
+    if (domRoutes.isEmpty || !domRoutes.head.getFrom.exists) Route(Nil, NoReference)
     else {
       // Convert the first route by default
       val firstRoute = domRoutes.head
@@ -48,9 +51,9 @@ class DomAbstractModelConverter extends AbstractModelConverter[List[DomElement]]
    * @param children The child DomElements within this structure
    * @return The abstract route representation of the same data model
    */
-  override def convert(children: List[DomElement]): Route = {
+  override def convert(children: List[ProcessorDefinition]): Route = {
     val processors = children.map(convert)
-    Route(processors)
+    Route(processors, NoReference)
   }
 
   /**
@@ -61,43 +64,57 @@ class DomAbstractModelConverter extends AbstractModelConverter[List[DomElement]]
    *         this class will not error, and will instead try to convert the element into
    *         a To processor
    */
-  def convert(domElement: DomElement): Processor = domElement match {
-    // Handle the <from uri="..." /> DomElement
+  def convert(domElement: ProcessorDefinition): Processor = domElement match {
+    /**
+     * Handle the <from uri="..." /> DomElement
+     */
     case from: FromProcessorDefinition =>
-      From(from.getUri.getStringValue)
+      From(from.getUri.getStringValue, DomReference(domElement))
 
-    // Handle the <to uri="..."/> DomElement
+    /**
+     * Handle the <to uri="..."/> DomElement
+     */
     case to: ToProcessorDefinition =>
-      To(to.getUri.getStringValue)
+      To(to.getUri.getStringValue, DomReference(domElement))
 
-    // Handle the <setHeader headerName="..."><expression>...</expression></setHeader> element
+    /**
+     * Handle the <setHeader headerName"..."><expression>...</expression></setHeader> element
+     */
     case setHeader: SetHeaderProcessorDefinition =>
       val headerName = setHeader.getHeaderName.getStringValue
       val expression = convertExpression(setHeader.getExpression)
 
-      SetHeader(headerName, expression)
+      SetHeader(headerName, expression, DomReference(domElement))
 
-    // Handle bean references <bean ref="..." method="..." />
+    /**
+     * Handle bean references <bean ref="..." method="..." />
+     */
     case bean: BeanDefinition =>
       val ref = Option(bean.getRef.getStringValue)
       val method = Option(bean.getMethod.getStringValue)
 
-      Bean(ref, method)
+      Bean(ref, method, DomReference(domElement))
 
-    // Handle <setBody><expression>...</expression></setBody>
+    /**
+     * Handle <setBody><expression>...</expression></setBody>
+     */
     case setBody: SetBodyProcessorDefinition =>
       val expression = convertExpression(setBody.getExpression)
-      SetBody(expression)
+      SetBody(expression, DomReference(domElement))
 
-    // Handle the <choice><when>...</when>*</choice> notation which can contain arbitary children
+    /**
+     * Handle the <choice><when>...</when>*</choice> notation which can contain arbitary children
+     */
     case choice: ChoiceProcessorDefinition =>
      val domChildren = choice.getWhenClauses.asScala
      val abstractChildren = domChildren.map(convertWhenClause).toList
-     Choice(abstractChildren)
+     Choice(abstractChildren, DomReference(domElement))
 
-    // Ensure we fall through in case there is a node we do not understand
+    /**
+     * Ensure we fall through in case there is a node we do not understand
+     */
     case _ =>
-      To("error:unexpected")
+      To("error:unexpected", DomReference(domElement))
   }
 
   /**
@@ -106,13 +123,15 @@ class DomAbstractModelConverter extends AbstractModelConverter[List[DomElement]]
    * @return The appropriate abstract model associated with this DomElement
    */
   def convertWhenClause(whenDefinition: WhenDefinition): When = whenDefinition match {
-    // Handle the When case - note we need to recursively apply the function
-    // to our children also
+    /**
+     * Handle the When case - note we need to recursively apply the function
+     * to our children also
+     */
     case when: WhenDefinition =>
       val expression = convertExpression(when.getExpression)
       val children = when.getComponents.asScala.map(convert).toList
 
-      When(expression, children)
+      When(expression, children, DomReference(whenDefinition))
 
     // case otherwise:
   }
@@ -131,14 +150,18 @@ class DomAbstractModelConverter extends AbstractModelConverter[List[DomElement]]
     val isValid = expression.isValid && expression.exists()
 
     expression match {
-      // Handle a malformed/non-existent DOM element explicitly
+      /**
+       * Handle a malformed/non-existent DOM element explicitly
+       */
       case _ if !isValid => UnknownExpression()
 
       case constant: ConstantExpression => CamelTypeSemantics(Set(CommonClassNames.JAVA_LANG_STRING), Map())
         Constant(constant.getValue)
       case simple: SimpleExpression =>
         Simple(simple.getValue, Option(simple.getResultType.getStringValue))
-      // By default we should supply no known type information for unknown type expressions
+      /**
+        * By default we should supply no known type information for unknown type expressions
+        */
       case _ =>
         UnknownExpression()
     }

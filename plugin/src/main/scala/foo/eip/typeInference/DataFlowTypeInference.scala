@@ -38,7 +38,7 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
     /**
      * Ensure that Route information takes into consideration its children
      */
-    case route@Route(children, _) =>
+    case route@Route(children, _, _) =>
 
       // Apply map by folding left with the new type environment
       val (newTypeEnv, newChildren) = children.foldLeft((typeEnvironment, List[Processor]()))({
@@ -60,7 +60,7 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
     /**
      * Camel Choice element, ensuring that When elements are allocated as expected
      */
-    case choice@Choice(whens, _) =>
+    case choice@Choice(whens, _, _) =>
       val (newTypeEnv, newChildren) = whens.foldLeft((typeEnvironment, List[When]()))({
         case (((typeEnv), previous), next) =>
           val mappedProcessor = performTypeInference(typeEnv, next)
@@ -88,7 +88,7 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
      * Ensure that When elements have their children's type information accounted for
      * as expected
      */
-    case when@When(expression, children, _) =>
+    case when@When(expression, children, _, _) =>
       val (newTypeEnv, newChildren) = children.foldLeft((typeEnvironment, List[Processor]()))({
         case (((typeEnv), previous), next) =>
           val mappedProcessor = performTypeInference(typeEnv, next)
@@ -122,7 +122,7 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
     /**
      * The type information of expressions applied to setHeader can update the type environment
      */
-    case setHeader@SetHeader(headerName, expression, _) =>
+    case setHeader@SetHeader(headerName, expression, _, _) =>
       val expressionTypeInformation = inferExpressionTypeInformation(expression)
       val newTypeEnvironment = typeEnvironment.copy(headers = typeEnvironment.headers + (headerName -> expressionTypeInformation))
       setHeader.copy(typeInformation = Inferred(typeEnvironment, newTypeEnvironment))
@@ -131,7 +131,7 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
     /**
      * The body's type information may be updated after running through an expression element
      */
-    case setBody@SetBody(expression, _) =>
+    case setBody@SetBody(expression, _, _) =>
       val expressionTypeInformation = inferExpressionTypeInformation(expression)
       val newTypeEnvironment = typeEnvironment.copy(body = Set(expressionTypeInformation))
       setBody.copy(typeInformation = Inferred(typeEnvironment, newTypeEnvironment))

@@ -1,5 +1,5 @@
 Route(
-     From(direct:start,NotInferred)
-     To(direct:foo,NotInferred)
-     To(direct:bar,NotInferred)
+     From(direct:start,DomReference(FromProcessorDefinition),NotInferred)
+     To(direct:foo,DomReference(ToProcessorDefinition),NotInferred)
+     To(direct:bar,DomReference(ToProcessorDefinition),NotInferred)
 )

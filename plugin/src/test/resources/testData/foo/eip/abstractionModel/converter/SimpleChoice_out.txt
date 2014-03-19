@@ -1,14 +1,14 @@
 Route(
-     From(direct:start,NotInferred)
-     To(direct:foo,NotInferred)
+     From(direct:start,DomReference(FromProcessorDefinition),NotInferred)
+     To(direct:foo,DomReference(ToProcessorDefinition),NotInferred)
      Choice(
           When(Simple(true,Some(java.lang.Boolean)))(
-               To(uri:firstChoiceProcessor,NotInferred)
+               To(uri:firstChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
           )
           When(Simple(false,None))(
-               To(uri:secondChoiceProcessor,NotInferred)
-               To(uri:thirdChoiceProcessor,NotInferred)
+               To(uri:secondChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
+               To(uri:thirdChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
           )
      )
-     To(direct:bar,NotInferred)
+     To(direct:bar,DomReference(ToProcessorDefinition),NotInferred)
 )
