@@ -1,8 +1,15 @@
 package foo.eip.model
 
-import foo.eip.graph.ADT.EmptyDAG
-
 // Abstract Models
+
+
+trait TypeInformation
+object NotInferred extends TypeInformation {
+  override def toString: String = "NotInferred"
+}
+case class Inferred(before: TypeEnvironment, after: TypeEnvironment) extends TypeInformation
+
+case class TypeEnvironment(body: Set[String], headers:Map[String, String]) extends TypeInformation
 
 trait Expression
 
@@ -12,18 +19,20 @@ case class Simple(value: String, resultType: Option[String]) extends Expression
 // An expression language not currently handled by the plugin
 case class UnknownExpression() extends Expression
 
-trait Processor
+trait Processor {
+  val typeInformation: TypeInformation
+}
 
-case class Route(children: List[Processor]) extends Processor
-case class From(uri: String) extends Processor
-case class To(uri: String) extends Processor
-case class BeanReference(reference: String, method: String) extends Processor
-case class SetBody(expression: Expression) extends Processor
-case class SetHeader(headerName: String, expression: Expression) extends Processor
-case class Choice(whens: List[When]) extends Processor
-case class When(expression: Expression, children: List[Processor]) extends Processor
-case class Otherwise(children: List[Processor]) extends Processor
-case class Bean(ref: Option[String], method:  Option[String]) extends Processor
+case class Route(children: List[Processor], typeInformation: TypeInformation = NotInferred) extends Processor
+case class From(uri: String, typeInformation: TypeInformation = NotInferred) extends Processor
+case class To(uri: String, typeInformation: TypeInformation = NotInferred) extends Processor
+case class BeanReference(reference: String, method: String, typeInformation: TypeInformation = NotInferred) extends Processor
+case class SetBody(expression: Expression, typeInformation: TypeInformation = NotInferred) extends Processor
+case class SetHeader(headerName: String, expression: Expression, typeInformation: TypeInformation = NotInferred) extends Processor
+case class Choice(whens: List[When], typeInformation: TypeInformation = NotInferred) extends Processor
+case class When(expression: Expression, children: List[Processor], typeInformation: TypeInformation = NotInferred) extends Processor
+case class Otherwise(children: List[Processor], typeInformation: TypeInformation = NotInferred) extends Processor
+case class Bean(ref: Option[String], method:  Option[String], typeInformation: TypeInformation = NotInferred) extends Processor
 
 object MainTest {
   def main(args: Array[String]) {
@@ -50,6 +59,9 @@ object MainTest {
       afterChoice
     ))
 
-    println(route)
+    val semantics = Inferred(TypeEnvironment(Set(), Map()), TypeEnvironment(Set(), Map()))
+    val typedProcessor = From("direct:start", semantics)
+
+    println(typedProcessor)
   }
 }

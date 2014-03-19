@@ -1,0 +1,14 @@
+Route(
+     From(direct:start,TODO)
+     To(direct:foo,TODO)
+     Choice(
+          When(Simple(true,Some(java.lang.Boolean)))(
+               To(uri:firstChoiceProcessor,TODO)
+          )
+          When(Simple(false,None))(
+               To(uri:secondChoiceProcessor,TODO)
+               To(uri:thirdChoiceProcessor,TODO)
+          )
+     )
+     To(direct:bar,TODO)
+)

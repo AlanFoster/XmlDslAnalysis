@@ -1,0 +1,9 @@
+Route(
+     From(direct:start,Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+     To(direct:foo,Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+     SetBody(Simple(${body},None),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+     SetBody(Constant(hello world),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.String),Map())))
+     SetBody(Simple(${body},Some(java.lang.Integer)),Inferred(TypeEnvironment(Set(java.lang.String),Map()),TypeEnvironment(Set(java.lang.Integer),Map())))
+     SetBody(Simple(${body},Some(java.lang.Boolean)),Inferred(TypeEnvironment(Set(java.lang.Integer),Map()),TypeEnvironment(Set(java.lang.Boolean),Map())))
+     SetBody(UnknownExpression(),Inferred(TypeEnvironment(Set(java.lang.Boolean),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+)

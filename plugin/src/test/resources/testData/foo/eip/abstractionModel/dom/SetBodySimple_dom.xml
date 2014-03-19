@@ -10,12 +10,21 @@
         <route>
             <from id="from" uri="direct:start"/>
             <to id="foo" uri="direct:foo" />
+
             <setBody>
                 <simple>${body}</simple>
             </setBody>
 
             <setBody>
                 <constant>hello world</constant>
+            </setBody>
+
+            <setBody>
+                <simple resultType="java.lang.Integer">${body}</simple>
+            </setBody>
+
+            <setBody>
+                <simple resultType="java.lang.Boolean">${body}</simple>
             </setBody>
 
             <!-- Invalid DOM -->

@@ -1,0 +1,8 @@
+Route(
+     From(direct:start,TODO)
+     To(direct:foo,TODO)
+     SetHeader(firstHeader,Constant(true),TODO)
+     SetHeader(secondHeader,Simple(${body},None),TODO)
+     SetHeader(thirdHeader,Simple(${body},Some(java.lang.String)),TODO)
+     To(direct:bar,TODO)
+)

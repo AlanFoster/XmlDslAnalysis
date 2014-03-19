@@ -1,0 +1,14 @@
+Route(
+     From(direct:start,NotInferred)
+     To(direct:foo,NotInferred)
+     Choice(
+          When(Simple(true,Some(java.lang.Boolean)))(
+               To(uri:firstChoiceProcessor,NotInferred)
+          )
+          When(Simple(false,None))(
+               To(uri:secondChoiceProcessor,NotInferred)
+               To(uri:thirdChoiceProcessor,NotInferred)
+          )
+     )
+     To(direct:bar,NotInferred)
+)

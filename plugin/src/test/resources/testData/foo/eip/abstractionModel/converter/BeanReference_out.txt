@@ -1,0 +1,8 @@
+Route(
+     From(direct:start,NotInferred)
+     Bean(Some(orderFactory),Some(createOrder),NotInferred)
+     To(direct:bar,NotInferred)
+     Bean(Some(complexFactory),Some(createComplexModel),NotInferred)
+     Bean(Some(),None,NotInferred)
+     To(direct:foo,NotInferred)
+)

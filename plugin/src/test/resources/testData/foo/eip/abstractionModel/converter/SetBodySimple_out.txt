@@ -1,0 +1,9 @@
+Route(
+     From(direct:start,NotInferred)
+     To(direct:foo,NotInferred)
+     SetBody(Simple(${body},None),NotInferred)
+     SetBody(Constant(hello world),NotInferred)
+     SetBody(Simple(${body},Some(java.lang.Integer)),NotInferred)
+     SetBody(Simple(${body},Some(java.lang.Boolean)),NotInferred)
+     SetBody(UnknownExpression(),NotInferred)
+)
