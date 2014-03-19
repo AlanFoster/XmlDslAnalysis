@@ -2,11 +2,16 @@ package foo.dom.converters
 
 import com.intellij.util.xml.{ElementPresentationManager, ConvertContext, ResolvingConverter}
 import java.util
-import foo.eip.graph.EipGraphCreator
 import scala.collection.JavaConverters._
 
 import foo.dom.DomFileAccessor
 import foo.dom.Model.ProcessorDefinition
+import foo.eip.converter.DomAbstractModelConverter
+import foo.eip.typeInference.DataFlowTypeInference
+import foo.eip.model._
+import foo.eip.model.TypeEnvironment
+import foo.eip.model.Inferred
+import foo.eip.model.DomReference
 
 
 /**
@@ -62,9 +67,28 @@ class ClearHeaderResolvingConverter extends ResolvingConverter[ProcessorDefiniti
 
     val currentTag = context.getTag
     val domFile = DomFileAccessor.getBlueprintDomFile(project, virtualFile).get
-    val graph = new EipGraphCreator().createEipGraph(domFile)
-    val headers = graph.vertices.find(_.psiReference.getXmlTag == currentTag).map(_.semantics.headers)
-    val availableHeaders = headers.getOrElse(Map())
+
+    // Create and pretty print the produced Eip DAG for the given DOM file
+    val route = new DomAbstractModelConverter().createAbstraction(domFile)
+    val routeWithSemantics = new DataFlowTypeInference().performTypeInference(route)
+
+    val currentNode = routeWithSemantics.collectFirst({
+      case Processor(DomReference(reference), _) =>
+        reference.getXmlTag == currentTag
+    })
+
+   val headers = currentNode.collect({
+      case Processor(_, Inferred(TypeEnvironment(_, headerMap), _)) =>
+        headerMap
+    })
+
+    val availableHeaders: Map[String, ProcessorDefinition] = headers
+      // Extract the associated element which modified this variable
+      .map(map => map.collect({
+       case (key, (inferredType, DomReference(processorDefinition))) => (key, processorDefinition)
+      }))
+      .getOrElse(Map())
+
     availableHeaders
   }
 }

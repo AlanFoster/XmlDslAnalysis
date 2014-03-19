@@ -14,7 +14,7 @@ object NotInferred extends TypeInformation {
 }
 case class Inferred(before: TypeEnvironment, after: TypeEnvironment) extends TypeInformation
 
-case class TypeEnvironment(body: Set[String], headers:Map[String, String]) extends TypeInformation
+case class TypeEnvironment(body: Set[String], headers:Map[String, (String, Reference)]) extends TypeInformation
 
 /*******************************************************************
   * Expressions
@@ -34,10 +34,10 @@ case class UnknownExpression() extends Expression
 
 trait Reference
 object NoReference extends Reference
-case class DomReference(xml: ProcessorDefinition) extends Reference {
+case class DomReference(element: ProcessorDefinition) extends Reference {
   override def toString: String = {
     // Strip off anything that is not needed, ie in `FromProcessorDefinition$$EnhancerByCGLIB$$28a504a3`
-    val classReferenceName = xml.getClass.getSimpleName.takeWhile(_ != '$')
+    val classReferenceName = element.getClass.getSimpleName.takeWhile(_ != '$')
     s"DomReference(${classReferenceName})"
   }
 }
@@ -46,9 +46,41 @@ case class DomReference(xml: ProcessorDefinition) extends Reference {
  * Processors
  *******************************************************************/
 
-trait Processor {
+trait Mappable[T] {
+  //def map[U](f: T => U): U
+  def collectFirst(func: PartialFunction[T, Boolean]): Option[T]
+}
+
+trait Processor extends Mappable[Processor] {
   val typeInformation: TypeInformation
   val reference: Reference
+
+  //override def map[U](f: (T) => U): U = ???
+  override def collectFirst(func: PartialFunction[Processor, Boolean]): Option[Processor] =
+    if(func.isDefinedAt(this) && func(this)) Some(this)
+    else {
+      this match {
+        case Route(children, _, _ ) =>
+          findChild(children)(func)
+        case Choice(children, _, _) =>
+          findChild(children)(func)
+        case When(_, children, _, _) =>
+          findChild(children)(func)
+        case _ =>
+          None
+      }
+    }
+
+  private def findChild(children: List[Processor])
+                           (func: PartialFunction[Processor, Boolean]): Option[Processor] = {
+    children.map(_.collectFirst(func)).collectFirst({ case Some(x) => x })
+  }
+}
+
+object Processor {
+  def unapply(processor: Processor): Option[(Reference, TypeInformation)] = {
+    Some(processor.reference, processor.typeInformation)
+  }
 }
 
 case class Route(children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor

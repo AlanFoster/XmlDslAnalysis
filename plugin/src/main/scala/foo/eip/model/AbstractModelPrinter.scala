@@ -21,13 +21,13 @@ object AbstractModelPrinter {
    * @return A human readable representation of the processor and children
    */
   private def print(processor: Processor, depth: Int):String = processor match {
-    case Route(children, _) =>
+    case Route(children, _, _) =>
       printWrapper("Route", children, depth)
 
-    case Choice(children, _) =>
+    case Choice(children, _, _) =>
       printWrapper("Choice", children, depth)
 
-    case When(expression, children, _) =>
+    case When(expression, children, _, _) =>
       printWrapper(s"When(${expression})", children, depth)
 
     case default =>
