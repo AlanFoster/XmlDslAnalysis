@@ -16,7 +16,7 @@ class BodyTypeEipDagSerializer extends EipDagSerializer {
   def createXml(eipDag: EipDAG): Elem =
     <eipDag>
       <vertices>
-        {eipDag.vertices.map(vertex => <vertex id={vertex.id} eipType={vertex.eipType} text={vertex.text} inferredType={vertex.semantics.possibleBodyTypes.mkString("{", ", ", "}")} />)}
+        {eipDag.vertices.map(vertex => <vertex id={vertex.id} eipType={vertex.eipType.toString.toLowerCase} text={vertex.text} inferredType={vertex.processor.bodies.get.mkString("{", ", ", "}")} />)}
       </vertices>
       <edges>
         {eipDag.edges.map(edge => <edge source={edge.source.id} target={edge.target.id} edgeConnection={edge.edge}/>)}

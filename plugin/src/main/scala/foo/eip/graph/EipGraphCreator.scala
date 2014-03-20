@@ -4,9 +4,29 @@ package foo.eip.graph
 import foo.eip.graph.StaticGraphTypes.EipDAG
 import scala.collection.JavaConverters._
 import foo.dom.Model._
+import foo.eip.graph.model.CamelType
+import foo.eip.model._
+import foo.eip.model.SetBody
 import foo.eip.graph.ADT.EmptyDAG
-import foo.eip.graph.model.{CamelType, CamelTypeSemantics, EipComponent}
-import com.intellij.psi.CommonClassNames
+import foo.eip.model.SetHeader
+import foo.eip.converter.DomAbstractModelConverter
+import foo.eip.typeInference.DataFlowTypeInference
+import foo.eip.model.EipName.EipName
+
+case class EipProcessor(text: String, id: String, eipType: EipName, processor: Processor)
+object EipProcessor {
+  def apply(text: String, processor: Processor): EipProcessor = processor match {
+    case processor@Processor(reference, _) =>
+      EipProcessor(text, getId(reference), processor.eipType, processor)
+  }
+
+  private def getId(reference: Reference) = reference match {
+    case NoReference =>
+      "Not Inferred"
+    case DomReference(domReference) =>
+      domReference.getId.getStringValue
+  }
+}
 
 /**
  * EIP Graph Creator class.
@@ -31,15 +51,21 @@ class EipGraphCreator {
   def createEipGraph(root:Blueprint): EipDAG = {
     // Extract the given camel routes and create an empty EipDAG
     val routes = root.getCamelContext.getRoutes.asScala
-    val createdDAG: EipDAG = EmptyDAG[EipComponent, String]()
+    val createdDAG: EipDAG = EmptyDAG[EipProcessor, String]()
 
     // There is no need to traverse the given routes if there are no processor definitions
     if (routes.isEmpty || !routes.head.getFrom.exists) createdDAG
-    else createEipGraph(
-      List(),
-      routes.head.getFrom :: routes.head.getComponents.asScala.toList,
-      createdDAG
-    )
+    else {
+      // TODO DI
+      val route = new DomAbstractModelConverter().createAbstraction(root)
+      val routeWithSemantics = new DataFlowTypeInference().performTypeInference(route)
+
+      newCreateGraph(
+        List(),
+        routeWithSemantics.children,
+        createdDAG
+      )
+    }
   }
 
   /**
@@ -55,74 +81,50 @@ class EipGraphCreator {
    * @param graph The current EipDag
    * @return A new EipDag, note the original data structure will not be mutated
    */
-  def createEipGraph(previous: List[EipComponent],
-                     processors: List[ProcessorDefinition],
+  def newCreateGraph(previous: List[EipProcessor],
+                     processors: List[Processor],
                      graph: EipDAG): EipDAG = processors match {
     // When there are no processors, we have completed our effort.
     case Nil => graph
 
-    case (from: FromProcessorDefinition) :: tail => {
-      val component = EipComponent(createId(from), "from", from.getUri.getStringValue, CamelType("java.lang.Object"), from)
-      createEipGraph(List(component), tail, linkGraph(previous, component, graph))
+    /*    case (from: RemoveHeader) :: tail =>
+    newCreateGraph(List(from), tail, linkGraph(previous, from, graph))*/
+
+    case (processor@From(uri, _, _)) :: tail => {
+      val eipProcessor = EipProcessor(uri, processor)
+      newCreateGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
     }
 
-    case (wireTap: WireTapDefinition) :: tail => {
-      val component = EipComponent(createId(wireTap), "wireTap", wireTap.getUri.getStringValue, unionTypes(previous), wireTap)
-      createEipGraph(List(component), tail, linkGraph(previous, component, graph))
+    case (processor@SetHeader(headerName, Expression(expressionValue), _, _)) :: tail => {
+      val eipProcessor = EipProcessor(headerName + "->" + expressionValue, processor)
+      newCreateGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
     }
 
-    case (removeHeader: RemoveHeaderProcessorDefinition) :: tail => {
-      // TODO Remove a header from the semantic graph... somehow
-      val typeInformation = unionTypes(previous, CamelType(Set(), Map()))
-      val component = EipComponent(createId(removeHeader), "translator", removeHeader.getHeaderName.getStringValue, typeInformation, removeHeader)
-      createEipGraph(List(component), tail, linkGraph(previous, component, graph))
-    }
+    case (processor: SetBody) :: tail =>
+      val eipProcessor = EipProcessor("TODO TYPE INFORMATION", processor)
+      newCreateGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
-    case (setHeader: SetHeaderProcessorDefinition) :: tail  => {
-      // Add a new header definition to the semantic model of the graph
-      val headerName = setHeader.getHeaderName.getStringValue
-      val typeInformation = unionTypes(previous, CamelType(Set(), Map(headerName -> setHeader)))
-      val expressionValue = setHeader.getExpression.getValue
-      val text = headerName + " -> " + expressionValue
-      val component = EipComponent(createId(setHeader), "translator", text, typeInformation, setHeader)
-      createEipGraph(List(component), tail, linkGraph(previous, component, graph))
-    }
+    case (processor@To(uri, _, _)) :: tail =>
+      val eipProcessor = EipProcessor(uri, processor)
+      newCreateGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
-    // TODO Implement as expected
-    case (setBody: SetBodyProcessorDefinition) :: tail => {
-      val expression = setBody.getExpression
-      val expressionTypeInformation = inferExpressionTypeInformation(expression)
-      //val newTypeInformation = replaceBody(previous, expressionTypeInformation)
-      val component = EipComponent(createId(setBody), "translator", expression.getValue, unionTypes(previous), setBody)
-      createEipGraph(List(component), tail, linkGraph(previous, component, graph))
-    }
+    case (processor@Bean(_, _, _, _)) :: tail =>
+      val eipProcessor = EipProcessor("TODO", processor)
+      newCreateGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
-    case (to: ToProcessorDefinition) :: tail => {
-      val component = EipComponent(createId(to), "to", to.getUri.getStringValue, unionTypes(previous), to)
-      createEipGraph(List(component), tail, linkGraph(previous, component, graph))
-    }
-
-    case (bean: BeanDefinition) :: tail => {
-      // Extract the bean reference
-      val typeInformation = getMutatedTypeInformation(bean)
-      val newTypeInformation = replaceBody(previous, typeInformation)
-      val component = EipComponent(createId(bean), "to", bean.getRef.getStringValue, newTypeInformation,  bean)
-      createEipGraph(List(component), tail, linkGraph(previous, component, graph))
-    }
-
-    case (choice: ChoiceProcessorDefinition) :: tail => {
-      val choiceComponent = EipComponent(createId(choice), "choice", "choice", unionTypes(previous), choice)
-      val linkedGraph = linkGraph(previous, choiceComponent, graph)
+/*    case (choice@Choice(whens, _, _)) :: tail =>
+      val choiceEipProcessor = EipProcessor("choice", choice)
+      val linkedGraph = linkGraph(previous, choiceEipProcessor, graph)
 
       // TODO When node should have its own vertex, with a text box with its predicate
-      val (completedWhenGraph, previousDefinitions) = choice.getWhens.asScala.foldLeft((linkedGraph, List[EipComponent]()))({
-        case ((eipGraph, lastProcessorDefinition), when) => {
+      val (completedWhenGraph, previousDefinitions) = whens.foldLeft((linkedGraph, List[EipProcessor]()))({
+        case ((eipGraph, lastProcessorDefinition), when@When(Expression(value), children, _, _)) => {
           // Create the initial expression element from the when expression
-          val component = EipComponent(createId(when), "when", when.getExpression.getValue, unionTypes(previous), when)
-          val linkedGraph = linkGraph(List(choiceComponent), component, eipGraph)
+          val whenEipProcessor = EipProcessor("TODO Expression", when)
+          val linkedGraph = linkGraph(List(choiceEipProcessor), whenEipProcessor, eipGraph)
 
           // Apply the graph function recursively to produce all children nodes within the when expression
-          val whenSubGraph = createEipGraph(List(component), when.getComponents.asScala.toList, linkedGraph)
+          val whenSubGraph = newCreateGraph(List(whenEipProcessor), children, linkedGraph)
 
           // get all leaf nodes which are contained within the subgraph
           // ie all descendants of the parent when node
@@ -142,62 +144,16 @@ class EipGraphCreator {
       // TODO Should only link the choice node to the next node, IF, and only if, there is no otherwise statement
       // TODO need to link all generated nodes to graph, IE Some(choiceComponent) isn't valid, it's Some(List[Choices]) possibly
       createEipGraph(choiceComponent :: previousDefinitions, tail, completedWhenGraph)
-    }
+    }*/
 
     // Fall through case, hitting a node we don't understand
     // We simply interpret it as a to component, so that we can still display
     // the information without crashing or such
     case unmatched :: tail => {
-      val component = EipComponent("", "to", "Error", unionTypes(previous), unmatched)
-      createEipGraph(List(component), tail, linkGraph(previous, component, graph))
+      val component = EipProcessor("Not Handlded", unmatched)
+      newCreateGraph(List(component), tail, linkGraph(previous, component, graph))
     }
   }
-
-  /**
-   * Attempts to extract the semantic information from the expression language used
-   * @param expression
-   * @return
-   */
-  def inferExpressionTypeInformation(expression: Expression) = expression match {
-    case constant: ConstantExpression => CamelTypeSemantics(Set(CommonClassNames.JAVA_LANG_STRING), Map())
-
-    case simple: SimpleExpression =>
-      // By default we should take priority of the attribute value
-      val resultTypeAttribute = simple.getResultType
-      val fqcnOption =
-        if(resultTypeAttribute.isValid && resultTypeAttribute.exists())
-          Some(resultTypeAttribute.getXmlAttributeValue.getValue)
-        else None
-
-      fqcnOption match {
-        case None =>
-          CamelTypeSemantics(Set(), Map())
-        case Some(fqcn) =>
-          CamelTypeSemantics(Set(fqcn), Map())
-      }
-
-    // By default we should supply no known type information for unknown type expressions
-    case _ => CamelTypeSemantics(Set(), Map())
-  }
-
-  /**
-   * Infers expression type information for a BeanDefinition reference.
-   * Note this does not currently perform any data flow analysis
-   *
-   * @param bean The bean definition reference
-   * @return The calculated return type qualified information, otherwise
-   *         a dafault of java.lang.Object
-   */
-  def getMutatedTypeInformation(bean: BeanDefinition) = {
-    // Extract the PsiMethod information - return type FQCN
-    val methodType =
-      Option(bean.getMethod.getValue)
-        .map(_.getReturnType.getCanonicalText)
-        .getOrElse(CommonClassNames.JAVA_LANG_OBJECT)
-
-    CamelTypeSemantics(Set(methodType), Map())
-  }
-
 
   /**
    * Attempts to extract the ID from the given processor definition.
@@ -209,30 +165,6 @@ class EipGraphCreator {
 
     if(idAttribute.exists()) idAttribute.getStringValue
     else idAttribute.hashCode.toString
-  }
-
-
-  /**
-   * Replaces the current body type information, IE used when the type information
-   * for the body is updated within a pipeline
-   */
-  def replaceBody(previous: List[EipComponent],
-                   current: CamelTypeSemantics = CamelType()) = {
-    unionTypes(previous, current).copy(possibleBodyTypes = current.possibleBodyTypes)
-  }
-
-  /**
-   * Unions all given type information together.
-   * @param previous The list of all known previous EipComponents
-   * @param current The current type information present within the given EipComponent
-   * @return A union of all type information
-   */
-  def unionTypes(previous: List[EipComponent],
-                 current: CamelTypeSemantics = CamelType()) = {
-    // Note, we fold *right* in order to ensure that the newest type information is only shown
-     previous
-       .map(_.semantics)
-       .foldRight(current)(_ + _)
   }
 
 }
@@ -257,8 +189,8 @@ object EipGraphCreator {
      * @param next The EipComponent to link to
      * @return A new graph with the given composed edges added
      */
-    def linkComponents(previousList: List[EipComponent],
-                      next: EipComponent): EipDAG =
+    def linkComponents(previousList: List[EipProcessor],
+                      next: EipProcessor): EipDAG =
       linkGraph(previousList, next, eipDag)
 
     /**
@@ -269,8 +201,8 @@ object EipGraphCreator {
      * @param next The EipComponent to link to
      * @return A new graph with the given composed edges added
      */
-    def linkComponents(previous: EipComponent,
-                       next: EipComponent): EipDAG =
+    def linkComponents(previous: EipProcessor,
+                       next: EipProcessor): EipDAG =
       linkGraph(List(previous), next, eipDag)
   }
 
@@ -281,7 +213,7 @@ object EipGraphCreator {
    * @param y The second node between the given edge
    * @return A unique ID for the given edge relation
    */
-  def UniqueString(graph: EipDAG)(x: EipComponent, y: EipComponent) = {
+  def UniqueString(graph: EipDAG)(x: EipProcessor, y: EipProcessor) = {
     val edgeSize = graph.edges.size
     x.id + "_" + y.id + edgeSize
   }
@@ -297,9 +229,9 @@ object EipGraphCreator {
    * @return A newly created EipDag - Note this operation does not mutate the original
    *         data structure
    */
-  def addEdge(previous: EipComponent,
-              next: EipComponent,
-              graph: EipDAG)(namingFunction: EipDAG => (EipComponent, EipComponent) => String) =
+  def addEdge(previous: EipProcessor,
+              next: EipProcessor,
+              graph: EipDAG)(namingFunction: EipDAG => (EipProcessor, EipProcessor) => String) =
     graph.addEdge(namingFunction(graph)(previous, next), previous, next)
 
 
@@ -312,8 +244,8 @@ object EipGraphCreator {
    * @param graph The currently composed graph
    * @return A new graph with the given composed edges added
    */
-  def linkGraph(previousList: List[EipComponent],
-                next: EipComponent,
+  def linkGraph(previousList: List[EipProcessor],
+                next: EipProcessor,
                 graph: EipDAG): EipDAG = {
     val newGraph = graph.addVertex(next)
     previousList.foldLeft(newGraph)((graphAccumulator, previous) => {

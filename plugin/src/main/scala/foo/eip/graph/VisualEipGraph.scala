@@ -16,8 +16,7 @@ import foo.eip.graph.StaticGraphTypes.EipDAG
 import foo.eip.serializers.CompleteEipDagSerializer
 import edu.uci.ics.jung.algorithms.layout.{StaticLayout, TreeLayout}
 import javax.swing.border.LineBorder
-
-import foo.eip.graph.model.EipComponent
+import foo.eip.model.Processor
 
 /**
  * Class used to represent a visual representation of the the given EipDAG.
@@ -34,13 +33,13 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
   /**
    * Create a type alias for VisualizationViewer to improve code readability
    */
-  type Viewer = VisualizationViewer[EipComponent, String]
+  type Viewer = VisualizationViewer[EipProcessor, String]
 
   /**
    * Creates a new Viewer
    * @return A new Visual viewer for the given EipDAG
    */
-  def createViewer(model: VisualizationModel[EipComponent, String]): Viewer = {
+  def createViewer(model: VisualizationModel[EipProcessor, String]): Viewer = {
     val viewer = new VisualizationViewer(model, new Dimension(3000, 3000))
 
     // Create our bound java component ie, the Swing graph
@@ -58,8 +57,8 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
   }
 
 
-  def createSatelliteViewer(parent: Viewer, model: VisualizationModel[EipComponent, String]): Viewer = {
-    val viewer = new SatelliteVisualizationViewer[EipComponent, String](parent, new Dimension(200, 200))
+  def createSatelliteViewer(parent: Viewer, model: VisualizationModel[EipProcessor, String]): Viewer = {
+    val viewer = new SatelliteVisualizationViewer[EipProcessor, String](parent, new Dimension(200, 200))
 
     // Create our bound java component ie, the Swing graph
     // Note the use of functional composition in order to compose features
@@ -117,19 +116,20 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
    * @return The Viewer
    */
   private def bindEipRenderer(viewer: Viewer): Viewer = {
-    def getIcon(component: EipComponent): Icon = {
-      val isPicked = viewer.getPickedVertexState.getPicked.contains(component)
-      val eipType = component.eipType
-      if (isPicked) loadPickedIcon(eipType)
-      else loadUnpickedIcon(eipType)
+    def getIcon(component: EipProcessor): Icon = component match {
+      case component@EipProcessor(_, _, eipName, _) =>
+        val isPicked = viewer.getPickedVertexState.getPicked.contains(component)
+        val eipType = eipName.toString.toLowerCase
+        if (isPicked) loadPickedIcon(eipType)
+        else loadUnpickedIcon(eipType)
     }
 
-    viewer.getRenderContext.setVertexIconTransformer(new Transformer[EipComponent, Icon] {
-      override def transform(component: EipComponent): Icon = getIcon(component)
+    viewer.getRenderContext.setVertexIconTransformer(new Transformer[EipProcessor, Icon] {
+      override def transform(component: EipProcessor): Icon = getIcon(component)
     })
 
-    viewer.getRenderContext.setVertexShapeTransformer(new Transformer[EipComponent, Shape] {
-      def transform(component: EipComponent): Shape = {
+    viewer.getRenderContext.setVertexShapeTransformer(new Transformer[EipProcessor, Shape] {
+      def transform(component: EipProcessor): Shape = {
         val icon = getIcon(component)
 
         val (width, height) = (icon.getIconWidth.toDouble, icon.getIconHeight.toDouble)
@@ -146,16 +146,19 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
    */
   private def setComponentToolTip(viewer: Viewer): Viewer =
     mutate(viewer) {
-      _.setVertexToolTipTransformer(new Transformer[EipComponent, String] {
-        def transform(component: EipComponent): String = {
-          val typeInformation = component.semantics
+      _.setVertexToolTipTransformer(new Transformer[EipProcessor, String] {
+        def transform(component: EipProcessor): String = {
+/*          val typeInformation = component.semantics
 
           // Concatenate the type information and EipComponent's specific text  value
           s"""<html>
             |${component.text}<br />
             |Possible Body Types: ${typeInformation.possibleBodyTypes.toList.sortBy(identity).mkString("{", ", ", "}")}<br />
             |Headers: ${typeInformation.headers.keys.toList.sortBy(identity).mkString("{", ", ", "}")}<br />
-            |</html>""".stripMargin
+            |</html>""".stripMargin*/
+
+          // TODO
+          "TODO Type information!"
         }
       })
     }
@@ -181,7 +184,7 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
    * @param viewer The viewer to modify
    */
   def bindGraphMouse(viewer: Viewer): Viewer = mutate(viewer)(viewer => {
-    val graphMouse = new DefaultModalGraphMouse[EipComponent, String]()
+    val graphMouse = new DefaultModalGraphMouse[EipProcessor, String]()
     viewer.setGraphMouse(graphMouse)
 
     graphMouse.setMode(ModalGraphMouse.Mode.PICKING)
@@ -216,7 +219,7 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
    * @return The viewer which now contains the option to generate debug output
    */
   def addGraphToXmlDebugOption(viewer: Viewer): Viewer = {
-    val graphMouse = viewer.getGraphMouse.asInstanceOf[DefaultModalGraphMouse[EipComponent, String]]
+    val graphMouse = viewer.getGraphMouse.asInstanceOf[DefaultModalGraphMouse[EipProcessor, String]]
     graphMouse.add(new DebugGraphToXmlPlugin(eipDag))
     viewer
   }

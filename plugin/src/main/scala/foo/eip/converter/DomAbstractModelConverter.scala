@@ -12,7 +12,6 @@ import foo.eip.model.When
 import foo.eip.model.SetHeader
 import foo.eip.model.From
 import foo.eip.model.Route
-import foo.eip.graph.model.CamelTypeSemantics
 import foo.eip.model.UnknownExpression
 import foo.eip.model.To
 import com.intellij.util.xml.GenericAttributeValue
@@ -170,7 +169,7 @@ class DomAbstractModelConverter extends AbstractModelConverter[List[ProcessorDef
        */
       case _ if !isValid => UnknownExpression()
 
-      case constant: ConstantExpression => CamelTypeSemantics(Set(CommonClassNames.JAVA_LANG_STRING), Map())
+      case constant: ConstantExpression =>
         Constant(constant.getValue)
       case simple: SimpleExpression =>
         Simple(simple.getValue, Option(simple.getResultType.getStringValue))

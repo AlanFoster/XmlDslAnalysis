@@ -1,7 +1,5 @@
 package foo.eip.graph
 
-import foo.eip.graph.model.EipComponent
-
 /**
  * Helper class which provides type aliasing for an EipGraph.
  */
@@ -14,5 +12,5 @@ object StaticGraphTypes {
    * graph, and is purely used as a data structures which contains the relevant type information
    * etc
    */
-  type EipDAG = foo.eip.graph.ADT.Graph[EipComponent, String]
+  type EipDAG = foo.eip.graph.ADT.Graph[EipProcessor, String]
 }

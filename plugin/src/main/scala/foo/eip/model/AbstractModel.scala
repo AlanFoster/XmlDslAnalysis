@@ -6,6 +6,7 @@ import com.intellij.util.xml.GenericAttributeValue
 import foo.eip.converter.DomAbstractModelConverter
 import foo.eip.typeInference.DataFlowTypeInference
 import com.intellij.psi.xml.XmlTag
+import foo.eip.model.EipName.EipName
 
 // Helpers to be placed in a better file
 object AbstractModelManager {
@@ -72,13 +73,23 @@ case class TypeEnvironment(body: Set[String], headers:Map[String, (String, Refer
   * Expressions
   *******************************************************************/
 
-trait Expression
+trait Expression {
+  val value: String
+}
+
+object Expression {
+  def unapply(expression: Expression): Option[(String)] = {
+    Some(expression.value)
+  }
+}
 
 case class Constant(value: String) extends Expression
 // TODO Maybe result type should be more statically typed instead of a string
 case class Simple(value: String, resultType: Option[String]) extends Expression
 // An expression language not currently handled by the plugin
-case class UnknownExpression() extends Expression
+case class UnknownExpression() extends Expression{
+  override val value: String = "Unknown Expression"
+}
 
 /*******************************************************************
   * Adapter Psi reference
@@ -106,6 +117,8 @@ trait Mappable[T] {
 trait Processor extends Mappable[Processor] {
   val typeInformation: TypeInformation
   val reference: Reference
+
+  def eipType: EipName
 
   /**
    * Extracts the headers associated with the current processor
@@ -157,17 +170,37 @@ object Processor {
   }
 }
 
-case class Route(children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor
-case class From(uri: String, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor
-case class To(uri: String, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor
-case class BeanReference(ref: String, method: String, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor
-case class SetBody(expression: Expression, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor
-case class SetHeader(headerName: String, expression: Expression, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor
-case class Choice(whens: List[When], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor
-case class When(expression: Expression, children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor
-case class Otherwise(children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor
-case class Bean(ref: Option[GenericAttributeValue[BlueprintBean]], method: Option[GenericAttributeValue[PsiMethod]], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
+object EipName extends Enumeration {
+  type EipName = Value
+  val To, From, choice, When, Translator, Otherwise = Value
+}
 
+case class Route(children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
+  override def eipType: EipName = ???
+}
+case class From(uri: String, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
+  override def eipType: EipName = EipName.From
+}
+case class To(uri: String, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
+  override def eipType: EipName = EipName.To
+}
+case class SetBody(expression: Expression, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
+  override def eipType: EipName = EipName.Translator
+}
+case class SetHeader(headerName: String, expression: Expression, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
+  override def eipType: EipName = EipName.Translator
+}
+case class Choice(whens: List[When], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
+  override def eipType: EipName = EipName.choice
+}
+case class When(expression: Expression, children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
+  override def eipType: EipName = EipName.When
+}
+case class Otherwise(children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
+  override def eipType: EipName = EipName.Otherwise
+}
+case class Bean(ref: Option[GenericAttributeValue[BlueprintBean]], method: Option[GenericAttributeValue[PsiMethod]], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
+  override def eipType: EipName = EipName.To
 }
 
 object MainTest {
