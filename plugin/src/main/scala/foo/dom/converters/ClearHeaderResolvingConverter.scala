@@ -6,12 +6,7 @@ import scala.collection.JavaConverters._
 
 import foo.dom.DomFileAccessor
 import foo.dom.Model.ProcessorDefinition
-import foo.eip.converter.DomAbstractModelConverter
-import foo.eip.typeInference.DataFlowTypeInference
 import foo.eip.model._
-import foo.eip.model.TypeEnvironment
-import foo.eip.model.Inferred
-import foo.eip.model.DomReference
 
 
 /**
@@ -68,27 +63,11 @@ class ClearHeaderResolvingConverter extends ResolvingConverter[ProcessorDefiniti
     val currentTag = context.getTag
     val domFile = DomFileAccessor.getBlueprintDomFile(project, virtualFile).get
 
-    // Perform route semantics
-    val route = new DomAbstractModelConverter().createAbstraction(domFile)
-    val routeWithSemantics = new DataFlowTypeInference().performTypeInference(route)
-
-    val currentNode = routeWithSemantics.collectFirst({
-      case Processor(DomReference(reference), _) =>
-        reference.getXmlTag == currentTag
-    })
-
-   val headers = currentNode.collect({
-      case Processor(_, Inferred(TypeEnvironment(_, headerMap), _)) =>
-        headerMap
-    })
-
-    val availableHeaders: Map[String, ProcessorDefinition] = headers
-      // Extract the associated element which modified this variable
-      .map(map => map.collect({
-       case (key, (inferredType, DomReference(processorDefinition))) => (key, processorDefinition)
-      }))
+    // Access the header information as expected
+    val headers = AbstractModelManager
+      .getInferredHeaders(domFile, currentTag)
       .getOrElse(Map())
 
-    availableHeaders
+    headers
   }
 }

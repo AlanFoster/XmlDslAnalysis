@@ -10,7 +10,7 @@ import foo.dom.Model.ProcessorDefinition
 import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlTag
-import foo.eip.graph.EipGraphCreator
+import foo.eip.model.AbstractModelManager
 
 /**
  * A concrete implementation of a CamelHeaderReference
@@ -30,11 +30,11 @@ class CamelHeaderReference(element: PsiElement, range: TextRange)
     // Convert all available completions to a Lookup Builder that IJ understands
     getAvailableHeaders
       .map({
-      case (headerName, processor) =>
-        val psiElement = processor.getXmlElement
-        LookupElementBuilder.create(psiElement, headerName)
-          .withIcon(ElementPresentationManager.getIcon(processor))
-    })
+        case (headerName, processor) =>
+          val psiElement = processor.getXmlElement
+          LookupElementBuilder.create(psiElement, headerName)
+            .withIcon(ElementPresentationManager.getIcon(processor))
+      })
       .toArray
   }
 
@@ -77,10 +77,12 @@ class CamelHeaderReference(element: PsiElement, range: TextRange)
         val simpleTag = getParentTag(hostXmlText)
         val outterTag = getParentTag(simpleTag)
 
-        // Calculate graph and headers
-        val graph = new EipGraphCreator().createEipGraph(domFile)
-        val headers = graph.vertices.find(_.psiReference.getXmlTag == outterTag).map(_.semantics.headers)
-        headers.getOrElse(Map())
+        // Calculate the available header information
+        val headers = AbstractModelManager
+          .getInferredHeaders(domFile, outterTag)
+          .getOrElse(Map())
+
+        headers
       }
     }
 

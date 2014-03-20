@@ -8,13 +8,17 @@ import foo.dom.DomFileAccessor
 import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlTag
-import foo.eip.graph.EipGraphCreator
+import foo.eip.model._
+import scala.Some
+import foo.dom.Model.Blueprint
 
 /**
  * Represents the trait of an EipReference, which provides access to required information
- * which can be inferred through the traversal of the Eip Graph
+ * which can be inferred through the traversal of the Eip Graph.
+ *
+ * This trait is associated with a reference within the apache camel simple language
  */
-trait EipReference {
+trait EipSimpleReference {
   /**
    * Computes the currently inferred body type for the given psiElement
    * @param element The Psi Element
@@ -38,10 +42,6 @@ trait EipReference {
 
     resolvedBodies
   }
-
-/*  def getMethodReturnType(psiMethod: PsiMethod): String = {
-    psiMethod.getContainingClass //.getName
-  }*/
 
   /**
    * Gets the available body classes which can be inferred under this context for
@@ -72,9 +72,10 @@ trait EipReference {
         val outterTag = getParentTag(simpleTag)
 
         // Calculate graph and headers
-        val graph = new EipGraphCreator().createEipGraph(domFile)
-        val bodyTypes = graph.vertices.find(_.psiReference.getXmlTag == outterTag).map(_.semantics.possibleBodyTypes)
-        bodyTypes.getOrElse(Set())
+        val currentNode: Option[Processor] = AbstractModelManager.getCurrentNode(domFile, outterTag)
+        val bodies = currentNode.flatMap(_.bodies)
+
+        bodies.getOrElse(Set())
       }
     }
 

@@ -3,6 +3,44 @@ package foo.eip.model
 import com.intellij.psi.PsiMethod
 import foo.dom.Model.{BlueprintBean, Blueprint, ProcessorDefinition}
 import com.intellij.util.xml.GenericAttributeValue
+import foo.eip.converter.DomAbstractModelConverter
+import foo.eip.typeInference.DataFlowTypeInference
+import com.intellij.psi.xml.XmlTag
+
+// Helpers to be placed in a better file
+object AbstractModelManager {
+  def getCurrentNode(domFile: Blueprint, currentTag: XmlTag): Option[Processor] = {
+    val route = new DomAbstractModelConverter().createAbstraction(domFile)
+    val routeWithSemantics = new DataFlowTypeInference().performTypeInference(route)
+
+    val currentNode = routeWithSemantics.collectFirst({
+      case Processor(DomReference(reference), _) =>
+        reference.getXmlTag == currentTag
+    })
+    currentNode
+  }
+
+  /**
+   * Gets the current inferred header information and their
+   * @param domFile
+   * @param currentTag
+   * @return
+   */
+  def getInferredHeaders(domFile: Blueprint, currentTag: XmlTag): Option[Map[String, ProcessorDefinition]] =  {
+    // Perform route semantics
+    val currentNode = getCurrentNode(domFile, currentTag)
+    val headers: Option[Map[String, (String, Reference)]] = currentNode.flatMap(_.headers)
+
+    // Additionally map the headers to their real reference types
+    val availableHeaders = headers
+        // Extract the associated element which modified this variable
+        .map(map => map.collect({
+        case (key, (inferredType, DomReference(processorDefinition))) => (key, processorDefinition)
+      }))
+
+    availableHeaders
+  }
+}
 
 // Abstract Models
 
@@ -68,6 +106,28 @@ trait Mappable[T] {
 trait Processor extends Mappable[Processor] {
   val typeInformation: TypeInformation
   val reference: Reference
+
+  /**
+   * Extracts the headers associated with the current processor
+   * @return An Option, as the semantic information may not have been inferred
+   *         currently.
+   */
+  def headers: Option[Map[String, (String, Reference)]] = typeInformation match {
+      case Inferred(TypeEnvironment(_, headerMap), _) =>
+        Some(headerMap)
+      case _ => None
+  }
+
+  /**
+   * Extracts the current body set associated with the current processor
+   * @return An option, as the semantic information may not have been inferred
+   *         currently.
+   */
+  def bodies: Option[Set[String]] = typeInformation match {
+    case Inferred(TypeEnvironment(bodySet, _), _) =>
+      Some(bodySet)
+    case _ => None
+  }
 
   //override def map[U](f: (T) => U): U = ???
   override def collectFirst(func: PartialFunction[Processor, Boolean]): Option[Processor] =

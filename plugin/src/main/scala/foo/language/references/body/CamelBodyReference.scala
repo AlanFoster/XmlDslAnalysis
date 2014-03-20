@@ -3,7 +3,7 @@ package foo.language.references.body
 import com.intellij.psi._
 import com.intellij.openapi.util.TextRange
 import foo.language.MethodConverter
-import foo.language.references.EipReference
+import foo.language.references.EipSimpleReference
 
 /**
  * Represents a CamelBodyReference, IE the element within ${body}.
@@ -22,7 +22,7 @@ class CamelBodyReference(element: PsiElement, range: TextRange)
   extends PsiReferenceBase[PsiElement](element, range, false)
   with PsiPolyVariantReference
   with MethodConverter
-  with EipReference {
+  with EipSimpleReference {
 
   /**
    * No variants are possible within this reference

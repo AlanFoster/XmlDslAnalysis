@@ -9,7 +9,7 @@ import com.intellij.patterns.PlatformPatterns._
 import scala.Some
 import com.intellij.util.xml.ElementPresentationManager
 import scala.util.Try
-import foo.language.references.EipReference
+import foo.language.references.EipSimpleReference
 import foo.traversal.MethodTraversal
 import com.intellij.psi.util.PsiTypesUtil
 import com.intellij.openapi.project.Project
@@ -26,7 +26,7 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
   // Note this reference is a soft reference, ie if it doesn't resolve, it is *not* an error!
   extends PsiReferenceBase[PsiElement](element, range, false)
   with MethodConverter
-  with EipReference {
+  with EipSimpleReference {
 
   /**
    * No variants are possible within this reference
