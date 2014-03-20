@@ -1,0 +1,16 @@
+Route(
+     From(direct:start,DomReference(FromProcessorDefinition),NotInferred)
+     Bean(Some(orderFactory),Some(createOrder),DomReference(BeanDefinition),NotInferred)
+     Choice(
+          When(Simple(true,None))(
+               To(direct:bar,DomReference(ToProcessorDefinition),NotInferred)
+               Bean(Some(complexFactory),Some(createComplexModel),DomReference(BeanDefinition),NotInferred)
+          )
+          When(Simple(false,None))(
+               Bean(Some(personFactory),Some(createPerson),DomReference(BeanDefinition),NotInferred)
+          )
+     )
+     To(direct:baz,DomReference(ToProcessorDefinition),NotInferred)
+     Bean(Some(),None,DomReference(BeanDefinition),NotInferred)
+     To(direct:foo,DomReference(ToProcessorDefinition),NotInferred)
+)

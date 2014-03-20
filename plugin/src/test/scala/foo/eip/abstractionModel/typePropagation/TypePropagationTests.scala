@@ -1,7 +1,7 @@
 package foo.eip.abstractionModel.typePropagation
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import foo.TestBase
+import foo.{CommonTestClasses, TestBase}
 import foo.dom.DomFileAccessor
 import foo.eip.converter.DomAbstractModelConverter
 import foo.eip.model.AbstractModelPrinter
@@ -14,7 +14,8 @@ import foo.eip.typeInference.DataFlowTypeInference
  */
 class TypePropagationTests
   extends LightCodeInsightFixtureTestCase
-  with TestBase {
+  with TestBase
+  with CommonTestClasses {
 
   /**
    * {@inheritdoc}
@@ -52,14 +53,21 @@ class TypePropagationTests
   /**
    * Ensure that bean information propagates as expected
    */
-  def ignoretestBeanReference() {
+  def testBeanReference() {
+    doTest()
+  }
+
+  /**
+   * Ensure that bean information is unioned successfully
+   */
+  def testBeanReferenceUnion() {
     doTest()
   }
 
   /**
    * Test a more complex scenario with arbitarily nested components etc
    */
-  def ignoretestComplexNestedChoice() {
+  def testComplexNestedChoice() {
     doTest()
   }
 
@@ -75,6 +83,9 @@ class TypePropagationTests
    */
   // TODO Could merge with the EipDagAssert class
   def doTest() {
+    // Ensure we have added all of the required testing
+    loadAllCommon(myFixture)
+
     // Load and create the DOM representation
     val virtualFile = myFixture.configureByFile(s"/dom/${getTestName(false)}_dom.xml").getVirtualFile
     val loadedDomFile = DomFileAccessor.getBlueprintDomFile(myFixture.getProject, virtualFile).get
@@ -90,6 +101,4 @@ class TypePropagationTests
     // Assert Equals - Note, IntelliJ will provide a nice comparison tool in failure scenarios
     Assert.assertEquals("the given and expected EipDag should be equal", expectedModel, serialized)
   }
-
-
 }

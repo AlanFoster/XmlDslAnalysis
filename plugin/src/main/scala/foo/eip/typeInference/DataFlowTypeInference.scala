@@ -61,28 +61,40 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
      * Camel Choice element, ensuring that When elements are allocated as expected
      */
     case choice@Choice(whens, _, _) =>
-      val (newTypeEnv, newChildren) = whens.foldLeft((typeEnvironment, List[When]()))({
-        case (((typeEnv), previous), next) =>
+      val (newTypeEnvs, newChildren) = whens.foldLeft((List(typeEnvironment), List[When]()))({
+        case ((typeEnvs@(typeEnv :: _), previous), next) =>
           val mappedProcessor = performTypeInference(typeEnv, next)
           val newEnv = mappedProcessor.typeInformation match {
             case NotInferred =>
               throw new Error("Could not infer the correct data type")
             case Inferred(_, after) => after
           }
-          (newEnv, previous :+ mappedProcessor.asInstanceOf[When])
+          (newEnv :: typeEnvs, previous :+ mappedProcessor.asInstanceOf[When])
       })
+
+      // Union the newTypeEnvs together as expected
+      val mergedTypeEnv = mergeTypeEnvironment(typeEnvironment, newTypeEnvs)
 
       choice.copy(
         whens = newChildren,
-        typeInformation = Inferred(typeEnvironment, newTypeEnv)
+        typeInformation = Inferred(typeEnvironment, mergedTypeEnv)
       )
 
     /**
      * Ensure Bean type information propagates as expected within the bean environment
      */
-    case bean:Bean =>
-      // TODO Infer with lookup
-      bean.copy(typeInformation = Inferred(typeEnvironment, typeEnvironment))
+    case bean@Bean(_, method, _, _) =>
+      // Extract the return type of the referenced method within the bean environment
+      val inferredBody = method match {
+        case Some(psiElement) =>
+          Option(psiElement.getValue)
+            .map(_.getReturnType.getCanonicalText)
+            .getOrElse(CommonClassNames.JAVA_LANG_OBJECT)
+        case _ => CommonClassNames.JAVA_LANG_OBJECT
+      }
+      val newTypeInformation = typeEnvironment.copy(body = Set(inferredBody))
+
+      bean.copy(typeInformation = Inferred(typeEnvironment, newTypeInformation))
 
     /**
      * Ensure that When elements have their children's type information accounted for
@@ -136,6 +148,16 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
       val expressionTypeInformation = inferExpressionTypeInformation(expression)
       val newTypeEnvironment = typeEnvironment.copy(body = Set(expressionTypeInformation))
       setBody.copy(typeInformation = Inferred(typeEnvironment, newTypeEnvironment))
+  }
+
+  /**
+   * Merges the given environments into a single type environment
+   * @param current The current type environment
+   * @param envs The list of possible type environments
+   * @return A single unified instance of a TypeEnvironment
+   */
+  def mergeTypeEnvironment(current: TypeEnvironment, envs: List[TypeEnvironment]): TypeEnvironment = {
+    envs.foldLeft(current)(_ + _)
   }
 
   /**

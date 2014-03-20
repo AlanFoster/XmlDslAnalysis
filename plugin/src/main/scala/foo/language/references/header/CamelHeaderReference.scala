@@ -56,7 +56,7 @@ class CamelHeaderReference(element: PsiElement, range: TextRange)
    * Gets the available headers within this context
    * @return The Map of available headers within the given context
    */
-  def getAvailableHeaders = {
+  def getAvailableHeaders: Map[String, ProcessorDefinition] = {
     val project = element.getProject
 
     // Extract the relevent PsiFile in order to test if we are contained within an XmlFile

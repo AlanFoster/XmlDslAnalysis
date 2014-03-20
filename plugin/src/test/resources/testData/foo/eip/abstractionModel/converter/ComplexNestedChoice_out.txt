@@ -12,13 +12,14 @@ Route(
           )
           When(Simple(false,None))(
                To(uri:secondChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
+               Bean(Some(personFactory),Some(createPerson),DomReference(BeanDefinition),NotInferred)
                To(uri:thirdChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
                Choice(
                     When(Simple(true,Some(java.lang.Boolean)))(
                          To(uri:firstChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
                     )
                     When(Simple(false,None))(
-                         To(uri:secondChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
+                         Bean(Some(personFactory),Some(createPerson),DomReference(BeanDefinition),NotInferred)
                          To(uri:thirdChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
                     )
                )
@@ -31,8 +32,10 @@ Route(
                Choice(
                     When(Simple(true,Some(java.lang.Boolean)))(
                          To(uri:firstChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
+                         Bean(Some(complexFactory),Some(createComplex),DomReference(BeanDefinition),NotInferred)
                     )
                     When(Simple(false,None))(
+                         Bean(Some(personFactory),Some(createPerson),DomReference(BeanDefinition),NotInferred)
                          To(uri:secondChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
                          To(uri:thirdChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
                          To(direct:foo,DomReference(ToProcessorDefinition),NotInferred)

@@ -68,7 +68,7 @@ class ClearHeaderResolvingConverter extends ResolvingConverter[ProcessorDefiniti
     val currentTag = context.getTag
     val domFile = DomFileAccessor.getBlueprintDomFile(project, virtualFile).get
 
-    // Create and pretty print the produced Eip DAG for the given DOM file
+    // Perform route semantics
     val route = new DomAbstractModelConverter().createAbstraction(domFile)
     val routeWithSemantics = new DataFlowTypeInference().performTypeInference(route)
 

@@ -9,7 +9,6 @@
     <bean class="foo.factory.OrderFactory" id="orderFactory" />
     <bean class="foo.factory.PersonFactory" id="personFactory" />
     <bean class="foo.factory.ComplexModelFactory" id="complexFactory" />
-    <bean class="" id="incorrectBean" />
 
     <camelContext trace="true" xmlns="http://camel.apache.org/schema/blueprint">
         <route>
@@ -17,12 +16,23 @@
 
             <bean id="beanOne" ref="orderFactory" method="createOrder"/>
 
-            <to id="bar" uri="direct:bar" />
 
-            <bean ref="incorrectId" method="foo" />
+            <choice>
+                <when>
+                    <simple>true</simple>
+                    <to id="bar" uri="direct:bar" />
 
-            <bean id="beanTwo" ref="complexFactory" method="createComplexModel"/>
-            <bean id="beanThree" ref="complexFactory" method="incorrectMethod"/>
+                    <bean id="beanTwo" ref="complexFactory" method="createComplexModel"/>
+
+                </when>
+
+                <when>
+                    <simple>false</simple>
+                    <bean ref="personFactory" method="createPerson" />
+                </when>
+            </choice>
+
+            <to uri="direct:baz" />
 
             <bean id="missingAttributes" ref=""/>
 

@@ -48,6 +48,13 @@ class DomAbstractionModelTests
   }
 
   /**
+   * Ensure that bean information is unioned successfully
+   */
+  def testBeanReferenceUnion() {
+    doTest()
+  }
+
+  /**
    * Ensure that bean information propagates as expected
    */
   def testBeanReference() {

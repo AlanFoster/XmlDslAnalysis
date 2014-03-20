@@ -15,6 +15,7 @@ import foo.eip.model.Route
 import foo.eip.graph.model.CamelTypeSemantics
 import foo.eip.model.UnknownExpression
 import foo.eip.model.To
+import com.intellij.util.xml.GenericAttributeValue
 
 /**
  * Concrete implementation of the Converter trait which will convert a Dom
@@ -35,6 +36,7 @@ class DomAbstractModelConverter extends AbstractModelConverter[List[ProcessorDef
   def createAbstraction(root:Blueprint): Route = {
     // Extract the given camel routes and create an empty EipDAG
     val domRoutes = root.getCamelContext.getRoutes.asScala
+
     // There is no need to traverse the given routes if there are no processor definitions
     if (domRoutes.isEmpty || !domRoutes.head.getFrom.exists) Route(Nil, NoReference)
     else {
@@ -90,8 +92,8 @@ class DomAbstractModelConverter extends AbstractModelConverter[List[ProcessorDef
      * Handle bean references <bean ref="..." method="..." />
      */
     case bean: BeanDefinition =>
-      val ref = Option(bean.getRef.getStringValue)
-      val method = Option(bean.getMethod.getStringValue)
+      val ref = wrapGenericValue(bean.getRef)
+      val method = wrapGenericValue(bean.getMethod)
 
       Bean(ref, method, DomReference(domElement))
 
@@ -134,6 +136,19 @@ class DomAbstractModelConverter extends AbstractModelConverter[List[ProcessorDef
       When(expression, children, DomReference(whenDefinition))
 
     // case otherwise:
+  }
+
+  /**
+   * Provides a type safe conversion of a GenericAttributeValue to an Option
+   * @param value The attribute value
+   * @tparam T The type of the attribute value
+   * @return None if the value resolves to null, otherwise Some(value)
+   */
+  private def wrapGenericValue[T](value: GenericAttributeValue[T]): Option[GenericAttributeValue[T]] = {
+    // GenericAttributeValue does not offer a safe way to check for null without invoking a value call
+    // As such the toString method is used
+    if(value.toString == null) None
+    else Some(value)
   }
 
   /**

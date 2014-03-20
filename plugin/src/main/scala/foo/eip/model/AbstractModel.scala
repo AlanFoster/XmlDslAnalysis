@@ -1,7 +1,8 @@
 package foo.eip.model
 
-import com.intellij.psi.PsiElement
-import foo.dom.Model.ProcessorDefinition
+import com.intellij.psi.PsiMethod
+import foo.dom.Model.{BlueprintBean, Blueprint, ProcessorDefinition}
+import com.intellij.util.xml.GenericAttributeValue
 
 // Abstract Models
 
@@ -14,7 +15,20 @@ object NotInferred extends TypeInformation {
 }
 case class Inferred(before: TypeEnvironment, after: TypeEnvironment) extends TypeInformation
 
-case class TypeEnvironment(body: Set[String], headers:Map[String, (String, Reference)]) extends TypeInformation
+case class TypeEnvironment(body: Set[String], headers:Map[String, (String, Reference)]) extends TypeInformation {
+  /**
+   * Unions two type environments together
+   *
+   * @param other The other type to union with
+   * @return A new TypeEnvironment instance with the union of type information performed
+   */
+  def +(other:TypeEnvironment): TypeEnvironment = {
+    TypeEnvironment(
+      body ++ other.body,
+      headers ++ other.headers
+    )
+  }
+}
 
 /*******************************************************************
   * Expressions
@@ -92,7 +106,9 @@ case class SetHeader(headerName: String, expression: Expression, reference:Refer
 case class Choice(whens: List[When], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor
 case class When(expression: Expression, children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor
 case class Otherwise(children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor
-case class Bean(ref: Option[String], method:  Option[String], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor
+case class Bean(ref: Option[GenericAttributeValue[BlueprintBean]], method: Option[GenericAttributeValue[PsiMethod]], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
+
+}
 
 object MainTest {
   def main(args: Array[String]) {

@@ -1,64 +1,67 @@
 Route(
-     From(direct:start,TODO)
-     To(direct:foo,TODO)
+     From(direct:start,DomReference(FromProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+     To(direct:foo,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
      Choice(
           When(Constant(true))(
-               Bean(Some(orderFactory),Some(createOrder),TODO)
+               Bean(Some(orderFactory),Some(createOrder),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(foo.models.OrderModel),Map())))
           )
      )
      Choice(
           When(Simple(true,Some(java.lang.Boolean)))(
-               To(uri:firstChoiceProcessor,TODO)
+               To(uri:firstChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel),Map()),TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel),Map())))
           )
           When(Simple(false,None))(
-               To(uri:secondChoiceProcessor,TODO)
-               To(uri:thirdChoiceProcessor,TODO)
+               To(uri:secondChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel),Map()),TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel),Map())))
+               Bean(Some(personFactory),Some(createPerson),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map())))
+               To(uri:thirdChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map())))
                Choice(
                     When(Simple(true,Some(java.lang.Boolean)))(
-                         To(uri:firstChoiceProcessor,TODO)
+                         To(uri:firstChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map())))
                     )
                     When(Simple(false,None))(
-                         To(uri:secondChoiceProcessor,TODO)
-                         To(uri:thirdChoiceProcessor,TODO)
+                         Bean(Some(personFactory),Some(createPerson),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map())))
+                         To(uri:thirdChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map())))
                     )
                )
           )
      )
-     To(direct:bar,TODO)
+     To(direct:bar,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel),Map()),TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel),Map())))
      Choice(
           When(Simple(true,Some(java.lang.Boolean)))(
-               To(uri:firstChoiceProcessor,TODO)
+               To(uri:firstChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel),Map()),TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel),Map())))
                Choice(
                     When(Simple(true,Some(java.lang.Boolean)))(
-                         To(uri:firstChoiceProcessor,TODO)
+                         To(uri:firstChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel),Map()),TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel),Map())))
+                         Bean(Some(complexFactory),Some(createComplex),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
                     )
                     When(Simple(false,None))(
-                         To(uri:secondChoiceProcessor,TODO)
-                         To(uri:thirdChoiceProcessor,TODO)
-                         To(direct:foo,TODO)
-                         SetHeader(secondHeader,Simple(${body},Some(java.lang.String)),TODO)
-                         SetHeader(thirdHeader,Simple(${body},Some(java.lang.Integer)),TODO)
-                         SetHeader(secondHeader,Simple(${body},Some(java.lang.Object)),TODO)
-                         SetHeader(fourthHeader,Simple(5,Some(java.lang.Integer)),TODO)
+                         Bean(Some(personFactory),Some(createPerson),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map())))
+                         To(uri:secondChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map())))
+                         To(uri:thirdChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map())))
+                         To(direct:foo,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map())))
+                         SetHeader(secondHeader,Simple(${body},Some(java.lang.String)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.String,DomReference(ExpressionDefinitionImpl))))))
+                         SetHeader(thirdHeader,Simple(${body},Some(java.lang.Integer)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.String,DomReference(ExpressionDefinitionImpl)))),TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.String,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))))
+                         SetHeader(secondHeader,Simple(${body},Some(java.lang.Object)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.String,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)))),TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))))
+                         SetHeader(fourthHeader,Simple(5,Some(java.lang.Integer)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)))),TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))))
                     )
                )
           )
           When(Simple(false,None))(
-               Bean(Some(complexModelFactory),Some(createComplexModel),TODO)
-               SetBody(Simple(${body.additionalInformation},Some(java.lang.String)),TODO)
-               To(uri:secondChoiceProcessor,TODO)
-               To(uri:thirdChoiceProcessor,TODO)
+               Bean(Some(complexModelFactory),Some(createComplexModel),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)))),TypeEnvironment(Set(java.lang.Object),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))))
+               SetBody(Simple(${body.additionalInformation},Some(java.lang.String)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(java.lang.Object),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)))),TypeEnvironment(Set(java.lang.String),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))))
+               To(uri:secondChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.String),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)))),TypeEnvironment(Set(java.lang.String),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))))
+               To(uri:thirdChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.String),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)))),TypeEnvironment(Set(java.lang.String),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))))
           )
      )
      Choice(
           When(Constant(true))(
-               Bean(Some(personFactory),Some(createPerson),TODO)
+               Bean(Some(personFactory),Some(createPerson),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, java.lang.String),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)))),TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))))
           )
      )
      Choice(
           When(Constant(true))(
-               Bean(Some(complexModelFactory),Some(createComplexModel),TODO)
+               Bean(Some(complexModelFactory),Some(createComplexModel),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, java.lang.String),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)))),TypeEnvironment(Set(java.lang.Object),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))))
           )
      )
-     SetHeader(fifthHeader,Constant(Hello World),TODO)
+     SetHeader(fifthHeader,Constant(Hello World),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, java.lang.String),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)))),TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, java.lang.String),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fifthHeader -> (java.lang.String,DomReference(ExpressionDefinitionImpl))))))
 )
