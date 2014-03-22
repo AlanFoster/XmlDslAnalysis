@@ -2,6 +2,7 @@ package foo.eip.serializers
 
 import foo.eip.graph.StaticGraphTypes._
 import scala.xml.Elem
+import foo.eip.graph.EipProcessor
 
 /**
  * Represents a concrete implementation implementation of an EipDagSerializer
@@ -9,6 +10,7 @@ import scala.xml.Elem
  * from the original model and edges/vertices etc.
  */
 class CompleteEipDagSerializer extends EipDagSerializer {
+
   /**
    * Creates the XML for the given EipDag
    * @param eipDag The EipDag to convert
@@ -17,7 +19,7 @@ class CompleteEipDagSerializer extends EipDagSerializer {
   def createXml(eipDag: EipDAG): Elem =
     <eipDag>
       <vertices>
-        {eipDag.vertices.map(vertex => <vertex id={vertex.id} eipType={vertex.eipType.toString.toLowerCase} text={vertex.text} inferredType={vertex.processor.bodies.mkString("{", ", ", "}")} headers={vertex.processor.headers.get.keys.toList.sortBy(identity).mkString("{", ", ", "}")}/>)}
+        {eipDag.vertices.map(vertex => <vertex id={vertex.id} eipType={getEipType(vertex)} text={vertex.text} inferredType={getInferredType(vertex)} headers={getHeaders(vertex)}/>)}
       </vertices>
       <edges>
         {eipDag.edges.map(edge => <edge source={edge.source.id} target={edge.target.id} edgeConnection={edge.edge}/>)}

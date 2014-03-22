@@ -4,7 +4,6 @@ package foo.eip.graph
 import foo.eip.graph.StaticGraphTypes.EipDAG
 import scala.collection.JavaConverters._
 import foo.dom.Model._
-import foo.eip.graph.model.CamelType
 import foo.eip.model._
 import foo.eip.model.SetBody
 import foo.eip.graph.ADT.EmptyDAG
@@ -96,31 +95,32 @@ class EipGraphCreator {
     }
 
     case (processor@SetHeader(headerName, Expression(expressionValue), _, _)) :: tail => {
-      val eipProcessor = EipProcessor(headerName + "->" + expressionValue, processor)
+      val eipProcessor = EipProcessor(headerName + " -> " + expressionValue, processor)
       newCreateGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
     }
 
-    case (processor: SetBody) :: tail =>
-      val eipProcessor = EipProcessor("TODO TYPE INFORMATION", processor)
+    case (processor@SetBody(Expression(expressionText), _, _)) :: tail =>
+      val eipProcessor = EipProcessor(expressionText, processor)
       newCreateGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
     case (processor@To(uri, _, _)) :: tail =>
       val eipProcessor = EipProcessor(uri, processor)
       newCreateGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
-    case (processor@Bean(_, _, _, _)) :: tail =>
-      val eipProcessor = EipProcessor("TODO", processor)
+    case (processor@Bean(beanReference, _, _, _)) :: tail =>
+      val beanText = beanReference.map(_.getStringValue).getOrElse("Not Specified")
+      val eipProcessor = EipProcessor(beanText, processor)
       newCreateGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
-/*    case (choice@Choice(whens, _, _)) :: tail =>
+    case (choice@Choice(whens, _, _)) :: tail =>
       val choiceEipProcessor = EipProcessor("choice", choice)
       val linkedGraph = linkGraph(previous, choiceEipProcessor, graph)
 
       // TODO When node should have its own vertex, with a text box with its predicate
       val (completedWhenGraph, previousDefinitions) = whens.foldLeft((linkedGraph, List[EipProcessor]()))({
-        case ((eipGraph, lastProcessorDefinition), when@When(Expression(value), children, _, _)) => {
+        case ((eipGraph, lastProcessorDefinition), when@When(Expression(expressionText), children, _, _)) => {
           // Create the initial expression element from the when expression
-          val whenEipProcessor = EipProcessor("TODO Expression", when)
+          val whenEipProcessor = EipProcessor(expressionText, when)
           val linkedGraph = linkGraph(List(choiceEipProcessor), whenEipProcessor, eipGraph)
 
           // Apply the graph function recursively to produce all children nodes within the when expression
@@ -129,12 +129,12 @@ class EipGraphCreator {
           // get all leaf nodes which are contained within the subgraph
           // ie all descendants of the parent when node
           val leafNodes = {
-            def getLeafNodes(parent: EipComponent, graph: EipDAG, leafNodes: List[EipComponent]): List[EipComponent] = {
+            def getLeafNodes(parent: EipProcessor, graph: EipDAG, leafNodes: List[EipProcessor]): List[EipProcessor] = {
               val children = graph.edges.toList.filter(_.source == parent)
               if(children.isEmpty) parent :: leafNodes
               else  children.flatMap(child => getLeafNodes(child.target, graph, leafNodes))
             }
-            getLeafNodes(component, whenSubGraph, List())
+            getLeafNodes(whenEipProcessor, whenSubGraph, List())
           }
 
           (whenSubGraph, leafNodes ::: lastProcessorDefinition)
@@ -143,8 +143,7 @@ class EipGraphCreator {
 
       // TODO Should only link the choice node to the next node, IF, and only if, there is no otherwise statement
       // TODO need to link all generated nodes to graph, IE Some(choiceComponent) isn't valid, it's Some(List[Choices]) possibly
-      createEipGraph(choiceComponent :: previousDefinitions, tail, completedWhenGraph)
-    }*/
+      newCreateGraph(choiceEipProcessor :: previousDefinitions, tail, completedWhenGraph)
 
     // Fall through case, hitting a node we don't understand
     // We simply interpret it as a to component, so that we can still display

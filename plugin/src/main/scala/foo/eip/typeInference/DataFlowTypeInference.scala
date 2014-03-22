@@ -61,15 +61,19 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
      * Camel Choice element, ensuring that When elements are allocated as expected
      */
     case choice@Choice(whens, _, _) =>
+      // Note that each child when node has access to the choice element's initial environment always
+      // And not the previous node - which differs to the implementation of the when processor implementation
       val (newTypeEnvs, newChildren) = whens.foldLeft((List(typeEnvironment), List[When]()))({
-        case ((typeEnvs@(typeEnv :: _), previous), next) =>
-          val mappedProcessor = performTypeInference(typeEnv, next)
+        case ((accumulatedTypeEnvironments, accumulatedWhenExpressions), next) =>
+          // Note that the parent choice type environment is used for each when expression!
+          val mappedProcessor = performTypeInference(typeEnvironment, next)
           val newEnv = mappedProcessor.typeInformation match {
             case NotInferred =>
               throw new Error("Could not infer the correct data type")
             case Inferred(_, after) => after
           }
-          (newEnv :: typeEnvs, previous :+ mappedProcessor.asInstanceOf[When])
+          // Return the tuple of the every accumulated type environment and every when element
+          (newEnv :: accumulatedTypeEnvironments, accumulatedWhenExpressions :+ mappedProcessor.asInstanceOf[When])
       })
 
       // Union the newTypeEnvs together as expected

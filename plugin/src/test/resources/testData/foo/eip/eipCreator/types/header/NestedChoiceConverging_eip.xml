@@ -5,13 +5,13 @@
         <vertex id="afterInnerHeader" eipType="to" text="direct:afterInnerHeader" headers="{innerChoiceWhen2Header, outerHeader}"/>
         <vertex id="innerChoiceWhen2Header" eipType="translator" text="innerChoiceWhen2Header -&gt; outer" headers="{innerChoiceWhen2Header, outerHeader}"/>
         <vertex id="beforeInnerHeader" eipType="to" text="direct:beforeInnerHeader" headers="{outerHeader}"/>
-        <vertex id="innerChoiceWhen2" eipType="when" text="true" headers="{outerHeader}"/>
+        <vertex id="innerChoiceWhen2" eipType="when" text="true" headers="{innerChoiceWhen2Header, outerHeader}"/>
         <vertex id="innerChoiceWhen1Header" eipType="translator" text="innerChoiceWhen1Header -&gt; true" headers="{innerChoiceWhen1Header, outerHeader}"/>
-        <vertex id="innerChoiceWhen1" eipType="when" text="true" headers="{outerHeader}"/>
-        <vertex id="innerChoice" eipType="choice" text="choice" headers="{outerHeader}"/>
+        <vertex id="innerChoiceWhen1" eipType="when" text="true" headers="{innerChoiceWhen1Header, outerHeader}"/>
+        <vertex id="innerChoice" eipType="choice" text="choice" headers="{innerChoiceWhen1Header, innerChoiceWhen2Header, outerHeader}"/>
         <vertex id="outerHeader" eipType="translator" text="outerHeader -&gt; inner" headers="{outerHeader}"/>
-        <vertex id="outerChoiceWhen1" eipType="when" text="true" headers="{}"/>
-        <vertex id="outerChoice" eipType="choice" text="choice" headers="{}"/>
+        <vertex id="outerChoiceWhen1" eipType="when" text="true" headers="{innerChoiceWhen1Header, innerChoiceWhen2Header, outerHeader}"/>
+        <vertex id="outerChoice" eipType="choice" text="choice" headers="{innerChoiceWhen1Header, innerChoiceWhen2Header, outerHeader}"/>
         <vertex id="beforeChoice" eipType="to" text="direct:foo" headers="{}"/>
         <vertex id="first" eipType="from" text="direct:start" headers="{}"/>
     </vertices>

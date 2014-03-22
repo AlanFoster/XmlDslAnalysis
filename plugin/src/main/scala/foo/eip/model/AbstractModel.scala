@@ -132,12 +132,34 @@ trait Processor extends Mappable[Processor] {
   }
 
   /**
+   * Extracts the out headers associated with the current processor
+   * @return An Option, as the semantic information may not have been inferred
+   *         currently.
+   */
+  def outHeaders: Option[Map[String, (String, Reference)]] = typeInformation match {
+    case Inferred(_, TypeEnvironment(_, headerMap)) =>
+      Some(headerMap)
+    case _ => None
+  }
+
+  /**
    * Extracts the current body set associated with the current processor
    * @return An option, as the semantic information may not have been inferred
    *         currently.
    */
   def bodies: Option[Set[String]] = typeInformation match {
     case Inferred(TypeEnvironment(bodySet, _), _) =>
+      Some(bodySet)
+    case _ => None
+  }
+
+  /**
+   * Extracts the out body set associated with the current processor
+   * @return An option, as the semantic information may not have been inferred
+   *         currently.
+   */
+  def outBodies: Option[Set[String]] = typeInformation match {
+    case Inferred(_, TypeEnvironment(bodySet, _)) =>
       Some(bodySet)
     case _ => None
   }

@@ -39,14 +39,22 @@ class TypePropagationTests
   /**
    * Attempts to pipeline all currently known processors
    */
-  def ignoretestPipelineHeaders() {
+  def testPipelineHeaders() {
     doTest()
   }
 
   /**
    * Attempts to create the abstract representation of a simple choice
    */
-  def ignoretestSimpleChoice() {
+  def testSimpleChoice() {
+    doTest()
+  }
+
+  /**
+   * Ensure that the type information of children elements in when statements
+   * shares the initial choice environment, and not the previous when's environment
+   */
+  def testSimpleChoiceBean() {
     doTest()
   }
 

@@ -2,6 +2,7 @@ package foo.eip.serializers
 
 import foo.eip.graph.StaticGraphTypes.EipDAG
 import scala.xml.{PrettyPrinter, Elem}
+import foo.eip.graph.EipProcessor
 
 /**
  * Represents a concrete implementation of a serializer which can serialize an
@@ -30,4 +31,26 @@ trait EipDagSerializer extends Serializer[EipDAG] {
    * @return A pretty printed string of th egiven Xml Element
    */
   def prettyPrint(elem: Elem) = new PrettyPrinter(Integer.MAX_VALUE, 4).format(elem)
+
+  /**
+   * Extracts the EIP Type from the eipProcessor
+   * @param eipProcessor the Eip Processor
+   * @return The EipType
+   */
+  def getEipType(eipProcessor: EipProcessor) = eipProcessor.eipType.toString.toLowerCase
+
+  /**
+   * Extracts the inferredBody type
+   * @param eipProcessor the Eip Processor
+   * @return The inferred body type
+   */
+  def getInferredType(eipProcessor: EipProcessor) = eipProcessor.processor.outBodies.get.mkString("{", ", ", "}")
+
+  /**
+   * Extracts the inferredBody headers
+   * @param eipProcessor the Eip Processor
+   * @return The inferred headers
+   */
+  def getHeaders(eipProcessor: EipProcessor) = eipProcessor.processor.outHeaders.get.keys.toList.sortBy(identity).mkString("{", ", ", "}")
+
 }

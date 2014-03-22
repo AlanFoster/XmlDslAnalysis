@@ -24,15 +24,22 @@ object AbstractModelPrinter {
     case Route(children, _, _) =>
       printWrapper("Route", children, depth)
 
-    case Choice(children, _, _) =>
+    case Choice(children, _, NotInferred) =>
       printWrapper("Choice", children, depth)
 
-    case When(expression, children, _, _) =>
+    case Choice(children, _, typeInformation:Inferred) =>
+      printWrapper("Choice", children, depth, Some(typeInformation))
+
+    case When(expression, children, _, NotInferred) =>
       printWrapper(s"When(${expression})", children, depth)
+
+    case When(expression, children, _, typeInformation) =>
+      printWrapper(s"When(${expression})", children, depth,  Some(typeInformation))
 
     case default =>
       fillWhitespace(depth) + default.toString
   }
+
 
   /**
    * Creates a topmost node output within the tree
@@ -41,7 +48,8 @@ object AbstractModelPrinter {
    * @param depth The level of traversal with the tree
    * @return The formatted string with the rootName wrapper as the starting text
    */
-  private def printWrapper(rootName: String, children: List[Processor], depth: Int): String = {
+  private def printWrapper(rootName: String, children: List[Processor], depth: Int,
+                           typeInformationWrapper: Option[TypeInformation] = None): String = {
     val parentWhitespace = fillWhitespace(depth)
     // Create the formatted children as expected
     val formattedChildren =
@@ -50,7 +58,21 @@ object AbstractModelPrinter {
       .mkString
 
     // Create the end string
-    parentWhitespace + rootName + "(\n" +
+    val rootText = {
+      parentWhitespace + rootName + {
+        typeInformationWrapper match {
+          case Some(Inferred(TypeEnvironment(bodyBefore, headersBefore), TypeEnvironment(bodyAfter, headersAfter))) =>
+            val typeInformationWhitespace = fillWhitespace(depth + 1)
+            "{ \n" +
+              typeInformationWhitespace + s"(${bodyBefore}, ${headersBefore})\n" +
+              typeInformationWhitespace + s"(${bodyAfter}, ${headersAfter})\n" +
+              parentWhitespace + "}(\n"
+          case _ => "(\n"
+        }
+      }
+    }
+
+    rootText +
         formattedChildren +
         parentWhitespace +
     ")"

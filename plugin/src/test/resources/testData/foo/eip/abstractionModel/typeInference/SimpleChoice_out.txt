@@ -1,14 +1,23 @@
 Route(
-     From(direct:start,TODO)
-     To(direct:foo,TODO)
-     Choice(
-          When(Simple(true,Some(java.lang.Boolean)))(
-               To(uri:firstChoiceProcessor,TODO)
+     From(direct:start,DomReference(FromProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+     To(direct:foo,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+     Choice{ 
+          (Set(java.lang.Object), Map())
+          (Set(java.lang.Object), Map())
+     }(
+          When(Simple(true,Some(java.lang.Boolean))){ 
+               (Set(java.lang.Object), Map())
+               (Set(java.lang.Object), Map())
+          }(
+               To(uri:firstChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
           )
-          When(Simple(false,None))(
-               To(uri:secondChoiceProcessor,TODO)
-               To(uri:thirdChoiceProcessor,TODO)
+          When(Simple(false,None)){ 
+               (Set(java.lang.Object), Map())
+               (Set(java.lang.Object), Map())
+          }(
+               To(uri:secondChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+               To(uri:thirdChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
           )
      )
-     To(direct:bar,TODO)
+     To(direct:bar,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
 )

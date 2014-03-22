@@ -1,0 +1,30 @@
+Route(
+     From(direct:start,DomReference(FromProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+     To(direct:foo,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+     Choice{ 
+          (Set(java.lang.Object), Map())
+          (Set(java.lang.Object, foo.models.PersonModel, foo.models.ComplexModel, foo.models.OrderModel), Map())
+     }(
+          When(Simple(true,Some(java.lang.Boolean))){ 
+               (Set(java.lang.Object), Map())
+               (Set(foo.models.OrderModel), Map())
+          }(
+               Bean(Some(orderFactory),Some(createOrder),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(foo.models.OrderModel),Map())))
+          )
+          When(Simple(false,None)){ 
+               (Set(java.lang.Object), Map())
+               (Set(foo.models.ComplexModel), Map())
+          }(
+               To(uri:secondChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+               Bean(Some(complexFactory),Some(createComplexModel),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(foo.models.ComplexModel),Map())))
+          )
+          When(Simple(false,None)){ 
+               (Set(java.lang.Object), Map())
+               (Set(foo.models.PersonModel), Map())
+          }(
+               To(uri:thirdChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+               Bean(Some(personFactory),Some(createPerson),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map())))
+          )
+     )
+     To(direct:bar,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object, foo.models.PersonModel, foo.models.ComplexModel, foo.models.OrderModel),Map()),TypeEnvironment(Set(java.lang.Object, foo.models.PersonModel, foo.models.ComplexModel, foo.models.OrderModel),Map())))
+)

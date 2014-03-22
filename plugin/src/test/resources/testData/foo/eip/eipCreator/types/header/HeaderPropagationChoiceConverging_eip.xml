@@ -4,13 +4,13 @@
         <vertex id="c" eipType="translator" text="thirdHeader -&gt; 3" headers="{initialHeader, secondHeader, thirdHeader}"/>
         <vertex id="baz" eipType="to" text="direct:baz" headers="{initialHeader, secondHeader}"/>
         <vertex id="b" eipType="translator" text="secondHeader -&gt; secondHeader" headers="{initialHeader, secondHeader}"/>
-        <vertex id="when3" eipType="when" text="true" headers="{initialHeader}"/>
+        <vertex id="when3" eipType="when" text="true" headers="{initialHeader, secondHeader, thirdHeader}"/>
         <vertex id="bar" eipType="to" text="direct:bar" headers="{initialHeader}"/>
         <vertex id="when2" eipType="when" text="true" headers="{initialHeader}"/>
         <vertex id="a" eipType="translator" text="firstHeader -&gt; firstHeader" headers="{firstHeader, initialHeader}"/>
         <vertex id="foo" eipType="to" text="direct:foo" headers="{initialHeader}"/>
-        <vertex id="when" eipType="when" text="true" headers="{initialHeader}"/>
-        <vertex id="choice" eipType="choice" text="choice" headers="{initialHeader}"/>
+        <vertex id="when" eipType="when" text="true" headers="{firstHeader, initialHeader}"/>
+        <vertex id="choice" eipType="choice" text="choice" headers="{firstHeader, initialHeader, secondHeader, thirdHeader}"/>
         <vertex id="initialHeader" eipType="translator" text="initialHeader -&gt; initialHeader" headers="{initialHeader}"/>
         <vertex id="from" eipType="from" text="direct:start" headers="{}"/>
     </vertices>

@@ -2,14 +2,14 @@
     <vertices>
         <vertex id="to" eipType="to" text="direct:start" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
         <vertex id="beanTwo" eipType="to" text="complexModelFactory" inferredType="{foo.models.ComplexModel}"/>
-        <vertex id="when3" eipType="when" text="true" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel}"/>
-        <vertex id="choice3" eipType="choice" text="choice" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel}"/>
+        <vertex id="when3" eipType="when" text="true" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="choice3" eipType="choice" text="choice" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
         <vertex id="beanThree" eipType="to" text="personFactory" inferredType="{foo.models.PersonModel}"/>
-        <vertex id="when2" eipType="when" text="true" inferredType="{java.lang.Object, foo.models.OrderModel}"/>
-        <vertex id="choice2" eipType="choice" text="choice" inferredType="{java.lang.Object, foo.models.OrderModel}"/>
+        <vertex id="when2" eipType="when" text="true" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="choice2" eipType="choice" text="choice" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel}"/>
         <vertex id="beanOne" eipType="to" text="orderFactory" inferredType="{foo.models.OrderModel}"/>
-        <vertex id="when1" eipType="when" text="true" inferredType="{java.lang.Object}"/>
-        <vertex id="choice1" eipType="choice" text="choice" inferredType="{java.lang.Object}"/>
+        <vertex id="when1" eipType="when" text="true" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="choice1" eipType="choice" text="choice" inferredType="{java.lang.Object, foo.models.OrderModel}"/>
         <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
     </vertices>
     <edges>
