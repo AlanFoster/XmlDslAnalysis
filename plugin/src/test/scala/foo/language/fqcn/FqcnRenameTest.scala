@@ -11,6 +11,9 @@ class FqcnRenameTest
   with JavaJDK1_7TestBase
   with CommonTestClasses {
 
+  /**
+   * {@inheritdoc}
+   */
   override def getTestDataPath: String = testDataMapper("/foo/language/fqcn/rename")
 
   /**

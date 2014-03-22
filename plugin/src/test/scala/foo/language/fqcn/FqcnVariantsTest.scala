@@ -15,6 +15,9 @@ class FqcnVariantsTest
   extends LightCodeInsightFixtureTestCase
   with JavaJDK1_7TestBase {
 
+  /**
+   * {@inheritdoc}
+   */
   override def getTestDataPath: String = testDataMapper("/foo/language/fqcn/variants")
 
   def testPackageVariantsSuggestedWhenNoExistingText() {

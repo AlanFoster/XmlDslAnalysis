@@ -32,7 +32,6 @@ class ParameterInfoTest
    */
   type Handler = ParameterInfoHandler[CamelFunctionCall, CamelFunctionCall]
 
-
   /**
    * Test that the parameters will be shown as expected for an empty list
    */
@@ -168,6 +167,4 @@ class ParameterInfoTest
     handler.updateParameterInfo(element, context)
     assertEquals(expectedIndex, context.getCurrentParameter)
   }
-
-
 }
