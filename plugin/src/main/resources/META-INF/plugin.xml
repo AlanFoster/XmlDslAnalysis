@@ -129,28 +129,5 @@
         -->
       <fileEditorProvider implementation="foo.eip.editor.EipEditorProvider" />
 
-
-      <!--            <debugger.breakpointFactory implementation="foo.language.debugger.CamelBreakpointFactory" />-->
-
-      <!--
-        Debugging Support for blueprint
-        An initial attempt to place breakpoints within the /EIP/ elements, to help debug in terms of DSL
-        rather than the concrete java implementation
-      -->
-<!--      <xdebugger.debuggerSupport implementation=""-->
-
-     <!--
-         Defines a breakpoint, which allows the user to place a breakpoint within a valid blueprint route.
-         Note this breakpoint by itself will do nothing other than place the icon where appropriate etc
-     -->
-<!--      <xdebugger.breakpointType implementation="foo.language.debugger.BlueprintBreakpointType" />-->
-
-<!--      <programRunner implementation="foo.language.debugger.BlueprintDebugRunner"-->
-<!--
-      <debugger.positionManagerFactory implementation="foo.language.debugger.CamelPositionManagerFactory" />-->
-
-<!--    <programRunner implementation="foo.language.debugger.CamelProgramRunner" />-->
-<!--      <configurationType implementation="foo.language.debugger.CamelConfigurationType" />-->
-
   </extensions>
 </idea-plugin>
