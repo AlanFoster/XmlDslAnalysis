@@ -102,7 +102,7 @@ class TypePropagationTests
     val expectedModel = myFixture.configureByFile(s"/typeInference/${getTestName(false)}_out.txt").getText
 
     // Create and pretty print the produced Eip DAG for the given DOM file
-    val route = new DomAbstractModelConverter().createAbstraction(loadedDomFile)
+    val route = new DomAbstractModelConverter().convert(loadedDomFile)
     val routeWithSemantics = new DataFlowTypeInference().performTypeInference(route)
     val serialized = AbstractModelPrinter.print(routeWithSemantics)
 

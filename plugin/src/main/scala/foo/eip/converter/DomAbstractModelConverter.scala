@@ -20,7 +20,7 @@ import com.intellij.util.xml.GenericAttributeValue
  * Concrete implementation of the Converter trait which will convert a Dom
  * structure into an abstract representation
  */
-class DomAbstractModelConverter extends AbstractModelConverter[List[ProcessorDefinition]] {
+class DomAbstractModelConverter extends AbstractModelConverter[Blueprint] {
   /**
    * Provide a type alias for the Dom expresions, so that 'Expression' can simply
    * refer to our abstract model instead.
@@ -32,7 +32,7 @@ class DomAbstractModelConverter extends AbstractModelConverter[List[ProcessorDef
    * @param root The root DOM element
    * @return The converted EipDAG
    */
-  def createAbstraction(root:Blueprint): Route = {
+  override def convert(root:Blueprint): Route = {
     // Extract the given camel routes and create an empty EipDAG
     val domRoutes = root.getCamelContext.getRoutes.asScala
 
@@ -52,7 +52,7 @@ class DomAbstractModelConverter extends AbstractModelConverter[List[ProcessorDef
    * @param children The child DomElements within this structure
    * @return The abstract route representation of the same data model
    */
-  override def convert(children: List[ProcessorDefinition]): Route = {
+  def convert(children: List[ProcessorDefinition]): Route = {
     val processors = children.map(convert)
     Route(processors, NoReference)
   }

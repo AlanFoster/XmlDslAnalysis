@@ -11,22 +11,15 @@ import javax.swing.{JPanel, JComponent}
 import foo.eip.graph.{EipGraphCreator, VisualEipGraph}
 import foo.eip.graph.loaders.IntellijIconLoader
 import foo.FunctionalUtil._
-import java.awt.{Color, GridLayout}
+import java.awt.GridLayout
 import scala.collection.JavaConverters._
 import com.intellij.openapi.ui.popup.{Balloon, JBPopupFactory}
 import com.intellij.openapi.ui.MessageType
 import com.intellij.ui.awt.RelativePoint
 import foo.dom.DomFileAccessor
 import foo.dom.Model.Blueprint
-import com.intellij.notification.Notifications
-import com.intellij.notification.Notification
-import com.intellij.notification.NotificationGroup
-import com.intellij.notification.NotificationType
-import com.intellij.notification.Notifications
-import com.intellij.openapi.fileEditor.ex.FileEditorManagerEx
-import org.jdom.Element
-import com.intellij.openapi.fileEditor.impl.EditorWindow
-import com.intellij.openapi.wm.WindowManager
+import foo.eip.converter.DomAbstractModelConverter
+import foo.eip.typeInference.DataFlowTypeInference
 
 /**
  * Creates and visualises the given XML DSl as a graph.
@@ -99,8 +92,13 @@ class EipEditor(project: Project, virtualFile: VirtualFile) extends UserDataHold
         .show(RelativePoint.getSouthEastOf(graphContainer), Balloon.Position.above)
     }
 
-    // Create the EipGraph if 'all is well'
-    val eipGraph = new EipGraphCreator().createEipGraph(blueprintDom)
+    // Instantiate the methods of creating an abstract dom model and semantic information for later DI
+    val modelConverter = new DomAbstractModelConverter()
+    val dataFlowInference = new DataFlowTypeInference()
+
+    // Create and pretty print the produced Eip DAG for the given DOM file
+    val eipGraph = new EipGraphCreator()
+      .createEipGraph(modelConverter, dataFlowInference)(blueprintDom)
 
     // Create a new VisualEipGraph, with an IntellijIconLoader mixed in
     val visualEipGraph = (new VisualEipGraph(eipGraph) with IntellijIconLoader).createScrollableViewer

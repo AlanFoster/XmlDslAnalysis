@@ -88,7 +88,7 @@ class DomAbstractionModelTests
     val expectedModel = myFixture.configureByFile(s"/converter/${getTestName(false)}_out.txt").getText
 
     // Create and pretty print the produced Eip DAG for the given DOM file
-    val route = new DomAbstractModelConverter().createAbstraction(loadedDomFile)
+    val route = new DomAbstractModelConverter().convert(loadedDomFile)
     val serialized = AbstractModelPrinter.print(route)
 
     // Assert Equals - Note, IntelliJ will provide a nice comparison tool in failure scenarios

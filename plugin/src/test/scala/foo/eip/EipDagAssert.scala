@@ -5,6 +5,8 @@ import junit.framework.Assert
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture
 import foo.eip.serializers.EipDagSerializer
 import foo.dom.DomFileAccessor
+import foo.eip.converter.DomAbstractModelConverter
+import foo.eip.typeInference.DataFlowTypeInference
 
 /**
  * EipDag asserting methods for ensuring that the EipDAGs are represented as expected
@@ -28,8 +30,13 @@ object EipDagAssert {
     // Load the expected EIP DAG, represented as Xml
     val expectedDag = fixture.configureByFile(s"${testName}_eip.xml").getText
 
+    // Instantiate the methods of creating an abstract dom model and semantic information for later DI
+    val modelConverter = new DomAbstractModelConverter()
+    val dataFlowInference = new DataFlowTypeInference()
+
     // Create and pretty print the produced Eip DAG for the given DOM file
-    val eipDag = new EipGraphCreator().createEipGraph(loadedDomFile)
+    val eipDag = new EipGraphCreator()
+      .createEipGraph(modelConverter, dataFlowInference)(loadedDomFile)
     val serializedXml = serializer.serialize(eipDag)
 
     // Assert Equals - Note, IntelliJ will provide a nice comparison tool in failure scenarios

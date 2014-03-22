@@ -148,17 +148,12 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
     mutate(viewer) {
       _.setVertexToolTipTransformer(new Transformer[EipProcessor, String] {
         def transform(component: EipProcessor): String = {
-/*          val typeInformation = component.semantics
-
           // Concatenate the type information and EipComponent's specific text  value
           s"""<html>
             |${component.text}<br />
-            |Possible Body Types: ${typeInformation.possibleBodyTypes.toList.sortBy(identity).mkString("{", ", ", "}")}<br />
-            |Headers: ${typeInformation.headers.keys.toList.sortBy(identity).mkString("{", ", ", "}")}<br />
-            |</html>""".stripMargin*/
-
-          // TODO
-          "TODO Type information!"
+            |Possible Body Types: ${component.processor.bodies.map(_.toList.sortBy(identity).mkString("{", ", ", "}")).getOrElse("{}")}<br />
+            |Headers: ${component.processor.headers.map(_.keys.toList.sortBy(identity).mkString("{", ", ", "}")).getOrElse("{}")}<br />
+            |</html>""".stripMargin
         }
       })
     }

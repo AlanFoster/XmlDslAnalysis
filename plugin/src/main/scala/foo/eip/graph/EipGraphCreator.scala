@@ -1,6 +1,5 @@
 package foo.eip.graph
 
-
 import foo.eip.graph.StaticGraphTypes.EipDAG
 import scala.collection.JavaConverters._
 import foo.dom.Model._
@@ -8,8 +7,8 @@ import foo.eip.model._
 import foo.eip.model.SetBody
 import foo.eip.graph.ADT.EmptyDAG
 import foo.eip.model.SetHeader
-import foo.eip.converter.DomAbstractModelConverter
-import foo.eip.typeInference.DataFlowTypeInference
+import foo.eip.converter.{AbstractModelConverter, DomAbstractModelConverter}
+import foo.eip.typeInference.{AbstractModelTypeInference, DataFlowTypeInference}
 import foo.eip.model.EipName.EipName
 
 case class EipProcessor(text: String, id: String, eipType: EipName, processor: Processor)
@@ -44,10 +43,14 @@ class EipGraphCreator {
 
   /**
    * Converts the given blueprint DOM file into an EipDag
+   * @param modelConverter An abstract implementation of a model converter
+   * @param dataFlowInference An abstract implementation of data flow inference algorithm
    * @param root The root DOM element
    * @return The converted EipDAG
    */
-  def createEipGraph(root:Blueprint): EipDAG = {
+  def createEipGraph
+      (modelConverter: AbstractModelConverter[Blueprint], dataFlowInference: AbstractModelTypeInference)
+      (root:Blueprint): EipDAG = {
     // Extract the given camel routes and create an empty EipDAG
     val routes = root.getCamelContext.getRoutes.asScala
     val createdDAG: EipDAG = EmptyDAG[EipProcessor, String]()
@@ -55,11 +58,10 @@ class EipGraphCreator {
     // There is no need to traverse the given routes if there are no processor definitions
     if (routes.isEmpty || !routes.head.getFrom.exists) createdDAG
     else {
-      // TODO DI
-      val route = new DomAbstractModelConverter().createAbstraction(root)
-      val routeWithSemantics = new DataFlowTypeInference().performTypeInference(route)
+      val route = modelConverter.convert(root)
+      val routeWithSemantics = dataFlowInference.performTypeInference(route)
 
-      newCreateGraph(
+      createEipGraph(
         List(),
         routeWithSemantics.children,
         createdDAG
@@ -80,37 +82,32 @@ class EipGraphCreator {
    * @param graph The current EipDag
    * @return A new EipDag, note the original data structure will not be mutated
    */
-  def newCreateGraph(previous: List[EipProcessor],
+  def createEipGraph(previous: List[EipProcessor],
                      processors: List[Processor],
                      graph: EipDAG): EipDAG = processors match {
     // When there are no processors, we have completed our effort.
     case Nil => graph
 
-    /*    case (from: RemoveHeader) :: tail =>
-    newCreateGraph(List(from), tail, linkGraph(previous, from, graph))*/
-
-    case (processor@From(uri, _, _)) :: tail => {
+    case (processor@From(uri, _, _)) :: tail =>
       val eipProcessor = EipProcessor(uri, processor)
-      newCreateGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
-    }
+      createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
-    case (processor@SetHeader(headerName, Expression(expressionValue), _, _)) :: tail => {
+    case (processor@SetHeader(headerName, Expression(expressionValue), _, _)) :: tail =>
       val eipProcessor = EipProcessor(headerName + " -> " + expressionValue, processor)
-      newCreateGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
-    }
+      createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
     case (processor@SetBody(Expression(expressionText), _, _)) :: tail =>
       val eipProcessor = EipProcessor(expressionText, processor)
-      newCreateGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
+      createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
     case (processor@To(uri, _, _)) :: tail =>
       val eipProcessor = EipProcessor(uri, processor)
-      newCreateGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
+      createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
     case (processor@Bean(beanReference, _, _, _)) :: tail =>
       val beanText = beanReference.map(_.getStringValue).getOrElse("Not Specified")
       val eipProcessor = EipProcessor(beanText, processor)
-      newCreateGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
+      createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
     case (choice@Choice(whens, _, _)) :: tail =>
       val choiceEipProcessor = EipProcessor("choice", choice)
@@ -124,7 +121,7 @@ class EipGraphCreator {
           val linkedGraph = linkGraph(List(choiceEipProcessor), whenEipProcessor, eipGraph)
 
           // Apply the graph function recursively to produce all children nodes within the when expression
-          val whenSubGraph = newCreateGraph(List(whenEipProcessor), children, linkedGraph)
+          val whenSubGraph = createEipGraph(List(whenEipProcessor), children, linkedGraph)
 
           // get all leaf nodes which are contained within the subgraph
           // ie all descendants of the parent when node
@@ -143,15 +140,14 @@ class EipGraphCreator {
 
       // TODO Should only link the choice node to the next node, IF, and only if, there is no otherwise statement
       // TODO need to link all generated nodes to graph, IE Some(choiceComponent) isn't valid, it's Some(List[Choices]) possibly
-      newCreateGraph(choiceEipProcessor :: previousDefinitions, tail, completedWhenGraph)
+      createEipGraph(choiceEipProcessor :: previousDefinitions, tail, completedWhenGraph)
 
     // Fall through case, hitting a node we don't understand
     // We simply interpret it as a to component, so that we can still display
     // the information without crashing or such
-    case unmatched :: tail => {
+    case unmatched :: tail =>
       val component = EipProcessor("Not Handlded", unmatched)
-      newCreateGraph(List(component), tail, linkGraph(previous, component, graph))
-    }
+      createEipGraph(List(component), tail, linkGraph(previous, component, graph))
   }
 
   /**
@@ -165,7 +161,6 @@ class EipGraphCreator {
     if(idAttribute.exists()) idAttribute.getStringValue
     else idAttribute.hashCode.toString
   }
-
 }
 
 /**

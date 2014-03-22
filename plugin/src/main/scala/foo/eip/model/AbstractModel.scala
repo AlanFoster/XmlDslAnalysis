@@ -11,7 +11,7 @@ import foo.eip.model.EipName.EipName
 // Helpers to be placed in a better file
 object AbstractModelManager {
   def getCurrentNode(domFile: Blueprint, currentTag: XmlTag): Option[Processor] = {
-    val route = new DomAbstractModelConverter().createAbstraction(domFile)
+    val route = new DomAbstractModelConverter().convert(domFile)
     val routeWithSemantics = new DataFlowTypeInference().performTypeInference(route)
 
     val currentNode = routeWithSemantics.collectFirst({
