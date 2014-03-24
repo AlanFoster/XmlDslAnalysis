@@ -5,14 +5,14 @@ Route(
           (Set(foo.models.OrderModel), Map())
           (Set(foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel), Map())
      }(
-          When(Simple(true,None)){ 
+          When(Simple(true,None,ExpressionReference(XmlTag:simple))){ 
                (Set(foo.models.OrderModel), Map())
                (Set(foo.models.ComplexModel), Map())
           }(
                To(direct:bar,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.OrderModel),Map()),TypeEnvironment(Set(foo.models.OrderModel),Map())))
                Bean(Some(complexFactory),Some(createComplexModel),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(foo.models.OrderModel),Map()),TypeEnvironment(Set(foo.models.ComplexModel),Map())))
           )
-          When(Simple(false,None)){ 
+          When(Simple(false,None,ExpressionReference(XmlTag:simple))){ 
                (Set(foo.models.OrderModel), Map())
                (Set(foo.models.PersonModel), Map())
           }(

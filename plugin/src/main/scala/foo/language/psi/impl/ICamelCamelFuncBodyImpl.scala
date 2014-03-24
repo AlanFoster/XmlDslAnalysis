@@ -13,6 +13,7 @@ import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry
  */
 class ICamelCamelFuncBodyImpl(node: ASTNode) extends ASTWrapperPsiElement(node) with ICamelCamelFuncBody {
   override def getReferences: Array[PsiReference] = {
-    ReferenceProvidersRegistry.getReferencesFromProviders(this)
+    val references = ReferenceProvidersRegistry.getReferencesFromProviders(this)
+    references
   }
 }

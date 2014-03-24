@@ -2,11 +2,11 @@ Route(
      From(direct:start,DomReference(FromProcessorDefinition),NotInferred)
      Bean(Some(orderFactory),Some(createOrder),DomReference(BeanDefinition),NotInferred)
      Choice(
-          When(Simple(true,None))(
+          When(Simple(true,None,ExpressionReference(XmlTag:simple)))(
                To(direct:bar,DomReference(ToProcessorDefinition),NotInferred)
                Bean(Some(complexFactory),Some(createComplexModel),DomReference(BeanDefinition),NotInferred)
           )
-          When(Simple(false,None))(
+          When(Simple(false,None,ExpressionReference(XmlTag:simple)))(
                Bean(Some(personFactory),Some(createPerson),DomReference(BeanDefinition),NotInferred)
           )
      )

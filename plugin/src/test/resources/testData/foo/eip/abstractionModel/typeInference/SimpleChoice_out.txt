@@ -5,13 +5,13 @@ Route(
           (Set(java.lang.Object), Map())
           (Set(java.lang.Object), Map())
      }(
-          When(Simple(true,Some(java.lang.Boolean))){ 
+          When(Simple(true,Some(java.lang.Boolean),ExpressionReference(XmlTag:simple))){ 
                (Set(java.lang.Object), Map())
                (Set(java.lang.Object), Map())
           }(
                To(uri:firstChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
           )
-          When(Simple(false,None)){ 
+          When(Simple(false,None,ExpressionReference(XmlTag:simple))){ 
                (Set(java.lang.Object), Map())
                (Set(java.lang.Object), Map())
           }(

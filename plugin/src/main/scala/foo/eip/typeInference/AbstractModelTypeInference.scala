@@ -1,6 +1,6 @@
 package foo.eip.typeInference
 
-import foo.eip.model.Route
+import foo.eip.model.{TypeEnvironment, Processor, Route}
 
 /**
  * Performs type inference on a given Abstract Model representation
@@ -11,5 +11,11 @@ trait AbstractModelTypeInference {
    * @param route The untyped model
    * @return The typed model
    */
-  def performTypeInference(route: Route): Route
+  def performTypeInference(route: Route,
+                           interceptor: (Processor) => (() => TypeEnvironment) => TypeEnvironment = identityInterceptor): Route
+
+  def identityInterceptor(processor: Processor)
+                         (fallback: () => TypeEnvironment): TypeEnvironment = {
+    fallback()
+  }
 }

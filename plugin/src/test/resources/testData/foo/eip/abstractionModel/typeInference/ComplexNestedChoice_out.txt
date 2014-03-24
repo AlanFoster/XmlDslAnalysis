@@ -16,13 +16,13 @@ Route(
           (Set(java.lang.Object, foo.models.OrderModel), Map())
           (Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel), Map())
      }(
-          When(Simple(true,Some(java.lang.Boolean))){ 
+          When(Simple(true,Some(java.lang.Boolean),ExpressionReference(XmlTag:simple))){ 
                (Set(java.lang.Object, foo.models.OrderModel), Map())
                (Set(java.lang.Object, foo.models.OrderModel), Map())
           }(
                To(uri:firstChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel),Map()),TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel),Map())))
           )
-          When(Simple(false,None)){ 
+          When(Simple(false,None,ExpressionReference(XmlTag:simple))){ 
                (Set(java.lang.Object, foo.models.OrderModel), Map())
                (Set(foo.models.PersonModel), Map())
           }(
@@ -33,13 +33,13 @@ Route(
                     (Set(foo.models.PersonModel), Map())
                     (Set(foo.models.PersonModel), Map())
                }(
-                    When(Simple(true,Some(java.lang.Boolean))){ 
+                    When(Simple(true,Some(java.lang.Boolean),ExpressionReference(XmlTag:simple))){ 
                          (Set(foo.models.PersonModel), Map())
                          (Set(foo.models.PersonModel), Map())
                     }(
                          To(uri:firstChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map())))
                     )
-                    When(Simple(false,None)){ 
+                    When(Simple(false,None,ExpressionReference(XmlTag:simple))){ 
                          (Set(foo.models.PersonModel), Map())
                          (Set(foo.models.PersonModel), Map())
                     }(
@@ -54,7 +54,7 @@ Route(
           (Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel), Map())
           (Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, java.lang.String), Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))
      }(
-          When(Simple(true,Some(java.lang.Boolean))){ 
+          When(Simple(true,Some(java.lang.Boolean),ExpressionReference(XmlTag:simple))){ 
                (Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel), Map())
                (Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel), Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))
           }(
@@ -63,14 +63,14 @@ Route(
                     (Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel), Map())
                     (Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel), Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))
                }(
-                    When(Simple(true,Some(java.lang.Boolean))){ 
+                    When(Simple(true,Some(java.lang.Boolean),ExpressionReference(XmlTag:simple))){ 
                          (Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel), Map())
                          (Set(java.lang.Object), Map())
                     }(
                          To(uri:firstChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel),Map()),TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel),Map())))
                          Bean(Some(complexFactory),Some(createComplex),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
                     )
-                    When(Simple(false,None)){ 
+                    When(Simple(false,None,ExpressionReference(XmlTag:simple))){ 
                          (Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel), Map())
                          (Set(foo.models.PersonModel), Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))
                     }(
@@ -78,19 +78,19 @@ Route(
                          To(uri:secondChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map())))
                          To(uri:thirdChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map())))
                          To(direct:foo,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map())))
-                         SetHeader(secondHeader,Simple(${body},Some(java.lang.String)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.String,DomReference(ExpressionDefinitionImpl))))))
-                         SetHeader(thirdHeader,Simple(${body},Some(java.lang.Integer)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.String,DomReference(ExpressionDefinitionImpl)))),TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.String,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))))
-                         SetHeader(secondHeader,Simple(${body},Some(java.lang.Object)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.String,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)))),TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))))
-                         SetHeader(fourthHeader,Simple(5,Some(java.lang.Integer)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)))),TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))))
+                         SetHeader(secondHeader,Simple(${body},Some(java.lang.String),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.String,DomReference(ExpressionDefinitionImpl))))))
+                         SetHeader(thirdHeader,Simple(${body},Some(java.lang.Integer),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.String,DomReference(ExpressionDefinitionImpl)))),TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.String,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))))
+                         SetHeader(secondHeader,Simple(${body},Some(java.lang.Object),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.String,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)))),TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))))
+                         SetHeader(fourthHeader,Simple(5,Some(java.lang.Integer),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)))),TypeEnvironment(Set(foo.models.PersonModel),Map(secondHeader -> (java.lang.Object,DomReference(ExpressionDefinitionImpl)), thirdHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl)), fourthHeader -> (java.lang.Integer,DomReference(ExpressionDefinitionImpl))))))
                     )
                )
           )
-          When(Simple(false,None)){ 
+          When(Simple(false,None,ExpressionReference(XmlTag:simple))){ 
                (Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel), Map())
                (Set(java.lang.String), Map())
           }(
                Bean(Some(complexModelFactory),Some(createComplexModel),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(java.lang.Object, foo.models.OrderModel, foo.models.PersonModel),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
-               SetBody(Simple(${body.additionalInformation},Some(java.lang.String)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.String),Map())))
+               SetBody(Simple(${body.additionalInformation},Some(java.lang.String),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.String),Map())))
                To(uri:secondChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.String),Map()),TypeEnvironment(Set(java.lang.String),Map())))
                To(uri:thirdChoiceProcessor,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.String),Map()),TypeEnvironment(Set(java.lang.String),Map())))
           )

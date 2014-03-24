@@ -1,18 +1,25 @@
 package foo.eip.model
 
-import com.intellij.psi.PsiMethod
+import com.intellij.psi.{PsiElement, PsiMethod}
 import foo.dom.Model.{BlueprintBean, Blueprint, ProcessorDefinition}
 import com.intellij.util.xml.GenericAttributeValue
 import foo.eip.converter.DomAbstractModelConverter
 import foo.eip.typeInference.DataFlowTypeInference
-import com.intellij.psi.xml.XmlTag
+import com.intellij.psi.xml.{XmlTagValue, XmlTag}
 import foo.eip.model.EipName.EipName
 
 // Helpers to be placed in a better file
 object AbstractModelManager {
   def getCurrentNode(domFile: Blueprint, currentTag: XmlTag): Option[Processor] = {
+
+    def interceptor(processor: Processor)(fallback: () => TypeEnvironment): TypeEnvironment = processor match {
+      case Processor(DomReference(reference), _) if reference.getXmlTag == currentTag =>
+        TypeEnvironment()
+      case _ => fallback()
+    }
+
     val route = new DomAbstractModelConverter().convert(domFile)
-    val routeWithSemantics = new DataFlowTypeInference().performTypeInference(route)
+    val routeWithSemantics = new DataFlowTypeInference().performTypeInference(route, interceptor)
 
     val currentNode = routeWithSemantics.collectFirst({
       case Processor(DomReference(reference), _) =>
@@ -69,6 +76,10 @@ case class TypeEnvironment(body: Set[String], headers:Map[String, (String, Refer
   }
 }
 
+object TypeEnvironment {
+  def apply():TypeEnvironment = TypeEnvironment(Set(), Map())
+}
+
 /*******************************************************************
   * Expressions
   *******************************************************************/
@@ -85,7 +96,7 @@ object Expression {
 
 case class Constant(value: String) extends Expression
 // TODO Maybe result type should be more statically typed instead of a string
-case class Simple(value: String, resultType: Option[String]) extends Expression
+case class Simple(value: String, resultType: Option[String], reference: Reference) extends Expression
 // An expression language not currently handled by the plugin
 case class UnknownExpression() extends Expression{
   override val value: String = "Unknown Expression"
@@ -97,6 +108,7 @@ case class UnknownExpression() extends Expression{
 
 trait Reference
 object NoReference extends Reference
+case class ExpressionReference(element: XmlTag) extends Reference
 case class DomReference(element: ProcessorDefinition) extends Reference {
   override def toString: String = {
     // Strip off anything that is not needed, ie in `FromProcessorDefinition$$EnhancerByCGLIB$$28a504a3`

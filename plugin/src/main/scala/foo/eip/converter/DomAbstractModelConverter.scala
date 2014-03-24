@@ -3,7 +3,6 @@ package foo.eip.converter
 import scala.collection.JavaConverters._
 import foo.dom.Model._
 import foo.eip.model._
-import com.intellij.psi.CommonClassNames
 import foo.eip.model.Expression
 import foo.eip.model.Choice
 import foo.eip.model.Constant
@@ -172,7 +171,7 @@ class DomAbstractModelConverter extends AbstractModelConverter[Blueprint] {
       case constant: ConstantExpression =>
         Constant(constant.getValue)
       case simple: SimpleExpression =>
-        Simple(simple.getValue, Option(simple.getResultType.getStringValue))
+        Simple(simple.getValue, Option(simple.getResultType.getStringValue), ExpressionReference(expression.getXmlTag))
       /**
         * By default we should supply no known type information for unknown type expressions
         */

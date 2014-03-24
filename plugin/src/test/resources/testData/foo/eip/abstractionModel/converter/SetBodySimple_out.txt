@@ -1,9 +1,9 @@
 Route(
      From(direct:start,DomReference(FromProcessorDefinition),NotInferred)
      To(direct:foo,DomReference(ToProcessorDefinition),NotInferred)
-     SetBody(Simple(${body},None),DomReference(ExpressionDefinitionImpl),NotInferred)
+     SetBody(Simple(${body},None,ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),NotInferred)
      SetBody(Constant(hello world),DomReference(ExpressionDefinitionImpl),NotInferred)
-     SetBody(Simple(${body},Some(java.lang.Integer)),DomReference(ExpressionDefinitionImpl),NotInferred)
-     SetBody(Simple(${body},Some(java.lang.Boolean)),DomReference(ExpressionDefinitionImpl),NotInferred)
+     SetBody(Simple(${body},Some(java.lang.Integer),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),NotInferred)
+     SetBody(Simple(${body},Some(java.lang.Boolean),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),NotInferred)
      SetBody(UnknownExpression(),DomReference(ExpressionDefinitionImpl),NotInferred)
 )

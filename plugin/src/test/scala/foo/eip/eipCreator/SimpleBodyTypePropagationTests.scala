@@ -22,27 +22,74 @@ class SimpleBodyTypePropagationTests
   /**
    * The result type attribute should  be applied and propagated as expected
    */
-  def ignoretestStringToStringResultTypeAttribute() {
+  def testStringToStringResultTypeAttribute() {
     doTest()
   }
 
   /**
    * Type 'coercion' should be applied
    */
-  def ignoretestIntegerToStringResultTypeAttribute() {
+  def testIntegerToStringResultTypeAttribute() {
     doTest()
   }
 
   /**
    * Type 'coercion' should be applied
    */
-  def ignoretestStringToBooleanResultTypeAttribute() {
+  def testStringToBooleanResultTypeAttribute() {
     doTest()
   }
 
-  def testTODO() {
-    // Noop test to stop JUnit3 from reporting test failure...
+  /**
+   * Regardless of LHS and RHS the end result will always be a boolean
+   */
+  def testSimpleProposition() {
+    doTest()
   }
+
+  /**
+   * Ensure GT operator works as expected
+   */
+  def testGreaterThanProposition() {
+    doTest()
+  }
+
+  /**
+   * A call to body by itself should result in the same type information
+   */
+  def testSimpleBodyPropagation() {
+    doTest()
+  }
+
+  /**
+   * Ensure that the expression results are propagated as expected when
+   * accessing a method directly
+   */
+/*  def testSimpleStringMethodCall() {
+    doTest()
+  }*/
+
+  /**
+   * Ensure that the expression results are propagated as expected when
+   * accessing a method directly
+   */
+/*  def testSimpleIntegerMethodCall() {
+    doTest()
+  }*/
+
+  /**
+   * Test complex nested recursive type call
+   */
+/*  def testComplexRecursiveComplexTypeMethodCall() {
+    doTest()
+  }*/
+
+  /**
+   * Test complex nested recursive type call followed by an integer access
+   */
+/*  def testComplexRecursiveComplexTypeThenIntegerMethodCall() {
+    doTest()
+  }*/
 
   /**
    * Performs the main test scenario- using the test method name the configuration
@@ -54,5 +101,4 @@ class SimpleBodyTypePropagationTests
 
     EipDagAssert.doTest(myFixture, getTestName(false), new BodyTypeEipDagSerializer)
   }
-
 }

@@ -38,36 +38,37 @@ class CamelBodyReferenceContributor extends PsiReferenceContributor {
           case _ => PsiReference.EMPTY_ARRAY
         }
       }
-
-      /**
-       * Creates and references the list of known PsiReferences for the camel body notation
-       * @param element The parent element to register within
-       * @param bodyRange The text range which is associated with a body reference
-       * @param methodRanges The remainder split text contributions which should resolve
-       *                            to methods
-       * @return The created array of `PsiReferences[PsiElement]`s
-       */
-      def createReferences(element: PsiElement,
-                           bodyRange: SplitTextRange,
-                           methodRanges: List[SplitTextRange]): Array[PsiReference] = {
-        val references = {
-          val bodyReference = new CamelBodyReference(
-            element,
-            bodyRange.getTextRange
-          )
-
-          // Compute the method references with foldLeft
-          val methodReferences = methodRanges.foldLeft(List[CamelMethodReference]())({
-            case (prev, tuple) =>
-                val newMethodReference = new CamelMethodReference(element, tuple.getTextRange, prev.headOption)
-                newMethodReference :: prev
-            })
-
-          // Add both the available body and method references
-          bodyReference :: methodReferences
-        }
-        references.toArray
-      }
     })
+  }
+
+
+  /**
+   * Creates and references the list of known PsiReferences for the camel body notation
+   * @param element The parent element to register within
+   * @param bodyRange The text range which is associated with a body reference
+   * @param methodRanges The remainder split text contributions which should resolve
+   *                            to methods
+   * @return The created array of `PsiReferences[PsiElement]`s
+   */
+  def createReferences(element: PsiElement,
+                       bodyRange: SplitTextRange,
+                       methodRanges: List[SplitTextRange]): Array[PsiReference] = {
+    val references = {
+      val bodyReference = new CamelBodyReference(
+        element,
+        bodyRange.getTextRange
+      )
+
+      // Compute the method references with foldLeft
+      val methodReferences = methodRanges.foldLeft(List[CamelMethodReference]())({
+        case (prev, tuple) =>
+          val newMethodReference = new CamelMethodReference(element, tuple.getTextRange, prev.headOption)
+          newMethodReference :: prev
+      })
+
+      // Add both the available body and method references
+      bodyReference :: methodReferences
+    }
+    references.toArray
   }
 }

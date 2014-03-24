@@ -1,7 +1,7 @@
 <eipDag>
     <vertices>
         <vertex id="end" eipType="to" text="direct:end" inferredType="{java.lang.Boolean}"/>
-        <vertex id="setBody" eipType="translator" text="true" inferredType="{java.lang.Boolean}"/>
+        <vertex id="setBody" eipType="translator" text="${body.getSelf.getSelf.getSelf.getId} &gt;= 5" inferredType="{java.lang.Boolean}"/>
         <vertex id="beanRef" eipType="to" text="complexModelFactory" inferredType="{foo.models.ComplexModel}"/>
         <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
     </vertices>

@@ -8,7 +8,8 @@ import com.intellij.psi.impl.source.resolve.reference.ReferenceProvidersRegistry
 
 class ACamelVariableAccessImpl(node: ASTNode) extends ASTWrapperPsiElement(node) with IACamelVariableAccess  {
   override def getReferences: Array[PsiReference] = {
-    ReferenceProvidersRegistry.getReferencesFromProviders(this)
+    val references = ReferenceProvidersRegistry.getReferencesFromProviders(this)
+    references
   }
 /*
   override def getName: String = toString
