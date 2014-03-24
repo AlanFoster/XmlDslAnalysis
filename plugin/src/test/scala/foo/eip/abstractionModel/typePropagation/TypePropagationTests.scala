@@ -89,7 +89,7 @@ class TypePropagationTests
   /**
    * Ensure that multiple set bodies in a row function as expected
    */
-  def ignoretestMultipleSetBodySimple() {
+  def testMultipleSetBodySimple() {
     doTest()
   }
 

@@ -1,7 +1,7 @@
 package foo.language.references
 
 import com.intellij.psi.{JavaPsiFacade, PsiClass, PsiElement}
-import com.intellij.openapi.module.ModuleUtilCore
+import com.intellij.openapi.module.Module
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil
 import foo.dom.DomFileAccessor
@@ -9,8 +9,6 @@ import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlTag
 import foo.eip.model._
-import scala.Some
-import foo.dom.Model.Blueprint
 
 /**
  * Represents the trait of an EipReference, which provides access to required information
@@ -19,26 +17,24 @@ import foo.dom.Model.Blueprint
  * This trait is associated with a reference within the apache camel simple language
  */
 trait EipSimpleReference {
+
+  def resolveEip(typeEnvironment: TypeEnvironment): Set[PsiElement]
+
   /**
    * Computes the currently inferred body type for the given psiElement
-   * @param element The Psi Element
+   * @param module The module to search within to resolve classes
    * @return The inferred body type. This may be null in the scenario of
    *         not being able to infer the body type. For instance if
    *         language injection is performed within the context of a Java DSL.
    */
-  def getInferredBodyTypes(element: PsiElement):Set[PsiClass] = {
-    // Define the class resolver and scope in which this body could possibly reference
-    val module = ModuleUtilCore.findModuleForPsiElement(element)
+  def getInferredBodyTypes(module: Module, bodyTypes: Set[String]):Set[PsiClass] = {
     val searchScope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)
-    val classResolver =
-      (className: String) => JavaPsiFacade
-        .getInstance(element.getProject)
-        .findClass(className, searchScope)
+    def classResolver(className: String) = {
+      JavaPsiFacade.getInstance(module.getProject).findClass(className, searchScope)
+    }
 
     // Attempt to find the matching body types and resolve them
-    val resolvedBodies =
-      getBodyTypeFqcns(element)
-        .map(classResolver)
+    val resolvedBodies = bodyTypes.map(classResolver)
 
     resolvedBodies
   }
@@ -47,39 +43,55 @@ trait EipSimpleReference {
    * Gets the available body classes which can be inferred under this context for
    * the given PsiElement
    *
-   * @param element The PsiElement to provide type inference for
+   * @param parentElement The PsiElement to provide type inference for
    * @return The set of known body types. This will never be null.
    */
-  def getBodyTypeFqcns(element: PsiElement): Set[String] = {
-    val project = element.getProject
+  def getBodyTypeFqcns(parentElement: XmlTag): Set[String] = {
+    getTypeEnvironment(parentElement).map(_.body).getOrElse(Set())
+  }
 
-    // Extract the relevant PsiFile in order to test if we are contained within an XmlFile
-    val psiFile = InjectedLanguageUtil.getTopLevelFile(element)
+  def getTypeEnvironment(parentElement: XmlTag): Option[TypeEnvironment] = {
+    val (project, psiFile) = (parentElement.getProject, parentElement.getContainingFile)
     val domFileOption = DomFileAccessor.getBlueprintDomFile(project, psiFile)
 
-    // If the XmlFile was found, create the EipGraph information to suggest the relevant information
-    // Otherwise default to an empty map
-    val availableBodyTypes: Set[String] = domFileOption match {
-      case None => Set()
-      case Some(domFile) => {
-        // Extract the injected host xml element using the InjectedLanguageManager
-        val hostXmlText = InjectedLanguageManager.getInstance(psiFile.getProject)
-          .getInjectionHost(element)
-
-        // Extract the outter tag
-        val getParentTag = (psiElement: PsiElement) => PsiTreeUtil.getParentOfType(psiElement, classOf[XmlTag], true)
-        val simpleTag = getParentTag(hostXmlText)
-        val outterTag = getParentTag(simpleTag)
-
-        // Calculate graph and headers
-        val currentNode: Option[Processor] = AbstractModelManager.getCurrentNode(domFile, outterTag)
-        val bodies = currentNode.flatMap(_.bodies)
-
-        bodies.getOrElse(Set())
-      }
+    val typeEnvironment = domFileOption flatMap {
+      case domFile =>
+        val currentNode: Option[Processor] = AbstractModelManager.getCurrentNode(domFile, parentElement)
+        currentNode.map(_.typeInformation).collect({
+          case Inferred(before, _) => before
+        })
     }
 
-    availableBodyTypes
+    typeEnvironment
+  }
+
+  /**
+   *
+   * @param psiElement A simple language PsiElement
+   * @return The topmost XmlTag which this element is injected into.
+   *         Note this may be None in the case of Java DSL
+   */
+  def getParentXmlElement(psiElement: PsiElement): Option[XmlTag] = {
+      val project = psiElement.getProject
+
+      // Extract the relevant PsiFile in order to test if we are contained within an XmlFile
+      val psiFile = InjectedLanguageUtil.getTopLevelFile(psiElement)
+      val domFileOption = DomFileAccessor.getBlueprintDomFile(project, psiFile)
+
+      // If the XmlFile was found, create the EipGraph information to suggest the relevant information
+      // Otherwise default to an empty map
+      val xmlElement = domFileOption.collect({
+        case _ =>
+          // Extract the injected host xml element using the InjectedLanguageManager
+          val hostXmlText = InjectedLanguageManager.getInstance(psiFile.getProject).getInjectionHost(psiElement)
+
+          // Extract the outter tag
+          val getParentTag = (psiElement: PsiElement) => PsiTreeUtil.getParentOfType(psiElement, classOf[XmlTag], true)
+          val simpleTag = getParentTag(hostXmlText)
+          val outterTag = getParentTag(simpleTag)
+          outterTag
+      })
+     xmlElement
   }
 }
 

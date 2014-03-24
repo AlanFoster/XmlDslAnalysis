@@ -63,6 +63,13 @@ class SimpleBodyTypePropagationTests
   }
 
   /**
+   * Ensure that the set of PsiClass types propagates throughout the system
+   */
+  def testSimpleBodyPropagationAfterUnionTypes() {
+    doTest()
+  }
+
+  /**
    * Ensure that the expression results are propagated as expected when
    * accessing a method directly
    */

@@ -4,6 +4,8 @@ import com.intellij.psi._
 import com.intellij.openapi.util.TextRange
 import foo.language.MethodConverter
 import foo.language.references.EipSimpleReference
+import foo.eip.model.TypeEnvironment
+import com.intellij.openapi.module.{ModuleUtil, ModuleUtilCore}
 
 /**
  * Represents a CamelBodyReference, IE the element within ${body}.
@@ -36,7 +38,7 @@ class CamelBodyReference(element: PsiElement, range: TextRange)
    * @return The resolved PsiClass, otherwise null.
    */
   override def resolve(): PsiElement = {
-    val bodyTypes = getInferredBodyTypes(element)
+    val bodyTypes = getBodyTypesForElement
     if(bodyTypes.size == 1) bodyTypes.head
     else null
   }
@@ -45,9 +47,31 @@ class CamelBodyReference(element: PsiElement, range: TextRange)
    * Returns all possible body type references applicable
    */
   override def multiResolve(incompleteCode: Boolean): Array[ResolveResult] = {
-    getInferredBodyTypes(element)
-      .map(new PsiElementResolveResult(_))
-      .toArray
+    val bodyTypes = getBodyTypesForElement
+
+      bodyTypes
+        .map(new PsiElementResolveResult(_))
+        .toArray
   }
+
+  def getBodyTypesForElement = {
+    val bodyTypes = getParentXmlElement(myElement)
+      .map(xmlTag => getBodyTypeFqcns(xmlTag))
+      .map(bodies => resolveBody(bodies))
+      .getOrElse(Set())
+    bodyTypes
+  }
+
+  private def resolveBody(bodies: Set[String]): Set[PsiClass] = {
+    val module = ModuleUtilCore.findModuleForPsiElement(myElement)
+    getInferredBodyTypes(module, bodies)
+  }
+
+  override def resolveEip(typeEnvironment: TypeEnvironment): Set[PsiElement] = {
+    val possibleReferences = resolveBody(typeEnvironment.body)
+    // set is invariant on A, so we must perform a map of types
+    possibleReferences.map(s => s: PsiElement)
+  }
+
 }
 

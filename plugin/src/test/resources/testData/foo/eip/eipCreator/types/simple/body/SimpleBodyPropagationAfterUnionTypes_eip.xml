@@ -1,0 +1,28 @@
+<eipDag>
+    <vertices>
+        <vertex id="end" eipType="to" text="direct:end" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
+        <vertex id="setBody" eipType="translator" text="${body}" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
+        <vertex id="thirdBean" eipType="to" text="orderFactory" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="choice3" eipType="when" text="true" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="secondBean" eipType="to" text="personFactory" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="choice2" eipType="when" text="true" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="firstBean" eipType="to" text="complexModelFactory" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="choice1" eipType="when" text="true" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="choice" eipType="choice" text="choice" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
+        <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
+    </vertices>
+    <edges>
+        <edge source="setBody" target="end" edgeConnection="setBody_end11"/>
+        <edge source="firstBean" target="setBody" edgeConnection="firstBean_setBody10"/>
+        <edge source="secondBean" target="setBody" edgeConnection="secondBean_setBody9"/>
+        <edge source="thirdBean" target="setBody" edgeConnection="thirdBean_setBody8"/>
+        <edge source="choice" target="setBody" edgeConnection="choice_setBody7"/>
+        <edge source="choice3" target="thirdBean" edgeConnection="choice3_thirdBean6"/>
+        <edge source="choice" target="choice3" edgeConnection="choice_choice35"/>
+        <edge source="choice2" target="secondBean" edgeConnection="choice2_secondBean4"/>
+        <edge source="choice" target="choice2" edgeConnection="choice_choice23"/>
+        <edge source="choice1" target="firstBean" edgeConnection="choice1_firstBean2"/>
+        <edge source="choice" target="choice1" edgeConnection="choice_choice11"/>
+        <edge source="from" target="choice" edgeConnection="from_choice0"/>
+    </edges>
+</eipDag>

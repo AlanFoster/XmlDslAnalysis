@@ -3,7 +3,6 @@ package foo.language.references.body
 import com.intellij.psi._
 import com.intellij.openapi.util.TextRange
 import foo.language.MethodConverter
-import scala.Some
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.patterns.PlatformPatterns._
 import scala.Some
@@ -11,6 +10,8 @@ import com.intellij.util.xml.ElementPresentationManager
 import scala.util.Try
 import foo.language.references.EipSimpleReference
 import foo.traversal.{MethodTypeInference, MethodTraversal}
+import foo.eip.model.TypeEnvironment
+import com.intellij.openapi.module.ModuleUtilCore
 
 /**
  * Represents a concrete implementation of a reference which is used within
@@ -20,7 +21,7 @@ import foo.traversal.{MethodTypeInference, MethodTraversal}
  * @param range The text range within the parent element that this reference
  *              should be provided for
  */
-class CamelMethodReference(element: PsiElement, range: TextRange, previousReference: Option[PsiReference])
+class CamelMethodReference(element: PsiElement, range: TextRange, previousReference: Option[EipSimpleReference])
   // Note this reference is a soft reference, ie if it doesn't resolve, it is *not* an error!
   extends PsiReferenceBase[PsiElement](element, range, false)
   with MethodConverter
@@ -30,7 +31,8 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
    * No variants are possible within this reference
    */
   override def getVariants: Array[AnyRef] = {
-    val availableVariants = contributeAvailableVariants()
+    val typeEnvironment = getParentXmlElement(myElement).flatMap(parent => getTypeEnvironment(parent))
+    val availableVariants = typeEnvironment.map(typeEnvironment => contributeAvailableVariants(typeEnvironment)).getOrElse(Set())
 
     // Create lookups for method access *and* the OGNL getter notation
     val lookUpElements = availableVariants.map(createLookupElements)
@@ -44,13 +46,14 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
    * Computes the available variants available under the given method context
    * @return The Set of possible variants available
    */
-  private def contributeAvailableVariants(): Set[Array[(PsiMethod, String)]] = {
+  private def contributeAvailableVariants(typeEnvironment: TypeEnvironment): Set[Array[(PsiMethod, String)]] = {
+    val module = ModuleUtilCore.findModuleForPsiElement(myElement)
     val psiClasses =
       // If we do not have a previous reference, then we are simply the first method call
       // And we should compute the inferred type information from the EIP graph
-      if(previousReference.isEmpty) getInferredBodyTypes(element)
+      if(previousReference.isEmpty) getInferredBodyTypes(module, typeEnvironment.body)
       // otherwise we must resolve the reference, and provide the contributions from that
-      else resolveMethod(previousReference.get)
+      else resolveMethod(previousReference.get, typeEnvironment)
 
     val unionAvailableVariants = for {
       psiClass <- psiClasses
@@ -71,9 +74,9 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
    * @param reference the PsiReference that this CamelMethodReference depends on
    * @return The set of possible PsiClasses that can be inferred currently
    */
-  def resolveMethod(reference: PsiReference): Set[PsiClass] = {
-    val someResolved = Option(reference.resolve())
-    val project = reference.getElement.getProject
+  def resolveMethod(reference: EipSimpleReference, typeEnvironment: TypeEnvironment): Set[PsiClass] = {
+    // TODO Note we currently only resolve to the first head element
+    val someResolved: Option[PsiElement] = Option(reference.resolveEip(typeEnvironment)).flatMap(_.headOption)
 
     // Attempt to resolve the current class, handling null scenarios with monads
     val resolvedClass = for {
@@ -130,16 +133,30 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
    * @return The given reference is resolved, otherwise false
    */
   override def resolve(): PsiElement = {
+    val typeEnvironment = getParentXmlElement(myElement).flatMap(parent => getTypeEnvironment(parent))
+    val availableVariants = typeEnvironment.map(typeEnvironment => contributeAvailableVariants(typeEnvironment)).getOrElse(Set())
+
+    resolveForIj(availableVariants).getOrElse(null)
+  }
+
+  override def resolveEip(typeEnvironment: TypeEnvironment): Set[PsiElement] = {
+    val resolved = resolveForIj(contributeAvailableVariants(typeEnvironment))
+        .map(s => s: PsiElement)
+        .map(resolved => Set(resolved))
+
+    resolved.getOrElse(Set())
+  }
+
+  private def resolveForIj(availableVariants: Set[Array[(PsiMethod, String)]]): Option[PsiMethod] = {
     val methodName = Try(element.getText.substring(range.getStartOffset, range.getEndOffset)).toOption
     methodName match {
       case None => null
       case Some(value) =>
-        // TODO Multiple resolve
-        contributeAvailableVariants()
-          .flatten
-          .find(_._2 == value)
-          .map(_._1)
-          .getOrElse(null)
+              // TODO Multiple resolve
+              availableVariants
+                  .flatten
+                  .find(_._2 == value)
+                  .map(_._1)
     }
   }
 }

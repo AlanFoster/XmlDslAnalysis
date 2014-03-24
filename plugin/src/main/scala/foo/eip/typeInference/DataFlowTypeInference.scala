@@ -10,7 +10,7 @@ import scala.Some
 import foo.eip.model.To
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil
 import foo.language.Core.CamelPsiFile
-import foo.language.typeChecking.VisitorSimpleTypeChecker
+import foo.language.typeChecking.CamelSimpleTypeChecker
 
 /**
  * Performs type inference on a given Abstract Model representation,
@@ -147,8 +147,8 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
      */
     case setHeader@SetHeader(headerName, expression, reference, _) =>
       val inferredTypeEnvironment = interceptor(setHeader)(() => {
-        val expressionTypeInformation = inferExpressionTypeInformation(expression)
-        val newHeaders = typeEnvironment.headers + (headerName -> (expressionTypeInformation, reference))
+        val expressionTypeInformation = inferExpressionTypeInformation(typeEnvironment, expression)
+        val newHeaders = typeEnvironment.headers + (headerName -> (expressionTypeInformation.headOption.getOrElse(CommonClassNames.JAVA_LANG_OBJECT), reference))
         val newTypeEnvironment = typeEnvironment
           .copy(headers = newHeaders)
         newTypeEnvironment
@@ -160,8 +160,8 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
      */
     case setBody@SetBody(expression, _, _) =>
       val inferredTypeEnvironment = interceptor(setBody)(() => {
-        val expressionTypeInformation = inferExpressionTypeInformation(expression)
-        val newTypeEnvironment = typeEnvironment.copy(body = Set(expressionTypeInformation))
+        val expressionTypeInformation = inferExpressionTypeInformation(typeEnvironment, expression)
+        val newTypeEnvironment = typeEnvironment.copy(body = expressionTypeInformation)
         newTypeEnvironment
       })
 
@@ -183,18 +183,18 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
    * @param expression The expression to infer type information on
    * @return The inferred type information of the given expression
    */
-  def inferExpressionTypeInformation(expression: Expression): String = expression match {
+  def inferExpressionTypeInformation(typeEnvironment: TypeEnvironment, expression: Expression): Set[String] = expression match {
     /**
      * Constants may only return Strings
      */
-    case constant: Constant => CommonClassNames.JAVA_LANG_STRING
+    case constant: Constant => Set(CommonClassNames.JAVA_LANG_STRING)
 
     /**
      * A simple expression with a supplied resultType will be used over the inferred
      * output of the expression value
      */
     case Simple(value, Some(fqcn),_ ) =>
-      fqcn
+      Set(fqcn)
 
     /**
      * When no resultType is set we should infer it
@@ -207,21 +207,21 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
       }
 
       psiElementOption match {
-        case None => CommonClassNames.JAVA_LANG_OBJECT
+        case None => Set(CommonClassNames.JAVA_LANG_OBJECT)
         case Some(element) =>
           val psiFile = element.getContainingFile
           val textOffset = element.getValue.getTextRange.getStartOffset
 
           // Attempt to infer the type of the camel expression
           val camelPsiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(psiFile, textOffset).asInstanceOf[CamelPsiFile]
-          val resolvedFqcn = new VisitorSimpleTypeChecker().typeCheckCamel(camelPsiFile)
+          val resolvedFqcn = new CamelSimpleTypeChecker().typeCheckCamel(typeEnvironment, camelPsiFile)
 
-          resolvedFqcn.getOrElse(CommonClassNames.JAVA_LANG_OBJECT)
+          resolvedFqcn.getOrElse(Set(CommonClassNames.JAVA_LANG_OBJECT))
       }
 
     /**
      * By default we should supply no known type information for unknown type expressions
      */
-    case _ => CommonClassNames.JAVA_LANG_OBJECT
+    case _ => Set(CommonClassNames.JAVA_LANG_OBJECT)
   }
 }
