@@ -1,7 +1,7 @@
 package foo.eip.eipCreator
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import foo.{CommonTestClasses, TestBase}
+import foo.{JavaJDK1_7TestBase, CommonTestClasses, TestBase}
 import foo.eip.EipDagAssert
 import foo.eip.serializers.BodyTypeEipDagSerializer
 
@@ -12,6 +12,7 @@ import foo.eip.serializers.BodyTypeEipDagSerializer
 class SimpleBodyTypePropagationTests
   extends LightCodeInsightFixtureTestCase
   with TestBase
+  with JavaJDK1_7TestBase
   with CommonTestClasses {
 
   /**
@@ -65,31 +66,38 @@ class SimpleBodyTypePropagationTests
    * Ensure that the expression results are propagated as expected when
    * accessing a method directly
    */
-/*  def testSimpleStringMethodCall() {
+  def testSimpleStringMethodCall() {
     doTest()
-  }*/
+  }
 
   /**
    * Ensure that the expression results are propagated as expected when
    * accessing a method directly
    */
-/*  def testSimpleIntegerMethodCall() {
+  def testSimpleIntegerMethodCall() {
     doTest()
-  }*/
+  }
 
   /**
    * Test complex nested recursive type call
    */
-/*  def testComplexRecursiveComplexTypeMethodCall() {
+  def testComplexRecursiveComplexTypeMethodCall() {
     doTest()
-  }*/
+  }
 
   /**
    * Test complex nested recursive type call followed by an integer access
    */
-/*  def testComplexRecursiveComplexTypeThenIntegerMethodCall() {
+  def testComplexRecursiveComplexTypeThenIntegerMethodCall() {
     doTest()
-  }*/
+  }
+
+  /**
+   * Ensure that chained accessor notation is allowed
+   */
+  def testChainedMethodCalls() {
+    doTest()
+  }
 
   /**
    * Performs the main test scenario- using the test method name the configuration

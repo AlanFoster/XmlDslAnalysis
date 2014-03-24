@@ -87,6 +87,13 @@ class TypePropagationTests
   }
 
   /**
+   * Ensure that multiple set bodies in a row function as expected
+   */
+  def ignoretestMultipleSetBodySimple() {
+    doTest()
+  }
+
+  /**
    * Ensures the test is valid - using the test name as the configuration file
    */
   // TODO Could merge with the EipDagAssert class

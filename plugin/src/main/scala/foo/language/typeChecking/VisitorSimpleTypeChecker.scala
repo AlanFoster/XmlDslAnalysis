@@ -2,9 +2,9 @@ package foo.language.typeChecking
 
 import foo.language.generated.psi._
 import foo.language.Core.CamelPsiFile
-import com.intellij.psi.{PsiClass, PsiMethodReferenceUtil, CommonClassNames, PsiElement}
-import com.intellij.psi.util.PsiUtil
-import com.intellij.psi.impl.source.resolve.{ResolveCache, ResolveVariableUtil}
+import com.intellij.psi._
+import scala.Some
+import foo.traversal.MethodTypeInference
 
 class VisitorSimpleTypeChecker extends SimpleTypeChecker  {
   override def typeCheckCamel(camelPsiFile: CamelPsiFile): Option[String] = {
@@ -45,18 +45,23 @@ class VisitorSimpleTypeChecker extends SimpleTypeChecker  {
     case camelFuncBody:CamelCamelFuncBody =>
       val variableAccessOption = Option(camelFuncBody.getVariableAccess)
 
+      // Attempt to get the last reference within the body element
+      val lastReferenceOption: Option[PsiReference] =
+        camelFuncBody.getReferences.toList
+        .sortBy(_.getRangeInElement.getEndOffset)
+        .lastOption
 
-      val resolvedBodyFqcn = camelFuncBody.getReferences.lastOption.map(_.resolve()).collect({
-        case psiClass:PsiClass =>
-          psiClass.getQualifiedName
-      })
-
-
-/*      val inferredAccess = for {
-        variableAccess <- variableAccessOption
-        references <- Some(variableAccess.getReferences)
-        lastReference <- references.lastOption
-      } yield Some(lastReference.resolve())*/
+      // Attempt to resolve the reference to a FQCN
+      val resolvedBodyFqcn: Option[String] =
+        lastReferenceOption
+        .map(_.resolve())
+          .flatMap({
+          case psiClass:PsiClass =>
+            Some(psiClass.getQualifiedName)
+          case psiMethod: PsiMethod =>
+            MethodTypeInference.getReturnTypeClass(psiMethod).map(_.getQualifiedName)
+          case _ => None
+        })
 
       //inferredAccess.getOrElse(typeCheckCamel(camelFuncBody.getFunctionCall))
 

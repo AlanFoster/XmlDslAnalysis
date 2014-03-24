@@ -10,9 +10,7 @@ import scala.Some
 import com.intellij.util.xml.ElementPresentationManager
 import scala.util.Try
 import foo.language.references.EipSimpleReference
-import foo.traversal.MethodTraversal
-import com.intellij.psi.util.PsiTypesUtil
-import com.intellij.openapi.project.Project
+import foo.traversal.{MethodTypeInference, MethodTraversal}
 
 /**
  * Represents a concrete implementation of a reference which is used within
@@ -78,17 +76,10 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
     val project = reference.getElement.getProject
 
     // Attempt to resolve the current class, handling null scenarios with monads
-    val someReturnType = for {
+    val resolvedClass = for {
       resolved <- someResolved
       psiMethod <- Try(resolved.asInstanceOf[PsiMethod]).toOption
-      returnType = psiMethod.getReturnType
-    } yield returnType
-
-    // Resolve the class via the PsiClassType information
-    val resolvedClass = for {
-      returnType <- someReturnType
-      boxedReturnType <- tryBoxPrimitiveType(returnType, project)
-      psiClass <- Option(PsiTypesUtil.getPsiClass(boxedReturnType))
+      psiClass <- MethodTypeInference.getReturnTypeClass(psiMethod)
     } yield psiClass
 
     // Handle the scenario in which we have not resolved successfully
@@ -96,28 +87,6 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
       case Some(psiClass) => Set(psiClass)
       case None => Set[PsiClass]()
     }
-  }
-
-  /**
-   * Attempts to extract the PsiClassType information from the given PsiType.
-   * This method will take into consideration the AutoBoxing effect which is applied to types.
-   * For instance int -> Integer.
-   *
-   * @param psiType The PsiType instance, possibly a Primitive or PsiClassType instance
-   * @param project The project instance
-   * @return The associated PsiClassType information, otherwise None
-   */
-  private def tryBoxPrimitiveType(psiType: PsiType, project: Project): Option[PsiClassType] = psiType match {
-    case primitive: PsiPrimitiveType if psiType != PsiType.VOID =>
-      val someBoxedName = Option(primitive.getBoxedTypeName)
-      // Create a new PsiClassType reference if the type successfully matches and is a boxed value
-      someBoxedName
-        .map(boxedName => {
-          val elementFactory = JavaPsiFacade.getInstance(project).getElementFactory
-          elementFactory.createTypeByFQClassName(boxedName)
-        })
-    case psiClassType: PsiClassType => Some(psiClassType)
-    case _ => None
   }
 
   /**
