@@ -130,7 +130,7 @@ trait Processor extends Mappable[Processor] {
   val typeInformation: TypeInformation
   val reference: Reference
 
-  def eipType: EipName
+  val eipType: EipName
 
   /**
    * Extracts the headers associated with the current processor
@@ -206,35 +206,35 @@ object Processor {
 
 object EipName extends Enumeration {
   type EipName = Value
-  val To, From, choice, When, Translator, Otherwise = Value
+  val Route, To, From, choice, When, Translator, Otherwise = Value
 }
 
 case class Route(children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
-  override def eipType: EipName = ???
+  val eipType: EipName = EipName.Route
 }
 case class From(uri: String, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
-  override def eipType: EipName = EipName.From
+  val eipType: EipName = EipName.From
 }
 case class To(uri: String, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
-  override def eipType: EipName = EipName.To
+  val eipType: EipName = EipName.To
 }
 case class SetBody(expression: Expression, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
-  override def eipType: EipName = EipName.Translator
+  val eipType: EipName = EipName.Translator
 }
 case class SetHeader(headerName: String, expression: Expression, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
-  override def eipType: EipName = EipName.Translator
+  val eipType: EipName = EipName.Translator
 }
 case class Choice(whens: List[When], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
-  override def eipType: EipName = EipName.choice
+  val eipType: EipName = EipName.choice
 }
 case class When(expression: Expression, children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
-  override def eipType: EipName = EipName.When
+  val eipType: EipName = EipName.When
 }
 case class Otherwise(children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
-  override def eipType: EipName = EipName.Otherwise
+  val eipType: EipName = EipName.Otherwise
 }
 case class Bean(ref: Option[GenericAttributeValue[BlueprintBean]], method: Option[GenericAttributeValue[PsiMethod]], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
-  override def eipType: EipName = EipName.To
+  val eipType: EipName = EipName.To
 }
 
 object MainTest {
