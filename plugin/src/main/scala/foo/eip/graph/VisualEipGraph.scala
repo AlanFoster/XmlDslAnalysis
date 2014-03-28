@@ -151,8 +151,10 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
           // Concatenate the type information and EipComponent's specific text  value
           s"""<html>
             |${component.text}<br />
-            |Possible Body Types: ${component.processor.bodies.map(_.toList.sortBy(identity).mkString("{", ", ", "}")).getOrElse("{}")}<br />
-            |Headers: ${component.processor.headers.map(_.keys.toList.sortBy(identity).mkString("{", ", ", "}")).getOrElse("{}")}<br />
+            |Input Body Types: ${component.processor.bodies.map(_.toList.sortBy(identity).mkString("{", ", ", "}")).getOrElse("{}")}<br />
+            |Output Body Types: ${component.processor.outBodies.map(_.toList.sortBy(identity).mkString("{", ", ", "}")).getOrElse("{}")}<br />
+            |Input Headers: ${component.processor.headers.map(_.keys.toList.sortBy(identity).mkString("{", ", ", "}")).getOrElse("{}")}<br />
+            |Output Headers: ${component.processor.outHeaders.map(_.keys.toList.sortBy(identity).mkString("{", ", ", "}")).getOrElse("{}")}<br />
             |</html>""".stripMargin
         }
       })
