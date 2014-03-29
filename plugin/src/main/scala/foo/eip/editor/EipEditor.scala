@@ -20,6 +20,7 @@ import foo.dom.DomFileAccessor
 import foo.dom.Model.Blueprint
 import foo.eip.converter.DomAbstractModelConverter
 import foo.eip.typeInference.DataFlowTypeInference
+import foo.graphing.ultimate.IdeaGraphCreator
 
 /**
  * Creates and visualises the given XML DSl as a graph.
@@ -78,32 +79,8 @@ class EipEditor(project: Project, virtualFile: VirtualFile) extends UserDataHold
     // Clear all existing state within the graphContainer
     graphContainer.removeAll()
 
-    // Assume we are using a DOM representation of camel intially
-    // Which allows for a EipDAG to be used within the VisualEipGraph, which could
-    // be expended upon in the future to allow for Java DSL EIP representations etc
-    val blueprintDom = DomFileAccessor.getBlueprintDomFile(project, virtualFile).get
-
-    if(!isValid(blueprintDom)) {
-      val message = "Note - At least one route, with one From definition is required."
-
-      JBPopupFactory.getInstance()
-        .createHtmlTextBalloonBuilder(message, MessageType.WARNING, null)
-        .createBalloon()
-        .show(RelativePoint.getSouthEastOf(graphContainer), Balloon.Position.above)
-    }
-
-    // Instantiate the methods of creating an abstract dom model and semantic information for later DI
-    val modelConverter = new DomAbstractModelConverter()
-    val dataFlowInference = new DataFlowTypeInference()
-
-    // Create and pretty print the produced Eip DAG for the given DOM file
-    val eipGraph = new EipGraphCreator()
-      .createEipGraph(modelConverter, dataFlowInference)(blueprintDom)
-
-    // Create a new VisualEipGraph, with an IntellijIconLoader mixed in
-    val visualEipGraph = (new VisualEipGraph(eipGraph) with IntellijIconLoader).createScrollableViewer
-
-    graphContainer.add(visualEipGraph)
+/*
+    graphContainer.add(foo)*/
   }
 
   /**
@@ -130,7 +107,36 @@ class EipEditor(project: Project, virtualFile: VirtualFile) extends UserDataHold
    * Represents the component to show within the editor region
    * @return the EIP graph component container
    */
-  def getComponent: JComponent = graphContainer
+  def getComponent: JComponent = {
+   // graphContainer
+   // Assume we are using a DOM representation of camel intially
+   // Which allows for a EipDAG to be used within the VisualEipGraph, which could
+   // be expended upon in the future to allow for Java DSL EIP representations etc
+   val blueprintDom = DomFileAccessor.getBlueprintDomFile(project, virtualFile).get
+
+    if(!isValid(blueprintDom)) {
+      val message = "Note - At least one route, with one From definition is required."
+
+      JBPopupFactory.getInstance()
+        .createHtmlTextBalloonBuilder(message, MessageType.WARNING, null)
+        .createBalloon()
+        .show(RelativePoint.getSouthEastOf(graphContainer), Balloon.Position.above)
+    }
+
+    // Instantiate the methods of creating an abstract dom model and semantic information for later DI
+    val modelConverter = new DomAbstractModelConverter()
+    val dataFlowInference = new DataFlowTypeInference()
+
+    // Create and pretty print the produced Eip DAG for the given DOM file
+    val eipGraph = new EipGraphCreator()
+      .createEipGraph(modelConverter, dataFlowInference)(blueprintDom)
+
+    // Create a new VisualEipGraph, with an IntellijIconLoader mixed in
+    /*    val visualEipGraph = (new VisualEipGraph(eipGraph) with IntellijIconLoader).createScrollableViewer*/
+    val foo = new IdeaGraphCreator().createComponent(project, virtualFile, eipGraph)
+
+    foo
+  }
 
   /**
    * Places focus on the component when the tab is opened
