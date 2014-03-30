@@ -9,7 +9,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.graph.GraphManager
 import java.awt.Color
 import foo.eip.graph.ADT.Edge
-import com.intellij.openapi.graph.builder.util.GraphViewUtil
 
 /**
  * The graph presentation model deals with edges/nodes drawing etc.
@@ -18,6 +17,25 @@ import com.intellij.openapi.graph.builder.util.GraphViewUtil
 class CamelGraphPresentationModel(graph: Graph, project: Project)
   extends BasicGraphPresentationModel[EipProcessor, Edge[EipProcessor, String]](graph) {
 
+  /**
+   * Provides access to the default node realizer configuration for EIP nodes.
+   * The first time this value is called, the configuration will be registered
+   * for use within generic node's configurations under the returned name.
+   */
+  private lazy val PLUGGABLE_NODEREALIZER_CONFIGURATION = {
+    val registeredName = "EipPluggableConfiguration"
+    registerDefaultNodeRealizerConfiguration(registeredName)
+    registeredName
+  }
+
+  /**
+   * Provides customized settings for the view, editMode instances.
+   * This method currently sets the default layout, as the getDefaultLayer method isn't
+   * called in this class for some reason..
+   *
+   * @param view
+   * @param editMode
+   */
   override def customizeSettings(view: Graph2DView, editMode: EditMode): Unit = {
     super.customizeSettings(view, editMode)
 
@@ -36,6 +54,9 @@ class CamelGraphPresentationModel(graph: Graph, project: Project)
       .setCurrentLayouter(layouter)
   }
 
+  /**
+   * The layout mechanism associated with this graph instance
+   */
   lazy val getLayouter = {
     val layouter = GraphManager.getGraphManager.createHierarchicGroupLayouter()
     layouter.setMinimalNodeDistance(80)
@@ -58,62 +79,49 @@ class CamelGraphPresentationModel(graph: Graph, project: Project)
    * @return A custom node realizer for this node
    */
   override def getNodeRealizer(eipProcessor: EipProcessor): NodeRealizer = {
-   // GraphManager.getGraphManager.createGenericNodeRealizer()
-    //val implementations = GenericNodeRealizer.Statics.getFactory.getAvailableConfigurations
+    // Create an instance of a generic realizer, and provide the configuration name
+    val realizor = GraphManager.getGraphManager.createGenericNodeRealizer(PLUGGABLE_NODEREALIZER_CONFIGURATION)
+    realizor
+  }
 
-    // Get the default map assocaited with Realization components, and modify it with our pluggable instances
+  /**
+   * Registers the default configuration for a node. This configuration will then be available to a newly
+   * created generic node, under the given registeredName
+   *
+   * @param registeredName The name of the configuration map to register under.
+   */
+  private def registerDefaultNodeRealizerConfiguration(registeredName: String) {
+    // Get the default map associated with Realization components, and modify it with our pluggable instances
     val factory = GenericNodeRealizer.Statics.getFactory
     val defaultConfigurationMap = factory.createDefaultConfigurationMap().asInstanceOf[java.util.Map[Any, Any]]
+
+    // Provide a custom implementation for painting nodes
     defaultConfigurationMap.put(
       classOf[GenericNodeRealizer.Painter],
       GraphManager.getGraphManager.createNodeCellRendererPainter(eipGraphNodeRenderer, NodeCellRendererPainter.USER_DATA_MAP)
     )
 
-/*
-    val impl = new AbstractCustomHotSpotPainter {
-      override def hotSpotHit(noderealizer: NodeRealizer, d: Double, d1: Double): Byte = ???
-      override def paintHotSpots(noderealizer: NodeRealizer, graphics2d: Graphics2D): Unit = ???
-    }
-*/
-
-/*    defaultConfigurationMap.put(
+    // Allow a custom implementation for drawing hotspots, ie handle bars when selected
+    defaultConfigurationMap.put(
       classOf[GenericNodeRealizer.HotSpotPainter],
-      //GraphManager.getGraphManager.createNodeCellRendererPainter(eipGraphNodeRenderer, NodeCellRendererPainter.USER_DATA_MAP)
-      GraphManager.getGraphManager.createColorRenderer()
-    )*/
+      EipHotspotPainter.createWrapper(new EipHotspotPainter)
+    )
 
-    factory.addConfiguration("EipPluggableConfiguration", defaultConfigurationMap)
-
-
-  // Create an instance of a generic realizer, and provide the configuration name
-   val realizor =  GraphManager.getGraphManager.createGenericNodeRealizer("EipPluggableConfiguration")
-
-    realizor
-
-    // GraphViewUtil.createNodeRealizer("EipProcessorRender", eipGraphNodeRenderer)
-    // http://docs.yworks.com/yfiles/doc/api/y/view/GenericNodeRealizer.html
-    // You seem to create a generic node realizer, then override what you want
-
-
-
-/*    val path = "file:\\C:\\Users\\a\\Documents\\GitHub\\XmlDslAnalysis\\plugin\\src\\main\\resources\\eip\\unpicked\\from.gif"*/
-    //val icon = (new Object with IntellijIconLoader).loadUnpickedIcon(eipProcessor.eipType.toString.toLowerCase)
-/*    val nodeRealizer = GraphManager.getGraphManager.createImageNodeRealizer()
-
-    //nodeRealizer.setImage(new ImageIcon(path).getImage)
-    nodeRealizer.setImageURL(new URL(path))
-    nodeRealizer.setAlphaImageUsed(true)
-    nodeRealizer.setToImageSize()*/
-/*
-    nodeRealizer*/
+    // Register the configuration under the required name, such that new generic instances can use the configuration
+    factory.addConfiguration(registeredName, defaultConfigurationMap)
   }
 
-  override def editEdge(e: Edge[EipProcessor, String]): Boolean = {
-    false
-  }
+  // Not sure when these are triggered...
+  override def editEdge(e: Edge[EipProcessor, String]): Boolean = false
   override def editNode(n: EipProcessor): Boolean = false
 
-  override def getEdgeRealizer(e: Edge[EipProcessor, String]): EdgeRealizer = {
+  /**
+   * An edge realizer allows for an edge to be drawn visually within a visual component.
+   *
+   * @param edge The given edge of the IJ graph
+   * @return The edge realizer associated with this edge
+   */
+  override def getEdgeRealizer(edge: Edge[EipProcessor, String]): EdgeRealizer = {
     val edgeRealizer = GraphManager.getGraphManager.createPolyLineEdgeRealizer()
     edgeRealizer.setSmoothedBends(true)
     edgeRealizer.setLineType(LineType.LINE_1)
@@ -124,5 +132,10 @@ class CamelGraphPresentationModel(graph: Graph, project: Project)
     edgeRealizer
   }
 
-  override def getNodeTooltip(n: EipProcessor): String = n.text
+  /**
+   * Provides the tooltip associated with a given node, ie when hovering the mouse above the node
+   * @param node The Eip Node
+   * @return The text to display when the user has hovered over this node
+   */
+  override def getNodeTooltip(node: EipProcessor): String = node.text
 }
