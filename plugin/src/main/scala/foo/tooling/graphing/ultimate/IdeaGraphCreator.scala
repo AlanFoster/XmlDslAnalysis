@@ -4,7 +4,6 @@ import com.intellij.openapi.graph.GraphManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.graph.view._
-import com.intellij.openapi.graph.impl.view.PolyLineEdgeRealizerImpl
 import com.intellij.openapi.graph.builder.{GraphBuilder, GraphBuilderFactory}
 import com.intellij.openapi.actionSystem.{ActionPlaces, ActionManager, DefaultActionGroup}
 import com.intellij.openapi.graph.builder.util.GraphViewUtil
@@ -22,15 +21,12 @@ class IdeaGraphCreator {
     val builder = createBuilder(project, file, eipGraph)
     val toolBar = createToolBar(builder)
 
-    //val layouter = GraphSettingsProvider.getInstance(project).getSettings(builder.getGraph)
-
     val createdPanel = mutate(panel)(panel => {
       panel.setLayout(new BorderLayout())
       panel.add(toolBar, BorderLayout.NORTH)
       panel.add(builder.getView.getJComponent, BorderLayout.CENTER)
     })
 
-    println("Successfully initialized graph builder")
     builder.initialize()
 
     createdPanel

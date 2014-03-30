@@ -27,7 +27,7 @@
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
-      <!-- Start Apache Camel Language Support -->
+          <!-- Start Apache Camel Language Support -->
           <!--
             Register the Apache Camel Language
           -->

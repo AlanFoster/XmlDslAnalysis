@@ -6,26 +6,9 @@ import foo.dom.Model._
 import foo.tooling.graphing.ADT.EmptyDAG
 import foo.intermediaterepresentation.converter.AbstractModelConverter
 import foo.intermediaterepresentation.typeInference.AbstractModelTypeInference
-import foo.intermediaterepresentation.model.EipName.EipName
-import foo.intermediaterepresentation.model.references.{DomReference, NoReference, Reference}
-import foo.intermediaterepresentation.model.processors.{SetHeader, SetBody, Processor}
 import foo.intermediaterepresentation.model.expressions.Expression
 import foo.intermediaterepresentation.model.processors._
 
-case class EipProcessor(text: String, id: String, eipType: EipName, processor: Processor)
-object EipProcessor {
-  def apply(text: String, processor: Processor): EipProcessor = processor match {
-    case processor@Processor(reference, _) =>
-      EipProcessor(text, getId(reference), processor.eipType, processor)
-  }
-
-  private def getId(reference: Reference) = reference match {
-    case NoReference =>
-      "Not Inferred"
-    case DomReference(domReference) =>
-      domReference.getId.getStringValue
-  }
-}
 
 /**
  * EIP Graph Creator class.

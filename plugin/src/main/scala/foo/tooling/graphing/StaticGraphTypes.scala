@@ -1,5 +1,7 @@
 package foo.tooling.graphing
 
+import foo.tooling.graphing.EipProcessor
+
 
 /**
  * Helper class which provides type aliasing for an EipGraph.

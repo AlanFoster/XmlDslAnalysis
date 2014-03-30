@@ -10,7 +10,6 @@ import foo.tooling.graphing.ADT.Graph
 import java.awt.Dimension
 import foo.dom.Model.ProcessorDefinition
 
-
 /**
  * Provides conversion methods for converting generic Graph[V,E] implementations
  * directly into a JUNG Directed Sparse Multigraph implementation
