@@ -5,8 +5,8 @@ import foo.language.Core.CamelPsiFile
 import com.intellij.psi._
 import scala.Some
 import foo.traversal.MethodTypeInference
-import foo.intermediaterepresentation.model.TypeEnvironment
 import foo.language.references.EipSimpleReference
+import foo.intermediaterepresentation.model.types.TypeEnvironment
 
 class CamelSimpleTypeChecker extends SimpleTypeChecker {
   override def typeCheckCamel(typeEnvironment: TypeEnvironment, camelPsiFile: CamelPsiFile): Option[Set[String]] = {

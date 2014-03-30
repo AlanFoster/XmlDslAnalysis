@@ -1,6 +1,6 @@
 package foo.intermediaterepresentation.converter
 
-import foo.intermediaterepresentation.model.Route
+import foo.intermediaterepresentation.model.processors.Route
 
 /**
  * Represents a convert which will take a known data type and convert it

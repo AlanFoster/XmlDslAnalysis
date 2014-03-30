@@ -9,6 +9,8 @@ import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlTag
 import foo.intermediaterepresentation.model._
+import foo.intermediaterepresentation.model.types.{Inferred, TypeEnvironment}
+import foo.intermediaterepresentation.model.processors.Processor
 
 /**
  * Represents the trait of an EipReference, which provides access to required information

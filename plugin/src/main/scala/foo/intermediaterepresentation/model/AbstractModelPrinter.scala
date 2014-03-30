@@ -1,5 +1,8 @@
 package foo.intermediaterepresentation.model
 
+import foo.intermediaterepresentation.model.types.{TypeEnvironment, NotInferred, Inferred, TypeInformation}
+import foo.intermediaterepresentation.model.processors._
+
 /**
  * Provides a concrete implementation for printing the abstract model processor classes
  * in a human readable way

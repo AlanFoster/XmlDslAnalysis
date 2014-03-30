@@ -3,13 +3,14 @@ package foo.tooling.graphing
 import StaticGraphTypes.EipDAG
 import scala.collection.JavaConverters._
 import foo.dom.Model._
-import foo.intermediaterepresentation.model._
-import foo.intermediaterepresentation.model.SetBody
 import foo.tooling.graphing.ADT.EmptyDAG
-import foo.intermediaterepresentation.model.SetHeader
 import foo.intermediaterepresentation.converter.AbstractModelConverter
 import foo.intermediaterepresentation.typeInference.AbstractModelTypeInference
 import foo.intermediaterepresentation.model.EipName.EipName
+import foo.intermediaterepresentation.model.references.{DomReference, NoReference, Reference}
+import foo.intermediaterepresentation.model.processors.{SetHeader, SetBody, Processor}
+import foo.intermediaterepresentation.model.expressions.Expression
+import foo.intermediaterepresentation.model.processors._
 
 case class EipProcessor(text: String, id: String, eipType: EipName, processor: Processor)
 object EipProcessor {

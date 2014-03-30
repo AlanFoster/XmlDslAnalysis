@@ -2,15 +2,22 @@ package foo.intermediaterepresentation.typeInference
 
 import foo.intermediaterepresentation.model._
 import com.intellij.psi.CommonClassNames
-import foo.intermediaterepresentation.model.TypeEnvironment
-import foo.intermediaterepresentation.model.Inferred
-import foo.intermediaterepresentation.model.From
-import foo.intermediaterepresentation.model.Route
 import scala.Some
-import foo.intermediaterepresentation.model.To
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil
 import foo.language.Core.CamelPsiFile
 import foo.language.typeChecking.CamelSimpleTypeChecker
+import foo.intermediaterepresentation.model.types.{NotInferred, Inferred, TypeEnvironment}
+import foo.intermediaterepresentation.model.references.{NoReference, ExpressionReference}
+import foo.intermediaterepresentation.model.expressions.{Expression, Simple, Constant}
+import foo.intermediaterepresentation.model.processors._
+import foo.intermediaterepresentation.model.expressions.Constant
+import foo.intermediaterepresentation.model.processors.Route
+import scala.Some
+import foo.intermediaterepresentation.model.expressions.Simple
+import foo.intermediaterepresentation.model.types.Inferred
+import foo.intermediaterepresentation.model.references.ExpressionReference
+import foo.intermediaterepresentation.model.processors.From
+import foo.intermediaterepresentation.model.processors.To
 
 /**
  * Performs type inference on a given Abstract Model representation,
@@ -23,10 +30,9 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
    * @param route The untyped model
    * @return The typed model
    */
-  override def performTypeInference(route: Route,
-                                    interceptor: (Processor) => (() => TypeEnvironment) => TypeEnvironment = identityInterceptor): Route = {
+  override def performTypeInference(route: Route): Route = {
     val startingTypeEnvironment = TypeEnvironment(Set(CommonClassNames.JAVA_LANG_OBJECT), Map())
-    performTypeInference(startingTypeEnvironment, route, interceptor).asInstanceOf[Route]
+    performTypeInference(startingTypeEnvironment, route).asInstanceOf[Route]
   }
 
   /**
@@ -38,8 +44,7 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
    * @return A new processor with updated type semantics
    */
   def performTypeInference[T >: Processor](typeEnvironment: TypeEnvironment,
-                                           processor: T,
-                                           interceptor: (Processor) => (() => TypeEnvironment) => TypeEnvironment): T = processor match {
+                                           processor: T): T = processor match {
     /**
      * Ensure that Route information takes into consideration its children
      */
@@ -48,7 +53,7 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
       // Apply map by folding left with the new type environment
       val (newTypeEnv, newChildren) = children.foldLeft((typeEnvironment, List[Processor]()))({
         case (((typeEnv), previous), next) =>
-          val mappedProcessor = performTypeInference(typeEnv, next, interceptor)
+          val mappedProcessor = performTypeInference(typeEnv, next)
           val newEnv = mappedProcessor.typeInformation match {
             case NotInferred =>
               throw new Error("Could not infer the correct data type")
@@ -71,7 +76,7 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
       val (newTypeEnvs, newChildren) = whens.foldLeft((List(typeEnvironment), List[When]()))({
         case ((accumulatedTypeEnvironments, accumulatedWhenExpressions), next) =>
           // Note that the parent choice type environment is used for each when expression!
-          val mappedProcessor = performTypeInference(typeEnvironment, next, interceptor)
+          val mappedProcessor = performTypeInference(typeEnvironment, next)
           val newEnv = mappedProcessor.typeInformation match {
             case NotInferred =>
               throw new Error("Could not infer the correct data type")
@@ -101,9 +106,7 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
             .getOrElse(CommonClassNames.JAVA_LANG_OBJECT)
         case _ => CommonClassNames.JAVA_LANG_OBJECT
       }
-      val newTypeInformation = interceptor(bean)(() =>
-        typeEnvironment.copy(body = Set(inferredBody))
-      )
+      val newTypeInformation = typeEnvironment.copy(body = Set(inferredBody))
 
       bean.copy(typeInformation = Inferred(typeEnvironment, newTypeInformation))
 
@@ -114,7 +117,7 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
     case when@When(expression, children, _, _) =>
       val (newTypeEnv, newChildren) = children.foldLeft((typeEnvironment, List[Processor]()))({
         case (((typeEnv), previous), next) =>
-          val mappedProcessor = performTypeInference(typeEnv, next, interceptor)
+          val mappedProcessor = performTypeInference(typeEnv, next)
           val newEnv = mappedProcessor.typeInformation match {
             case NotInferred =>
               throw new Error("Could not infer the correct data type")
@@ -146,24 +149,24 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
      * The type information of expressions applied to setHeader can update the type environment
      */
     case setHeader@SetHeader(headerName, expression, reference, _) =>
-      val inferredTypeEnvironment = interceptor(setHeader)(() => {
+      val inferredTypeEnvironment = {
         val expressionTypeInformation = inferExpressionTypeInformation(typeEnvironment, expression)
         val newHeaders = typeEnvironment.headers + (headerName -> (expressionTypeInformation.headOption.getOrElse(CommonClassNames.JAVA_LANG_OBJECT), reference))
         val newTypeEnvironment = typeEnvironment
           .copy(headers = newHeaders)
         newTypeEnvironment
-      })
+      }
       setHeader.copy(typeInformation = Inferred(typeEnvironment, inferredTypeEnvironment))
 
     /**
      * The body's type information may be updated after running through an expression element
      */
     case setBody@SetBody(expression, _, _) =>
-      val inferredTypeEnvironment = interceptor(setBody)(() => {
+      val inferredTypeEnvironment = {
         val expressionTypeInformation = inferExpressionTypeInformation(typeEnvironment, expression)
         val newTypeEnvironment = typeEnvironment.copy(body = expressionTypeInformation)
         newTypeEnvironment
-      })
+      }
 
       setBody.copy(typeInformation = Inferred(typeEnvironment, inferredTypeEnvironment))
   }

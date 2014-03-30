@@ -4,8 +4,9 @@ import com.intellij.psi._
 import com.intellij.openapi.util.TextRange
 import foo.language.MethodConverter
 import foo.language.references.EipSimpleReference
-import foo.intermediaterepresentation.model.TypeEnvironment
+
 import com.intellij.openapi.module.{ModuleUtil, ModuleUtilCore}
+import foo.intermediaterepresentation.model.types.TypeEnvironment
 
 /**
  * Represents a CamelBodyReference, IE the element within ${body}.

@@ -2,18 +2,24 @@ package foo.intermediaterepresentation.converter
 
 import scala.collection.JavaConverters._
 import foo.dom.Model._
-import foo.intermediaterepresentation.model._
-import foo.intermediaterepresentation.model.Expression
-import foo.intermediaterepresentation.model.Choice
-import foo.intermediaterepresentation.model.Constant
-import foo.intermediaterepresentation.model.Simple
-import foo.intermediaterepresentation.model.When
-import foo.intermediaterepresentation.model.SetHeader
-import foo.intermediaterepresentation.model.From
-import foo.intermediaterepresentation.model.Route
-import foo.intermediaterepresentation.model.UnknownExpression
-import foo.intermediaterepresentation.model.To
+import foo.intermediaterepresentation.model.expressions.Expression
 import com.intellij.util.xml.GenericAttributeValue
+import foo.intermediaterepresentation.model.references.NoReference
+import foo.intermediaterepresentation.model.processors._
+import foo.intermediaterepresentation.model.expressions.Constant
+import foo.intermediaterepresentation.model.processors.Route
+import foo.intermediaterepresentation.model.processors.SetBody
+import foo.intermediaterepresentation.model.references.DomReference
+import scala.Some
+import foo.intermediaterepresentation.model.processors.Choice
+import foo.intermediaterepresentation.model.expressions.Simple
+import foo.intermediaterepresentation.model.processors.When
+import foo.intermediaterepresentation.model.references.ExpressionReference
+import foo.intermediaterepresentation.model.processors.SetHeader
+import foo.intermediaterepresentation.model.processors.Bean
+import foo.intermediaterepresentation.model.processors.From
+import foo.intermediaterepresentation.model.expressions.UnknownExpression
+import foo.intermediaterepresentation.model.processors.To
 
 /**
  * Concrete implementation of the Converter trait which will convert a Dom
