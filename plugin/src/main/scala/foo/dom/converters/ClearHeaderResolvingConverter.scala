@@ -6,7 +6,7 @@ import scala.collection.JavaConverters._
 
 import foo.dom.DomFileAccessor
 import foo.dom.Model.ProcessorDefinition
-import foo.eip.model._
+import foo.intermediaterepresentation.model._
 
 
 /**

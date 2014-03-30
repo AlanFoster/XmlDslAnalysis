@@ -1,12 +1,12 @@
 package foo.eip
 
-import foo.eip.graph.EipGraphCreator
 import junit.framework.Assert
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture
-import foo.eip.serializers.EipDagSerializer
+import foo.tooling.serializers.EipDagSerializer
 import foo.dom.DomFileAccessor
-import foo.eip.converter.DomAbstractModelConverter
-import foo.eip.typeInference.DataFlowTypeInference
+import foo.intermediaterepresentation.converter.DomAbstractModelConverter
+import foo.intermediaterepresentation.typeInference.DataFlowTypeInference
+import foo.tooling.graphing.EipGraphCreator
 
 /**
  * EipDag asserting methods for ensuring that the EipDAGs are represented as expected

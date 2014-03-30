@@ -10,7 +10,7 @@ import com.intellij.util.xml.ElementPresentationManager
 import scala.util.Try
 import foo.language.references.EipSimpleReference
 import foo.traversal.{MethodTypeInference, MethodTraversal}
-import foo.eip.model.TypeEnvironment
+import foo.intermediaterepresentation.model.TypeEnvironment
 import com.intellij.openapi.module.ModuleUtilCore
 
 /**

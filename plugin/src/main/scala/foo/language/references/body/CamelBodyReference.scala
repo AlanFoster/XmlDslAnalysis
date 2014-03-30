@@ -4,7 +4,7 @@ import com.intellij.psi._
 import com.intellij.openapi.util.TextRange
 import foo.language.MethodConverter
 import foo.language.references.EipSimpleReference
-import foo.eip.model.TypeEnvironment
+import foo.intermediaterepresentation.model.TypeEnvironment
 import com.intellij.openapi.module.{ModuleUtil, ModuleUtilCore}
 
 /**

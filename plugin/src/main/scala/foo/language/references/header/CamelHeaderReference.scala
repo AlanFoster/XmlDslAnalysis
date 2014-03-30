@@ -10,7 +10,7 @@ import foo.dom.Model.ProcessorDefinition
 import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlTag
-import foo.eip.model.AbstractModelManager
+import foo.intermediaterepresentation.model.AbstractModelManager
 
 /**
  * A concrete implementation of a CamelHeaderReference

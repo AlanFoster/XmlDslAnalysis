@@ -1,7 +1,7 @@
 package foo.eip.eipCreator
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import foo.eip.serializers.{HeaderTypeEipDagSerializer, BodyTypeEipDagSerializer}
+import foo.tooling.serializers.{HeaderTypeEipDagSerializer, BodyTypeEipDagSerializer}
 import foo.eip.EipDagAssert
 import foo.TestBase
 

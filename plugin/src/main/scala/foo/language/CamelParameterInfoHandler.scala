@@ -7,7 +7,6 @@ import com.intellij.util.ArrayUtil
 import com.intellij.psi.util.PsiTreeUtil
 import foo.language.generated.psi.CamelFunctionCall
 import com.intellij.lang.ASTNode
-import foo.CamelFunctions
 import foo.language.generated.CamelTypes
 
 /**

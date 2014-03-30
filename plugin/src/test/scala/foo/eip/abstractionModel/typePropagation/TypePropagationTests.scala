@@ -3,10 +3,10 @@ package foo.eip.abstractionModel.typePropagation
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import foo.{CommonTestClasses, TestBase}
 import foo.dom.DomFileAccessor
-import foo.eip.converter.DomAbstractModelConverter
-import foo.eip.model.AbstractModelPrinter
+import foo.intermediaterepresentation.converter.DomAbstractModelConverter
+import foo.intermediaterepresentation.model.AbstractModelPrinter
 import junit.framework.Assert
-import foo.eip.typeInference.DataFlowTypeInference
+import foo.intermediaterepresentation.typeInference.DataFlowTypeInference
 
 /**
  * Tests to ensure that type propagation occurs as expected within the abstract model

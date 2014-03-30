@@ -3,7 +3,7 @@ package foo.eip.eipCreator
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import foo.{JavaJDK1_7TestBase, CommonTestClasses, TestBase}
 import foo.eip.EipDagAssert
-import foo.eip.serializers.BodyTypeEipDagSerializer
+import foo.tooling.serializers.BodyTypeEipDagSerializer
 
 /**
  * Tests to ensure that the type information of simple expressions are propagated

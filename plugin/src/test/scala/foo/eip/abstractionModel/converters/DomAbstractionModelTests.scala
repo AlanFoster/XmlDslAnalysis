@@ -4,8 +4,8 @@ import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
 import foo.TestBase
 import foo.dom.DomFileAccessor
 import junit.framework.Assert
-import foo.eip.converter.DomAbstractModelConverter
-import foo.eip.model.AbstractModelPrinter
+import foo.intermediaterepresentation.converter.DomAbstractModelConverter
+import foo.intermediaterepresentation.model.AbstractModelPrinter
 
 /**
  * Tests to ensure that the DOM can successfully be converted into an intermediate representation

@@ -20,9 +20,6 @@
   </application-components>
 
   <project-components>
-<!--      <component>
-          <implementation-class>foo.language.debugger.DebuggerHackTest</implementation-class>
-      </component>-->
   </project-components>
 
   <actions>
@@ -126,7 +123,7 @@
       <!--
           Represents the EIP Editor functionality within a Dom tree
         -->
-      <fileEditorProvider implementation="foo.eip.editor.EipEditorProvider" />
+      <fileEditorProvider implementation="foo.tooling.editor.EipEditorProvider" />
 
   </extensions>
 </idea-plugin>

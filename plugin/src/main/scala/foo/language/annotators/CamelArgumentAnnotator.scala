@@ -4,9 +4,9 @@ import com.intellij.lang.annotation.{AnnotationHolder, Annotator}
 import com.intellij.psi.PsiElement
 import com.intellij.patterns.PlatformPatterns._
 import foo.language.generated.psi.CamelFunctionArg
-import foo.{CamelArgument, CamelFunction}
 import com.intellij.psi.tree.IElementType
 import com.intellij.lang.ASTNode
+import foo.language.{CamelFunction, CamelArgument}
 
 /**
  * Represents the annotator which ensures that the camel functions are called as expected.

@@ -8,7 +8,7 @@ import foo.dom.DomFileAccessor
 import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlTag
-import foo.eip.model._
+import foo.intermediaterepresentation.model._
 
 /**
  * Represents the trait of an EipReference, which provides access to required information

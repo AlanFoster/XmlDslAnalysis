@@ -5,7 +5,7 @@ import foo.language.Core.CamelPsiFile
 import com.intellij.psi._
 import scala.Some
 import foo.traversal.MethodTypeInference
-import foo.eip.model.TypeEnvironment
+import foo.intermediaterepresentation.model.TypeEnvironment
 import foo.language.references.EipSimpleReference
 
 class CamelSimpleTypeChecker extends SimpleTypeChecker {
