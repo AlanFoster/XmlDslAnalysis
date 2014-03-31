@@ -8,12 +8,13 @@ import java.awt.geom.Rectangle2D
 import edu.uci.ics.jung.visualization.control._
 import java.awt.event._
 import foo.FunctionalUtil._
-import foo.tooling.loaders.IconLoader
 import foo.tooling.graphing.{EipProcessor, StaticGraphTypes}
 import StaticGraphTypes.EipDAG
 import foo.tooling.serializers.CompleteEipDagSerializer
 import edu.uci.ics.jung.algorithms.layout.{StaticLayout, TreeLayout}
 import javax.swing.border.LineBorder
+import foo.tooling.graphing.strategies.icons.{EipIconLoader, IconLoader}
+import foo.tooling.graphing.strategies.tooltip.ToolTipStrategy
 
 /**
  * Class used to represent a visual representation of the the given EipDAG.
@@ -26,7 +27,7 @@ import javax.swing.border.LineBorder
  * @param eipDag In order to be agnostic of the underlying technology/DSL used for
  *               creating the given Camel routes, the EipDAG abstraction is instead used
  */
-abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
+class VisualEipGraph(eipDag: EipDAG, iconLoader: EipIconLoader, tooltipStrategy: ToolTipStrategy) {
   /**
    * Create a type alias for VisualizationViewer to improve code readability
    */
@@ -113,12 +114,9 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
    * @return The Viewer
    */
   private def bindEipRenderer(viewer: Viewer): Viewer = {
-    def getIcon(component: EipProcessor): Icon = component match {
-      case component@EipProcessor(_, _, eipName, _) =>
-        val isPicked = viewer.getPickedVertexState.getPicked.contains(component)
-        val eipType = eipName.toString.toLowerCase
-        if (isPicked) loadPickedIcon(eipType)
-        else loadUnpickedIcon(eipType)
+    def getIcon(component: EipProcessor): Icon = {
+      val isSelected = viewer.getPickedVertexState.getPicked.contains (component)
+      iconLoader.loadIcon(component, isSelected)
     }
 
     viewer.getRenderContext.setVertexIconTransformer(new Transformer[EipProcessor, Icon] {
@@ -145,14 +143,7 @@ abstract class VisualEipGraph(eipDag: EipDAG) extends IconLoader {
     mutate(viewer) {
       _.setVertexToolTipTransformer(new Transformer[EipProcessor, String] {
         def transform(component: EipProcessor): String = {
-          // Concatenate the type information and EipComponent's specific text  value
-          s"""<html>
-            |${component.text}<br />
-            |Input Body Types: ${component.processor.bodies.map(_.toList.sortBy(identity).mkString("{", ", ", "}")).getOrElse("{}")}<br />
-            |Output Body Types: ${component.processor.outBodies.map(_.toList.sortBy(identity).mkString("{", ", ", "}")).getOrElse("{}")}<br />
-            |Input Headers: ${component.processor.headers.map(_.keys.toList.sortBy(identity).mkString("{", ", ", "}")).getOrElse("{}")}<br />
-            |Output Headers: ${component.processor.outHeaders.map(_.keys.toList.sortBy(identity).mkString("{", ", ", "}")).getOrElse("{}")}<br />
-            |</html>""".stripMargin
+          tooltipStrategy.createTooltip(component)
         }
       })
     }

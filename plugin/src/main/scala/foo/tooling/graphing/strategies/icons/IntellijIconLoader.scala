@@ -1,4 +1,4 @@
-package foo.tooling.loaders
+package foo.tooling.graphing.strategies.icons
 
 import javax.swing.Icon
 import com.intellij.openapi.util.{IconLoader => OpenApiIconLoader}
@@ -12,6 +12,9 @@ trait IntellijIconLoader extends IconLoader {
    * @param path The path for the icon
    * @return The loaded icon
    */
-  def load(path: String): Icon = OpenApiIconLoader.getIcon(path)
+  def load(path: String): Icon = {
+    println("Intellij icon loader - loading : " + path)
+    OpenApiIconLoader.getIcon(path)
+  }
 }
 

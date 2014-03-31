@@ -2,10 +2,10 @@ package foo.tooling.graphing.ultimate
 
 import com.intellij.openapi.graph.builder.GraphBuilder
 import javax.swing._
-import foo.tooling.loaders.IntellijIconLoader
 import com.intellij.openapi.graph.view.{NodeCellRenderer, Graph2DView, NodeRealizer}
 import foo.tooling.graphing.ADT.Edge
 import foo.tooling.graphing.EipProcessor
+import foo.tooling.graphing.strategies.icons.{EipIconLoader, IntellijIconLoader}
 
 /**
  * A concrete implementation of an EipProcessor renderer, which has the ability to
@@ -16,7 +16,7 @@ import foo.tooling.graphing.EipProcessor
  *
  * @param builder The graph builder currently being used to create a graph
  */
-class EipGraphNodeRenderer(builder: GraphBuilder[EipProcessor, Edge[EipProcessor, String]])
+class EipGraphNodeRenderer(builder: GraphBuilder[EipProcessor, Edge[EipProcessor, String]], iconLoader: EipIconLoader)
   extends NodeCellRenderer {
   /**
    * Serves as a cache for previously created NodeRealizers.
@@ -46,10 +46,8 @@ class EipGraphNodeRenderer(builder: GraphBuilder[EipProcessor, Edge[EipProcessor
     cache.getOrElseUpdate((realizer, isSelected), {
       val node = builder.getNodeObject(realizer.getNode)
       val label = {
-        val eipType = node.eipType.toString.toLowerCase
-        val icon =
-          if(isSelected) (new Object with IntellijIconLoader).loadPickedIcon(eipType)
-          else (new Object with IntellijIconLoader).loadUnpickedIcon(eipType)
+        // delegate Node creation to the icon loader strategy
+        val icon = iconLoader.loadIcon(node, isSelected)
         val label = new JLabel(icon)
         label.setSize(icon.getIconHeight, icon.getIconHeight)
         realizer.setSize(icon.getIconWidth, icon.getIconHeight)

@@ -1,4 +1,4 @@
-package foo.tooling.loaders
+package foo.tooling.graphing.strategies.icons
 
 import javax.swing.{ImageIcon, Icon}
 

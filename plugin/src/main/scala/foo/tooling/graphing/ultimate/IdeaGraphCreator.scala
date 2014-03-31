@@ -12,10 +12,27 @@ import javax.swing.JPanel
 import java.awt.BorderLayout
 import foo.tooling.graphing.{GraphCreator, StaticGraphTypes}
 import StaticGraphTypes.EipDAG
+import foo.tooling.graphing.strategies.icons.EipIconLoader
+import foo.tooling.graphing.strategies.tooltip.ToolTipStrategy
 
-class IdeaGraphCreator extends GraphCreator {
+/**
+ * A concrete implementation of the GraphCreator trait which interacts
+ * with the Graph-API provided by IntelliJ ultimate.
+ *
+ * {@link foo.tooling.graphing.GraphCreator}
+ *
+ * @param iconLoader Provide access to an EIP Icon loader strategy implementation
+ * @param tooltipStrategy Provide access to a tooltip strategy implementation
+ */
+class IdeaGraphCreator(iconLoader: EipIconLoader, tooltipStrategy: ToolTipStrategy) extends GraphCreator {
+  /**
+   * {@inheritdoc}
+   */
   override val prettyName: String = "Eip Graph (yFiles)"
 
+  /**
+   * {@inheritdoc}
+   */
   def createComponent(project: Project, file: VirtualFile, eipGraph: EipDAG) = {
     val panel = new JPanel()
 
@@ -50,7 +67,7 @@ class IdeaGraphCreator extends GraphCreator {
     // Create our data model and presentation model
     val (edges, nodes) = (eipGraph.vertices, eipGraph.edges)
     val dataModel = new CamelGraphDataModel(edges, nodes)
-    val presentationModel = new CamelGraphPresentationModel(graph, project)
+    val presentationModel = new CamelGraphPresentationModel(graph, project, iconLoader, tooltipStrategy)
 
     // Create a builder
     val builder = GraphBuilderFactory.getInstance(project)
@@ -59,6 +76,12 @@ class IdeaGraphCreator extends GraphCreator {
     builder
   }
 
+  /**
+   * Creates the toolbar associated with this graph. This toolbar contains
+   * action buttons such as zooming etc
+   * @param builder The graph builder currently being used
+   * @return The associated toolbar
+   */
   private def createToolBar(builder: GraphBuilder[_, _]) = {
     val actionGroup =
       mutate(new DefaultActionGroup())(

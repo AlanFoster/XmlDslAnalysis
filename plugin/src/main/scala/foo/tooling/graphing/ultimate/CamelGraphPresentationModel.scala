@@ -9,12 +9,15 @@ import com.intellij.openapi.graph.GraphManager
 import java.awt.Color
 import foo.tooling.graphing.ADT.Edge
 import foo.tooling.graphing.EipProcessor
+import foo.tooling.graphing.strategies.tooltip.ToolTipStrategy
+import foo.tooling.graphing.strategies.icons.EipIconLoader
 
 /**
  * The graph presentation model deals with edges/nodes drawing etc.
  * For instance being able to provide custom realizors for nodes.
  */
-class CamelGraphPresentationModel(graph: Graph, project: Project)
+class CamelGraphPresentationModel(graph: Graph, project: Project,
+                                  iconLoader: EipIconLoader, tooltipStrategy: ToolTipStrategy)
   extends BasicGraphPresentationModel[EipProcessor, Edge[EipProcessor, String]](graph) {
 
   /**
@@ -69,7 +72,7 @@ class CamelGraphPresentationModel(graph: Graph, project: Project)
    * Lazily instantiated eip graph node render, which will handle drawing the nodes
    * wtihin this graph
    */
-  def eipGraphNodeRenderer = new EipGraphNodeRenderer(getGraphBuilder)
+  def eipGraphNodeRenderer = new EipGraphNodeRenderer(getGraphBuilder, iconLoader)
 
   /**
    * Provide a concrete implementation of a node realizer which allows for a custom
@@ -137,5 +140,6 @@ class CamelGraphPresentationModel(graph: Graph, project: Project)
    * @param node The Eip Node
    * @return The text to display when the user has hovered over this node
    */
-  override def getNodeTooltip(node: EipProcessor): String = node.text
+  override def getNodeTooltip(node: EipProcessor): String =
+    tooltipStrategy.createTooltip(node)
 }
