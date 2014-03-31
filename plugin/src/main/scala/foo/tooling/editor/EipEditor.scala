@@ -7,9 +7,9 @@ import com.intellij.openapi.project.Project
 import com.intellij.ide.structureView.StructureViewBuilder
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter
 import java.beans.PropertyChangeListener
-import javax.swing.{JPanel, JComponent}
+import javax.swing._
 import foo.FunctionalUtil._
-import java.awt.GridLayout
+import java.awt.{FlowLayout, BorderLayout, GridLayout}
 import scala.collection.JavaConverters._
 import com.intellij.openapi.ui.popup.{Balloon, JBPopupFactory}
 import com.intellij.openapi.ui.MessageType
@@ -18,13 +18,18 @@ import foo.dom.DomFileAccessor
 import foo.dom.Model.Blueprint
 import foo.intermediaterepresentation.converter.DomAbstractModelConverter
 import foo.intermediaterepresentation.typeInference.DataFlowTypeInference
-import foo.tooling.graphing.ultimate.IdeaGraphCreator
-import foo.tooling.graphing.EipGraphCreator
+import foo.tooling.graphing.{GraphCreator, EipGraphCreator}
+import java.awt.event.{ActionEvent, ActionListener}
+import com.intellij.ui.components.JBComboBoxLabel
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.progress.ProgressManager
 
 /**
  * Creates and visualises the given XML DSl as a graph.
  */
-class EipEditor(project: Project, virtualFile: VirtualFile) extends UserDataHolderBase with FileEditor {
+class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[GraphCreator]) extends UserDataHolderBase with FileEditor {
+
+  var currentlySelectedGraphCreator = graphCreators.head
 
   /**
    * Represents the constant tab name, for improved user experience
@@ -34,15 +39,25 @@ class EipEditor(project: Project, virtualFile: VirtualFile) extends UserDataHold
   /**
    * Define the graph container
    */
-  val graphContainer =
-    mutate(new JPanel()) { _.setLayout(new GridLayout(0, 1))}
+  val graphContainer = mutate(new JPanel()) { _.setLayout(new GridLayout(0, 1))}
+
+  /**
+   * Define the entire window, consisting of the editable options + graph container
+   */
+  val entireContainer = {
+    val container = new JPanel(new FlowLayout())
+    container.setLayout(new BorderLayout())
+    container.add(createOptions, BorderLayout.NORTH)
+    container.add(graphContainer, BorderLayout.CENTER)
+    container
+  }
 
   /**
    * Disposes resources associated with this editor
    */
   def dispose() {
     // swing will automatically dispose of itself within the expected manner
-    graphContainer.removeAll()
+    entireContainer.removeAll()
   }
 
   /**
@@ -75,11 +90,84 @@ class EipEditor(project: Project, virtualFile: VirtualFile) extends UserDataHold
    * Creates the given EIPGraph, and modifies the graphContainer
    */
   def selectNotify() {
-    // Clear all existing state within the graphContainer
-    graphContainer.removeAll()
+    generateGraph(currentlySelectedGraphCreator)
+  }
 
-/*
-    graphContainer.add(foo)*/
+  private def generateGraph(graphCreator: GraphCreator) {
+      ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable {
+      override def run(): Unit = {
+        ProgressManager.getInstance().getProgressIndicator.setText("Initializing...")
+
+        // Clear all existing state within the graphContainer
+        graphContainer.removeAll()
+
+        // Assume we are using a DOM representation of camel intially
+        // Which allows for a EipDAG to be used within the VisualEipGraph, which could
+        // be expended upon in the future to allow for Java DSL EIP representations etc
+        val blueprintDomOption = DomFileAccessor.getBlueprintDomFile(project, virtualFile)
+        if(!validateInput(blueprintDomOption)) return
+
+        val blueprintDom = blueprintDomOption.get
+
+        ProgressManager.getInstance().getProgressIndicator.setText("Creating Model...")
+
+        // Instantiate the methods of creating an abstract dom model and semantic information for later DI
+        val modelConverter = new DomAbstractModelConverter()
+        val dataFlowInference = new DataFlowTypeInference()
+
+        ProgressManager.getInstance().getProgressIndicator.setText(s"Creating ${graphCreator.prettyName}...")
+
+        // Create and pretty print the produced Eip DAG for the given DOM file
+        val eipGraph = new EipGraphCreator()
+          .createEipGraph(modelConverter, dataFlowInference)(blueprintDom)
+
+        // Create a new VisualEipGraph, with an IntellijIconLoader mixed in
+        val graphComponent = currentlySelectedGraphCreator.createComponent(project, virtualFile, eipGraph)
+
+        graphContainer.add(graphComponent)
+
+        ProgressManager.getInstance().getProgressIndicator.setText("Finished.")
+      }
+    }, s"Generating ${graphCreator.prettyName}", false, project)
+  }
+
+  private def validateInput(blueprint: Option[Blueprint]) = blueprint match {
+    case None => false
+    case Some(blueprintDom) =>
+      if(!isValid(blueprintDom)) {
+        val message = "Note - At least one route, with one From definition is required."
+
+        JBPopupFactory.getInstance()
+          .createHtmlTextBalloonBuilder(message, MessageType.WARNING, null)
+          .createBalloon()
+          .show(RelativePoint.getSouthEastOf(graphContainer), Balloon.Position.above)
+        false
+      } else {
+        true
+      }
+  }
+
+  private def createOptions: JComponent = {
+    val container = new JPanel(new FlowLayout())
+    val label = new JLabel("Showing Graph :")
+
+    val options = new JComboBox[GraphCreatorOption]()
+    graphCreators.foreach(graphCreator => options.addItem(GraphCreatorOption(graphCreator)))
+
+    // When an option is selected, let the graph be re-created as appropriate
+    options.addActionListener(new ActionListener {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        // </3 Swing - Have to type cast even though JComboBox is generically typed...
+        val chosenItem = options.getSelectedItem.asInstanceOf[GraphCreatorOption]
+        currentlySelectedGraphCreator = chosenItem.graphCreator
+        generateGraph(currentlySelectedGraphCreator)
+      }
+    })
+
+    container.add(label)
+    container.add(options)
+
+    container
   }
 
   /**
@@ -107,34 +195,7 @@ class EipEditor(project: Project, virtualFile: VirtualFile) extends UserDataHold
    * @return the EIP graph component container
    */
   def getComponent: JComponent = {
-   // graphContainer
-   // Assume we are using a DOM representation of camel intially
-   // Which allows for a EipDAG to be used within the VisualEipGraph, which could
-   // be expended upon in the future to allow for Java DSL EIP representations etc
-   val blueprintDom = DomFileAccessor.getBlueprintDomFile(project, virtualFile).get
-
-    if(!isValid(blueprintDom)) {
-      val message = "Note - At least one route, with one From definition is required."
-
-      JBPopupFactory.getInstance()
-        .createHtmlTextBalloonBuilder(message, MessageType.WARNING, null)
-        .createBalloon()
-        .show(RelativePoint.getSouthEastOf(graphContainer), Balloon.Position.above)
-    }
-
-    // Instantiate the methods of creating an abstract dom model and semantic information for later DI
-    val modelConverter = new DomAbstractModelConverter()
-    val dataFlowInference = new DataFlowTypeInference()
-
-    // Create and pretty print the produced Eip DAG for the given DOM file
-    val eipGraph = new EipGraphCreator()
-      .createEipGraph(modelConverter, dataFlowInference)(blueprintDom)
-
-    // Create a new VisualEipGraph, with an IntellijIconLoader mixed in
-    /*    val visualEipGraph = (new VisualEipGraph(eipGraph) with IntellijIconLoader).createScrollableViewer*/
-    val foo = new IdeaGraphCreator().createComponent(project, virtualFile, eipGraph)
-
-    foo
+    entireContainer
   }
 
   /**
@@ -190,4 +251,8 @@ class EipEditor(project: Project, virtualFile: VirtualFile) extends UserDataHold
    * @return null, as the EIP does not have a structured view, as the EIP represents a tree already.
    */
   def getStructureViewBuilder: StructureViewBuilder = null
+
+ private case class GraphCreatorOption(graphCreator: GraphCreator) {
+   override def toString: String = graphCreator.prettyName
+ }
 }

@@ -10,10 +10,12 @@ import com.intellij.openapi.graph.builder.util.GraphViewUtil
 import foo.FunctionalUtil._
 import javax.swing.JPanel
 import java.awt.BorderLayout
-import foo.tooling.graphing.StaticGraphTypes
+import foo.tooling.graphing.{GraphCreator, StaticGraphTypes}
 import StaticGraphTypes.EipDAG
 
-class IdeaGraphCreator {
+class IdeaGraphCreator extends GraphCreator {
+  override val prettyName: String = "Eip Graph (yFiles)"
+
   def createComponent(project: Project, file: VirtualFile, eipGraph: EipDAG) = {
     val panel = new JPanel()
 

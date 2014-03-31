@@ -6,9 +6,12 @@ import org.jdom.Element
 import com.intellij.openapi.vfs.VirtualFile
 import foo.dom.DomFileAccessor
 import DomFileAccessor._
+import foo.tooling.graphing.ultimate.IdeaGraphCreator
+import foo.tooling.graphing.jung.JungGraphCreator
 
 /**
  * Represents the EipEditorProvider, which acts as a factory for FileEditors.
+ * This adds an additional tab to the bottom of the file editor.
  * Registered via the extension point fileEditorProvider
  */
 class EipEditorProvider extends FileEditorProvider with DumbAware {
@@ -40,7 +43,7 @@ class EipEditorProvider extends FileEditorProvider with DumbAware {
    *
    * @param project
    * @param file Never null
-   * @return
+   * @return True if the given VirtualFile is a blueprint file, otherwise false
    */
   def accept(project: Project, file: VirtualFile): Boolean = {
     val blueprintDomFile = getBlueprintDomFile(project, file)
@@ -52,11 +55,16 @@ class EipEditorProvider extends FileEditorProvider with DumbAware {
    * Note this method should only be called after accept results in true.
    *
    * @param project
-   * @param file
+   * @param file Never null, additionally guaranteed to be a Blueprint file
    * @return The new file editor associated to the given file
    */
-  def createEditor(project: Project, file: VirtualFile): FileEditor =
-    new EipEditor(project, file)
+  def createEditor(project: Project, file: VirtualFile): FileEditor = {
+    val graphCreators = List(
+      new IdeaGraphCreator(),
+      new JungGraphCreator()
+    )
+    new EipEditor(project, file, graphCreators)
+  }
 
   /**
    * Loads the state from the specified sourceElement.
