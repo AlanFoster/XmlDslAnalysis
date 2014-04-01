@@ -117,7 +117,7 @@ class DomAbstractModelConverter extends AbstractModelConverter[Blueprint] {
      Choice(abstractChildren, DomReference(domElement))
 
     /**
-     * Ensure we fall through in case there is a node we do not understand
+     * Ensure we fall through safely in case there is a node we do not understand
      */
     case _ =>
       To("error:unexpected", DomReference(domElement))
@@ -178,6 +178,7 @@ class DomAbstractModelConverter extends AbstractModelConverter[Blueprint] {
         Constant(constant.getValue)
       case simple: SimpleExpression =>
         Simple(simple.getValue, Option(simple.getResultType.getStringValue), ExpressionReference(expression.getXmlTag))
+
       /**
         * By default we should supply no known type information for unknown type expressions
         */

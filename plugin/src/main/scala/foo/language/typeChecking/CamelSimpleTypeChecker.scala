@@ -8,12 +8,28 @@ import foo.traversal.MethodTypeInference
 import foo.language.references.EipSimpleReference
 import foo.intermediaterepresentation.model.types.TypeEnvironment
 
+/**
+ * A concrete implementation of a SimpleTypeCheck which relies on recursively
+ * resolving a given Camel expression, based on type judgements/inference rules
+ */
 class CamelSimpleTypeChecker extends SimpleTypeChecker {
+  /**
+   * {@inheritdoc}
+   */
   override def typeCheckCamel(typeEnvironment: TypeEnvironment, camelPsiFile: CamelPsiFile): Option[Set[String]] = {
     typeCheck(typeEnvironment, camelPsiFile)
   }
 
+  /**
+   * Performs type checking on the expression
+   * @param typeEnvironment The current type environment associated with this expression
+   * @param psiElement The current expression to perform type checking on
+   * @return The inferred type information associated with this expression
+   */
   private def typeCheck(typeEnvironment: TypeEnvironment, psiElement: PsiElement): Option[Set[String]] = psiElement match {
+    /**
+     * Perform type checking on the entire tree
+     */
     case file: CamelPsiFile =>
       val expressionOption = file.getChildren.lift(0)
 
@@ -24,12 +40,20 @@ class CamelSimpleTypeChecker extends SimpleTypeChecker {
           Some(Set(CommonClassNames.JAVA_LANG_OBJECT))
       }
 
+    /**
+     * Performs type checking on the given camel CamelExpression element
+     * IE this consists of either a literal or a camel expression
+     */
     case expression: CamelExpression =>
       val literal = typeCheck(typeEnvironment, expression.getLiteral)
 
       if (literal.isDefined) literal
       else typeCheck(typeEnvironment, expression.getCamelExpression)
 
+    /**
+     * Performs type checking on the contents of a given camel expression.
+     * Note this consists of the full text `${...} OP ${...}`
+     */
     case expression: CamelCamelExpression =>
       val hasOperator = Option(expression.getOperator).isDefined
 
@@ -44,6 +68,10 @@ class CamelSimpleTypeChecker extends SimpleTypeChecker {
     case camelFunction: CamelCamelFunction =>
       typeCheck(typeEnvironment, camelFunction.getCamelFuncBody)
 
+    /**
+     * Performs type inference for a camel function body.
+     * IE Either a camel function call, or body/header access.
+     */
     case camelFuncBody: CamelCamelFuncBody =>
       val variableAccessOption = Option(camelFuncBody.getVariableAccess)
 
@@ -74,6 +102,11 @@ class CamelSimpleTypeChecker extends SimpleTypeChecker {
 
       resolvedBodyFqcn
 
+    /**
+     * Fall through statement - this language can not be resolved.
+     * This should never happen however, as the language's type judgements
+     * should be completely defined, and therefore defined for all elements
+     */
     case _ =>
       None
   }
