@@ -12,7 +12,6 @@ abstract class EipIconLoader extends IconLoader {
    */
   val cache = collection.mutable.Map[(String, Boolean), Icon]()
 
-
   /**
    * Loads the appropriate icon for the given EIP component
    * @param component The EIP component to load an icon for

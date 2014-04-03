@@ -13,7 +13,6 @@ trait IntellijIconLoader extends IconLoader {
    * @return The loaded icon
    */
   def load(path: String): Icon = {
-    println("Intellij icon loader - loading : " + path)
     OpenApiIconLoader.getIcon(path)
   }
 }
