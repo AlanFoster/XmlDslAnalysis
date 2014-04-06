@@ -13,7 +13,7 @@ class SemanticToolTipStrategy extends ToolTipStrategy {
    * @return A human readable string
    */
   override def createTooltip(component: EipProcessor): String =
-  // Concatenate the type information and EipComponent's specific text  value
+    // Concatenate the type information and EipComponent's specific text  value
     s"""<html>
             |${component.text}<br />
             |Input Body Types: ${component.processor.bodies.map(_.toList.sortBy(identity).mkString("{", ", ", "}")).getOrElse("{}")}<br />
