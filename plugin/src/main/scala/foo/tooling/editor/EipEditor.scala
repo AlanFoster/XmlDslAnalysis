@@ -94,18 +94,18 @@ class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[
   }
 
   private def generateGraph(graphCreator: GraphCreator) {
+      // Assume we are using a DOM representation of camel intially
+      // Which allows for a EipDAG to be used within the VisualEipGraph, which could
+      // be expended upon in the future to allow for Java DSL EIP representations etc
+      val blueprintDomOption = DomFileAccessor.getBlueprintDomFile(project, virtualFile)
+      if(!validateInput(blueprintDomOption)) return
+
       ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable {
       override def run(): Unit = {
         ProgressManager.getInstance().getProgressIndicator.setText("Initializing...")
 
         // Clear all existing state within the graphContainer
         graphContainer.removeAll()
-
-        // Assume we are using a DOM representation of camel intially
-        // Which allows for a EipDAG to be used within the VisualEipGraph, which could
-        // be expended upon in the future to allow for Java DSL EIP representations etc
-        val blueprintDomOption = DomFileAccessor.getBlueprintDomFile(project, virtualFile)
-        if(!validateInput(blueprintDomOption)) return
 
         val blueprintDom = blueprintDomOption.get
 
