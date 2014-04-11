@@ -163,6 +163,34 @@ class SimpleBodyTypePropagationTests
   }
 
   /**
+   * Happy path headerAs tests
+   */
+  def testHeaderAsValid() {
+    doTest()
+  }
+
+  /**
+   * Ensure that one argument can be supplied
+   */
+  def testHeaderAsOneArgument() {
+    doTest()
+  }
+
+  /**
+   * Ensure that a class refernece which doesn't resolve successfully is defaulted
+   */
+  def testHeaderAsInvalid() {
+    doTest()
+  }
+
+  /**
+   * Test what happens when the arguments are applied in the wrong order for the headerAs function
+   */
+  def testHeaderAsWrongOrder() {
+    doTest()
+  }
+
+  /**
    * Performs the main test scenario- using the test method name the configuration
    * file to run
    */

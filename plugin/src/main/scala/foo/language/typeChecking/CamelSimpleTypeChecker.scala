@@ -86,20 +86,30 @@ class CamelSimpleTypeChecker extends SimpleTypeChecker {
      * bodyAs(e), mandatoryBodyAs(e), headerAs(s1, e1)
      */
     case camelFunctionCall: CamelFunctionCall =>
+      // Attempts to resolve the type information for the given fqcnText and project
+      def resolveFqcnArgument(argument: CamelFunctionArg, project: Project): Option[Set[String]] = {
+        val fqcnOptionText = Option(argument.getFqcn).map(_.getText)
+        // As per the specification \Omega(fqcn) should resolve, otherwise default.
+        val resolvedClass = fqcnOptionText.flatMap(fqcnText => omega(fqcnText, project))
+
+        resolvedClass match {
+          case Some(ref) => Some(Set(ref.getQualifiedName))
+          case None => Some(Set(CommonClassNames.JAVA_LANG_OBJECT))
+        }
+      }
+
+      // Extract the function name and args, avoiding a possible NPE
       val functionName = camelFunctionCall.getFunctionName
+      val functionArgs = Option(camelFunctionCall.getFunctionArgs).map(_.getFunctionArgList.asScala.toList).getOrElse(List())
+      val project = camelFunctionCall.getProject
 
       // Attempt to match the given function name
-      val functionArgs = Option(camelFunctionCall.getFunctionArgs).map(_.getFunctionArgList.asScala.toList).getOrElse(List())
+      // And subsequently attempt to extract the FQCN reference from the appropriate argument
       val resolvedType = (functionName.getText, functionArgs) match {
         case ("bodyAs" | "mandatoryBodyAs", arg1 :: args) =>
-          val fqcnText = Option(arg1.getFqcn).map(_.getText)
-          // As per the specification \Omega(fqcn) should resolve, otherwise default.
-          val resolvedClass = fqcnText.flatMap(fqcn => omega(fqcn, arg1.getProject))
-
-          resolvedClass match {
-            case Some(ref) => Some(Set(ref.getQualifiedName))
-            case None => Some(Set(CommonClassNames.JAVA_LANG_OBJECT))
-          }
+          resolveFqcnArgument(arg1, project)
+        case ("headerAs", _ :: arg2 :: args) =>
+          resolveFqcnArgument(arg2, project)
         case _ => None
       }
 
