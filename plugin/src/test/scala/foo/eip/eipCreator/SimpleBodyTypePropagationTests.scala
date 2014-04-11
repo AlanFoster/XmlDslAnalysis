@@ -107,6 +107,62 @@ class SimpleBodyTypePropagationTests
   }
 
   /**
+   * Ensure that bodyAs works as expected when given a valid FQCN
+   */
+  def testBodyAsValid() {
+    doTest()
+  }
+
+  /**
+   * Test to ensure that mandatoryBodyAs works as expected when given a valid FQCN
+   */
+  def testMandatoryBodyAsValid() {
+    doTest()
+  }
+
+  /**
+   * Ensure that bodyAs defaults to java.lang.Object when not a valid FQCN
+   */
+  def testBodyAsInvalid() {
+    doTest()
+  }
+
+  /**
+   * Tests to see if a nested expression can be resolved as expected
+   */
+  def testBodyAsNestedExpression() {
+    doTest()
+  }
+
+  /**
+   * Ensure that a number literal is handled as expected
+   */
+  def testBodyAsNumberLiteral() {
+    doTest()
+  }
+
+  /**
+   * The first argument should only be used, as there will be a separate semantic highlight
+   */
+  def testBodyAsMultipleArguments() {
+    doTest()
+  }
+
+  /**
+   * Ensure there are no NPEs etc when no arguments are applied
+   */
+  def testBodyAsZeroArguments() {
+    doTest()
+  }
+
+  /**
+   * Ensure there is no NPE when using a function call that doesn't exist
+   */
+  def testInvalidFunctionCall() {
+    doTest()
+  }
+
+  /**
    * Performs the main test scenario- using the test method name the configuration
    * file to run
    */

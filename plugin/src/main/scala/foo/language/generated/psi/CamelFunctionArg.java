@@ -13,6 +13,9 @@ public interface CamelFunctionArg extends PsiElement {
   CamelFqcn getFqcn();
 
   @Nullable
+  CamelCamelFunction getCamelFunction();
+
+  @Nullable
   CamelLiteral getLiteral();
 
 }

@@ -33,6 +33,12 @@ public class CamelFunctionArgImpl extends ASTWrapperPsiElement implements CamelF
 
   @Override
   @Nullable
+  public CamelCamelFunction getCamelFunction() {
+    return findChildByClass(CamelCamelFunction.class);
+  }
+
+  @Override
+  @Nullable
   public CamelLiteral getLiteral() {
     return findChildByClass(CamelLiteral.class);
   }

@@ -1,0 +1,15 @@
+<eipDag>
+    <vertices>
+        <vertex id="end" eipType="to" text="direct:end" inferredType="{java.lang.Object}"/>
+        <vertex eipType="translator" text="${bodyAs(&quot;java.lang.Integer&quot;)}" inferredType="{java.lang.Object}"/>
+        <vertex eipType="translator" text="${bodyAs(10)}" inferredType="{java.lang.Object}"/>
+        <vertex id="beanRef" eipType="to" text="complexModelFactory" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
+    </vertices>
+    <edges>
+        <edge target="end" edgeConnection="null_end3"/>
+        <edge edgeConnection="null_null2"/>
+        <edge source="beanRef" edgeConnection="beanRef_null1"/>
+        <edge source="from" target="beanRef" edgeConnection="from_beanRef0"/>
+    </edges>
+</eipDag>

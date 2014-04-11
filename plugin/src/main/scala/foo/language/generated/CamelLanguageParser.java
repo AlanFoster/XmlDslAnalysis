@@ -269,13 +269,14 @@ public class CamelLanguageParser implements PsiParser {
   }
 
   /* ********************************************************** */
-  // literal | FQCN
+  // literal | FQCN | camel_function
   public static boolean functionArg(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "functionArg")) return false;
     boolean result_ = false;
     Marker marker_ = enter_section_(builder_, level_, _NONE_, "<function arg>");
     result_ = literal(builder_, level_ + 1);
     if (!result_) result_ = FQCN(builder_, level_ + 1);
+    if (!result_) result_ = camel_function(builder_, level_ + 1);
     exit_section_(builder_, level_, marker_, FUNCTION_ARG, result_, false, null);
     return result_;
   }

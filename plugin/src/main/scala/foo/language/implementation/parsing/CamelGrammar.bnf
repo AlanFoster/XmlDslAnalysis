@@ -109,7 +109,7 @@ functionCall ::= functionName LEFT_PAREN functionArgs? RIGHT_PAREN
 functionArgs ::= functionArg (functionArgTail)* // IE func(first (, tail)*)
 // Pin 1 - Error recovery, the functionArg tail is considered successful if we at least have a comma
 private functionArgTail ::= COMMA functionArg {pin=1}
-functionArg ::= literal | FQCN
+functionArg ::= literal | FQCN | camel_function
 
 functionName ::= IDENTIFIER
 
