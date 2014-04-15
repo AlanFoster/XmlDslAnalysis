@@ -35,6 +35,7 @@ class EipGraphCreator {
   def createEipGraph
       (modelConverter: AbstractModelConverter[Blueprint], dataFlowInference: AbstractModelTypeInference)
       (root:Blueprint): EipDAG = {
+
     // Extract the given camel routes and create an empty EipDAG
     val routes = root.getCamelContext.getRoutes.asScala
     val createdDAG: EipDAG = EmptyDAG[EipProcessor, String]()
@@ -72,10 +73,16 @@ class EipGraphCreator {
     // When there are no processors, we have completed our effort.
     case Nil => graph
 
+    /**
+     * Provides a conversion for the From IR Model
+     */
     case (processor@From(uri, _, _)) :: tail =>
       val eipProcessor = EipProcessor(uri.getOrElse(DefaultAttributes.uri), processor)
       createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
+    /**
+     * Provides a conversion for the SetHeader IR Model
+     */
     case (processor@SetHeader(headerNameOption, Expression(expressionValue), _, _)) :: tail =>
       val eipProcessor = headerNameOption match {
         case Some(headerName) => EipProcessor(headerName + " -> " + expressionValue, processor)
@@ -83,19 +90,31 @@ class EipGraphCreator {
       }
       createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
+    /**
+     * Provides a conversion for the SetBody IR Model
+     */
     case (processor@SetBody(Expression(expressionText), _, _)) :: tail =>
       val eipProcessor = EipProcessor(expressionText, processor)
       createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
+    /**
+     * Provides a conversion for the To IR Model
+     */
     case (processor@To(uri, _, _)) :: tail =>
       val eipProcessor = EipProcessor(uri.getOrElse(DefaultAttributes.uri), processor)
       createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
+    /**
+     * Provides a conversion for the Bean IR Model
+     */
     case (processor@Bean(beanReference, _, _, _)) :: tail =>
       val beanText = beanReference.map(_.getStringValue).getOrElse("Not Specified")
       val eipProcessor = EipProcessor(beanText, processor)
       createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
+    /**
+     * Provides a conversion for the Choice IR Model
+     */
     case (choice@Choice(whens, _, _)) :: tail =>
       val choiceEipProcessor = EipProcessor("choice", choice)
       val linkedGraph = linkGraph(previous, choiceEipProcessor, graph)
