@@ -1,6 +1,6 @@
 Route(
-     From(direct:start,DomReference(FromProcessorDefinition),NotInferred)
-     To(direct:foo,DomReference(ToProcessorDefinition),NotInferred)
+     From(Some(direct:start),DomReference(FromProcessorDefinition),NotInferred)
+     To(Some(direct:foo),DomReference(ToProcessorDefinition),NotInferred)
      Choice(
           When(Constant(true))(
                Bean(Some(orderFactory),Some(createOrder),DomReference(BeanDefinition),NotInferred)
@@ -8,49 +8,49 @@ Route(
      )
      Choice(
           When(Simple(true,Some(java.lang.Boolean),ExpressionReference(XmlTag:simple)))(
-               To(uri:firstChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
+               To(Some(uri:firstChoiceProcessor),DomReference(ToProcessorDefinition),NotInferred)
           )
           When(Simple(false,None,ExpressionReference(XmlTag:simple)))(
-               To(uri:secondChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
+               To(Some(uri:secondChoiceProcessor),DomReference(ToProcessorDefinition),NotInferred)
                Bean(Some(personFactory),Some(createPerson),DomReference(BeanDefinition),NotInferred)
-               To(uri:thirdChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
+               To(Some(uri:thirdChoiceProcessor),DomReference(ToProcessorDefinition),NotInferred)
                Choice(
                     When(Simple(true,Some(java.lang.Boolean),ExpressionReference(XmlTag:simple)))(
-                         To(uri:firstChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
+                         To(Some(uri:firstChoiceProcessor),DomReference(ToProcessorDefinition),NotInferred)
                     )
                     When(Simple(false,None,ExpressionReference(XmlTag:simple)))(
                          Bean(Some(personFactory),Some(createPerson),DomReference(BeanDefinition),NotInferred)
-                         To(uri:thirdChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
+                         To(Some(uri:thirdChoiceProcessor),DomReference(ToProcessorDefinition),NotInferred)
                     )
                )
           )
      )
-     To(direct:bar,DomReference(ToProcessorDefinition),NotInferred)
+     To(Some(direct:bar),DomReference(ToProcessorDefinition),NotInferred)
      Choice(
           When(Simple(true,Some(java.lang.Boolean),ExpressionReference(XmlTag:simple)))(
-               To(uri:firstChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
+               To(Some(uri:firstChoiceProcessor),DomReference(ToProcessorDefinition),NotInferred)
                Choice(
                     When(Simple(true,Some(java.lang.Boolean),ExpressionReference(XmlTag:simple)))(
-                         To(uri:firstChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
+                         To(Some(uri:firstChoiceProcessor),DomReference(ToProcessorDefinition),NotInferred)
                          Bean(Some(complexFactory),Some(createComplex),DomReference(BeanDefinition),NotInferred)
                     )
                     When(Simple(false,None,ExpressionReference(XmlTag:simple)))(
                          Bean(Some(personFactory),Some(createPerson),DomReference(BeanDefinition),NotInferred)
-                         To(uri:secondChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
-                         To(uri:thirdChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
-                         To(direct:foo,DomReference(ToProcessorDefinition),NotInferred)
-                         SetHeader(secondHeader,Simple(${body},Some(java.lang.String),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),NotInferred)
-                         SetHeader(thirdHeader,Simple(${body},Some(java.lang.Integer),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),NotInferred)
-                         SetHeader(secondHeader,Simple(${body},Some(java.lang.Object),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),NotInferred)
-                         SetHeader(fourthHeader,Simple(5,Some(java.lang.Integer),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),NotInferred)
+                         To(Some(uri:secondChoiceProcessor),DomReference(ToProcessorDefinition),NotInferred)
+                         To(Some(uri:thirdChoiceProcessor),DomReference(ToProcessorDefinition),NotInferred)
+                         To(Some(direct:foo),DomReference(ToProcessorDefinition),NotInferred)
+                         SetHeader(Some(secondHeader),Simple(${body},Some(java.lang.String),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),NotInferred)
+                         SetHeader(Some(thirdHeader),Simple(${body},Some(java.lang.Integer),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),NotInferred)
+                         SetHeader(Some(secondHeader),Simple(${body},Some(java.lang.Object),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),NotInferred)
+                         SetHeader(Some(fourthHeader),Simple(5,Some(java.lang.Integer),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),NotInferred)
                     )
                )
           )
           When(Simple(false,None,ExpressionReference(XmlTag:simple)))(
                Bean(Some(complexModelFactory),Some(createComplexModel),DomReference(BeanDefinition),NotInferred)
                SetBody(Simple(${body.additionalInformation},Some(java.lang.String),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),NotInferred)
-               To(uri:secondChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
-               To(uri:thirdChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
+               To(Some(uri:secondChoiceProcessor),DomReference(ToProcessorDefinition),NotInferred)
+               To(Some(uri:thirdChoiceProcessor),DomReference(ToProcessorDefinition),NotInferred)
           )
      )
      Choice(
@@ -63,5 +63,5 @@ Route(
                Bean(Some(complexModelFactory),Some(createComplexModel),DomReference(BeanDefinition),NotInferred)
           )
      )
-     SetHeader(fifthHeader,Constant(Hello World),DomReference(ExpressionDefinitionImpl),NotInferred)
+     SetHeader(Some(fifthHeader),Constant(Hello World),DomReference(ExpressionDefinitionImpl),NotInferred)
 )

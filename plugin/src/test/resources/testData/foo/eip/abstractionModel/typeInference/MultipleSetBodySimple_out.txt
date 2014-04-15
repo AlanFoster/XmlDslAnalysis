@@ -1,5 +1,5 @@
 Route(
-     From(direct:start,DomReference(FromProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+     From(Some(direct:start),DomReference(FromProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
      Bean(Some(orderFactory),Some(createOrder),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(foo.models.OrderModel),Map())))
      SetBody(Simple(${body},None,ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(foo.models.OrderModel),Map()),TypeEnvironment(Set(foo.models.OrderModel),Map())))
      SetBody(Simple(${body},None,ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(foo.models.OrderModel),Map()),TypeEnvironment(Set(foo.models.OrderModel),Map())))

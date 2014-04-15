@@ -48,7 +48,7 @@
     AND_AND="&&"
     OR_OR="||"
 
-    IDENTIFIER="regexp:[a-zA-Z]([a-zA-Z_0-9])*"
+    IDENTIFIER="regexp:[a-zA-Z_$]([a-zA-Z_$0-9])*"
 
     NUMBER="regexp:\d+"
 

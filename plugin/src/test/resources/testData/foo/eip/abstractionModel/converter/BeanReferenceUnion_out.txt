@@ -1,16 +1,16 @@
 Route(
-     From(direct:start,DomReference(FromProcessorDefinition),NotInferred)
+     From(Some(direct:start),DomReference(FromProcessorDefinition),NotInferred)
      Bean(Some(orderFactory),Some(createOrder),DomReference(BeanDefinition),NotInferred)
      Choice(
           When(Simple(true,None,ExpressionReference(XmlTag:simple)))(
-               To(direct:bar,DomReference(ToProcessorDefinition),NotInferred)
+               To(Some(direct:bar),DomReference(ToProcessorDefinition),NotInferred)
                Bean(Some(complexFactory),Some(createComplexModel),DomReference(BeanDefinition),NotInferred)
           )
           When(Simple(false,None,ExpressionReference(XmlTag:simple)))(
                Bean(Some(personFactory),Some(createPerson),DomReference(BeanDefinition),NotInferred)
           )
      )
-     To(direct:baz,DomReference(ToProcessorDefinition),NotInferred)
+     To(Some(direct:baz),DomReference(ToProcessorDefinition),NotInferred)
      Bean(Some(),None,DomReference(BeanDefinition),NotInferred)
-     To(direct:foo,DomReference(ToProcessorDefinition),NotInferred)
+     To(Some(direct:foo),DomReference(ToProcessorDefinition),NotInferred)
 )

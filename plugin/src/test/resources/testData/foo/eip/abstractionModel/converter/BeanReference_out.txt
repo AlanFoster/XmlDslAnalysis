@@ -1,10 +1,10 @@
 Route(
-     From(direct:start,DomReference(FromProcessorDefinition),NotInferred)
+     From(Some(direct:start),DomReference(FromProcessorDefinition),NotInferred)
      Bean(Some(orderFactory),Some(createOrder),DomReference(BeanDefinition),NotInferred)
-     To(direct:bar,DomReference(ToProcessorDefinition),NotInferred)
+     To(Some(direct:bar),DomReference(ToProcessorDefinition),NotInferred)
      Bean(Some(incorrectId),Some(foo),DomReference(BeanDefinition),NotInferred)
      Bean(Some(complexFactory),Some(createComplexModel),DomReference(BeanDefinition),NotInferred)
      Bean(Some(complexFactory),Some(incorrectMethod),DomReference(BeanDefinition),NotInferred)
      Bean(Some(),None,DomReference(BeanDefinition),NotInferred)
-     To(direct:foo,DomReference(ToProcessorDefinition),NotInferred)
+     To(Some(direct:foo),DomReference(ToProcessorDefinition),NotInferred)
 )

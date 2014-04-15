@@ -1,5 +1,5 @@
 Route(
-     From(direct:start,DomReference(FromProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+     From(Some(direct:start),DomReference(FromProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
      Bean(Some(orderFactory),Some(createOrder),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(foo.models.OrderModel),Map())))
      Choice{ 
           (Set(foo.models.OrderModel), Map())
@@ -9,7 +9,7 @@ Route(
                (Set(foo.models.OrderModel), Map())
                (Set(foo.models.ComplexModel), Map())
           }(
-               To(direct:bar,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.OrderModel),Map()),TypeEnvironment(Set(foo.models.OrderModel),Map())))
+               To(Some(direct:bar),DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.OrderModel),Map()),TypeEnvironment(Set(foo.models.OrderModel),Map())))
                Bean(Some(complexFactory),Some(createComplexModel),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(foo.models.OrderModel),Map()),TypeEnvironment(Set(foo.models.ComplexModel),Map())))
           )
           When(Simple(false,None,ExpressionReference(XmlTag:simple))){ 
@@ -19,7 +19,7 @@ Route(
                Bean(Some(personFactory),Some(createPerson),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(foo.models.OrderModel),Map()),TypeEnvironment(Set(foo.models.PersonModel),Map())))
           )
      )
-     To(direct:baz,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel),Map()),TypeEnvironment(Set(foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel),Map())))
+     To(Some(direct:baz),DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel),Map()),TypeEnvironment(Set(foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel),Map())))
      Bean(Some(),None,DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
-     To(direct:foo,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+     To(Some(direct:foo),DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
 )

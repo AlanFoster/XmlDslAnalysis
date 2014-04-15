@@ -26,12 +26,21 @@ import foo.intermediaterepresentation.model.processors.To
  */
 class DataFlowTypeInference extends AbstractModelTypeInference {
   /**
+   * Represents the default inferred type of an object when it can not be inferred,
+   * either by a malformed expression, or there is a limitation in the static analysis.
+   *
+   * In a future release it would be better to use an 'Any/NotInferrable' type into the
+   * system instead of defaulting to java.lang.Object :)
+   */
+  val DEFAULT_INFERRED_TYPE = CommonClassNames.JAVA_LANG_OBJECT
+
+  /**
    * Performs type inference on the given model
    * @param route The untyped model
    * @return The typed model
    */
   override def performTypeInference(route: Route): Route = {
-    val startingTypeEnvironment = TypeEnvironment(Set(CommonClassNames.JAVA_LANG_OBJECT), Map())
+    val startingTypeEnvironment = TypeEnvironment(Set(DEFAULT_INFERRED_TYPE), Map())
     performTypeInference(startingTypeEnvironment, route).asInstanceOf[Route]
   }
 
@@ -103,8 +112,8 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
         case Some(psiElement) =>
           Option(psiElement.getValue)
             .map(_.getReturnType.getCanonicalText)
-            .getOrElse(CommonClassNames.JAVA_LANG_OBJECT)
-        case _ => CommonClassNames.JAVA_LANG_OBJECT
+            .getOrElse(DEFAULT_INFERRED_TYPE)
+        case _ => DEFAULT_INFERRED_TYPE
       }
       val newTypeInformation = typeEnvironment.copy(body = Set(inferredBody))
 
@@ -148,10 +157,18 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
     /**
      * The type information of expressions applied to setHeader can update the type environment
      */
-    case setHeader@SetHeader(headerName, expression, reference, _) =>
+    case setHeader@SetHeader(headerNameOption, expression, reference, _) =>
       val inferredTypeEnvironment = {
         val expressionTypeInformation = inferExpressionTypeInformation(typeEnvironment, expression)
-        val newHeaders = typeEnvironment.headers + (headerName -> (expressionTypeInformation.headOption.getOrElse(CommonClassNames.JAVA_LANG_OBJECT), reference))
+
+        // We should keep track of this header information, as long as it is valid.
+        val newHeaders = headerNameOption match {
+          case Some(headerName) =>
+            // Note, the limitation in a single inferred header type... DataModel limitations! :)
+            val inferredHeaderType = expressionTypeInformation.headOption.getOrElse(DEFAULT_INFERRED_TYPE)
+            typeEnvironment.headers + (headerName -> (inferredHeaderType, reference))
+          case None => typeEnvironment.headers
+        }
         val newTypeEnvironment = typeEnvironment
           .copy(headers = newHeaders)
         newTypeEnvironment
@@ -210,7 +227,7 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
       }
 
       psiElementOption match {
-        case None => Set(CommonClassNames.JAVA_LANG_OBJECT)
+        case None => Set(DEFAULT_INFERRED_TYPE)
         case Some(element) =>
           val psiFile = element.getContainingFile
           val textOffset = element.getValue.getTextRange.getStartOffset
@@ -219,12 +236,12 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
           val camelPsiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(psiFile, textOffset).asInstanceOf[CamelPsiFile]
           val resolvedFqcn = new CamelSimpleTypeChecker().typeCheckCamel(typeEnvironment, camelPsiFile)
 
-          resolvedFqcn.getOrElse(Set(CommonClassNames.JAVA_LANG_OBJECT))
+          resolvedFqcn.getOrElse(Set(DEFAULT_INFERRED_TYPE))
       }
 
     /**
-     * By default we should supply no known type information for unknown type expressions
+     * By default we should the default inferred typefor unknown type expressions
      */
-    case _ => Set(CommonClassNames.JAVA_LANG_OBJECT)
+    case _ => Set(DEFAULT_INFERRED_TYPE)
   }
 }

@@ -73,11 +73,14 @@ class EipGraphCreator {
     case Nil => graph
 
     case (processor@From(uri, _, _)) :: tail =>
-      val eipProcessor = EipProcessor(uri, processor)
+      val eipProcessor = EipProcessor(uri.getOrElse(DefaultAttributes.uri), processor)
       createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
-    case (processor@SetHeader(headerName, Expression(expressionValue), _, _)) :: tail =>
-      val eipProcessor = EipProcessor(headerName + " -> " + expressionValue, processor)
+    case (processor@SetHeader(headerNameOption, Expression(expressionValue), _, _)) :: tail =>
+      val eipProcessor = headerNameOption match {
+        case Some(headerName) => EipProcessor(headerName + " -> " + expressionValue, processor)
+        case None => EipProcessor(DefaultAttributes.headerName, processor)
+      }
       createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
     case (processor@SetBody(Expression(expressionText), _, _)) :: tail =>
@@ -85,7 +88,7 @@ class EipGraphCreator {
       createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
     case (processor@To(uri, _, _)) :: tail =>
-      val eipProcessor = EipProcessor(uri, processor)
+      val eipProcessor = EipProcessor(uri.getOrElse(DefaultAttributes.uri), processor)
       createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
     case (processor@Bean(beanReference, _, _, _)) :: tail =>

@@ -34,6 +34,13 @@ class HeaderTypePropagationTests
     doTest()
   }
 
+  /**
+   * Ensure that malformed attributes are handled as expected. IE This header information
+   * will be ignored until it is resolved successfully.
+   */
+  def testHeaderPropagationMalformedHeaderName(){
+    doTest()
+  }
 
   /**
    * Ensure that header information unions within nested choice statements that converge

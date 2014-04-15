@@ -96,7 +96,6 @@ object Processor {
   }
 }
 
-
 /*************************************************************************
  * Defines the currently defined set of processors within the intermediate
  * representation of the apache camel language
@@ -105,16 +104,16 @@ object Processor {
 case class Route(children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
   val eipType: EipName = EipName.Route
 }
-case class From(uri: String, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
+case class From(uri: Option[String], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
   val eipType: EipName = EipName.From
 }
-case class To(uri: String, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
+case class To(uri: Option[String], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
   val eipType: EipName = EipName.To
 }
 case class SetBody(expression: Expression, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
   val eipType: EipName = EipName.Translator
 }
-case class SetHeader(headerName: String, expression: Expression, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
+case class SetHeader(headerName: Option[String], expression: Expression, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
   val eipType: EipName = EipName.Translator
 }
 case class Choice(whens: List[When], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
@@ -128,4 +127,14 @@ case class Otherwise(children: List[Processor], reference:Reference, typeInforma
 }
 case class Bean(ref: Option[GenericAttributeValue[BlueprintBean]], method: Option[GenericAttributeValue[PsiMethod]], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
   val eipType: EipName = EipName.To
+}
+
+
+/**
+ * Represents the human readable defaults associated with attributes that were not
+ * successfully set as expected.
+ */
+object DefaultAttributes {
+  val uri = "error:unexpected"
+  val headerName = "Not Inferrable"
 }

@@ -1,14 +1,14 @@
 Route(
-     From(direct:start,DomReference(FromProcessorDefinition),NotInferred)
-     To(direct:foo,DomReference(ToProcessorDefinition),NotInferred)
+     From(Some(direct:start),DomReference(FromProcessorDefinition),NotInferred)
+     To(Some(direct:foo),DomReference(ToProcessorDefinition),NotInferred)
      Choice(
           When(Simple(true,Some(java.lang.Boolean),ExpressionReference(XmlTag:simple)))(
-               To(uri:firstChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
+               To(Some(uri:firstChoiceProcessor),DomReference(ToProcessorDefinition),NotInferred)
           )
           When(Simple(false,None,ExpressionReference(XmlTag:simple)))(
-               To(uri:secondChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
-               To(uri:thirdChoiceProcessor,DomReference(ToProcessorDefinition),NotInferred)
+               To(Some(uri:secondChoiceProcessor),DomReference(ToProcessorDefinition),NotInferred)
+               To(Some(uri:thirdChoiceProcessor),DomReference(ToProcessorDefinition),NotInferred)
           )
      )
-     To(direct:bar,DomReference(ToProcessorDefinition),NotInferred)
+     To(Some(direct:bar),DomReference(ToProcessorDefinition),NotInferred)
 )

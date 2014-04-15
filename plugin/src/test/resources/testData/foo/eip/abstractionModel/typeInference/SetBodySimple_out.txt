@@ -1,6 +1,6 @@
 Route(
-     From(direct:start,DomReference(FromProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
-     To(direct:foo,DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+     From(Some(direct:start),DomReference(FromProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+     To(Some(direct:foo),DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
      SetBody(Simple(${body},None,ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
      SetBody(Constant(hello world),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.String),Map())))
      SetBody(Simple(${body},Some(java.lang.Integer),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(java.lang.String),Map()),TypeEnvironment(Set(java.lang.Integer),Map())))

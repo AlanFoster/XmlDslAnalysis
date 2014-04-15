@@ -10,7 +10,8 @@ import foo.intermediaterepresentation.model.references.Reference
  */
 case class TypeEnvironment(body: Set[String], headers:Map[String, (String, Reference)]) extends TypeInformation {
   /**
-   * Unions two type environments together
+   * Unions two type environments together.
+   * This could be named ⊕, as Scala allows it. But it has been chosen not to do so.
    *
    * @param other The other type to union with
    * @return A new TypeEnvironment instance with the union of type information performed

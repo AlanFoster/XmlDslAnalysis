@@ -24,6 +24,13 @@ class LoadingTests
     doTest()
   }
 
+  /**
+   * Ensure no NPE is triggered on a malformed data model from the graphing library
+   */
+  def testMalformedFromElement() {
+    doTest()
+  }
+
   private def doTest() {
     val testName = getTestName(false)
     val virtualFile = myFixture.configureByFile(s"${testName}_dom.xml").getVirtualFile

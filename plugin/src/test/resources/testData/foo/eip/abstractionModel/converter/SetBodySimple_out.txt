@@ -1,6 +1,6 @@
 Route(
-     From(direct:start,DomReference(FromProcessorDefinition),NotInferred)
-     To(direct:foo,DomReference(ToProcessorDefinition),NotInferred)
+     From(Some(direct:start),DomReference(FromProcessorDefinition),NotInferred)
+     To(Some(direct:foo),DomReference(ToProcessorDefinition),NotInferred)
      SetBody(Simple(${body},None,ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),NotInferred)
      SetBody(Constant(hello world),DomReference(ExpressionDefinitionImpl),NotInferred)
      SetBody(Simple(${body},Some(java.lang.Integer),ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),NotInferred)

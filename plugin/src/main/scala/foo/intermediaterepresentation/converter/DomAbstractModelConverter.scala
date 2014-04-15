@@ -75,19 +75,21 @@ class DomAbstractModelConverter extends AbstractModelConverter[Blueprint] {
      * Handle the <from uri="..." /> DomElement
      */
     case from: FromProcessorDefinition =>
-      From(from.getUri.getStringValue, DomReference(domElement))
+      val uri = Option(from.getUri.getStringValue)
+      From(uri, DomReference(domElement))
 
     /**
      * Handle the <to uri="..."/> DomElement
      */
     case to: ToProcessorDefinition =>
-      To(to.getUri.getStringValue, DomReference(domElement))
+      val uri = Option(to.getUri.getStringValue)
+      To(uri, DomReference(domElement))
 
     /**
      * Handle the <setHeader headerName"..."><expression>...</expression></setHeader> element
      */
     case setHeader: SetHeaderProcessorDefinition =>
-      val headerName = setHeader.getHeaderName.getStringValue
+      val headerName = Option(setHeader.getHeaderName.getStringValue)
       val expression = convertExpression(setHeader.getExpression)
 
       SetHeader(headerName, expression, DomReference(domElement))
@@ -120,7 +122,7 @@ class DomAbstractModelConverter extends AbstractModelConverter[Blueprint] {
      * Ensure we fall through safely in case there is a node we do not understand
      */
     case _ =>
-      To("error:unexpected", DomReference(domElement))
+      To(Some(DefaultAttributes.uri), DomReference(domElement))
   }
 
   /**
