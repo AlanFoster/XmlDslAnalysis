@@ -20,12 +20,12 @@ import foo.intermediaterepresentation.converter.DomAbstractModelConverter
 import foo.intermediaterepresentation.typeInference.DataFlowTypeInference
 import foo.tooling.graphing.{GraphCreator, EipGraphCreator}
 import java.awt.event.{ActionEvent, ActionListener}
-import com.intellij.ui.components.JBComboBoxLabel
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.progress.ProgressManager
 
 /**
  * Creates and visualises the given XML DSl as a graph.
+ * This is done in two steps; Creating a wrapper object which contains a set of options
+ * available to the user, and the core visual representation of the given virtual file.
  */
 class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[GraphCreator]) extends UserDataHolderBase with FileEditor {
 
@@ -100,22 +100,24 @@ class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[
       val blueprintDomOption = DomFileAccessor.getBlueprintDomFile(project, virtualFile)
       if(!validateInput(blueprintDomOption)) return
 
-      ProgressManager.getInstance().runProcessWithProgressSynchronously(new Runnable {
+    val processManager: ProgressManager = ProgressManager.getInstance()
+    processManager.runProcessWithProgressSynchronously(new Runnable {
       override def run(): Unit = {
-        ProgressManager.getInstance().getProgressIndicator.setText("Initializing...")
+        processManager.getProgressIndicator.setText("Initializing...")
 
         // Clear all existing state within the graphContainer
         graphContainer.removeAll()
 
         val blueprintDom = blueprintDomOption.get
 
-        ProgressManager.getInstance().getProgressIndicator.setText("Creating Model...")
+        processManager.getProgressIndicator.setText("Creating Model...")
 
         // Instantiate the methods of creating an abstract dom model and semantic information for later DI
+        // IE, this converts to an IR and then performs type inference on the structure
         val modelConverter = new DomAbstractModelConverter()
         val dataFlowInference = new DataFlowTypeInference()
 
-        ProgressManager.getInstance().getProgressIndicator.setText(s"Creating ${graphCreator.prettyName}...")
+        processManager.getProgressIndicator.setText(s"Creating ${graphCreator.prettyName}...")
 
         // Create and pretty print the produced Eip DAG for the given DOM file
         val eipGraph = new EipGraphCreator()
@@ -126,7 +128,7 @@ class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[
 
         graphContainer.add(graphComponent)
 
-        ProgressManager.getInstance().getProgressIndicator.setText("Finished.")
+        processManager.getProgressIndicator.setText("Finished.")
       }
     }, s"Generating ${graphCreator.prettyName}", false, project)
   }
@@ -147,6 +149,12 @@ class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[
       }
   }
 
+  /**
+   * Creates an additional JComponent header with the option to switch between graphing libraries.
+   * This will be the place to add switching between the visualisations of routes contained
+   * within the camel file.
+   * @return The options currently available to the user.
+   */
   private def createOptions: JComponent = {
     val container = new JPanel(new FlowLayout())
     val label = new JLabel("Showing Graph :")
@@ -181,7 +189,6 @@ class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[
     val routes = blueprint.getCamelContext.getRoutes.asScala
     !routes.isEmpty && routes.head.getFrom.exists()
   }
-
 
   /**
    *  The EIP editor is stateless. As such, this is noop.
