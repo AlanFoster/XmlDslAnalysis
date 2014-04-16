@@ -93,6 +93,13 @@ class SimpleBodyTypePropagationTests
   }
 
   /**
+   * Ensure no NPEs etc happen when there is a very long method call chain
+   */
+  def testExtremelyLongMethodCallChain() {
+    doTest()
+  }
+
+  /**
    * Test complex nested recursive type call followed by an integer access
    */
   def testComplexRecursiveComplexTypeThenIntegerMethodCall() {

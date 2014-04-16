@@ -35,7 +35,7 @@ class DomAbstractModelConverter extends AbstractModelConverter[Blueprint] {
   /**
    * Converts the given blueprint DOM file into an EipDag
    * @param root The root DOM element
-   * @return The converted EipDAG
+   * @return The converted IR representation of the given DSL
    */
   override def convert(root:Blueprint): Route = {
     // Extract the given camel routes and create an empty EipDAG

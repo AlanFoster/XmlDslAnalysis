@@ -31,7 +31,16 @@ class LoadingTests
     doTest()
   }
 
+  /**
+   * Ensure no NPE is triggered in a long method call chain
+   */
+  def testExtremelyLongMethodCallChain() {
+    doTest()
+  }
+
   private def doTest() {
+    loadAllCommon(myFixture)
+
     val testName = getTestName(false)
     val virtualFile = myFixture.configureByFile(s"${testName}_dom.xml").getVirtualFile
 
