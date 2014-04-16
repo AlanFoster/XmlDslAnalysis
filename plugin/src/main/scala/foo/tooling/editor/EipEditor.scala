@@ -16,11 +16,10 @@ import com.intellij.openapi.ui.MessageType
 import com.intellij.ui.awt.RelativePoint
 import foo.dom.DomFileAccessor
 import foo.dom.Model.Blueprint
-import foo.intermediaterepresentation.converter.DomAbstractModelConverter
-import foo.intermediaterepresentation.typeInference.DataFlowTypeInference
 import foo.tooling.graphing.{GraphCreator, EipGraphCreator}
 import java.awt.event.{ActionEvent, ActionListener}
 import com.intellij.openapi.progress.ProgressManager
+import foo.intermediaterepresentation.model.AbstractModelManager
 
 /**
  * Creates and visualises the given XML DSl as a graph.
@@ -29,6 +28,9 @@ import com.intellij.openapi.progress.ProgressManager
  */
 class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[GraphCreator]) extends UserDataHolderBase with FileEditor {
 
+  /**
+   * The currently selected graph creator implementation
+   */
   var currentlySelectedGraphCreator = graphCreators.head
 
   /**
@@ -105,27 +107,21 @@ class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[
       override def run(): Unit = {
         processManager.getProgressIndicator.setText("Initializing...")
 
-        // Clear all existing state within the graphContainer
+        // Clear all existing state within the graphContainer, which will only contain the visual graph component
         graphContainer.removeAll()
 
         val blueprintDom = blueprintDomOption.get
 
+        // Create the intermediate representation with semantic information
         processManager.getProgressIndicator.setText("Creating Model...")
+        val route = AbstractModelManager.createSemanticIntermediateRepresentation(blueprintDom)
 
-        // Instantiate the methods of creating an abstract dom model and semantic information for later DI
-        // IE, this converts to an IR and then performs type inference on the structure
-        val modelConverter = new DomAbstractModelConverter()
-        val dataFlowInference = new DataFlowTypeInference()
-
+        // Convert the IR graph into an EIP Dag, which fills in the appropriate edges between nodes
+        // And then attempt to create the element visually
         processManager.getProgressIndicator.setText(s"Creating ${graphCreator.prettyName}...")
 
-        // Create and pretty print the produced Eip DAG for the given DOM file
-        val eipGraph = new EipGraphCreator()
-          .createEipGraph(modelConverter, dataFlowInference)(blueprintDom)
-
-        // Create a new VisualEipGraph, with an IntellijIconLoader mixed in
+        val eipGraph = new EipGraphCreator().createEipGraph(route)
         val graphComponent = currentlySelectedGraphCreator.createComponent(project, virtualFile, eipGraph)
-
         graphContainer.add(graphComponent)
 
         processManager.getProgressIndicator.setText("Finished.")

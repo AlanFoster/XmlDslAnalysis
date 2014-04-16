@@ -1,57 +1,34 @@
 package foo.tooling.graphing
 
 import StaticGraphTypes.EipDAG
-import scala.collection.JavaConverters._
 import foo.dom.Model._
 import foo.tooling.graphing.ADT.EmptyDAG
-import foo.intermediaterepresentation.converter.AbstractModelConverter
-import foo.intermediaterepresentation.typeInference.AbstractModelTypeInference
 import foo.intermediaterepresentation.model.expressions.Expression
 import foo.intermediaterepresentation.model.processors._
-
+import foo.intermediaterepresentation.model.processors.Route
 
 /**
  * EIP Graph Creator class.
- * This class will convert the given intellij DOM class into a more abstract
- * DAG (Directed Acyclic Graph) which contains more semantic information
- * relevant to EIPs than the lower level abstraction of DOM.
- *
- * This decision will allow for other DSLs such as Java to be supported.
- *
- * Note an EipGraph contains /no/ information in relation to the creation of a visual
- * graph, and is purely used as a data structures which contains the relevant type information
- * etc
+ * This class is associated with converting the Intermediate representation into a
+ * DAG of EipProcessors, which can then be used later by a graphing API.
  */
 class EipGraphCreator {
   import EipGraphCreator._
 
   /**
-   * Converts the given blueprint DOM file into an EipDag
-   * @param modelConverter An abstract implementation of a model converter
-   * @param dataFlowInference An abstract implementation of data flow inference algorithm
-   * @param root The root DOM element
-   * @return The converted EipDAG
+   * Converts the given intermediate representation of camel into a the 'visual' representation.
+   *
+   * @param routeWithSemantics The intermediate representation used for Camel
+   * @return The converted EipDAG, which contains the appropriate edges between nodes so that they
+   *         can be visually iinterpretedas an EIP diagram.
    */
-  def createEipGraph
-      (modelConverter: AbstractModelConverter[Blueprint], dataFlowInference: AbstractModelTypeInference)
-      (root:Blueprint): EipDAG = {
-
-    // Extract the given camel routes and create an empty EipDAG
-    val routes = root.getCamelContext.getRoutes.asScala
-    val createdDAG: EipDAG = EmptyDAG[EipProcessor, String]()
-
-    // There is no need to traverse the given routes if there are no processor definitions
-    if (routes.isEmpty || !routes.head.getFrom.exists) createdDAG
-    else {
-      val route = modelConverter.convert(root)
-      val routeWithSemantics = dataFlowInference.performTypeInference(route)
-
+  def createEipGraph(routeWithSemantics: Route): EipDAG = {
+      val createdDAG: EipDAG = EmptyDAG[EipProcessor, String]()
       createEipGraph(
         List(),
         routeWithSemantics.children,
         createdDAG
       )
-    }
   }
 
   /**
@@ -61,13 +38,13 @@ class EipGraphCreator {
    * A pointer to the previously recursed node will be used to successfully
    * create edges between the nodes in the DAG.
    *
-   * @param previous The previously visited ProcessorDefinition.
+   * @param previous The previously visited Processors.
    *                 This should be None when called with the root node
-   * @param processors The remaining list of processor definitions.
-   * @param graph The current EipDag
+   * @param processors The remaining list of processors to consume.
+   * @param graph The currently created EipDag
    * @return A new EipDag, note the original data structure will not be mutated
    */
-  def createEipGraph(previous: List[EipProcessor],
+  private def createEipGraph(previous: List[EipProcessor],
                      processors: List[Processor],
                      graph: EipDAG): EipDAG = processors match {
     // When there are no processors, we have completed our effort.

@@ -5,7 +5,7 @@ import com.intellij.psi.xml.XmlTag
 import foo.intermediaterepresentation.converter.DomAbstractModelConverter
 import foo.intermediaterepresentation.typeInference.DataFlowTypeInference
 import foo.intermediaterepresentation.model.references.{Reference, DomReference}
-import foo.intermediaterepresentation.model.processors.Processor
+import foo.intermediaterepresentation.model.processors.{Route, Processor}
 
 /**
  * Represents the singleton instance of an AbstractModelManager, which simply provides
@@ -48,5 +48,24 @@ object AbstractModelManager {
     }))
 
     availableHeaders
+  }
+
+  /**
+   * Creates the intermediate representation and semantic information for the given blueprint file
+   * @param blueprint The Blueprint Element
+   * @return The intermediate representation and semantic information for the given blueprint file
+   */
+  def createSemanticIntermediateRepresentation(blueprint: Blueprint): Route = {
+    // Instantiate the methods of creating an abstract dom model and semantic information for later DI
+    // IE, this converts to an IR and then performs type inference on the structure
+    val modelConverter = new DomAbstractModelConverter()
+    val dataFlowInference = new DataFlowTypeInference()
+
+    // Apply the transformation
+    // firstly creating the IR representation, then applying the more expensive type inference
+    val route = modelConverter.convert(blueprint)
+    val routeWithSemantics = dataFlowInference.performTypeInference(route)
+
+    routeWithSemantics
   }
 }
