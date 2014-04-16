@@ -1,7 +1,7 @@
 package foo.language.impl.body
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import foo.{TestBase, JavaJDK1_7TestBase}
+import foo.{CommonTestClasses, TestBase, JavaJDK1_7TestBase}
 import foo.language.impl.TestDataInterpolator
 import scala.Some
 import foo.RichTestFixture._
@@ -15,7 +15,8 @@ class MethodResolveTests
   extends LightCodeInsightFixtureTestCase
   with JavaJDK1_7TestBase
   with TestBase
-  with TestDataInterpolator {
+  with TestDataInterpolator
+  with CommonTestClasses {
 
   /**
    * {@inheritdoc}
@@ -37,6 +38,7 @@ class MethodResolveTests
   }
 
   val BodyIsJavaLangObject = TestScenario(Some("BodyIsJavaLangObject.xml"))
+  val BodyIsComplexModel = TestScenario(Some("ComplexModel.xml"))
 
   /**
    * Ensures that a non-getter method can be contributed
@@ -53,6 +55,13 @@ class MethodResolveTests
     doTest(BodyIsJavaLangObject.withExpectedMethodName(null))
   }
 
+  /**
+   * Ensure no NPEs etc happen when there is a very long method call chain
+   */
+  def testExtremelyLongMethodCallChain() {
+    doTest(BodyIsComplexModel.withExpectedMethodName("getSelf"))
+  }
+
   // TODO Implement when the type information can be unioned successfully
   // TODO Implement a test for numbers in the method name
   /*def testBodyAccessGetter() {
@@ -64,6 +73,8 @@ class MethodResolveTests
    * @param testScenario
    */
   def doTest(testScenario: TestScenario){
+    loadAllCommon(myFixture)
+
     // Load the file
     val testName = getTestName(false).takeWhile(_ != '_')
     val testData = getTestData(testName, testScenario.fileName, getTestDataPath)
@@ -72,7 +83,7 @@ class MethodResolveTests
     // Ensure that our Psi method is referenced as expected
     val referenceOption = myFixture.getElementAtCaretSafe
     referenceOption match {
-      case None => assertNull("There should be no matching reference for this scenario", testScenario.expectedMethodName)
+      case None => assertNull("No element was successfully resolved - Expected <" + testScenario.expectedMethodName + ">", testScenario.expectedMethodName)
       case Some(reference) =>
         // If a reference has been provided, we must fail it.
         if(testScenario.expectedMethodName == null) {
