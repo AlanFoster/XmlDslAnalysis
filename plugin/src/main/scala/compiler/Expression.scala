@@ -126,7 +126,7 @@ object Main {
           throw new Error(s"${expr} already defined in scope!")
         }
         val newSymbolTable = symbolTable.add(typeInfo, identifier)
-        newSymbolTable
+        //newSymbolTable
         println("Created new symbol - " + newSymbolTable)
         newSymbolTable
       case Assignment(varReference, e) =>

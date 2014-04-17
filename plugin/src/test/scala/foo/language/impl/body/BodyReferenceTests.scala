@@ -173,6 +173,7 @@ class BodyReferenceTests
         assertEquals("The head contribution should be valid as expected",
           reference.getQualifiedName,
           expectedResolve.get)
+      case _ => fail("Unexpected scenario")
     }
   }
 

@@ -61,6 +61,7 @@ class HeaderReferenceTest
 
         val headerElement = domElement.asInstanceOf[SetHeaderProcessorDefinition]
         assertEquals("The header name should be as expected for this scenario", expected, headerElement.getHeaderName.getStringValue)
+      case _ => fail("Unexpected scenario")
     }
   }
 }

@@ -2,7 +2,7 @@ package foo.tooling.graphing
 
 import foo.intermediaterepresentation.model.EipName._
 import foo.intermediaterepresentation.model.processors.Processor
-import foo.intermediaterepresentation.model.references.{Reference, DomReference, NoReference}
+import foo.intermediaterepresentation.model.references.{ExpressionReference, Reference, DomReference, NoReference}
 
 /**
  * Represents a wrapper of a processor, which contains the additional information associated
@@ -39,5 +39,7 @@ object EipProcessor {
        "Not Inferred"
      case DomReference(domReference) =>
        domReference.getId.getStringValue
+     case ExpressionReference(tag) =>
+        tag.getName
    }
  }

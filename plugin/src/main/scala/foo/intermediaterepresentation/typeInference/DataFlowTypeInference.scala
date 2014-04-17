@@ -7,7 +7,7 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil
 import foo.language.Core.CamelPsiFile
 import foo.language.typeChecking.CamelSimpleTypeChecker
 import foo.intermediaterepresentation.model.types.{NotInferred, Inferred, TypeEnvironment}
-import foo.intermediaterepresentation.model.references.{NoReference, ExpressionReference}
+import foo.intermediaterepresentation.model.references.{DomReference, NoReference, ExpressionReference}
 import foo.intermediaterepresentation.model.expressions.{Expression, Simple, Constant}
 import foo.intermediaterepresentation.model.processors._
 import foo.intermediaterepresentation.model.expressions.Constant
@@ -15,7 +15,6 @@ import foo.intermediaterepresentation.model.processors.Route
 import scala.Some
 import foo.intermediaterepresentation.model.expressions.Simple
 import foo.intermediaterepresentation.model.types.Inferred
-import foo.intermediaterepresentation.model.references.ExpressionReference
 import foo.intermediaterepresentation.model.processors.From
 import foo.intermediaterepresentation.model.processors.To
 
@@ -64,9 +63,9 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
         case (((typeEnv), previous), next) =>
           val mappedProcessor = performTypeInference(typeEnv, next)
           val newEnv = mappedProcessor.typeInformation match {
-            case NotInferred =>
-              throw new Error("Could not infer the correct data type")
             case Inferred(_, after) => after
+            case NotInferred | _ =>
+              throw new Error("Could not infer the correct data type")
           }
           (newEnv, previous :+ mappedProcessor)
       })
@@ -87,9 +86,9 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
           // Note that the parent choice type environment is used for each when expression!
           val mappedProcessor = performTypeInference(typeEnvironment, next)
           val newEnv = mappedProcessor.typeInformation match {
-            case NotInferred =>
-              throw new Error("Could not infer the correct data type")
             case Inferred(_, after) => after
+            case NotInferred | _ =>
+              throw new Error("Could not infer the correct data type")
           }
           // Return the tuple of the every accumulated type environment and every when element
           (newEnv :: accumulatedTypeEnvironments, accumulatedWhenExpressions :+ mappedProcessor.asInstanceOf[When])
@@ -128,9 +127,9 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
         case (((typeEnv), previous), next) =>
           val mappedProcessor = performTypeInference(typeEnv, next)
           val newEnv = mappedProcessor.typeInformation match {
-            case NotInferred =>
-              throw new Error("Could not infer the correct data type")
             case Inferred(_, after) => after
+            case NotInferred | _ =>
+              throw new Error("Could not infer the correct data type")
           }
           (newEnv, previous :+ mappedProcessor)
       })
@@ -221,7 +220,7 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
      */
     case Simple(value, None, reference) =>
       val psiElementOption = reference match {
-        case NoReference => None
+        case NoReference | DomReference(_) => None
         case ExpressionReference(element) =>
           Some(element)
       }

@@ -10,6 +10,8 @@ import scala.util.{Failure, Success, Try}
  * would be useful to use during testing scenarios
  */
 object RichTestFixture {
+  import scala.language.implicitConversions
+
   implicit def toRichTestFixture(testFixture: JavaCodeInsightTestFixture) =
     new RichTestFixture(testFixture)
 

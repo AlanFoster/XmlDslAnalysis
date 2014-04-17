@@ -101,31 +101,31 @@ object Processor {
  * representation of the apache camel language
  *************************************************************************/
 
-case class Route(children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
+final case class Route(children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
   val eipType: EipName = EipName.Route
 }
-case class From(uri: Option[String], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
+final case class From(uri: Option[String], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
   val eipType: EipName = EipName.From
 }
-case class To(uri: Option[String], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
+final case class To(uri: Option[String], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
   val eipType: EipName = EipName.To
 }
-case class SetBody(expression: Expression, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
+final case class SetBody(expression: Expression, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
   val eipType: EipName = EipName.Translator
 }
-case class SetHeader(headerName: Option[String], expression: Expression, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
+final case class SetHeader(headerName: Option[String], expression: Expression, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
   val eipType: EipName = EipName.Translator
 }
-case class Choice(whens: List[When], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
+final case class Choice(whens: List[When], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
   val eipType: EipName = EipName.choice
 }
-case class When(expression: Expression, children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
+final case class When(expression: Expression, children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
   val eipType: EipName = EipName.When
 }
-case class Otherwise(children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
+final case class Otherwise(children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
   val eipType: EipName = EipName.Otherwise
 }
-case class Bean(ref: Option[GenericAttributeValue[BlueprintBean]], method: Option[GenericAttributeValue[PsiMethod]], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
+final case class Bean(ref: Option[GenericAttributeValue[BlueprintBean]], method: Option[GenericAttributeValue[PsiMethod]], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
   val eipType: EipName = EipName.To
 }
 
