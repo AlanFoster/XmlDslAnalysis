@@ -31,12 +31,13 @@ trait EipSimpleReference {
    */
   def getInferredBodyTypes(module: Module, bodyTypes: Set[String]):Set[PsiClass] = {
     val searchScope = GlobalSearchScope.moduleWithDependenciesAndLibrariesScope(module)
-    def classResolver(className: String) = {
-      JavaPsiFacade.getInstance(module.getProject).findClass(className, searchScope)
+    def classResolver(className: String): Option[PsiClass] = {
+      Option(JavaPsiFacade.getInstance(module.getProject).findClass(className, searchScope))
     }
 
     // Attempt to find the matching body types and resolve them
-    val resolvedBodies = bodyTypes.map(classResolver)
+    // Ensuring that no unresolved classes leak through
+    val resolvedBodies = bodyTypes.map(classResolver).flatten
 
     resolvedBodies
   }

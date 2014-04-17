@@ -10,12 +10,13 @@ import foo.intermediaterepresentation.model.types.TypeEnvironment
 import scala.collection.JavaConverters._
 import com.intellij.openapi.project.Project
 import com.intellij.psi.search.GlobalSearchScope
+import foo.intermediaterepresentation.model.ReadonlyTypeEnvironment
 
 /**
  * A concrete implementation of a SimpleTypeCheck which relies on recursively
  * resolving a given Camel expression, based on type judgements/inference rules
  */
-class CamelSimpleTypeChecker extends SimpleTypeChecker {
+class CamelSimpleTypeChecker extends SimpleTypeChecker with ReadonlyTypeEnvironment {
   /**
    * {@inheritdoc}
    */
@@ -128,20 +129,9 @@ class CamelSimpleTypeChecker extends SimpleTypeChecker {
   }
 
   /**
-   * Function which provides access to resolve a given text to a resolved class
-   * @param fqcnText The FQCN text
-   * @param project The associated project
-   * @return the associated type information for this fqcn, otherwise None
-   */
-  private def omega(fqcnText: String, project: Project): Option[PsiClass] = {
-    val resolvedClass =  Option(JavaPsiFacade.getInstance(project).findClass(fqcnText, GlobalSearchScope.allScope(project)))
-    resolvedClass
-  }
-
-  /**
    * Attempts to infer the resolved method access for the given CamelCamelFuncBody expression
    * @param typeEnvironment The current type environment
-   * @param camelFuncBody THe current CamelCamelFuncBody instane
+   * @param camelFuncBody The current CamelCamelFuncBody instance
    * @return The inferred body types which may or may not successfully have been resolved.
    */
   private def inferMethodAccess(typeEnvironment: TypeEnvironment, camelFuncBody: CamelCamelFuncBody): Option[Set[String]] = {

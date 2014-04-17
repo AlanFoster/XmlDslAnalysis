@@ -23,6 +23,11 @@
                 <simple resultType="java.lang.Integer">${body}</simple>
             </setBody>
 
+            <!-- Not resolved -->
+            <setBody>
+                <simple resultType="java.lang.invalid.unresolved">${simple}</simple>
+            </setBody>
+
             <setBody>
                 <simple resultType="java.lang.Boolean">${body}</simple>
             </setBody>

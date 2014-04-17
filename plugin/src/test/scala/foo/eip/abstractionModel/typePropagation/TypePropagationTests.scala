@@ -1,7 +1,7 @@
 package foo.eip.abstractionModel.typePropagation
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import foo.{CommonTestClasses, TestBase}
+import foo.{JavaJDK1_7TestBase, CommonTestClasses, TestBase}
 import foo.dom.DomFileAccessor
 import foo.intermediaterepresentation.converter.DomAbstractModelConverter
 import foo.intermediaterepresentation.model.AbstractModelPrinter
@@ -15,7 +15,9 @@ import foo.intermediaterepresentation.typeInference.DataFlowTypeInference
 class TypePropagationTests
   extends LightCodeInsightFixtureTestCase
   with TestBase
-  with CommonTestClasses {
+  with CommonTestClasses
+  with JavaJDK1_7TestBase
+  {
 
   /**
    * {@inheritdoc}

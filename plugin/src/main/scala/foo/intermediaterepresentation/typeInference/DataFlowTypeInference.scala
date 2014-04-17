@@ -23,7 +23,7 @@ import foo.intermediaterepresentation.model.processors.To
  * by using the concept of type information 'flowing' between
  * processors, and unioning their type information.
  */
-class DataFlowTypeInference extends AbstractModelTypeInference {
+class DataFlowTypeInference extends AbstractModelTypeInference with ReadonlyTypeEnvironment {
   /**
    * Represents the default inferred type of an object when it can not be inferred,
    * either by a malformed expression, or there is a limitation in the static analysis.
@@ -212,8 +212,15 @@ class DataFlowTypeInference extends AbstractModelTypeInference {
      * A simple expression with a supplied resultType will be used over the inferred
      * output of the expression value
      */
-    case Simple(value, Some(fqcn),_ ) =>
-      Set(fqcn)
+    case Simple(value, Some(fqcn), reference) =>
+      // Extract the required project
+      val projectOption = reference match {
+        case NoReference => None
+        case ExpressionReference(xmlTag) => Option(xmlTag.getProject)
+        case DomReference(processor) => Option(processor.getXmlTag.getProject)
+      }
+      val resolvedFqcn = projectOption.flatMap(project => omega(fqcn, project)).map(_.getQualifiedName)
+      resolvedFqcn.map(fqcn => Set(fqcn)).getOrElse(Set(DEFAULT_INFERRED_TYPE))
 
     /**
      * When no resultType is set we should infer it

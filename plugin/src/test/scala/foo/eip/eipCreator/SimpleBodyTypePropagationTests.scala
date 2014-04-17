@@ -42,6 +42,13 @@ class SimpleBodyTypePropagationTests
   }
 
   /**
+   * Ensure that when the result type is invalid, it is as a defualt type
+   */
+  def testInvalidResultTypeAttribute() {
+    doTest()
+  }
+
+  /**
    * Regardless of LHS and RHS the end result will always be a boolean
    */
   def testSimpleProposition() {
@@ -194,6 +201,14 @@ class SimpleBodyTypePropagationTests
    * Test what happens when the arguments are applied in the wrong order for the headerAs function
    */
   def testHeaderAsWrongOrder() {
+    doTest()
+  }
+
+
+  /**
+   * Ensure that type information propagates as expected when the body is set to a header
+   */
+  def ignoretestSimpleHeaderAccessValid() {
     doTest()
   }
 

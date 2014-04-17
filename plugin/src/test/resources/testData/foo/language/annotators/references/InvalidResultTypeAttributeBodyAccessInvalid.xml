@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="<error descr="URI is not registered (Settings | Project Settings | Schemas and DTDs)">http://www.osgi.org/xmlns/blueprint/v1.0.0</error>"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:camel="<error descr="URI is not registered (Settings | Project Settings | Schemas and DTDs)">http://camel.apache.org/schema/blueprint</error>"
+        xsi:schemaLocation="
+        http://www.osgi.org/xmlns/blueprint/v1.0.0 <error descr="Cannot resolve symbol 'http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd'">http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd</error>
+        http://camel.apache.org/schema/blueprint <error descr="Cannot resolve symbol 'http://camel.apache.org/schema/blueprint/camel-blueprint.xsd'">http://camel.apache.org/schema/blueprint/camel-blueprint.xsd</error>">
+
+<bean class="foo.factory.OrderFactory" id="orderFactory" />
+<bean class="foo.factory.PersonFactory" id="personFactory" />
+<bean class="foo.factory.ComplexModelFactory" id="complexFactory" />
+
+<camelContext trace="true" xmlns="<error descr="URI is not registered (Settings | Project Settings | Schemas and DTDs)">http://camel.apache.org/schema/blueprint</error>">
+<route>
+<from id="from" uri="direct:foo"/>
+
+<setHeader id="setHeader" headerName="foo">
+    <constant>String</constant>
+</setHeader>
+
+<setBody id="setBody1">
+    <simple resultType="invalid">${simple}</simple>
+</setBody>
+
+<setBody id="setBody2">
+    <simple>${<weak_warning descr="Unresolved Reference - Potentially valid">body</weak_warning>}</simple>
+</setBody>
+</route>
+        </camelContext>
+        </blueprint>
