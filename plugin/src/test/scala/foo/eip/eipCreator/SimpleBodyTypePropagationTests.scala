@@ -121,6 +121,13 @@ class SimpleBodyTypePropagationTests
   }
 
   /**
+   * Chained method calls separated by ?.
+   */
+  def testChainedMethodCallsElvis() {
+    doTest()
+  }
+
+  /**
    * Ensure that bodyAs works as expected when given a valid FQCN
    */
   def testBodyAsValid() {
@@ -203,7 +210,6 @@ class SimpleBodyTypePropagationTests
   def testHeaderAsWrongOrder() {
     doTest()
   }
-
 
   /**
    * Ensure that type information propagates as expected when the body is set to a header

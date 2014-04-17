@@ -14,14 +14,18 @@ object ElementSplitter {
     var end = 0
     var ranges = List[SplitTextRange]()
     while(text.lift(end).isDefined) {
-
-      if(text(end) == '.') {
-        ranges ::= SplitTextRange(text.substring(start, end), start, end)
-        end = end + 1
-        start = end
-      } else
-
-      end = end + 1
+      text(end) match {
+        case '?' if text.lift(end + 1) == Some('.') =>
+          ranges ::= SplitTextRange(text.substring(start, end), start, end)
+          end = end + 2
+          start = end
+        case '.' =>
+          ranges ::= SplitTextRange(text.substring(start, end), start, end)
+          end = end + 1
+          start = end
+        case _=>
+          end = end + 1
+      }
     }
 
     ranges ::= SplitTextRange(text.substring(start, end), start, end)
