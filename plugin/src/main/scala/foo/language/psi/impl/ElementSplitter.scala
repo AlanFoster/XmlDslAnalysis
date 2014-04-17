@@ -19,6 +19,16 @@ object ElementSplitter {
           ranges ::= SplitTextRange(text.substring(start, end), start, end)
           end = end + 2
           start = end
+        case '[' =>
+          ranges ::= SplitTextRange(text.substring(start, end), start, end)
+          end = end + 1
+          while(text.lift(end).isDefined && text.lift(end) != Some(']') ) {
+            end = end + 1
+          }
+          if(text.lift(end) == Some(']') || text.lift(end).isEmpty) {
+            end = end + 1
+            start = end
+          }
         case '.' =>
           ranges ::= SplitTextRange(text.substring(start, end), start, end)
           end = end + 1
@@ -28,7 +38,10 @@ object ElementSplitter {
       }
     }
 
-    ranges ::= SplitTextRange(text.substring(start, end), start, end)
+    // Consume the remaining text
+    if(start < end) {
+      ranges ::= SplitTextRange(text.substring(start, end), start, end)
+    }
 
     ranges.filter(t => t.start != t.end)
   }

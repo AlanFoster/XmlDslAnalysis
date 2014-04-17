@@ -7,7 +7,6 @@ import java.io.File
  * A trait which defines common classes which can be used during test scenarios.
  * This should be mixed in the appropriate testing scenarios
  */
-// TODO It would be nice if there was a nice DSL for this instead of traits perhaps
 trait CommonTestClasses
   extends TestBase {
 
@@ -17,6 +16,7 @@ trait CommonTestClasses
     loadCommon(fixture, "/foo/models/PersonModel.java")
     loadCommon(fixture, "/foo/models/ComplexModel.java")
     loadCommon(fixture, "/foo/models/BaseSimpleModel.java")
+    loadCommon(fixture, "/foo/models/EdgeCaseModel.java")
 
     // Processors
     loadCommon(fixture, "/foo/processors/OrderProcessor.java")
@@ -25,6 +25,7 @@ trait CommonTestClasses
     loadCommon(fixture, "/foo/factory/OrderFactory.java")
     loadCommon(fixture, "/foo/factory/PersonFactory.java")
     loadCommon(fixture, "/foo/factory/ComplexModelFactory.java")
+    loadCommon(fixture, "/foo/factory/EdgeCaseFactory.java")
   }
 
   def commonFile = new File(testRoot, "/commonClasses")

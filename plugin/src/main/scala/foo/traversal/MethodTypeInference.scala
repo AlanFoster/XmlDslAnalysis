@@ -42,6 +42,10 @@ object MethodTypeInference {
           elementFactory.createTypeByFQClassName(boxedName)
         })
     case psiClassType: PsiClassType => Some(psiClassType)
+    case psiArrayType:PsiArrayType =>
+      tryBoxPrimitiveType(psiArrayType.getComponentType, project)
     case _ => None
   }
+
+
 }

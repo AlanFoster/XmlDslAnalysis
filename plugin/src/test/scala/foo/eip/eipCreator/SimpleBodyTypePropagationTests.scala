@@ -219,6 +219,13 @@ class SimpleBodyTypePropagationTests
   }
 
   /**
+   * The notion of array access should be supported
+   */
+  def testSimpleArrayAccess() {
+    doTest()
+  }
+
+  /**
    * Performs the main test scenario- using the test method name the configuration
    * file to run
    */
