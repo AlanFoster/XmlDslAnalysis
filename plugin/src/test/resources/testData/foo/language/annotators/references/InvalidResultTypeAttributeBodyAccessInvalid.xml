@@ -23,7 +23,7 @@
 </setBody>
 
 <setBody id="setBody2">
-    <simple>${<weak_warning descr="Unresolved Reference - Potentially valid">body</weak_warning>}</simple>
+    <simple>${body}</simple>
 </setBody>
 </route>
         </camelContext>

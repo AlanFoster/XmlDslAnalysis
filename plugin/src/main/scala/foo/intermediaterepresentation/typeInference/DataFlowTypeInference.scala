@@ -214,11 +214,7 @@ class DataFlowTypeInference extends AbstractModelTypeInference with ReadonlyType
      */
     case Simple(value, Some(fqcn), reference) =>
       // Extract the required project
-      val projectOption = reference match {
-        case NoReference => None
-        case ExpressionReference(xmlTag) => Option(xmlTag.getProject)
-        case DomReference(processor) => Option(processor.getXmlTag.getProject)
-      }
+      val projectOption = reference.getProject
       val resolvedFqcn = projectOption.flatMap(project => omega(fqcn, project)).map(_.getQualifiedName)
       resolvedFqcn.map(fqcn => Set(fqcn)).getOrElse(Set(DEFAULT_INFERRED_TYPE))
 
