@@ -39,6 +39,7 @@ class MethodResolveTests
 
   val BodyIsJavaLangObject = TestScenario(Some("BodyIsJavaLangObject.xml"))
   val BodyIsComplexModel = TestScenario(Some("ComplexModel.xml"))
+  val BodyIsEdgeCasesModel = TestScenario(Some("EdgeCaseModel.xml"))
 
   /**
    * Ensures that a non-getter method can be contributed
@@ -62,11 +63,12 @@ class MethodResolveTests
     doTest(BodyIsComplexModel.withExpectedMethodName("getSelf"))
   }
 
-  // TODO Implement when the type information can be unioned successfully
-  // TODO Implement a test for numbers in the method name
-  /*def testBodyAccessGetter() {
-    doTest
-  }*/
+  /**
+   * Edge case for non-common characters
+   */
+  def testBodyAccessComplexGetter() {
+    doTest(BodyIsEdgeCasesModel.withExpectedMethodName("get_123$$3"))
+  }
 
   /**
    * Performs the actual test with the given test scenario

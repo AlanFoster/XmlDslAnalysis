@@ -1,6 +1,7 @@
 package foo.intermediaterepresentation.model.expressions
 
 import foo.intermediaterepresentation.model.references.Reference
+import foo.intermediaterepresentation.model.types.CamelStaticTypes.ACSLFqcn
 
 /**
  * Represents the base trait of an expression within Camel
@@ -20,7 +21,7 @@ object Expression {
   *******************************************************************/
 
 // TODO Maybe result type should be more statically typed instead of a string
-final case class Simple(value: String, resultType: Option[String], reference: Reference) extends Expression
+final case class Simple(value: String, resultType: Option[ACSLFqcn], reference: Reference) extends Expression
 final case class Constant(value: String) extends Expression
 final case class UnknownExpression() extends Expression{
   override val value: String = "Unknown Expression"

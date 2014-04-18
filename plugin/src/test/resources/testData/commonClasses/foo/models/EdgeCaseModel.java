@@ -1,5 +1,7 @@
 package foo.models;
 
+import java.util.Map;
+
 /**
  * Represents an object which contains a lot of the associated edge cases
  * that should be handled without error
@@ -19,6 +21,9 @@ public class EdgeCaseModel {
     // Complex Array
     private Map[] arrayRawMap;
     private Map<String, String>[] arrayStringMap;
+
+    // Potentially generated attribute use case
+    private EdgeCaseModel _123$$3;
 
     public int[] getArrayInt() {
         return arrayInt;
@@ -91,5 +96,15 @@ public class EdgeCaseModel {
     public void setArrayStringMap(Map<String, String>[] arrayStringMap) {
         this.arrayStringMap = arrayStringMap;
     }
+
+    public foo.models.EdgeCaseModel get_123$$3() {
+        return _123$$3;
+    }
+
+    public void set_123$$3(foo.models.EdgeCaseModel _123$$3) {
+        this._123$$3 = _123$$3;
+    }
+
+
 }
 
