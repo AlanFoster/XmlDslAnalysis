@@ -11,7 +11,7 @@ import scala.util.Try
 import foo.language.references.EipSimpleReference
 import foo.traversal.{MethodTypeInference, MethodTraversal}
 import com.intellij.openapi.module.ModuleUtilCore
-import foo.intermediaterepresentation.model.types.TypeEnvironment
+import foo.intermediaterepresentation.model.types.{CamelReferenceType, CamelType, TypeEnvironment}
 
 /**
  * Represents a concrete implementation of a reference which is used within
@@ -76,7 +76,10 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
    */
   def resolveMethod(reference: EipSimpleReference, typeEnvironment: TypeEnvironment): Set[PsiClass] = {
     // TODO Note we currently only resolve to the first head element
-    val someResolved: Option[PsiElement] = Option(reference.resolveEip(typeEnvironment)).flatMap(_.headOption)
+    val someResolved: Option[PsiElement] =
+      Option(reference.resolveEip(typeEnvironment)
+        .collect({ case CamelReferenceType(_, p) => p}))
+        .flatMap(_.headOption)
 
     // Attempt to resolve the current class, handling null scenarios with monads
     val resolvedClass = for {
@@ -139,9 +142,9 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
     resolveForIj(availableVariants).getOrElse(null)
   }
 
-  override def resolveEip(typeEnvironment: TypeEnvironment): Set[PsiElement] = {
+  override def resolveEip(typeEnvironment: TypeEnvironment): Set[CamelType] = {
     val resolved = resolveForIj(contributeAvailableVariants(typeEnvironment))
-        .map(s => s: PsiElement)
+        .map(s => CamelReferenceType(s): CamelType)
         .map(resolved => Set(resolved))
 
     resolved.getOrElse(Set())

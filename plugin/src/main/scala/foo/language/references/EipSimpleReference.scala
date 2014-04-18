@@ -9,7 +9,7 @@ import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.xml.XmlTag
 import foo.intermediaterepresentation.model._
-import foo.intermediaterepresentation.model.types.{Inferred, TypeEnvironment}
+import foo.intermediaterepresentation.model.types.{CamelType, Inferred, TypeEnvironment}
 import foo.intermediaterepresentation.model.processors.Processor
 
 /**
@@ -20,7 +20,7 @@ import foo.intermediaterepresentation.model.processors.Processor
  */
 trait EipSimpleReference {
 
-  def resolveEip(typeEnvironment: TypeEnvironment): Set[PsiElement]
+  def resolveEip(typeEnvironment: TypeEnvironment): Set[CamelType]
 
   /**
    * Computes the currently inferred body type for the given psiElement

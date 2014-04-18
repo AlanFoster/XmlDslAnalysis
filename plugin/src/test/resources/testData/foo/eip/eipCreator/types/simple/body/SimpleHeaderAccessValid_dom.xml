@@ -19,7 +19,7 @@
             </setHeader>
 
             <setBody id="setBody">
-                <simple>${headers.foo}</simple>
+                <simple>${in.headers.foo}</simple>
             </setBody>
 
             <!-- Ensure information has propagated as expected -->

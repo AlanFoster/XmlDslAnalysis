@@ -20,35 +20,41 @@ sealed trait Processor extends Mappable[Processor] {
   val reference: Reference
   val eipType: EipName
 
+  def before: Option[TypeEnvironment] = typeInformation match {
+    case Inferred(before, _) =>
+      Option(before)
+    case _ => None
+  }
+
+  def after: Option[TypeEnvironment] = typeInformation match {
+    case Inferred(_, after) =>
+      Option(after)
+    case _ => None
+  }
+
   /**
    * Extracts the headers associated with the current processor
    * @return An Option, as the semantic information may not have been inferred
    *         currently.
    */
-  def headers: Option[Map[String, (String, Reference)]] = typeInformation match {
-    case Inferred(TypeEnvironment(_, headerMap), _) =>
-      Some(headerMap)
-    case _ => None
-  }
+  def headers: Option[Map[String, (String, Reference)]] =
+    before.map(_.headers)
 
   /**
    * Extracts the out headers associated with the current processor
    * @return An Option, as the semantic information may not have been inferred
    *         currently.
    */
-  def outHeaders: Option[Map[String, (String, Reference)]] = typeInformation match {
-    case Inferred(_, TypeEnvironment(_, headerMap)) =>
-      Some(headerMap)
-    case _ => None
-  }
+  def outHeaders: Option[Map[String, (String, Reference)]] =
+    after.map(_.headers)
 
   /**
    * Extracts the current body set associated with the current processor
    * @return An option, as the semantic information may not have been inferred
    *         currently.
    */
-  def bodies: Option[Set[String]] = typeInformation match {
-    case Inferred(TypeEnvironment(bodySet, _), _) =>
+  def bodies: Option[Set[String]] = before flatMap  {
+    case TypeEnvironment(bodySet, _) =>
       Some(bodySet)
     case _ => None
   }
@@ -58,8 +64,8 @@ sealed trait Processor extends Mappable[Processor] {
    * @return An option, as the semantic information may not have been inferred
    *         currently.
    */
-  def outBodies: Option[Set[String]] = typeInformation match {
-    case Inferred(_, TypeEnvironment(bodySet, _)) =>
+  def outBodies: Option[Set[String]] = after flatMap {
+    case TypeEnvironment(bodySet, _) =>
       Some(bodySet)
     case _ => None
   }

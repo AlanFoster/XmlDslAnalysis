@@ -46,6 +46,4 @@ object MethodTypeInference {
       tryBoxPrimitiveType(psiArrayType.getComponentType, project)
     case _ => None
   }
-
-
 }

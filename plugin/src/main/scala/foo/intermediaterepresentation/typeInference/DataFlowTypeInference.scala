@@ -2,13 +2,12 @@ package foo.intermediaterepresentation.typeInference
 
 import foo.intermediaterepresentation.model._
 import com.intellij.psi.CommonClassNames
-import scala.Some
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil
 import foo.language.Core.CamelPsiFile
 import foo.language.typeChecking.CamelSimpleTypeChecker
-import foo.intermediaterepresentation.model.types.{NotInferred, Inferred, TypeEnvironment}
+import foo.intermediaterepresentation.model.types.{NotInferred, TypeEnvironment}
 import foo.intermediaterepresentation.model.references.{DomReference, NoReference, ExpressionReference}
-import foo.intermediaterepresentation.model.expressions.{Expression, Simple, Constant}
+import foo.intermediaterepresentation.model.expressions.Expression
 import foo.intermediaterepresentation.model.processors._
 import foo.intermediaterepresentation.model.expressions.Constant
 import foo.intermediaterepresentation.model.processors.Route
@@ -17,6 +16,7 @@ import foo.intermediaterepresentation.model.expressions.Simple
 import foo.intermediaterepresentation.model.types.Inferred
 import foo.intermediaterepresentation.model.processors.From
 import foo.intermediaterepresentation.model.processors.To
+import CoreConstants._
 
 /**
  * Performs type inference on a given Abstract Model representation,
@@ -24,14 +24,6 @@ import foo.intermediaterepresentation.model.processors.To
  * processors, and unioning their type information.
  */
 class DataFlowTypeInference extends AbstractModelTypeInference with ReadonlyTypeEnvironment {
-  /**
-   * Represents the default inferred type of an object when it can not be inferred,
-   * either by a malformed expression, or there is a limitation in the static analysis.
-   *
-   * In a future release it would be better to use an 'Any/NotInferrable' type into the
-   * system instead of defaulting to java.lang.Object :)
-   */
-  val DEFAULT_INFERRED_TYPE = CommonClassNames.JAVA_LANG_OBJECT
 
   /**
    * Performs type inference on the given model

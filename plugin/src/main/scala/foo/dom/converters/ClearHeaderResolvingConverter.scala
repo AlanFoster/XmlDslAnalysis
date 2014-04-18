@@ -7,6 +7,7 @@ import scala.collection.JavaConverters._
 import foo.dom.DomFileAccessor
 import foo.dom.Model.ProcessorDefinition
 import foo.intermediaterepresentation.model._
+import foo.intermediaterepresentation.model.types.CamelStaticTypes.ACSLKey
 
 
 /**
@@ -57,7 +58,7 @@ class ClearHeaderResolvingConverter extends ResolvingConverter[ProcessorDefiniti
    * @param context The context
    * @return All known headers within the given context
    */
-  def getAvailableHeaders(context: ConvertContext): Map[String, ProcessorDefinition] = {
+  def getAvailableHeaders(context: ConvertContext): Map[ACSLKey, ProcessorDefinition] = {
     val (project, virtualFile) = (context.getProject, context.getFile)
 
     val currentTag = context.getTag
@@ -66,6 +67,7 @@ class ClearHeaderResolvingConverter extends ResolvingConverter[ProcessorDefiniti
     // Access the header information as expected
     val headers = AbstractModelManager
       .getInferredHeaders(domFile, currentTag)
+      .map(_.map { case (key, (_, processor)) => (key, processor) })
       .getOrElse(Map())
 
     headers

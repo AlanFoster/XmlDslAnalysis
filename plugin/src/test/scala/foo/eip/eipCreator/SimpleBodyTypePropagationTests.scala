@@ -214,7 +214,7 @@ class SimpleBodyTypePropagationTests
   /**
    * Ensure that type information propagates as expected when the body is set to a header
    */
-  def ignoretestSimpleHeaderAccessValid() {
+  def testSimpleHeaderAccessValid() {
     doTest()
   }
 

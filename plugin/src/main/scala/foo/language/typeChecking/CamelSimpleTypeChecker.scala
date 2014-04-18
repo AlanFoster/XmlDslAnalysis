@@ -4,13 +4,12 @@ import foo.language.generated.psi._
 import foo.language.Core.CamelPsiFile
 import com.intellij.psi._
 import scala.Some
-import foo.traversal.MethodTypeInference
 import foo.language.references.EipSimpleReference
-import foo.intermediaterepresentation.model.types.TypeEnvironment
+import foo.intermediaterepresentation.model.types.{CamelReferenceType, BaseType, CamelType, TypeEnvironment}
 import scala.collection.JavaConverters._
 import com.intellij.openapi.project.Project
-import com.intellij.psi.search.GlobalSearchScope
-import foo.intermediaterepresentation.model.ReadonlyTypeEnvironment
+import foo.intermediaterepresentation.model.{CoreConstants, ReadonlyTypeEnvironment}
+import foo.intermediaterepresentation.model.types.CamelStaticTypes.ACSLFqcn
 
 /**
  * A concrete implementation of a SimpleTypeCheck which relies on recursively
@@ -30,7 +29,7 @@ class CamelSimpleTypeChecker extends SimpleTypeChecker with ReadonlyTypeEnvironm
    * @param psiElement The current expression to perform type checking on
    * @return The inferred type information associated with this expression
    */
-  private def typeCheck(typeEnvironment: TypeEnvironment, psiElement: PsiElement): Option[Set[String]] = psiElement match {
+  private def typeCheck(typeEnvironment: TypeEnvironment, psiElement: PsiElement): Option[Set[ACSLFqcn]] = psiElement match {
     /**
      * Perform type checking on the entire tree
      */
@@ -88,7 +87,7 @@ class CamelSimpleTypeChecker extends SimpleTypeChecker with ReadonlyTypeEnvironm
      */
     case camelFunctionCall: CamelFunctionCall =>
       // Attempts to resolve the type information for the given fqcnText and project
-      def resolveFqcnArgument(argument: CamelFunctionArg, project: Project): Option[Set[String]] = {
+      def resolveFqcnArgument(argument: CamelFunctionArg, project: Project): Option[Set[ACSLFqcn]] = {
         val fqcnOptionText = Option(argument.getFqcn).map(_.getText)
         // As per the specification \Omega(fqcn) should resolve, otherwise default.
         val resolvedClass = fqcnOptionText.flatMap(fqcnText => omega(fqcnText, project))
@@ -134,32 +133,62 @@ class CamelSimpleTypeChecker extends SimpleTypeChecker with ReadonlyTypeEnvironm
    * @param camelFuncBody The current CamelCamelFuncBody instance
    * @return The inferred body types which may or may not successfully have been resolved.
    */
-  private def inferMethodAccess(typeEnvironment: TypeEnvironment, camelFuncBody: CamelCamelFuncBody): Option[Set[String]] = {
+  private def inferMethodAccess(typeEnvironment: TypeEnvironment, camelFuncBody: CamelCamelFuncBody): Option[Set[ACSLFqcn]] = {
     // Attempt to get the last reference within the body element
     val lastReferenceOption: Option[PsiReference] =
       camelFuncBody.getReferences.toList
         .sortBy(_.getRangeInElement.getEndOffset)
         .lastOption
 
-    // Attempt to resolve the reference to a FQCN
-    val resolvedReferencesOption: Option[Set[PsiElement]] =
-      lastReferenceOption
-        .collect({
-        case eipReference: EipSimpleReference =>
-          eipReference.resolveEip(typeEnvironment)
-      })
+    if(lastReferenceOption.isDefined) inferBodyAccess(typeEnvironment, lastReferenceOption)
+    else inferHeaderAccess(typeEnvironment, camelFuncBody)
+  }
 
-    val resolvedBodyFqcn: Option[Set[String]] =
-      resolvedReferencesOption.map(elems => elems.collect({
-        case psiClass: PsiClass =>
-          Some(psiClass.getQualifiedName)
-        case psiMethod: PsiMethod =>
-          MethodTypeInference.getReturnTypeClass(psiMethod).map(_.getQualifiedName)
-      }))
-        .map(_.flatten)
-        .map(s => if(s.isEmpty) Set(CommonClassNames.JAVA_LANG_OBJECT) else s)
-    //inferredAccess.getOrElse(typeCheckCamel(camelFuncBody.getFunctionCall))
+  private def inferHeaderAccess(typeEnvironment: TypeEnvironment, camelFuncBody: CamelCamelFuncBody): Option[Set[ACSLFqcn]] = {
+    def findLastAccess(access: CamelVariableAccess): CamelVariableAccess = {
+        val accessList = access.getVariableAccessList
+        val lastOption = accessList.asScala.lastOption
+        lastOption match {
+          case Some(newAccess) => findLastAccess(newAccess)
+          case None => access
+        }
+    }
 
-    resolvedBodyFqcn
+    val resolvedEipReference = for {
+      topAccess <- Option(camelFuncBody.getVariableAccess)
+      lastAccess = findLastAccess(topAccess)
+      references = lastAccess.getReferences
+      lastReference = references.lastOption
+      eipReference <- resolveEipReference(typeEnvironment, lastReference)
+    } yield eipReference
+
+    resolvedEipReference
+  }
+
+  /**
+   * Infers the body access of a given reference
+   */
+  private def inferBodyAccess(typeEnvironment: TypeEnvironment, lastReferenceOption: Option[PsiReference]): Option[Set[ACSLFqcn]] =
+    resolveEipReference(typeEnvironment, lastReferenceOption)
+
+  /**
+   * Attempts to resolve an EIP reference into the appropriate types
+   */
+  private def resolveEipReference(typeEnvironment: TypeEnvironment, reference: Option[PsiReference]): Option[Set[ACSLFqcn]] = {
+    val resolvedReferencesOption: Option[Set[CamelType]] =
+      reference.collect({
+          case eipReference: EipSimpleReference =>
+            eipReference.resolveEip(typeEnvironment)
+        })
+
+    val typesOption = resolvedReferencesOption.map(set => set.map({
+      case BaseType(fqcn) => fqcn
+      case CamelReferenceType(BaseType(fqcn), _) => fqcn
+    }))
+
+    typesOption.map(set =>
+      if(set.isEmpty) Set(CoreConstants.DEFAULT_INFERRED_TYPE)
+      else set
+    )
   }
 }

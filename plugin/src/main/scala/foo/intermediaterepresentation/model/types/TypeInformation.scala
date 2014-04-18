@@ -1,6 +1,13 @@
 package foo.intermediaterepresentation.model.types
 
 import foo.intermediaterepresentation.model.references.Reference
+import CamelStaticTypes._
+
+object CamelStaticTypes {
+  type ACSLKey = String
+  type ACSLFqcn = String
+}
+
 
 /**
  * Represents the base trait of TypeInformation, ie inferred information about
@@ -14,7 +21,7 @@ sealed trait TypeInformation
  * @param body The currently inferred body information
  * @param headers The current inferred header information
  */
-final case class TypeEnvironment(body: Set[String], headers:Map[String, (String, Reference)]) extends TypeInformation {
+final case class TypeEnvironment(body: Set[ACSLFqcn], headers:Map[ACSLKey, (ACSLFqcn, Reference)]) extends TypeInformation {
   /**
    * Unions two type environments together.
    * This could be named ⊕, as Scala allows it. But it has been chosen not to do so.

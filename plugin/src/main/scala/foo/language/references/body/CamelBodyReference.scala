@@ -6,7 +6,7 @@ import foo.language.MethodConverter
 import foo.language.references.EipSimpleReference
 
 import com.intellij.openapi.module.{ModuleUtil, ModuleUtilCore}
-import foo.intermediaterepresentation.model.types.TypeEnvironment
+import foo.intermediaterepresentation.model.types.{CamelReferenceType, CamelType, TypeEnvironment}
 
 /**
  * Represents a CamelBodyReference, IE the element within ${body}.
@@ -68,10 +68,10 @@ class CamelBodyReference(element: PsiElement, range: TextRange)
     getInferredBodyTypes(module, bodies)
   }
 
-  override def resolveEip(typeEnvironment: TypeEnvironment): Set[PsiElement] = {
+  override def resolveEip(typeEnvironment: TypeEnvironment): Set[CamelType] = {
     val possibleReferences = resolveBody(typeEnvironment.body)
     // set is invariant on A, so we must perform a map of types
-    possibleReferences.map(s => s: PsiElement)
+    possibleReferences.map(s => CamelReferenceType(s))
   }
 
 }
