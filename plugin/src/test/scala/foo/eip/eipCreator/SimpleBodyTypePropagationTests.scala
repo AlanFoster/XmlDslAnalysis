@@ -219,6 +219,13 @@ class SimpleBodyTypePropagationTests
   }
 
   /**
+   * Ensure that type information propagates as expected when the body is set to a header
+   */
+  def testSimpleHeaderAccessInvalid() {
+    doTest()
+  }
+
+  /**
    * The notion of array access should be supported
    */
   def testSimpleArrayAccess() {

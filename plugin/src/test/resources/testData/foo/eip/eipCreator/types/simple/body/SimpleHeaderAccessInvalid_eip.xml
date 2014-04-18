@@ -1,0 +1,27 @@
+<eipDag>
+    <vertices>
+        <vertex id="end" eipType="to" text="direct:end" inferredType="{java.lang.Object}"/>
+        <vertex id="setBody" eipType="translator" text="${in.headers.invalid}" inferredType="{java.lang.Object}"/>
+        <vertex id="setHeader" eipType="translator" text="foo -&gt; Hello World" inferredType="{java.lang.Object}"/>
+        <vertex id="sixth" eipType="translator" text="${body.id}" inferredType="{java.lang.Object}"/>
+        <vertex id="fifth" eipType="translator" text="${headers.orderCopy}" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="fourth" eipType="translator" text="${body.id}" inferredType="{java.lang.Object}"/>
+        <vertex id="third" eipType="translator" text="${body}" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="second" eipType="translator" text="orderCopy -&gt; ${body}" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="first" eipType="translator" text="${body}" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="orderfactory" eipType="to" text="orderFactory" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
+    </vertices>
+    <edges>
+        <edge source="setBody" target="end" edgeConnection="setBody_end9"/>
+        <edge source="setHeader" target="setBody" edgeConnection="setHeader_setBody8"/>
+        <edge source="sixth" target="setHeader" edgeConnection="sixth_setHeader7"/>
+        <edge source="fifth" target="sixth" edgeConnection="fifth_sixth6"/>
+        <edge source="fourth" target="fifth" edgeConnection="fourth_fifth5"/>
+        <edge source="third" target="fourth" edgeConnection="third_fourth4"/>
+        <edge source="second" target="third" edgeConnection="second_third3"/>
+        <edge source="first" target="second" edgeConnection="first_second2"/>
+        <edge source="orderfactory" target="first" edgeConnection="orderfactory_first1"/>
+        <edge source="from" target="orderfactory" edgeConnection="from_orderfactory0"/>
+    </edges>
+</eipDag>
