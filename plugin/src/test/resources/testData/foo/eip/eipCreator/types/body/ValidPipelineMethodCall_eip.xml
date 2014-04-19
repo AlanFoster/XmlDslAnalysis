@@ -1,7 +1,7 @@
 <eipDag>
     <vertices>
         <vertex id="third" eipType="to" text="direct:foo" inferredType="{foo.models.OrderModel}"/>
-        <vertex id="orderFactoryReference" eipType="to" text="orderFactory" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="orderFactoryReference" eipType="to" text="orderFactory.createOrder()" inferredType="{foo.models.OrderModel}"/>
         <vertex id="first" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
     </vertices>
     <edges>

@@ -1,6 +1,6 @@
 <eipDag>
     <vertices>
-        <vertex id="bean" eipType="to" text=""/>
+        <vertex id="bean" eipType="to" text="[Empty]"/>
         <vertex id="from" eipType="from" text="direct:start"/>
     </vertices>
     <edges>

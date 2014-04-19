@@ -9,7 +9,7 @@
         <vertex id="third" eipType="translator" text="${body}" inferredType="{foo.models.OrderModel}"/>
         <vertex id="second" eipType="translator" text="orderCopy -&gt; ${body}" inferredType="{foo.models.OrderModel}"/>
         <vertex id="first" eipType="translator" text="${body}" inferredType="{foo.models.OrderModel}"/>
-        <vertex id="orderfactory" eipType="to" text="orderFactory" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="orderfactory" eipType="to" text="orderFactory.createOrder()" inferredType="{foo.models.OrderModel}"/>
         <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
     </vertices>
     <edges>

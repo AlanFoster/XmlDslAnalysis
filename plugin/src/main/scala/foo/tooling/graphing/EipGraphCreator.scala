@@ -106,8 +106,13 @@ class EipGraphCreator {
         /**
          * Provides a conversion for the Bean IR Model
          */
-        case processor@Bean(beanReference, _, _, _) =>
-          val beanText = beanReference.map(_.getStringValue).getOrElse(DefaultAttributes.NotValid)
+        case processor@Bean(beanReferenceOption, beanMethodOption, _, _) =>
+          val beanTextOption = for {
+            beanReference <- beanReferenceOption
+            beanMethod <- beanMethodOption
+          } yield s"${beanReference.getStringValue}.${beanMethod.getStringValue}()"
+
+          val beanText = beanTextOption.getOrElse(DefaultAttributes.NotValid)
           val eipProcessor = EipProcessor(beanText, processor)
           createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 

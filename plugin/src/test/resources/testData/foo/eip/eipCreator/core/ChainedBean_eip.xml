@@ -1,8 +1,8 @@
 <eipDag>
     <vertices>
-        <vertex id="baz" eipType="to" text="baz"/>
-        <vertex id="bar" eipType="to" text="bar"/>
-        <vertex id="foo" eipType="to" text="foo"/>
+        <vertex id="baz" eipType="to" text="baz.baz()"/>
+        <vertex id="bar" eipType="to" text="bar.bar()"/>
+        <vertex id="foo" eipType="to" text="foo.foo()"/>
         <vertex id="from" eipType="from" text="direct:start"/>
     </vertices>
     <edges>

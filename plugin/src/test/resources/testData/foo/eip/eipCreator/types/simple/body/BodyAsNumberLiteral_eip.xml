@@ -3,7 +3,7 @@
         <vertex id="end" eipType="to" text="direct:end" inferredType="{java.lang.Object}"/>
         <vertex eipType="translator" text="${bodyAs(&quot;java.lang.Integer&quot;)}" inferredType="{java.lang.Object}"/>
         <vertex eipType="translator" text="${bodyAs(10)}" inferredType="{java.lang.Object}"/>
-        <vertex id="beanRef" eipType="to" text="complexModelFactory" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="beanRef" eipType="to" text="complexModelFactory.createComplexModel()" inferredType="{foo.models.ComplexModel}"/>
         <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
     </vertices>
     <edges>
