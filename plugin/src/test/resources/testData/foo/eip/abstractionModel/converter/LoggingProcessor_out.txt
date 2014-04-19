@@ -1,0 +1,7 @@
+Route(
+     From(Some(direct:start),DomReference(FromProcessorDefinition),NotInferred)
+     Bean(Some(orderFactory),Some(createOrder),DomReference(BeanDefinition),NotInferred)
+     SetBody(Simple(${body},None,ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),NotInferred)
+     Log(Some(The body is ${body}),DomReference(LogProcessorDefinition),NotInferred)
+     To(Some(direct:end),DomReference(ToProcessorDefinition),NotInferred)
+)

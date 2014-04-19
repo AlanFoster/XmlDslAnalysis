@@ -171,7 +171,9 @@ final case class Otherwise(children: List[Processor], reference:Reference, typeI
 final case class Bean(ref: Option[GenericAttributeValue[BlueprintBean]], method: Option[GenericAttributeValue[PsiMethod]], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
   val eipType: EipName = EipName.To
 }
-
+final case class Log(message: Option[String], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
+  val eipType: EipName = EipName.Misc
+}
 
 /**
  * Represents the human readable defaults associated with attributes that were not

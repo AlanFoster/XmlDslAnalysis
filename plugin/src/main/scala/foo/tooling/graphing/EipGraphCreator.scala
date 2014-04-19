@@ -83,6 +83,13 @@ class EipGraphCreator {
           createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
         /**
+         * Provides a conversion for the Log IR Model
+         */
+        case processor@Log(text, _, _) =>
+          val eipProcessor = EipProcessor(text.getOrElse(DefaultAttributes.NotValid), processor)
+          createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
+
+        /**
          * Provides a conversion for the SetBody IR Model
          */
         case processor@SetBody(Expression(expressionText), _, _) =>

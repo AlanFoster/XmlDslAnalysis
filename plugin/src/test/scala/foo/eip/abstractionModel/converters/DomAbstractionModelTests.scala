@@ -83,6 +83,13 @@ class DomAbstractionModelTests
   }
 
   /**
+   * Logging processors should be accepted
+   */
+  def testLoggingProcessor() {
+    doTest()
+  }
+
+  /**
    * Ensures the test is valid - using the test name as the configuration file
    */
   // TODO Could merge with the EipDagAssert class

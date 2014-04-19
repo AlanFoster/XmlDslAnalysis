@@ -6,5 +6,5 @@ package foo.intermediaterepresentation.model
  */
 object EipName extends Enumeration {
   type EipName = Value
-  val Route, To, From, choice, When, Translator, Otherwise = Value
+  val Route, To, From, choice, When, Translator, Misc, Otherwise = Value
 }

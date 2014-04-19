@@ -139,6 +139,12 @@ class TypePropagationTypeInference extends AbstractModelTypeInference with Reado
       to.copy(typeInformation = Inferred(typeEnvironment, typeEnvironment))
 
     /**
+     * A log message will not mutate the exchange properties
+     */
+    case log: Log =>
+      log.copy(typeInformation = Inferred(typeEnvironment, typeEnvironment))
+
+    /**
      * By default the from definition does not contain any possible type inference information
      * This could be updated within a Camel PR perhaps
      */

@@ -127,6 +127,13 @@ class DomAbstractModelConverter extends AbstractModelConverter[Blueprint] {
      Choice(abstractChildren, DomReference(domElement))
 
     /**
+     * Handle the <log message="..." /> node
+     */
+    case log: LogProcessorDefinition =>
+      val message = Option(log.getMessage.getStringValue)
+      Log(message, DomReference(log))
+
+    /**
      * Ensure we fall through safely in case there is a node we do not understand
      */
     case _ =>

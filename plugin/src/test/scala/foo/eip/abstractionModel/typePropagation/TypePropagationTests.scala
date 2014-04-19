@@ -61,6 +61,13 @@ class TypePropagationTests
   }
 
   /**
+   * Logging should not mutate the type environment
+   */
+  def testLoggingProcessor() {
+    doTest()
+  }
+
+  /**
    * Ensure that bean information propagates as expected
    */
   def testBeanReference() {
