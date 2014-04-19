@@ -167,6 +167,21 @@ class TypePropagationTypeInference extends AbstractModelTypeInference with Reado
       setHeader.copy(typeInformation = Inferred(typeEnvironment, inferredTypeEnvironment))
 
     /**
+     * Camel RemoveHeader element, remove a header if it it exists within the type environment,
+     * and the option is well defined
+     */
+    case removeHeader@RemoveHeader(headerNameOption, reference, _) =>
+      val filteredHeaders = {
+        headerNameOption match {
+          case None => typeEnvironment.headers
+          case Some(headerName) =>
+            typeEnvironment.headers.filterKeys(_ != headerName)
+        }
+      }
+      val inferredTypeEnvironment = typeEnvironment.copy(headers = filteredHeaders)
+      removeHeader.copy(typeInformation = Inferred(typeEnvironment, inferredTypeEnvironment))
+
+    /**
      * The body's type information may be updated after running through an expression element
      */
     case setBody@SetBody(expression, _, _) =>

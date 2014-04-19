@@ -42,7 +42,7 @@ class DomAbstractModelConverter extends AbstractModelConverter[Blueprint] {
     val domRoutes = root.getCamelContext.getRoutes.asScala
 
     // There is no need to traverse the given routes if there are no processor definitions
-    if (domRoutes.isEmpty || !domRoutes.head.getFrom.exists) Route(Nil, NoReference)
+    if (!root.isValid || domRoutes.isEmpty || !domRoutes.head.getFrom.exists) Route(Nil, NoReference)
     else {
       // Convert the first route by default
       val firstRoute = domRoutes.head
@@ -93,6 +93,14 @@ class DomAbstractModelConverter extends AbstractModelConverter[Blueprint] {
       val expression = convertExpression(setHeader.getExpression)
 
       SetHeader(headerName, expression, DomReference(domElement))
+
+    /**
+     * Handle the <removeHeader headerName="..." /> element
+     */
+    case removeHeader: RemoveHeaderProcessorDefinition =>
+      val headerName = Option(removeHeader.getHeaderName.getStringValue)
+
+      RemoveHeader(headerName, DomReference(domElement))
 
     /**
      * Handle bean references <bean ref="..." method="..." />

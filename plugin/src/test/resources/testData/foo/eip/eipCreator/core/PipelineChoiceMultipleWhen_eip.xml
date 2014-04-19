@@ -5,7 +5,7 @@
         <vertex id="when2" eipType="when" text="false"/>
         <vertex id="foo" eipType="to" text="direct:foo"/>
         <vertex id="when1" eipType="when" text="true"/>
-        <vertex id="choice" eipType="choice" text="choice"/>
+        <vertex id="choice" eipType="choice" text=""/>
         <vertex id="from" eipType="from" text="direct:start"/>
     </vertices>
     <edges>

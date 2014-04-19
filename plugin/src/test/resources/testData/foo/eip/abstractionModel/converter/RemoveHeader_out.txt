@@ -1,0 +1,32 @@
+Route(
+     From(Some(direct:start),DomReference(FromProcessorDefinition),NotInferred)
+     Bean(Some(orderFactory),Some(createOrder),DomReference(BeanDefinition),NotInferred)
+     SetHeader(Some(aConstant),Constant(a),DomReference(ExpressionDefinitionImpl),NotInferred)
+     SetHeader(Some(bConstant),Constant(b),DomReference(ExpressionDefinitionImpl),NotInferred)
+     SetHeader(Some(simpleHeader),Constant(a),DomReference(ExpressionDefinitionImpl),NotInferred)
+     RemoveHeader(None,DomReference(RemoveHeaderProcessorDefinition),NotInferred)
+     RemoveHeader(None,DomReference(RemoveHeaderProcessorDefinition),NotInferred)
+     RemoveHeader(Some(),DomReference(RemoveHeaderProcessorDefinition),NotInferred)
+     RemoveHeader(Some(Constant),DomReference(RemoveHeaderProcessorDefinition),NotInferred)
+     RemoveHeader(Some(b),DomReference(RemoveHeaderProcessorDefinition),NotInferred)
+     RemoveHeader(Some(bConstant),DomReference(RemoveHeaderProcessorDefinition),NotInferred)
+     Choice(
+          When(Constant(true))(
+               SetHeader(Some(unionInformation),Simple(${body},None,ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),NotInferred)
+          )
+          When(Constant(true))(
+               RemoveHeader(Some(simpleHeader),DomReference(RemoveHeaderProcessorDefinition),NotInferred)
+          )
+     )
+     SetHeader(Some(beforeChoice),Constant(true),DomReference(ExpressionDefinitionImpl),NotInferred)
+     Choice(
+          When(Simple(${headers.beforeChoice},None,ExpressionReference(XmlTag:simple)))(
+               SetHeader(Some(other),Simple(${body},None,ExpressionReference(XmlTag:simple)),DomReference(ExpressionDefinitionImpl),NotInferred)
+               RemoveHeader(Some(beforeChoice),DomReference(RemoveHeaderProcessorDefinition),NotInferred)
+          )
+          When(Simple(${headers.beforeChoice},None,ExpressionReference(XmlTag:simple)))(
+               RemoveHeader(Some(beforeChoice),DomReference(RemoveHeaderProcessorDefinition),NotInferred)
+          )
+     )
+     To(Some(direct:bar),DomReference(ToProcessorDefinition),NotInferred)
+)

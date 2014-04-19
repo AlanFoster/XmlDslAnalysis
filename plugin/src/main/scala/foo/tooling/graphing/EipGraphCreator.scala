@@ -69,10 +69,17 @@ class EipGraphCreator {
          * Provides a conversion for the SetHeader IR Model
          */
         case processor@SetHeader(headerNameOption, Expression(expressionValue), _, _) =>
-          val eipProcessor = headerNameOption match {
-            case Some(headerName) => EipProcessor(headerName + " -> " + expressionValue, processor)
-            case None => EipProcessor(DefaultAttributes.headerName, processor)
-          }
+          val headerText = headerNameOption.map(_ + " -> " + expressionValue).getOrElse(DefaultAttributes.EmptyHeaderName)
+          val eipProcessor = EipProcessor(headerText, processor)
+
+          createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
+
+        /**
+         * Match a removeHeader element
+         */
+        case processor@RemoveHeader(headerNameOption, _, _) =>
+          val headerName = headerNameOption.getOrElse(DefaultAttributes.EmptyHeaderName)
+          val eipProcessor = EipProcessor(headerName, processor)
           createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
         /**
@@ -93,7 +100,7 @@ class EipGraphCreator {
          * Provides a conversion for the Bean IR Model
          */
         case processor@Bean(beanReference, _, _, _) =>
-          val beanText = beanReference.map(_.getStringValue).getOrElse("Not Specified")
+          val beanText = beanReference.map(_.getStringValue).getOrElse(DefaultAttributes.NotValid)
           val eipProcessor = EipProcessor(beanText, processor)
           createEipGraph(List(eipProcessor), tail, linkGraph(previous, eipProcessor, graph))
 
@@ -101,7 +108,7 @@ class EipGraphCreator {
          * Provides a conversion for the Choice IR Model
          */
         case choice@Choice(whens, _, _) =>
-          val choiceEipProcessor = EipProcessor("choice", choice)
+          val choiceEipProcessor = EipProcessor("", choice)
           val linkedGraph = linkGraph(previous, choiceEipProcessor, graph)
 
           // TODO When node should have its own vertex, with a text box with its predicate

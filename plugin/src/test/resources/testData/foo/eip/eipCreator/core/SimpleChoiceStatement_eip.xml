@@ -4,7 +4,7 @@
         <vertex id="secondWhen" eipType="when" text="${body.bar} == &quot;bar&quot;"/>
         <vertex id="processorFoo" eipType="to" text="direct:processorFoo"/>
         <vertex id="firstWhen" eipType="when" text="${body.foo} == &quot;foo&quot;"/>
-        <vertex id="choice" eipType="choice" text="choice"/>
+        <vertex id="choice" eipType="choice" text=""/>
         <vertex id="from" eipType="from" text="direct:start"/>
     </vertices>
     <edges>

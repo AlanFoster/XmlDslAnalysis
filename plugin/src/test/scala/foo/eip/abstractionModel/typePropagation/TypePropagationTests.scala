@@ -96,6 +96,13 @@ class TypePropagationTests
   }
 
   /**
+   * Ensure that RemoveHeader is handled as expected
+   */
+  def testRemoveHeader() {
+    doTest()
+  }
+
+  /**
    * Ensures the test is valid - using the test name as the configuration file
    */
   // TODO Could merge with the EipDagAssert class

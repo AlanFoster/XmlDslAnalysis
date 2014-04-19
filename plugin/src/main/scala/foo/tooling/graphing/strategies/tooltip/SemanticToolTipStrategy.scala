@@ -12,13 +12,15 @@ class SemanticToolTipStrategy extends ToolTipStrategy {
    * @param component The given EIP Processor component
    * @return A human readable string
    */
-  override def createTooltip(component: EipProcessor): String =
+  override def createTooltip(component: EipProcessor): String = {
+    val componentName = component.processor.prettyName
     // Concatenate the type information and EipComponent's specific text  value
     s"""<html>
-            |${component.text}<br />
+            |<u>${componentName}</u> ${component.text}<br />
             |Input Body Types: ${component.processor.bodies.map(_.toList.sortBy(identity).mkString("{", ", ", "}")).getOrElse("{}")}<br />
             |Output Body Types: ${component.processor.outBodies.map(_.toList.sortBy(identity).mkString("{", ", ", "}")).getOrElse("{}")}<br />
             |Input Headers: ${component.processor.headers.map(_.keys.toList.sortBy(identity).mkString("{", ", ", "}")).getOrElse("{}")}<br />
             |Output Headers: ${component.processor.outHeaders.map(_.keys.toList.sortBy(identity).mkString("{", ", ", "}")).getOrElse("{}")}<br />
             |</html>""".stripMargin
+  }
 }

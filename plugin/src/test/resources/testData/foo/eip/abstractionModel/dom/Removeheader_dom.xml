@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:camel="http://camel.apache.org/schema/blueprint"
+           xsi:schemaLocation="
+       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+    <bean class="foo.factory.OrderFactory" id="orderFactory" />
+    <bean class="foo.factory.PersonFactory" id="personFactory" />
+    <bean class="foo.factory.ComplexModelFactory" id="complexFactory" />
+
+    <camelContext trace="true" xmlns="http://camel.apache.org/schema/blueprint">
+        <route>
+            <from id="from" uri="direct:start"/>
+
+            <bean ref="orderFactory" method="createOrder"/>
+
+            <setHeader headerName="aConstant">
+                <constant>a</constant>
+            </setHeader>
+            <setHeader headerName="bConstant">
+                <constant>b</constant>
+            </setHeader>
+            <setHeader headerName="simpleHeader">
+                <constant>a</constant>
+            </setHeader>
+
+            <removeHeader/>
+            <removeHeader headerName/>
+            <removeHeader headerName=""/>
+
+            <removeHeader headerName="Constant"/>
+            <removeHeader headerName="b"/>
+            <removeHeader headerName="bConstant"/>
+
+            <choice>
+                <when>
+                    <constant>true</constant>
+                    <setHeader headerName="unionInformation">
+                        <simple>${body}</simple>
+                    </setHeader>
+                </when>
+                <when>
+                    <constant>true</constant>
+                    <removeHeader headerName="simpleHeader"/>
+                </when>
+            </choice>
+
+            <setHeader headerName="beforeChoice">
+                <constant>true</constant>
+            </setHeader>
+            <choice>
+                <when>
+                    <simple>${headers.beforeChoice}</simple>
+                    <setHeader headerName="other">
+                        <simple>${body}</simple>
+                    </setHeader>
+                    <removeHeader headerName="beforeChoice"/>
+                </when>
+                <when>
+                    <simple>${headers.beforeChoice}</simple>
+                    <removeHeader headerName="beforeChoice"/>
+                </when>
+            </choice>
+
+
+            <to id="bar" uri="direct:bar"/>
+        </route>
+    </camelContext>
+</blueprint>

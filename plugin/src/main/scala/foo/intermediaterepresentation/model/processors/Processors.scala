@@ -16,16 +16,50 @@ import foo.intermediaterepresentation.model.EipName.EipName
  * possible cases.
  */
 sealed trait Processor extends Mappable[Processor] {
+  /**
+   * The associated type information with this processor
+   */
   val typeInformation: TypeInformation
+
+  /**
+   * A reference to the representation that this Processor was
+   * originated from
+   */
   val reference: Reference
+
+  /**
+   * The high level EipType associated with this Processor.
+   * More commonly this will be equal to the Translator Eip
+   */
   val eipType: EipName
 
+  /**
+   * The pretty name of this Processor
+   * @return The human readable String associated with this Processor
+   *          for instance, SetHeader -> Set Header
+   */
+  lazy val prettyName: String = {
+    val simpleName = getClass.getSimpleName
+    val prettyName = simpleName.map(c =>
+      if(c.isUpper) " " + c else c.toString
+    ).mkString.tail
+    prettyName
+  }
+
+  /**
+   * @return The before environment type information associated
+   *         with this processor
+   */
   def before: Option[TypeEnvironment] = typeInformation match {
     case Inferred(before, _) =>
       Option(before)
     case _ => None
   }
 
+  /**
+   * @return The after environment type information associated
+   *         with this processor
+   */
   def after: Option[TypeEnvironment] = typeInformation match {
     case Inferred(_, after) =>
       Option(after)
@@ -116,6 +150,9 @@ final case class From(uri: Option[String], reference:Reference, typeInformation:
 final case class To(uri: Option[String], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
   val eipType: EipName = EipName.To
 }
+final case class RemoveHeader(headerName: Option[String], reference: Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
+  val eipType: EipName = EipName.Translator
+}
 final case class SetBody(expression: Expression, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
   val eipType: EipName = EipName.Translator
 }
@@ -141,6 +178,7 @@ final case class Bean(ref: Option[GenericAttributeValue[BlueprintBean]], method:
  * successfully set as expected.
  */
 object DefaultAttributes {
-  val uri = "error:unexpected"
-  val headerName = "Not Inferrable"
+  val NotValid = "[Empty]"
+  val uri = "error:" + NotValid
+  val EmptyHeaderName = NotValid
 }

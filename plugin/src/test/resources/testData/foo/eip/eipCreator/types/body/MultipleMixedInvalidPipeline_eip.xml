@@ -5,7 +5,7 @@
         <vertex id="headerFive" eipType="translator" text="a -&gt; true" inferredType="{foo.models.OrderModel}"/>
         <vertex id="beanFour" eipType="to" text="orderFactory" inferredType="{foo.models.OrderModel}"/>
         <vertex id="headerFour" eipType="translator" text="b -&gt; true" inferredType="{java.lang.Object}"/>
-        <vertex id="beanThreeInvalid" eipType="to" text="Not Specified" inferredType="{java.lang.Object}"/>
+        <vertex id="beanThreeInvalid" eipType="to" text="[Empty]" inferredType="{java.lang.Object}"/>
         <vertex id="headerThree" eipType="translator" text="c -&gt; true" inferredType="{foo.models.PersonModel}"/>
         <vertex id="beanThree" eipType="to" text="personFactory" inferredType="{foo.models.PersonModel}"/>
         <vertex id="setBodyInvalid" eipType="translator" text="${body}" inferredType="{java.lang.Object}"/>
