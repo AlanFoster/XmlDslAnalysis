@@ -11,6 +11,7 @@ import foo.tooling.graphing.ADT.Edge
 import foo.tooling.graphing.EipProcessor
 import foo.tooling.graphing.strategies.tooltip.ToolTipStrategy
 import foo.tooling.graphing.strategies.icons.EipIconLoader
+import foo.FunctionalUtil._
 
 /**
  * The graph presentation model deals with edges/nodes drawing etc.
@@ -61,10 +62,12 @@ class CamelGraphPresentationModel(graph: Graph, project: Project,
    * The layout mechanism associated with this graph instance
    */
   lazy val getLayouter = {
-    val layouter = GraphManager.getGraphManager.createHierarchicGroupLayouter()
-    layouter.setMinimalNodeDistance(80)
-    layouter.setMinimalLayerDistance(50)
-    layouter.setOrientationLayouterEnabled(true)
+    val layouter = mutate(GraphManager.getGraphManager.createHierarchicGroupLayouter())(
+      _.setMinimalNodeDistance(150),
+      _.setMinimalLayerDistance(100),
+      _.setOrientationLayouterEnabled(true)
+    )
+
     layouter
   }
 
@@ -125,13 +128,13 @@ class CamelGraphPresentationModel(graph: Graph, project: Project,
    * @return The edge realizer associated with this edge
    */
   override def getEdgeRealizer(edge: Edge[EipProcessor, String]): EdgeRealizer = {
-    val edgeRealizer = GraphManager.getGraphManager.createPolyLineEdgeRealizer()
-    edgeRealizer.setSmoothedBends(true)
-    edgeRealizer.setLineType(LineType.LINE_1)
-    edgeRealizer.setLineColor(Color.DARK_GRAY)
-    edgeRealizer.setSourceArrow(Arrow.NONE)
-    edgeRealizer.setTargetArrow(Arrow.STANDARD)
-
+    val edgeRealizer = mutate(GraphManager.getGraphManager.createPolyLineEdgeRealizer())(
+      _.setSmoothedBends(true),
+      _.setLineType(LineType.LINE_1),
+      _.setLineColor(Color.DARK_GRAY),
+      _.setSourceArrow(Arrow.NONE),
+      _.setTargetArrow(Arrow.STANDARD)
+    )
     edgeRealizer
   }
 
