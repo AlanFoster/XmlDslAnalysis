@@ -9,7 +9,7 @@ import junit.framework.Assert
 import javax.swing.{WindowConstants, JFrame}
 import org.apache.commons.lang.time.DurationFormatUtils
 
-class LoadingTests
+class GraphTests
   extends LightCodeInsightFixtureTestCase
   with TestBase
   with JavaJDK1_7TestBase
