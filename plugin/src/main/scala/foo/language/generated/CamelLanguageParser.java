@@ -217,16 +217,9 @@ public class CamelLanguageParser implements PsiParser {
   }
 
   /* ********************************************************** */
-  // camelInterpolation*
+  // camelInterpolation
   static boolean camel_file(PsiBuilder builder_, int level_) {
-    if (!recursion_guard_(builder_, level_, "camel_file")) return false;
-    int pos_ = current_position_(builder_);
-    while (true) {
-      if (!camelInterpolation(builder_, level_ + 1)) break;
-      if (!empty_element_parsed_guard_(builder_, "camel_file", pos_)) break;
-      pos_ = current_position_(builder_);
-    }
-    return true;
+    return camelInterpolation(builder_, level_ + 1);
   }
 
   /* ********************************************************** */

@@ -29,7 +29,7 @@ LINE_WS=[\ \t\f]
 WHITE_SPACE=({LINE_WS}|{EOL})+
 
 IDENTIFIER=[a-zA-Z_$]([a-zA-Z_$0-9])*
-NUMBER=[:digit:]+
+NUMBER=[0-9]+("."[0-9]+)?
 STRING=\"[^\"]*\"?|'[^\']*'?
 
 %%
