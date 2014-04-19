@@ -3,7 +3,7 @@ package foo.intermediaterepresentation.model
 import foo.dom.Model.{ProcessorDefinition, Blueprint}
 import com.intellij.psi.xml.XmlTag
 import foo.intermediaterepresentation.converter.DomAbstractModelConverter
-import foo.intermediaterepresentation.typeInference.DataFlowTypeInference
+import foo.intermediaterepresentation.typeInference.TypePropagationTypeInference
 import foo.intermediaterepresentation.model.references.DomReference
 import foo.intermediaterepresentation.model.processors.{Route, Processor}
 import foo.intermediaterepresentation.model.types.TypeEnvironment
@@ -66,7 +66,7 @@ object AbstractModelManager {
     // Instantiate the methods of creating an abstract dom model and semantic information for later DI
     // IE, this converts to an IR and then performs type inference on the structure
     val modelConverter = new DomAbstractModelConverter()
-    val dataFlowInference = new DataFlowTypeInference()
+    val dataFlowInference = new TypePropagationTypeInference()
 
     // Apply the transformation
     // firstly creating the IR representation, then applying the more expensive type inference

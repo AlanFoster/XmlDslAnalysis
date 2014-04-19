@@ -6,7 +6,7 @@ import foo.dom.DomFileAccessor
 import foo.intermediaterepresentation.converter.DomAbstractModelConverter
 import foo.intermediaterepresentation.model.AbstractModelPrinter
 import junit.framework.Assert
-import foo.intermediaterepresentation.typeInference.DataFlowTypeInference
+import foo.intermediaterepresentation.typeInference.TypePropagationTypeInference
 
 /**
  * Tests to ensure that type propagation occurs as expected within the abstract model
@@ -112,7 +112,7 @@ class TypePropagationTests
 
     // Create and pretty print the produced Eip DAG for the given DOM file
     val route = new DomAbstractModelConverter().convert(loadedDomFile)
-    val routeWithSemantics = new DataFlowTypeInference().performTypeInference(route)
+    val routeWithSemantics = new TypePropagationTypeInference().performTypeInference(route)
     val serialized = AbstractModelPrinter.print(routeWithSemantics)
 
     // Assert Equals - Note, IntelliJ will provide a nice comparison tool in failure scenarios

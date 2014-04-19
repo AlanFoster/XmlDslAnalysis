@@ -23,7 +23,7 @@ import CoreConstants._
  * by using the concept of type information 'flowing' between
  * processors, and unioning their type information.
  */
-class DataFlowTypeInference extends AbstractModelTypeInference with ReadonlyTypeEnvironment {
+class TypePropagationTypeInference extends AbstractModelTypeInference with ReadonlyTypeEnvironment {
 
   /**
    * Performs type inference on the given model
