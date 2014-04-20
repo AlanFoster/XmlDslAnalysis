@@ -18,16 +18,23 @@ object InstallDependencies {
 
     val configuration = getConfiguration(args)
 
-	println(s"Attempting install with the following information\n\t-version ${configuration.intellijVersion} -intellijPath ${configuration.intellijPath}");
-	
+    println(s"Attempting install with the following information\n\t-version ${configuration.intellijVersion} -intellijPath ${configuration.intellijPath}");
+
     def installJar(path: Path, groupId: String, artifactId: String, version: String) {
       // Output SBT information
       println(s""""${groupId}" % "${artifactId}" % "${version}",""")
 
       println(s"Installing .. groupId: ${groupId}, artifactId: ${artifactId}, version: ${version}, path : ${path}")
-      val mvnCommand = s"""cmd /c mvn install:install-file -Dfile="${path}" -DgroupId=${groupId} -DartifactId=$artifactId -Dversion=${version} -Dpackaging=jar"""
+      val os = System.getProperty("os.name")
+      val mvnCommand = s"""mvn install:install-file -Dfile="${path}" -DgroupId=${groupId} -DartifactId=$artifactId -Dversion=${version} -Dpackaging=jar"""
+
+      val osCommand =
+        if(os == "Linux") mvnCommand
+        else if(os.contains("Windows")) s"""cmd /c ${mvnCommand}"""
+        else ???
+
       // Invoke the maven command process
-      mvnCommand ! CommandLineProcessLogger()
+      osCommand ! CommandLineProcessLogger()
     }
 
     configuration match {
@@ -111,10 +118,10 @@ object Input {
 
 // Builders
 case class InputBuilder[C, T](
-                       argNames: List[String],
-                       debugText: String = "",
-                       isRequired: Boolean = false,
-                       configurer: (C, T) => C = (c: C, _: T) => c) {
+                               argNames: List[String],
+                               debugText: String = "",
+                               isRequired: Boolean = false,
+                               configurer: (C, T) => C = (c: C, _: T) => c) {
 
   private def updateIsRequired(newIsRequired: Boolean) = copy(isRequired = newIsRequired)
 
