@@ -21,7 +21,7 @@ class ChainedMethodContribution
   /**
    * {@inheritdoc}
    */
-  override def getTestDataPath: String = testDataMapper("/foo/language/contribution/body/ChainedMethodContribution")
+  override def getTestDataPath: String = testDataMapper("/foo/language/contribution/body/chainedMethodContribution")
 
   /**
    * Definitions for test

@@ -72,7 +72,7 @@ class FunctionAnnotatorTests
   }
 
   private def doTest() {
-    val testName = getTestName(true)
+    val testName = getTestName(false)
 
     // Load the file and the expected errors with the given naming convention
     val loadedFile = s"${testName}.${LanguageConstants.extension}"
