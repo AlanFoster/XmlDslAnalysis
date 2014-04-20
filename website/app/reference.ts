@@ -5,6 +5,7 @@
 /// <reference path="ts/controllers/LoginController.ts" />
 /// <reference path="ts/controllers/featuresController.ts" />
 /// <reference path="ts/controllers/overviewController.ts" />
+/// <reference path="ts/directives/docImageDirective.ts" />
 /// <reference path="ts/directives/fileDropDirective.ts" />
 /// <reference path="ts/directives/menuDirective.ts" />
 /// <reference path="ts/directives/tagDirective.ts" />

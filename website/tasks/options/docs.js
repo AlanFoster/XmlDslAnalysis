@@ -87,7 +87,8 @@ module.exports = {
                     flatten: true,
                     src: [
                         // Images
-                        "./../docs_images/**"
+                        "./../docs_images/**",
+                        "./../plugin/documentation/**"
                     ],
                     dest: "./app/docs_images/",
                     filter: "isFile"

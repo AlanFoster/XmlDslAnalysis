@@ -87,6 +87,19 @@ docsApp.controller("featuresController", function ($scope, featureService, toast
 });
 docsApp.controller("overviewController", function ($scope) {
 });
+docsApp.directive("docImg", function ($location) {
+    var definition = {
+        restrict: 'A',
+        scope: {},
+        link: function (scope, element, attrs) {
+            var src = element.attr("src");
+
+            var newSrc = "docs_images/" + src.replace(/^.*[\\\/]/, '');
+            element.attr("src", newSrc);
+        }
+    };
+    return definition;
+});
 "use strict";
 
 docsApp.directive("imageUploader", function () {
