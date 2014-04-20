@@ -8,33 +8,27 @@ Apache Camel is an open source integration framework which provides various DSLs
 
 This plugin provides support for the XML DSL provided by Apache Camel, which can be seen below
 
+	<route>
+		<from uri="direct:entry"/>
 
-     <route>
-        <from uri="direct:input"/>
-        <choice>
-            <when>
-                <simple>${body.age} < 3</simple>
-                <to uri="direct:freeEntry"/>
-            </when>
-            <when>
-                <simple>${body.age} < 18</simple>
-                <to uri="direct:childFare"/>
-            </when>
-            <when>
-                <simple>${body.age} > 65</simple>
-                <to uri="direct:oapFare"/>
-            </when>
-            <otherwise>
-                <to uri="direct:adultFare"/>
-            </otherwise>
-        </choice>
-    </route>
+		<bean ref="orderFactory" method="createOrder" />
 
+		<choice>
+			<when>
+				<simple>${body.orderType} == "Gizmo"</simple>
+				<to uri="direct:gizmo-queue" />
+			</when>
+			<when>
+				<simple>${body.getOrderType} == "Gadget"</simple>
+				<to uri="direct:gadget-queue" />
+			</when>
+		</choice>
+	</route>
 
 Within the context of Enterprise Integration Patterns, the above could be visualised as the following - 
 
-<div class="text-center">
-    <img src="docs_images/routeExample.png" alt="CBR Example" doc-img />
+<div class="text-center" align="center">
+	<div><img src="docs_images/routeExample.png" alt="CBR Example" doc-img /></div>
 </div>
 
 Before / After
@@ -44,20 +38,20 @@ By default there is no tooling available for Apache Camel's simple, for instance
 
 Such a mistake would not be known about until either runtime or deploy time, and the worst time to find out about mistakes is within production!
 
-<div style="text-align:center" class="text-center">
+<div class="text-center" align="center">
 	<div><img src="docs_images/codeExample_before.png" alt="Broken code - Incorrect arguments" doc-img /></div>
 	*Without the plugin - plain text language support*
 </div>
 
 After the plugin has been installed we can see the problem more clearly with syntax highlighting and type checking working successfully
 
-<div style="text-align:center" class="text-center">
+<div class="text-center" align="center">
 	<div><img alt="Broken code - Incorrect arguments" src="docs_images/CodeExample_typeInformation.png" doc-img /></div>
 	*With the plugin - The argument's type information is wrong!*
 </div>
 
 
-<div style="text-align:center" class="text-center">
+<div class="text-center" align="center">
 	<div><img alt="Broken code - Type param" src="docs_images/CodeExample_typeParam.png" doc-img /></div>
 	*After using `ctrl+p` we can see that our arguments are backwards!*
 </div>
