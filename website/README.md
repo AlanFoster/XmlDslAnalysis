@@ -33,6 +33,7 @@ Ensure that GruntJS cli has been additionally installed globally via NPM, so tha
 
 ###### Setup
 
+######### Windows
 - Download MongoDB 2.4.9
 - Extract to wherever you wish, ie `C:/`
 - Execute
@@ -42,6 +43,15 @@ Ensure that GruntJS cli has been additionally installed globally via NPM, so tha
     > mongod --dbpath .\..\pluginWebsite\data
 
 - It should be running with `waiting for connections on port XXXXX`
+
+######### Linux
+- Follow the instructions from http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
+  The following commands are useful
+
+        sudo service mongod start
+        sudo service mongod stop
+        sudo service mongod restart
+- Remember that the security config is in `/etc/mongodb.conf` by default
 
 ###### Verification
 
