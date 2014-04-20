@@ -93,6 +93,6 @@ Edit the `./idea_modules/StaticAnalysis.iml` file to contain the following heade
 
 Ensure that you are using the intellij SDK within your project. This menu is accessible with `ctrl+alt+s`
 
-![Updating JDK](documentation/installSDK.png)
+<img src="documentation/installSDK.png" alt="Update SDK" doc-img />
 
 
