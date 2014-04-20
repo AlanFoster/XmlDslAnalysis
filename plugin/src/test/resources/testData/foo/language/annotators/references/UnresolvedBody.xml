@@ -9,7 +9,7 @@
 <camelContext trace="true" xmlns="<error descr="URI is not registered (Settings | Project Settings | Schemas and DTDs)">http://camel.apache.org/schema/blueprint</error>">
 <route>
 <setBody id="setBody">
-    <simple>${<weak_warning descr="Unresolved Reference - Potentially valid">body</weak_warning>}</simple>
+    <simple>${<weak_warning descr="Unresolved Reference - Potentially Invalid">body</weak_warning>}</simple>
 </setBody>
 </route>
         </camelContext>

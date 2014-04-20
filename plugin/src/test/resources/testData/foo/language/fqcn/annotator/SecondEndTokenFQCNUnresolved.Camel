@@ -1,1 +1,1 @@
-${bodyAs(java.<weak_warning descr="Unresolved Reference - Potentially valid">foo</weak_warning>.<weak_warning descr="Unresolved Reference - Potentially valid">MissingReference</weak_warning>)}
+${bodyAs(java.<weak_warning descr="Unresolved Reference - Potentially Invalid">foo</weak_warning>.<weak_warning descr="Unresolved Reference - Potentially Invalid">MissingReference</weak_warning>)}
