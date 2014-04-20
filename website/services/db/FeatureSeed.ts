@@ -112,6 +112,23 @@ var features = <any> [
             DefaultTags.JAVA,
             DefaultTags.XML
         ]
+    },
+    {
+        title: "Body Code Completion",
+        date: 7,
+        images: [
+            {
+                location: "images/BodySuggestion.png",
+                title: "Body Code Completion",
+                description: "Code inference in a body pipeline"
+            }
+        ],
+        tags: [
+            DefaultTags.CODE_COMPLETION,
+            DefaultTags.SIMPLE,
+            DefaultTags.JAVA,
+            DefaultTags.XML
+        ]
     }
 ];
 
