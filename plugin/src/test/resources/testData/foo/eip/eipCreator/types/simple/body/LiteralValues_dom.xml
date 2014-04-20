@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:camel="http://camel.apache.org/schema/blueprint"
+           xsi:schemaLocation="
+       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+    <bean class="foo.factory.OrderFactory" id="orderFactory"/>
+    <bean class="foo.factory.PersonFactory" id="personFactory"/>
+    <bean class="foo.factory.ComplexModelFactory" id="complexModelFactory"/>
+
+    <camelContext trace="true" xmlns="http://camel.apache.org/schema/blueprint">
+        <route>
+            <from id="from" uri="direct:start"/>
+
+            <!-- Set the body as the model -->
+            <bean id="beanRef" ref="complexModelFactory" method="createComplexModel" />
+
+            <setBody id="doubleFoo">
+                <simple>"foo"</simple>
+            </setBody>
+
+            <setBody id="singleFoo">
+                <simple>'foo'</simple>
+            </setBody>
+
+            <setBody id="integer">
+                <simple>10</simple>
+            </setBody>
+
+            <setBody id="floatOrDouble">
+                <simple>10.23</simple>
+            </setBody>
+
+            <setBody id="malformedFloatOrDouble">
+                <simple>.23</simple>
+            </setBody>
+
+            <setBody id="nullValue">
+                <simple>null</simple>
+            </setBody>
+
+            <to id="final" uri="direct:final"/>
+        </route>
+    </camelContext>
+</blueprint>

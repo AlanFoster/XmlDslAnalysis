@@ -52,7 +52,15 @@ public class CamelVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitNully(@NotNull CamelNully o) {
+    visitPsiElement(o);
+  }
+
   public void visitOperator(@NotNull CamelOperator o) {
+    visitPsiElement(o);
+  }
+
+  public void visitTruthy(@NotNull CamelTruthy o) {
     visitPsiElement(o);
   }
 

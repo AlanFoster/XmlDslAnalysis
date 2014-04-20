@@ -51,6 +51,9 @@
     IDENTIFIER="regexp:[a-zA-Z_$]([a-zA-Z_$0-9])*"
 
     NUMBER="regexp:\d+(\.\d+)?"
+    TRUE="true"
+    FALSE="false'"
+    NULL="regexp:null"
 
     STRING="regexp:\"[^\"]*\"?|'[^\']*'?"
 
@@ -70,7 +73,10 @@ private camelInterpolation ::=  expression
 expression ::=  camel_expression | literal
 
 // Represents literals, ie numbers, strings
-literal ::= NUMBER | STRING
+literal ::= NUMBER | STRING | truthy | nully
+
+truthy ::= TRUE | FALSE
+nully ::= NULL
 
 // A top level Camel expression such as `${foo} == ${bar}`
 camel_expression ::=

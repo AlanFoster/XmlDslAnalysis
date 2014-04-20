@@ -1,0 +1,23 @@
+<eipDag>
+    <vertices>
+        <vertex eipType="to" text="direct:final" inferredType="{java.lang.Boolean}"/>
+        <vertex id="literalComparisonBody" eipType="translator" text="true == true" inferredType="{java.lang.Boolean}"/>
+        <vertex id="truthBodyFalse" eipType="translator" text="false" inferredType="{java.lang.Boolean}"/>
+        <vertex id="comparisonBody" eipType="translator" text="${body} == ${headers.foo}" inferredType="{java.lang.Boolean}"/>
+        <vertex id="bodyWithAttribute" eipType="translator" text="false" inferredType="{java.lang.Boolean}"/>
+        <vertex id="falseHeader" eipType="translator" text="foo -&gt; false" inferredType="{java.lang.Boolean}"/>
+        <vertex id="truthBodyTrue" eipType="translator" text="true" inferredType="{java.lang.Boolean}"/>
+        <vertex id="beanRef" eipType="to" text="complexModelFactory.createComplexModel()" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
+    </vertices>
+    <edges>
+        <edge source="literalComparisonBody" edgeConnection="literalComparisonBody_null7"/>
+        <edge source="truthBodyFalse" target="literalComparisonBody" edgeConnection="truthBodyFalse_literalComparisonBody6"/>
+        <edge source="comparisonBody" target="truthBodyFalse" edgeConnection="comparisonBody_truthBodyFalse5"/>
+        <edge source="bodyWithAttribute" target="comparisonBody" edgeConnection="bodyWithAttribute_comparisonBody4"/>
+        <edge source="falseHeader" target="bodyWithAttribute" edgeConnection="falseHeader_bodyWithAttribute3"/>
+        <edge source="truthBodyTrue" target="falseHeader" edgeConnection="truthBodyTrue_falseHeader2"/>
+        <edge source="beanRef" target="truthBodyTrue" edgeConnection="beanRef_truthBodyTrue1"/>
+        <edge source="from" target="beanRef" edgeConnection="from_beanRef0"/>
+    </edges>
+</eipDag>

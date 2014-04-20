@@ -59,7 +59,7 @@ class UnresolvedReferenceAnnotator extends Annotator {
   private def annotateUnresolved(element: PsiElement, holder: AnnotationHolder, psiReference: PsiReference) {
     val rangeInDocument = addTextRanges(element.getTextRange, psiReference.getRangeInElement)
     holder
-      .createWeakWarningAnnotation(rangeInDocument, "Unresolved Reference - Potentially valid")
+      .createWeakWarningAnnotation(rangeInDocument, "Unresolved Reference - Potentially Invalid")
       .setTextAttributes(CamelTextAttributeKeys.UNRESOLVED_REFERENCE)
   }
 

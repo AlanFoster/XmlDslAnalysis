@@ -44,6 +44,18 @@ class CamelSimpleTypeChecker extends SimpleTypeChecker with ReadonlyTypeEnvironm
       }
 
     /**
+     * Camel Literals - IE numbers, string, truthy values etc.
+     * These represent the axioms within the type checking rules.
+     */
+    case literal:CamelLiteral =>
+
+     if(literal.getTruthy != null) Some(Set(CommonClassNames.JAVA_LANG_BOOLEAN))
+     else if(literal.getString != null) Some(Set(CommonClassNames.JAVA_LANG_STRING))
+     else if(literal.getNumber != null) Some(Set(CommonClassNames.JAVA_LANG_DOUBLE))
+     else if(literal.getNully != null) Some(Set(CommonClassNames.JAVA_LANG_OBJECT))
+     else None
+
+    /**
      * Performs type checking on the given camel CamelExpression element
      * IE this consists of either a literal or a camel expression
      */

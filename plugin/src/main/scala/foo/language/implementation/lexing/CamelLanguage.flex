@@ -30,6 +30,9 @@ WHITE_SPACE=({LINE_WS}|{EOL})+
 
 IDENTIFIER=[a-zA-Z_$]([a-zA-Z_$0-9])*
 NUMBER=[0-9]+("."[0-9]+)?
+TRUE="true"
+FALSE="false"
+NULL="null"
 STRING=\"[^\"]*\"?|'[^\']*'?
 
 %%
@@ -63,9 +66,13 @@ STRING=\"[^\"]*\"?|'[^\']*'?
     "(" { return CamelTypes.LEFT_PAREN; }
     ")" { return CamelTypes.RIGHT_PAREN; }
 
-    {IDENTIFIER}              { return CamelTypes.IDENTIFIER; }
     {STRING}              { return CamelTypes.STRING; }
     {NUMBER}              { return CamelTypes.NUMBER; }
+    {TRUE}              { return CamelTypes.TRUE; }
+    {FALSE}              { return CamelTypes.FALSE; }
+    {NULL}              { return CamelTypes.NULL; }
+
+    {IDENTIFIER}              { return CamelTypes.IDENTIFIER; }
 
     [^] { return TokenType.BAD_CHARACTER; }
 }

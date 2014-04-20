@@ -22,13 +22,16 @@ public interface CamelTypes {
   IElementType FUNCTION_CALL = new CamelElementType("FUNCTION_CALL");
   IElementType FUNCTION_NAME = new CamelElementType("FUNCTION_NAME");
   IElementType LITERAL = new CamelElementType("LITERAL");
+  IElementType NULLY = new CamelElementType("NULLY");
   IElementType OPERATOR = new CamelElementType("OPERATOR");
+  IElementType TRUTHY = new CamelElementType("TRUTHY");
   IElementType VARIABLE_ACCESS = new CamelElementType("VARIABLE_ACCESS");
 
   IElementType AND_AND = new CamelTokenType("&&");
   IElementType COMMA = new CamelTokenType(",");
   IElementType DOT = new CamelTokenType(".");
   IElementType EQ_EQ = new CamelTokenType("==");
+  IElementType FALSE = new CamelTokenType("false'");
   IElementType FUNC_BEGIN = new CamelTokenType("${");
   IElementType FUNC_END = new CamelTokenType("}");
   IElementType GT = new CamelTokenType(">");
@@ -38,12 +41,14 @@ public interface CamelTypes {
   IElementType LEFT_SQUARE_BRACE = new CamelTokenType("[");
   IElementType LT = new CamelTokenType("<");
   IElementType LT_EQ = new CamelTokenType("<=");
+  IElementType NULL = new CamelTokenType("NULL");
   IElementType NUMBER = new CamelTokenType("NUMBER");
   IElementType OR_OR = new CamelTokenType("||");
   IElementType QUESTION_MARK = new CamelTokenType("?");
   IElementType RIGHT_PAREN = new CamelTokenType(")");
   IElementType RIGHT_SQUARE_BRACE = new CamelTokenType("]");
   IElementType STRING = new CamelTokenType("STRING");
+  IElementType TRUE = new CamelTokenType("true");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
@@ -78,8 +83,14 @@ public interface CamelTypes {
       else if (type == LITERAL) {
         return new CamelLiteralImpl(node);
       }
+      else if (type == NULLY) {
+        return new CamelNullyImpl(node);
+      }
       else if (type == OPERATOR) {
         return new CamelOperatorImpl(node);
+      }
+      else if (type == TRUTHY) {
+        return new CamelTruthyImpl(node);
       }
       else if (type == VARIABLE_ACCESS) {
         return new CamelVariableAccessImpl(node);

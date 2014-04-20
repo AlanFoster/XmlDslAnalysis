@@ -14,39 +14,21 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import foo.language.generated.psi.*;
 import foo.language.psi.Util;
 
-public class CamelLiteralImpl extends ASTWrapperPsiElement implements CamelLiteral {
+public class CamelNullyImpl extends ASTWrapperPsiElement implements CamelNully {
 
-  public CamelLiteralImpl(ASTNode node) {
+  public CamelNullyImpl(ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
-    if (visitor instanceof CamelVisitor) ((CamelVisitor)visitor).visitLiteral(this);
+    if (visitor instanceof CamelVisitor) ((CamelVisitor)visitor).visitNully(this);
     else super.accept(visitor);
   }
 
   @Override
-  @Nullable
-  public CamelNully getNully() {
-    return findChildByClass(CamelNully.class);
-  }
-
-  @Override
-  @Nullable
-  public CamelTruthy getTruthy() {
-    return findChildByClass(CamelTruthy.class);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getNumber() {
-    return findChildByType(NUMBER);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getString() {
-    return findChildByType(STRING);
+  @NotNull
+  public PsiElement getNull() {
+    return findNotNullChildByType(NULL);
   }
 
 }

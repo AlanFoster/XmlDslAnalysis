@@ -52,8 +52,14 @@ public class CamelLanguageParser implements PsiParser {
     else if (root_ == LITERAL) {
       result_ = literal(builder_, 0);
     }
+    else if (root_ == NULLY) {
+      result_ = nully(builder_, 0);
+    }
     else if (root_ == OPERATOR) {
       result_ = operator(builder_, 0);
+    }
+    else if (root_ == TRUTHY) {
+      result_ = truthy(builder_, 0);
     }
     else if (root_ == VARIABLE_ACCESS) {
       result_ = variableAccess(builder_, 0);
@@ -364,14 +370,15 @@ public class CamelLanguageParser implements PsiParser {
   }
 
   /* ********************************************************** */
-  // NUMBER | STRING
+  // NUMBER | STRING | truthy | nully
   public static boolean literal(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "literal")) return false;
-    if (!nextTokenIs(builder_, "<literal>", NUMBER, STRING)) return false;
     boolean result_ = false;
     Marker marker_ = enter_section_(builder_, level_, _NONE_, "<literal>");
     result_ = consumeToken(builder_, NUMBER);
     if (!result_) result_ = consumeToken(builder_, STRING);
+    if (!result_) result_ = truthy(builder_, level_ + 1);
+    if (!result_) result_ = nully(builder_, level_ + 1);
     exit_section_(builder_, level_, marker_, LITERAL, result_, false, null);
     return result_;
   }
@@ -390,6 +397,18 @@ public class CamelLanguageParser implements PsiParser {
   }
 
   /* ********************************************************** */
+  // NULL
+  public static boolean nully(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "nully")) return false;
+    if (!nextTokenIs(builder_, NULL)) return false;
+    boolean result_ = false;
+    Marker marker_ = enter_section_(builder_);
+    result_ = consumeToken(builder_, NULL);
+    exit_section_(builder_, marker_, NULLY, result_);
+    return result_;
+  }
+
+  /* ********************************************************** */
   // binary_operator | logic_operator
   public static boolean operator(PsiBuilder builder_, int level_) {
     if (!recursion_guard_(builder_, level_, "operator")) return false;
@@ -398,6 +417,19 @@ public class CamelLanguageParser implements PsiParser {
     result_ = binary_operator(builder_, level_ + 1);
     if (!result_) result_ = logic_operator(builder_, level_ + 1);
     exit_section_(builder_, level_, marker_, OPERATOR, result_, false, null);
+    return result_;
+  }
+
+  /* ********************************************************** */
+  // TRUE | FALSE
+  public static boolean truthy(PsiBuilder builder_, int level_) {
+    if (!recursion_guard_(builder_, level_, "truthy")) return false;
+    if (!nextTokenIs(builder_, "<truthy>", FALSE, TRUE)) return false;
+    boolean result_ = false;
+    Marker marker_ = enter_section_(builder_, level_, _NONE_, "<truthy>");
+    result_ = consumeToken(builder_, TRUE);
+    if (!result_) result_ = consumeToken(builder_, FALSE);
+    exit_section_(builder_, level_, marker_, TRUTHY, result_, false, null);
     return result_;
   }
 

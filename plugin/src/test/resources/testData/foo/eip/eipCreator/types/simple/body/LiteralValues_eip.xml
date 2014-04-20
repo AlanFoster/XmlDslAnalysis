@@ -1,0 +1,23 @@
+<eipDag>
+    <vertices>
+        <vertex id="final" eipType="to" text="direct:final" inferredType="{java.lang.Object}"/>
+        <vertex id="nullValue" eipType="translator" text="null" inferredType="{java.lang.Object}"/>
+        <vertex id="malformedFloatOrDouble" eipType="translator" text=".23" inferredType="{java.lang.Object}"/>
+        <vertex id="floatOrDouble" eipType="translator" text="10.23" inferredType="{java.lang.Double}"/>
+        <vertex id="integer" eipType="translator" text="10" inferredType="{java.lang.Double}"/>
+        <vertex id="singleFoo" eipType="translator" text="'foo'" inferredType="{java.lang.String}"/>
+        <vertex id="doubleFoo" eipType="translator" text="&quot;foo&quot;" inferredType="{java.lang.String}"/>
+        <vertex id="beanRef" eipType="to" text="complexModelFactory.createComplexModel()" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
+    </vertices>
+    <edges>
+        <edge source="nullValue" target="final" edgeConnection="nullValue_final7"/>
+        <edge source="malformedFloatOrDouble" target="nullValue" edgeConnection="malformedFloatOrDouble_nullValue6"/>
+        <edge source="floatOrDouble" target="malformedFloatOrDouble" edgeConnection="floatOrDouble_malformedFloatOrDouble5"/>
+        <edge source="integer" target="floatOrDouble" edgeConnection="integer_floatOrDouble4"/>
+        <edge source="singleFoo" target="integer" edgeConnection="singleFoo_integer3"/>
+        <edge source="doubleFoo" target="singleFoo" edgeConnection="doubleFoo_singleFoo2"/>
+        <edge source="beanRef" target="doubleFoo" edgeConnection="beanRef_doubleFoo1"/>
+        <edge source="from" target="beanRef" edgeConnection="from_beanRef0"/>
+    </edges>
+</eipDag>

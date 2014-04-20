@@ -233,6 +233,20 @@ class SimpleBodyTypePropagationTests
   }
 
   /**
+   * Ensure that true/false literals are handled as java.lang.Boolean
+   */
+  def testTruthyValues(){
+    doTest()
+  }
+
+  /**
+   * Test that string/numbers/null are propagated as expected
+   */
+  def testLiteralValues() {
+    doTest()
+  }
+
+  /**
    * Performs the main test scenario- using the test method name the configuration
    * file to run
    */
