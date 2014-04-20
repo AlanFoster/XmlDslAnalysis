@@ -14,13 +14,13 @@ var DefaultTags = {
 
 var features = <any> [
     {
-        title: "Simple Language Injection",
-        date: 1391305155486,
+        title: "Simple - Parameter Handler",
+        date: 1,
         images: [
             {
-                location: "images/paramInsight.png",
-                title: "Java DSL Injection",
-                description: "Simple Language injection supported within Java DSL"
+                location: "images/HeaderAsParamHandler.png",
+                title: "Parameter Handling",
+                description: "The possible arguments are shown to the user"
             }
         ],
         tags: [
@@ -29,18 +29,85 @@ var features = <any> [
         ]
     },
     {
-        title: "Simple Function Contribution",
-        date: 1391305294892,
+        title: "Simple - Language Injection",
+        date: 2,
         images: [
             {
-                location: "images/contribution.png",
-                title: "Simple Function Contribution",
-                description: "Simple Function Contribution"
+                location: "images/JavaDSLSimpleInjectionContribution.png",
+                title: "Java Injection for Simple",
+                description: "Java DSL Example with Simple language injected"
             }
         ],
         tags: [
             DefaultTags.CODE_COMPLETION,
-            DefaultTags.REFACTOR,
+            DefaultTags.SIMPLE,
+            DefaultTags.JAVA,
+            DefaultTags.XML
+        ]
+    },
+    {
+        title: "Blueprint Bean Method Completion",
+        date: 3,
+        images: [
+            {
+                location: "images/BlueprintBeanMethodCompletion.gif",
+                title: "Blueprint Bean Method Completion",
+                description: "Ctrl+Space within attributes"
+            }
+        ],
+        tags: [
+            DefaultTags.CODE_COMPLETION,
+            DefaultTags.SIMPLE,
+            DefaultTags.JAVA,
+            DefaultTags.XML
+        ]
+    },
+    {
+        title: "Simple - Semantic Highlighting",
+        date: 4,
+        images: [
+            {
+                location: "images/HeaderAsSemanticHighlighting.png",
+                title: "Header As",
+                description: "Invalid types as arguments are highlighted"
+            }
+        ],
+        tags: [
+            DefaultTags.CODE_COMPLETION,
+            DefaultTags.SIMPLE,
+            DefaultTags.JAVA,
+            DefaultTags.XML
+        ]
+    },
+    {
+        title: "Simple - Header Contribution",
+        date: 5,
+        images: [
+            {
+                location: "images/PipelineHeaderContribution.png",
+                title: "Pipeline Header Contribution",
+                description: "Locally declared headers in a pipeline are inferred"
+            }
+        ],
+        tags: [
+            DefaultTags.CODE_COMPLETION,
+            DefaultTags.SIMPLE,
+            DefaultTags.JAVA,
+            DefaultTags.XML
+        ]
+    },
+    {
+        title: "Blueprint - Remove Header Contribution + Validation",
+        date: 6,
+        images: [
+            {
+                location: "images/VideoRemoveHeaderPipeline.gif",
+                title: "Pipeline Header Contribution",
+                description: "Removing header intellisense, and warning highlighting"
+            }
+        ],
+        tags: [
+            DefaultTags.CODE_COMPLETION,
             DefaultTags.SIMPLE,
             DefaultTags.JAVA,
             DefaultTags.XML
