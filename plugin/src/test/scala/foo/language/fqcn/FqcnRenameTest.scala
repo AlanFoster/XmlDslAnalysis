@@ -29,7 +29,7 @@ class FqcnRenameTest
   def doTest() {
     // Ensure we have added all of the required testing
     loadAllCommon(myFixture)
-    val testName = getTestName(true)
+    val testName = getTestName(false)
 
     myFixture.configureByFiles(s"${testName}.Camel", s"${testName}_after.Camel")
 

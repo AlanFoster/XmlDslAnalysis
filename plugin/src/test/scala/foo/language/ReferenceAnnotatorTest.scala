@@ -16,7 +16,7 @@ class ReferenceAnnotatorTest
   /**
    * {@inheritdoc}
    */
-  override def getTestDataPath: String = testDataMapper("/foo/language/annotators/References")
+  override def getTestDataPath: String = testDataMapper("/foo/language/annotators/references")
 
   /**
    * An unresolved body with no inferred information should be highlighted successfully
