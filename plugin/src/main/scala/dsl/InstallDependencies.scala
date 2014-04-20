@@ -1,7 +1,6 @@
 import java.io.File
 import sys.process._
 import java.nio.file.{Paths, Path, Files}
-import java.net.{URLEncoder, URI}
 import java.util
 import collection.JavaConverters._
 
@@ -19,23 +18,6 @@ object InstallDependencies {
     val configuration = getConfiguration(args)
 
     println(s"Attempting install with the following information\n\t-version ${configuration.intellijVersion} -intellijPath ${configuration.intellijPath}");
-
-    def installJar(path: Path, groupId: String, artifactId: String, version: String) {
-      // Output SBT information
-      println(s""""${groupId}" % "${artifactId}" % "${version}",""")
-
-      println(s"Installing .. groupId: ${groupId}, artifactId: ${artifactId}, version: ${version}, path : ${path}")
-      val os = System.getProperty("os.name")
-      val mvnCommand = s"""mvn install:install-file -Dfile="${path}" -DgroupId=${groupId} -DartifactId=$artifactId -Dversion=${version} -Dpackaging=jar"""
-
-      val osCommand =
-        if(os == "Linux") mvnCommand
-        else if(os.contains("Windows")) s"""cmd /c ${mvnCommand}"""
-        else ???
-
-      // Invoke the maven command process
-      osCommand ! CommandLineProcessLogger()
-    }
 
     configuration match {
       case Configuration(version, path) => {
@@ -61,19 +43,36 @@ object InstallDependencies {
     }
   }
 
-  def getConfiguration(args: Array[String]) = {
-    Configuration(args(0), args(1))
+  def installJar(path: Path, groupId: String, artifactId: String, version: String) {
+    // Output SBT information
+    println( s""""${groupId}" % "${artifactId}" % "${version}",""")
 
-    //Configuration("133.139", """C:\Program Files (x86)\JetBrains\IntelliJ IDEA 13.0""")
+    println(s"Installing .. groupId: ${groupId}, artifactId: ${artifactId}, version: ${version}, path : ${path}")
+    val os = System.getProperty("os.name")
+    val mvnCommand = s"""mvn install:install-file -Dfile="${path}" -DgroupId=${groupId} -DartifactId=$artifactId -Dversion=${version} -Dpackaging=jar"""
+
+    val osCommand =
+      if (os == "Linux") mvnCommand
+      else if (os.contains("Windows")) s"""cmd /c ${mvnCommand}"""
+      else ???
+
+    // Invoke the maven command process
+    osCommand ! CommandLineProcessLogger()
+  }
+
+  def getConfiguration(args: Array[String]) = {
+    if (args == null || args.size != 2) Helper.dieWithReason(Helper.defaultHelp)
+
+    Configuration(args(0), args(1))
   }
 }
 
 case class Configuration(intellijVersion: String, intellijPath: String)
 
-object ArgsHandler {
-  val help =
+object Helper {
+  val defaultHelp =
     """
-      | ${scriptName}
+      | Installing Options
       | ------------------------------------
       | Expected Inputs:
       |   -version ${intellijVersion}
@@ -90,45 +89,4 @@ object ArgsHandler {
     println(reason)
     System.exit(-1)
   }
-
-  def parse(args: List[String]): (Option[Configuration], Option[String]) = args match {
-    case version :: path :: Nil => (Some(Configuration(version, path)), None)
-    case Nil => (None, Some("Path and Version not supplied."))
-    case version :: _ => (None, Some("Path or version not supplied."))
-    case _ => (None, Some("Invalid Arguments. Please supply only Path and version"))
-  }
-}
-
-trait InputOption
-case object DoubleOption extends InputOption
-case object FileOption extends InputOption
-
-object ArgumentParser {
-  def apply[T](name: String)= new ArgumentParserBuilder[T](name)
-}
-
-case class ArgumentParserBuilder[T](name: String) {
-  def input[U](argNames: String*): ArgumentParserBuilder[T] = ??? // InputBuilder
-
-}
-
-object Input {
-  def apply[C, T](argNames: String*): InputBuilder[C, T] = new InputBuilder[C, T](argNames.toList)
-}
-
-// Builders
-case class InputBuilder[C, T](
-                               argNames: List[String],
-                               debugText: String = "",
-                               isRequired: Boolean = false,
-                               configurer: (C, T) => C = (c: C, _: T) => c) {
-
-  private def updateIsRequired(newIsRequired: Boolean) = copy(isRequired = newIsRequired)
-
-  def required() = updateIsRequired(newIsRequired = true)
-  def optional() = updateIsRequired(newIsRequired = false)
-
-  def withText(text: String) = copy(debugText = text)
-
-  def configureWith(f: (C, T) => C) = copy(configurer = f)
 }
