@@ -66,7 +66,7 @@
                 Annotators for camel functions are called as expected
             -->
             <annotator language="Camel" implementationClass="foo.language.annotators.CamelArgumentAnnotator"/>
-            <annotator language="Camel" implementationClass="foo.language.annotators.CamelFunctionAnnotator"/>
+            <annotator language="Camel" implementationClass="foo.language.annotators.CamelFunctionNameAnnotator"/>
             <annotator language="Camel" implementationClass="foo.language.Highlighting.CamelComplexElementAnnotator"/>
 
             <!-- Language Injector - Ensure that we have injected the camel language into the appropriate places -->

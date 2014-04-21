@@ -19,7 +19,7 @@ class CamelSimpleTypeChecker extends SimpleTypeChecker with ReadonlyTypeEnvironm
   /**
    * {@inheritdoc}
    */
-  override def typeCheckCamel(typeEnvironment: TypeEnvironment, camelPsiFile: CamelPsiFile): Option[Set[String]] = {
+  override def typeCheckCamel(typeEnvironment: TypeEnvironment, camelPsiFile: PsiElement): Option[Set[String]] = {
     typeCheck(typeEnvironment, camelPsiFile)
   }
 
@@ -92,6 +92,18 @@ class CamelSimpleTypeChecker extends SimpleTypeChecker with ReadonlyTypeEnvironm
 
       if(inferredMethodAccess.isDefined) inferredMethodAccess
       else typeCheck(typeEnvironment, camelFuncBody.getFunctionCall)
+
+    /**
+     * A camel argument definition, attempts to resolve to the first non-null psi element
+     * and return the type environment of that
+     */
+    case camelArg: CamelFunctionArg =>
+      val resolvedArgument =
+        List(Option(camelArg.getCamelFunction), Option(camelArg.getFqcn), Option(camelArg.getLiteral))
+          .flatten.headOption
+
+      val inferredType = resolvedArgument.flatMap(typeCheckCamel(typeEnvironment, _))
+      inferredType
 
     /**
      * Infers the type information for a camel function call, IE

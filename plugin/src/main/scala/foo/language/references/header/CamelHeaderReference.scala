@@ -38,7 +38,7 @@ class CamelHeaderReference(element: PsiElement, range: TextRange)
   }
 
   private def getAvailableHeaders: Map[ACSLKey, (ACSLFqcn, ProcessorDefinition)] = {
-    val typeEnvironment = getParentXmlElement(myElement).flatMap(parent => getTypeEnvironment(parent))
+    val typeEnvironment = getTypeEnvironment(myElement)
     val headers = typeEnvironment.flatMap(AbstractModelManager.getInferredHeaders)
     headers.getOrElse(Map())
   }

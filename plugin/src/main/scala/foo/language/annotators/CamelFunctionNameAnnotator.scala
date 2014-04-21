@@ -9,7 +9,7 @@ import foo.language.CamelFunction
 /**
  * Ensures that the given function name exists within the camel language
  */
-class CamelFunctionAnnotator extends Annotator {
+class CamelFunctionNameAnnotator extends Annotator {
   /**
    * {@inheritdoc}
    */

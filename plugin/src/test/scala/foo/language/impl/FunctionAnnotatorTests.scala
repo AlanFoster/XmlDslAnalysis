@@ -71,6 +71,18 @@ class FunctionAnnotatorTests
     doTest()
   }
 
+  def ignoretestExtraCommas() {
+    doTest()
+  }
+
+  def testNestedExpressionIsString() {
+    doTest()
+  }
+
+  def testNestedExpressionIsInvalid() {
+    doTest()
+  }
+
   private def doTest() {
     val testName = getTestName(false)
 

@@ -2,6 +2,8 @@ package foo.language
 
 import com.intellij.psi.tree.IElementType
 import foo.language.generated.CamelTypes
+import foo.intermediaterepresentation.model.types.CamelStaticTypes.ACSLFqcn
+import com.intellij.psi.CommonClassNames
 
 /**
  * Represents a CamelArgument which can be used within the context of a camel function
@@ -9,18 +11,24 @@ import foo.language.generated.CamelTypes
 trait CamelArgument {
   /**
    * The name associated with the camel argument
-   * @return The name assocaited with teh camel argument
+   * @return The name associated with teh camel argument
    */
   def argName: String
 
   /**
-   * The type definition assocaited with this argument
+   * The type definition associated with this argument
    * @return The required element type information
    */
   def requiredElementType: IElementType
 
   /**
-   * Computes the prettified version of this argument's type informatin
+   * Optionally the required FQCN type
+   * @return The required FQCN Type
+   */
+  def requiredFQCN: ACSLFqcn
+
+  /**
+   * Computes the prettified version of this argument's type information
    * @return A human-readible version of this argument type information
    */
   def prettyType: String
@@ -76,6 +84,12 @@ case class CamelString(override val argName: String) extends CamelArgument {
    * {@inheritdoc}
    */
   def requiredElementType = CamelTypes.STRING
+
+  /**
+   * Optionally the required FQCN type
+   * @return The required FQCN Type
+   */
+  override def requiredFQCN: ACSLFqcn = CommonClassNames.JAVA_LANG_STRING
 }
 
 /**
@@ -89,10 +103,16 @@ case class CamelPackage(override val argName: String) extends CamelArgument {
    * {@inheritdoc}
    */
   def prettyType: String = "Class"
+
   /**
    * {@inheritdoc}
    */
   def requiredElementType = CamelTypes.FQCN
+
+  /**
+   * {@inheritdoc}
+   */
+  override def requiredFQCN: ACSLFqcn = ""
 }
 
 /**

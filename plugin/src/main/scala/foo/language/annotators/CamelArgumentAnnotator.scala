@@ -7,6 +7,11 @@ import foo.language.generated.psi.CamelFunctionArg
 import com.intellij.psi.tree.IElementType
 import com.intellij.lang.ASTNode
 import foo.language.{CamelFunction, CamelArgument}
+import foo.language.typeChecking.CamelSimpleTypeChecker
+import foo.language.references.Resolving
+import foo.intermediaterepresentation.model.types.TypeEnvironment
+import foo.language.CamelFunction
+import scala.Some
 
 /**
  * Represents the annotator which ensures that the camel functions are called as expected.
@@ -21,6 +26,8 @@ class CamelArgumentAnnotator extends Annotator {
     val isAccepted = psiElement(classOf[CamelFunctionArg]).accepts(element)
     if (!isAccepted) return
 
+    val psiArgument = element.asInstanceOf[CamelFunctionArg]
+
     val addError = (s: String) => {
       holder.createErrorAnnotation(element, s)
       ()
@@ -29,10 +36,11 @@ class CamelArgumentAnnotator extends Annotator {
     CamelFunctionUtil.matchFunction(element)({
       case (camelFunctionDefinition@CamelFunction(_, arguments: List[CamelArgument]), psiCamelFunction) => {
         // Calculate our current argument position
-        val index = psiCamelFunction.getFunctionArgs.getFunctionArgList.indexOf(element)
+        val argList = psiCamelFunction.getFunctionArgs.getFunctionArgList
+        val index = argList.indexOf(psiArgument)
 
         validateArgumentIndex(index, arguments)(addError)
-        validateArgumentType(index, arguments, element)(addError)
+        validateArgumentType(index, arguments, psiArgument)(addError)
       }
     }, () => ())
   }
@@ -51,10 +59,10 @@ class CamelArgumentAnnotator extends Annotator {
    * Ensures that the current argument has a valid type matching the original function
    * definition
    */
-  def validateArgumentType(currentIndex: Int, arguments: List[CamelArgument], psiArg: PsiElement)
+  def validateArgumentType(currentIndex: Int, arguments: List[CamelArgument], psiArg: CamelFunctionArg)
                           (addError: String => Unit) = arguments.lift(currentIndex) match {
     case Some(camelArgumentDefinition : CamelArgument) => {
-          val isValid = containsElementType(psiArg.getNode, camelArgumentDefinition.requiredElementType)
+          val isValid = isOfType(psiArg, camelArgumentDefinition.requiredFQCN, camelArgumentDefinition.requiredElementType)
           if (!isValid) {
             addError("Expected type: " + camelArgumentDefinition.prettyType)
           }
@@ -63,13 +71,30 @@ class CamelArgumentAnnotator extends Annotator {
   }
 
   /**
+   * @return True if the given psiElement is inferrable to the required Fqcn, or contains the requiredElementType
+   *         as a child, otherwise false
+   */
+  private def isOfType(psiArg: CamelFunctionArg, requiredFqcn: String, requiredElementType: IElementType): Boolean = {
+    // Firstly attempt to perform type checking on the current element through type inference rules
+    val typeEnvironment = Resolving.getTypeEnvironment(psiArg).getOrElse(TypeEnvironment())
+    val matchInferredType = {
+        val inferredTypes = new CamelSimpleTypeChecker().typeCheckCamel(typeEnvironment, psiArg)
+        inferredTypes.exists(_.contains(requiredFqcn))
+    }
+
+    // Attempt to contains element type
+    matchInferredType || containsElementType(psiArg.getNode, requiredElementType)
+  }
+
+
+  /**
    * Recursive searches the given ASTNode's tree to check if the required IElementType is false
    * @param parent The parent ASTNode
    * @param requiredType The required IElementType
    * @return true if either the parent, or any of its children (including grandchildren), contain the
    *         given IElementType reference, otherwise false.
    */
-  def containsElementType(parent: ASTNode, requiredType: IElementType): Boolean = parent match {
+  private def containsElementType(parent: ASTNode, requiredType: IElementType): Boolean = parent match {
     case matched: ASTNode =>
       if (matched.getElementType == requiredType) true
       else {

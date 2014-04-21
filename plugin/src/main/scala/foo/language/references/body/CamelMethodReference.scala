@@ -136,7 +136,7 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
    * @return The given reference is resolved, otherwise false
    */
   override def resolve(): PsiElement = {
-    val typeEnvironment = getParentXmlElement(myElement).flatMap(parent => getTypeEnvironment(parent))
+    val typeEnvironment = getTypeEnvironment(myElement)
     val availableVariants = typeEnvironment.map(typeEnvironment => contributeAvailableVariants(typeEnvironment)).getOrElse(Set())
 
     resolveForIj(availableVariants).getOrElse(null)

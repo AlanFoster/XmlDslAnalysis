@@ -2,6 +2,7 @@ package foo.intermediaterepresentation.model.types
 
 import foo.intermediaterepresentation.model.references.Reference
 import CamelStaticTypes._
+import foo.intermediaterepresentation.model.CoreConstants._
 
 object CamelStaticTypes {
   type ACSLKey = String
@@ -38,7 +39,7 @@ final case class TypeEnvironment(body: Set[ACSLFqcn], headers:Map[ACSLKey, (ACSL
 }
 
 object TypeEnvironment {
-  def apply():TypeEnvironment = TypeEnvironment(Set(), Map())
+  def apply():TypeEnvironment = TypeEnvironment(Set(DEFAULT_INFERRED_TYPE), Map())
 }
 
 /**
