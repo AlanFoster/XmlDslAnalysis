@@ -83,6 +83,18 @@ class FunctionAnnotatorTests
     doTest()
   }
 
+  def testMissingFinalSingleSingleQuote() {
+    doTest()
+  }
+
+  def testMissingFinalStringDoubleQuote() {
+    doTest()
+  }
+
+  def testSingleQuote() {
+    doTest()
+  }
+
   private def doTest() {
     val testName = getTestName(false)
 

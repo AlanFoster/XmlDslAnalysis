@@ -1,0 +1,1 @@
+${headerAs('foo, java.lang.String)<error descr="Unterminated String Literal">}</error><EOLError descr="'{CamelTokenType )}' or '{CamelTokenType ,}' expected, unexpected end of file"></EOLError>
