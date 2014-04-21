@@ -60,7 +60,7 @@ object AbstractModelPrinter {
       .map(child => print(child, depth + 1) + "\n")
       .mkString
 
-    // Create the end string
+    // Create the root element text, which may contain the semantic information
     val rootText = {
       parentWhitespace + rootName + {
         typeInformationWrapper match {
@@ -75,6 +75,7 @@ object AbstractModelPrinter {
       }
     }
 
+    // Create the given which represents this wrapper
     rootText +
         formattedChildren +
         parentWhitespace +
