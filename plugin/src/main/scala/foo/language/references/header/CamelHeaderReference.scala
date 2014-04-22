@@ -3,12 +3,13 @@ package foo.language.references.header
 import com.intellij.psi.{PsiReferenceBase, PsiElement}
 import com.intellij.openapi.util.TextRange
 import com.intellij.codeInsight.lookup.LookupElementBuilder
-import com.intellij.util.xml.ElementPresentationManager
+import com.intellij.util.xml.{DomTarget, ElementPresentationManager}
 import foo.dom.Model.ProcessorDefinition
 import foo.intermediaterepresentation.model.AbstractModelManager
-import foo.language.references.EipSimpleReference
+import foo.language.references.{CamelRenameFactory, EipSimpleReference}
 import foo.intermediaterepresentation.model.types.{BaseType, CamelType, TypeEnvironment}
 import foo.intermediaterepresentation.model.types.CamelStaticTypes.{ACSLFqcn, ACSLKey}
+import com.intellij.pom.references.PomService
 
 /**
  * A concrete implementation of a CamelHeaderReference
@@ -50,7 +51,7 @@ class CamelHeaderReference(element: PsiElement, range: TextRange)
   override def resolve(): PsiElement = {
     val headers = getAvailableHeaders
     resolveHeader(headers)
-      .map({ case (_, (_, processorDefinition)) => processorDefinition.getXmlElement})
+      .map({ case (_, (_, processorDefinition)) => PomService.convertToPsi(DomTarget.getTarget(processorDefinition))})
       .getOrElse(null)
   }
 
@@ -59,6 +60,9 @@ class CamelHeaderReference(element: PsiElement, range: TextRange)
       .find({ case (headerName, processor) => headerName == element.getText })
   }
 
+  /**
+   * @inheritdoc
+   */
   override def resolveEip(typeEnvironment: TypeEnvironment): Set[CamelType] = {
     val resolvedHeader =
       for {
@@ -70,5 +74,17 @@ class CamelHeaderReference(element: PsiElement, range: TextRange)
       case None => Set()
       case Some((_, (fqcn, processor))) => Set(BaseType(fqcn))
     }
+  }
+
+
+  /**
+   * Handles a rename of this element. This element should be renamed when the DOM references it points to are renamed
+   * also
+   */
+  override def handleElementRename(newElementName: String): PsiElement = {
+    val replacementObject = CamelRenameFactory.getIdentifierRename(myElement, newElementName)
+    myElement.replace(replacementObject)
+
+    replacementObject
   }
 }
