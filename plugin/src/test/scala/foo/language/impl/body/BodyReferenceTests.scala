@@ -131,7 +131,7 @@ class BodyReferenceTests
     loadAllCommon(myFixture)
 
     val testName = getTestName(false).takeWhile(_ != '_')
-    val testData = getTestData(testName, testScenario.fileName, getTestDataPath)
+    val testData = getInterpolatedTestData(testName, testScenario.fileName, getTestDataPath)
     myFixture.configureByText(testScenario.fileName.getOrElse("camelTest.Camel"), testData)
 
     assertContributions(testScenario.expectedContributions)

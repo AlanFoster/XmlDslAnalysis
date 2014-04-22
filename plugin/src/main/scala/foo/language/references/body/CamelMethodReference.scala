@@ -8,7 +8,7 @@ import com.intellij.patterns.PlatformPatterns._
 import scala.Some
 import com.intellij.util.xml.ElementPresentationManager
 import scala.util.Try
-import foo.language.references.EipSimpleReference
+import foo.language.references.{CamelRenameFactory, EipSimpleReference}
 import foo.traversal.{MethodTypeInference, MethodTraversal}
 import com.intellij.openapi.module.ModuleUtilCore
 import foo.intermediaterepresentation.model.types.{CamelReferenceType, CamelType, TypeEnvironment}
@@ -161,5 +161,14 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
                   .find(_._2 == value)
                   .map(_._1)
     }
+  }
+
+  /**
+   * Handles a method rename
+   */
+  override def handleElementRename(newElementName: String): PsiElement = {
+    val replacementObject = CamelRenameFactory.getMethodRename(myElement, getRangeInElement, newElementName)
+    myElement.replace(replacementObject)
+    replacementObject
   }
 }

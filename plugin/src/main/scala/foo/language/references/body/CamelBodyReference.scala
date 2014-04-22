@@ -3,7 +3,7 @@ package foo.language.references.body
 import com.intellij.psi._
 import com.intellij.openapi.util.TextRange
 import foo.language.MethodConverter
-import foo.language.references.EipSimpleReference
+import foo.language.references.{CamelRenameFactory, EipSimpleReference}
 
 import com.intellij.openapi.module.{ModuleUtil, ModuleUtilCore}
 import foo.intermediaterepresentation.model.types.{CamelReferenceType, CamelType, TypeEnvironment}
@@ -74,5 +74,12 @@ class CamelBodyReference(element: PsiElement, range: TextRange)
     possibleReferences.map(s => CamelReferenceType(s))
   }
 
+  /**
+   * Handles a rename of this element. This element should be renamed when the DOM references it points to are renamed
+   * also
+   */
+  override def handleElementRename(newElementName: String): PsiElement = {
+    myElement
+  }
 }
 

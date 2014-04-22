@@ -2,9 +2,10 @@ package foo.language.impl.headers
 
 import junit.framework.Assert._
 import foo.dom.Model.SetHeaderProcessorDefinition
-import com.intellij.util.xml.DomManager
+import com.intellij.util.xml.{DomTarget, DomManager}
 import com.intellij.psi.xml.XmlTag
 import foo.RichTestFixture.toRichTestFixture
+import com.intellij.pom.PomTargetPsiElement
 
 
 /**
@@ -42,7 +43,7 @@ class HeaderReferenceTest
    */
   def doTest(testContext: TestContext, expectedHeaderName: Option[String]) {
     // Configure the fixture
-    val testData = getTestData(getTestName(false).takeWhile(_ != '_'), testContext.testFileName, getTestDataPath)
+    val testData = getInterpolatedTestData(getTestName(false).takeWhile(_ != '_'), testContext.testFileName, getTestDataPath)
     myFixture.configureByText(testContext.testFileName.getOrElse("camelTest.Camel"), testData)
 
     val referenceOption = myFixture.getElementAtCaretSafe
@@ -53,9 +54,8 @@ class HeaderReferenceTest
       case (None, Some(_)) =>
         fail("No reference should be resolved for this scenario, instead found :: " + referenceOption)
       case (Some(expected), Some(reference)) =>
-        assertTrue("The contributed element should be an Xml Element", reference.isInstanceOf[XmlTag])
-        val xmlTag = reference.asInstanceOf[XmlTag]
-        val domElement = DomManager.getDomManager(getProject).getDomElement(xmlTag)
+        assertTrue("The contributed element should be an Pom Target Psi Element", reference.isInstanceOf[PomTargetPsiElement])
+        val domElement = reference.asInstanceOf[PomTargetPsiElement].getTarget.asInstanceOf[DomTarget].getDomElement
 
         assertTrue("The contributed dom element should be a SetHeaderProcessorDefinition", domElement.isInstanceOf[SetHeaderProcessorDefinition])
 

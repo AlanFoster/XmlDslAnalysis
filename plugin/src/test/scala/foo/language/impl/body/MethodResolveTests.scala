@@ -79,7 +79,7 @@ class MethodResolveTests
 
     // Load the file
     val testName = getTestName(false).takeWhile(_ != '_')
-    val testData = getTestData(testName, testScenario.fileName, getTestDataPath)
+    val testData = getInterpolatedTestData(testName, testScenario.fileName, getTestDataPath)
     myFixture.configureByText(testScenario.fileName.getOrElse("camelTest.Camel"), testData)
 
     // Ensure that our Psi method is referenced as expected
