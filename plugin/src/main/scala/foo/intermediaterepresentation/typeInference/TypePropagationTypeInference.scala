@@ -60,42 +60,27 @@ class TypePropagationTypeInference extends AbstractModelTypeInference with Reado
      * Camel Choice element, ensuring that When elements are allocated as expected
      */
     case choice@Choice(whens, otherwiseOption, _, _) =>
-      // Note that each child when node has access to the choice element's initial environment always
+      // Note that each child when node has access to the initial choice element's initial environment always
       // And not the previous node - which differs to the implementation of the when processor implementation
-      // TODO Might be able to re-write this with a higher order function
-      val (newWhenTypeEnvs, newWhenChildren) = whens.foldLeft((List[TypeEnvironment](), List[When]()))({
-        case ((accumulatedTypeEnvironments, accumulatedWhenExpressions), next) =>
-          // Note that the parent choice type environment is used for each when expression!
-          val mappedProcessor = performTypeInference(typeEnvironment, next)
-          val newEnv = mappedProcessor.typeInformation match {
-            case Inferred(_, after) => after
-            case NotInferred | _ =>
-              throw new Error("Could not infer the correct data type")
-          }
+      val (newWhenTypeEnvs, newWhenChildren) =
+        whens.map(when => performTypeInference(typeEnvironment, when).asInstanceOf[When])
+        .foldLeft((List[TypeEnvironment](), List[When]()))({
+          case ((accumulatedTypeEnvironments, accumulatedWhenExpressions), when) =>
+            (when.after.get :: accumulatedTypeEnvironments, accumulatedWhenExpressions :+ when)
+        })
 
-          // Return the tuple of the every accumulated type environment and every when element
-          (newEnv :: accumulatedTypeEnvironments, accumulatedWhenExpressions :+ mappedProcessor.asInstanceOf[When])
-      })
+      // Perform type information propagation on the otherwise node if it exists
+      val newOtherwiseOption =
+        otherwiseOption
+          .map(choice => performTypeInference(typeEnvironment, choice).asInstanceOf[Otherwise])
 
-      // If the otherwise element is defined, then logic dictates that we must have gone down
-      // at least one of the given paths, therefore the original type environment should not
-      // be unioned! :)
-      val (newTypeEnvironment, newOtherwiseOption) = otherwiseOption match {
-        case Some(otherwise) =>
-          val newOtherwise = performTypeInference(typeEnvironment, otherwise).asInstanceOf[Otherwise]
-          val newOtherwiseEnvironment = newOtherwise.after.get
-
-          // Note that the type environment for otherwise is unioned with its when processors
-          // but does not consist of the initial input value
-          val newTypeEnvironment = mergeTypeEnvironment(newOtherwiseEnvironment, newWhenTypeEnvs)
-
-          (newTypeEnvironment, Some(newOtherwise))
-        case None =>
-          // Union the when type environments with the initial type environment
-          val mergedTypeEnv = mergeTypeEnvironment(typeEnvironment, newWhenTypeEnvs)
-
-          (mergedTypeEnv, None)
-      }
+      val newTypeEnvironment =
+        // If the otherwise element is defined, then logic dictates that we must have gone down
+        // at least one of the given paths, therefore the original type environment should not
+        // be unioned! :)
+        newOtherwiseOption.map(otherwise => mergeTypeEnvironment(otherwise.after.get, newWhenTypeEnvs))
+        // If no otherwise element exists, then merge the initial type environment when all when elements
+        .getOrElse(mergeTypeEnvironment(typeEnvironment, newWhenTypeEnvs))
 
       choice.copy(
         whens = newWhenChildren,
@@ -108,13 +93,7 @@ class TypePropagationTypeInference extends AbstractModelTypeInference with Reado
      */
     case bean@Bean(_, method, _, _) =>
       // Extract the return type of the referenced method within the bean environment
-      val inferredBody = method match {
-        case Some(psiElement) =>
-          Option(psiElement.getValue)
-            .map(_.getReturnType.getCanonicalText)
-            .getOrElse(DEFAULT_INFERRED_TYPE)
-        case _ => DEFAULT_INFERRED_TYPE
-      }
+      val inferredBody = mR(method.flatMap(m => Option(m.getValue)))
       val newTypeInformation = typeEnvironment.copy(body = Set(inferredBody))
 
       bean.copy(typeInformation = Inferred(typeEnvironment, newTypeInformation))

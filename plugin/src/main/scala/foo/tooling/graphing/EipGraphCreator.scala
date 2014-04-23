@@ -232,7 +232,7 @@ class EipGraphCreator {
              */
             case ((eipGraph, lastProcessorDefinition), otherwise@Otherwise(children, _, _)) =>
               val otherwiseEipProcessor = EipProcessor("", otherwise)
-              val linkedGraph = eipGraph.linkComponents(List(choiceEipProcessor), otherwiseEipProcessor)
+              val linkedGraph = eipGraph.linkComponents(choiceEipProcessor, otherwiseEipProcessor)
 
               // If we have no children, then the graph is complete, but we must be linked to the next processor
               if(children.isEmpty) (linkedGraph, otherwiseEipProcessor :: lastProcessorDefinition)
