@@ -109,10 +109,13 @@ class TypePropagationTests
     doTest()
   }
 
+  def testOtherwise() {
+   doTest()
+  }
+
   /**
    * Ensures the test is valid - using the test name as the configuration file
    */
-  // TODO Could merge with the EipDagAssert class
   def doTest() {
     // Ensure we have added all of the required testing
     loadAllCommon(myFixture)

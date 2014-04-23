@@ -25,24 +25,20 @@ object AbstractModelPrinter {
    */
   private def print(processor: Processor, depth: Int):String = processor match {
     case Route(children, _, _) =>
-      printWrapper("Route", children, depth)
+      printWrapper("Route", children, depth, NotInferred)
 
-    case Choice(children, _, NotInferred) =>
-      printWrapper("Choice", children, depth)
+    case choice@Choice(_, _, _,typeEnvironment) =>
+      printWrapper("Choice", choice.getChildren, depth, typeEnvironment)
 
-    case Choice(children, _, typeInformation:Inferred) =>
-      printWrapper("Choice", children, depth, Some(typeInformation))
+    case When(expression, children, _, typeEnvironment) =>
+      printWrapper(s"When(${expression})", children, depth, typeEnvironment)
 
-    case When(expression, children, _, NotInferred) =>
-      printWrapper(s"When(${expression})", children, depth)
-
-    case When(expression, children, _, typeInformation) =>
-      printWrapper(s"When(${expression})", children, depth,  Some(typeInformation))
+    case Otherwise(children, _, typeEnvironment) =>
+      printWrapper("Otherwise", children, depth, typeEnvironment)
 
     case default =>
       fillWhitespace(depth) + default.toString
   }
-
 
   /**
    * Creates a topmost node output within the tree
@@ -52,7 +48,7 @@ object AbstractModelPrinter {
    * @return The formatted string with the rootName wrapper as the starting text
    */
   private def printWrapper(rootName: String, children: List[Processor], depth: Int,
-                           typeInformationWrapper: Option[TypeInformation] = None): String = {
+                           typeEnvironment: TypeInformation): String = {
     val parentWhitespace = fillWhitespace(depth)
     // Create the formatted children as expected
     val formattedChildren =
@@ -63,8 +59,8 @@ object AbstractModelPrinter {
     // Create the root element text, which may contain the semantic information
     val rootText = {
       parentWhitespace + rootName + {
-        typeInformationWrapper match {
-          case Some(Inferred(TypeEnvironment(bodyBefore, headersBefore), TypeEnvironment(bodyAfter, headersAfter))) =>
+        typeEnvironment match {
+          case Inferred(TypeEnvironment(bodyBefore, headersBefore), TypeEnvironment(bodyAfter, headersAfter)) =>
             val typeInformationWhitespace = fillWhitespace(depth + 1)
             "{ \n" +
               typeInformationWhitespace + s"(${bodyBefore}, ${headersBefore})\n" +

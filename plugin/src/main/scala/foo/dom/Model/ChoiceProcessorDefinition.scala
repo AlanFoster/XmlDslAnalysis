@@ -8,4 +8,6 @@ trait ChoiceProcessorDefinition extends DomElement with ProcessorDefinition {
 
   @SubTagList("when")
   def getWhens: java.util.List[WhenDefinition]
+
+  def getOtherwise: OtherwiseDefinition
 }

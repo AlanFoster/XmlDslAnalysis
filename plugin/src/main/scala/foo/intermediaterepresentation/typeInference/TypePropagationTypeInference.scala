@@ -49,18 +49,7 @@ class TypePropagationTypeInference extends AbstractModelTypeInference with Reado
      * Ensure that Route information takes into consideration its children
      */
     case route@Route(children, _, _) =>
-
-      // Apply map by folding left with the new type environment
-      val (newTypeEnv, newChildren) = children.foldLeft((typeEnvironment, List[Processor]()))({
-        case (((typeEnv), previous), next) =>
-          val mappedProcessor = performTypeInference(typeEnv, next)
-          val newEnv = mappedProcessor.typeInformation match {
-            case Inferred(_, after) => after
-            case NotInferred | _ =>
-              throw new Error("Could not infer the correct data type")
-          }
-          (newEnv, previous :+ mappedProcessor)
-      })
+      val (newTypeEnv, newChildren) = pipelineChildren(typeEnvironment, children)
 
       route.copy(
         children = newChildren,
@@ -70,10 +59,11 @@ class TypePropagationTypeInference extends AbstractModelTypeInference with Reado
     /**
      * Camel Choice element, ensuring that When elements are allocated as expected
      */
-    case choice@Choice(whens, _, _) =>
+    case choice@Choice(whens, otherwiseOption, _, _) =>
       // Note that each child when node has access to the choice element's initial environment always
       // And not the previous node - which differs to the implementation of the when processor implementation
-      val (newTypeEnvs, newChildren) = whens.foldLeft((List(typeEnvironment), List[When]()))({
+      // TODO Might be able to re-write this with a higher order function
+      val (newWhenTypeEnvs, newWhenChildren) = whens.foldLeft((List[TypeEnvironment](), List[When]()))({
         case ((accumulatedTypeEnvironments, accumulatedWhenExpressions), next) =>
           // Note that the parent choice type environment is used for each when expression!
           val mappedProcessor = performTypeInference(typeEnvironment, next)
@@ -82,16 +72,35 @@ class TypePropagationTypeInference extends AbstractModelTypeInference with Reado
             case NotInferred | _ =>
               throw new Error("Could not infer the correct data type")
           }
+
           // Return the tuple of the every accumulated type environment and every when element
           (newEnv :: accumulatedTypeEnvironments, accumulatedWhenExpressions :+ mappedProcessor.asInstanceOf[When])
       })
 
-      // Union the newTypeEnvs together as expected
-      val mergedTypeEnv = mergeTypeEnvironment(typeEnvironment, newTypeEnvs)
+      // If the otherwise element is defined, then logic dictates that we must have gone down
+      // at least one of the given paths, therefore the original type environment should not
+      // be unioned! :)
+      val (newTypeEnvironment, newOtherwiseOption) = otherwiseOption match {
+        case Some(otherwise) =>
+          val newOtherwise = performTypeInference(typeEnvironment, otherwise).asInstanceOf[Otherwise]
+          val newOtherwiseEnvironment = newOtherwise.after.get
+
+          // Note that the type environment for otherwise is unioned with its when processors
+          // but does not consist of the initial input value
+          val newTypeEnvironment = mergeTypeEnvironment(newOtherwiseEnvironment, newWhenTypeEnvs)
+
+          (newTypeEnvironment, Some(newOtherwise))
+        case None =>
+          // Union the when type environments with the initial type environment
+          val mergedTypeEnv = mergeTypeEnvironment(typeEnvironment, newWhenTypeEnvs)
+
+          (mergedTypeEnv, None)
+      }
 
       choice.copy(
-        whens = newChildren,
-        typeInformation = Inferred(typeEnvironment, mergedTypeEnv)
+        whens = newWhenChildren,
+        otherwiseOption = newOtherwiseOption,
+        typeInformation = Inferred(typeEnvironment, newTypeEnvironment)
       )
 
     /**
@@ -111,20 +120,23 @@ class TypePropagationTypeInference extends AbstractModelTypeInference with Reado
       bean.copy(typeInformation = Inferred(typeEnvironment, newTypeInformation))
 
     /**
+     * Unions the type information associated with the otherwise element, in a pipeline
+     * fashion, similar to both When and Route processors
+     */
+    case otherwise@Otherwise(children, _, _) =>
+      val (newTypeEnv, newChildren) = pipelineChildren(typeEnvironment, children)
+
+      otherwise.copy(
+        children = newChildren,
+        typeInformation = Inferred(typeEnvironment, newTypeEnv)
+      )
+
+    /**
      * Ensure that When elements have their children's type information accounted for
      * as expected
      */
     case when@When(expression, children, _, _) =>
-      val (newTypeEnv, newChildren) = children.foldLeft((typeEnvironment, List[Processor]()))({
-        case (((typeEnv), previous), next) =>
-          val mappedProcessor = performTypeInference(typeEnv, next)
-          val newEnv = mappedProcessor.typeInformation match {
-            case Inferred(_, after) => after
-            case NotInferred | _ =>
-              throw new Error("Could not infer the correct data type")
-          }
-          (newEnv, previous :+ mappedProcessor)
-      })
+      val (newTypeEnv, newChildren) = pipelineChildren(typeEnvironment, children)
 
       when.copy(
         children = newChildren,
@@ -208,6 +220,24 @@ class TypePropagationTypeInference extends AbstractModelTypeInference with Reado
    */
   def mergeTypeEnvironment(current: TypeEnvironment, envs: List[TypeEnvironment]): TypeEnvironment = {
     envs.foldLeft(current)(_ + _)
+  }
+
+  /**
+   * Performs the pipeline mechanism for a given list of children.
+   * @param typeEnvironment The initial type environment
+   * @param children The children of the given pipeline
+   * @return The new, final, type environment, and the new list of processors which contain
+   *         the additional type information.
+   */
+  private def pipelineChildren(typeEnvironment: TypeEnvironment, children: List[Processor]): (TypeEnvironment, List[Processor]) = {
+    // Apply map by folding left with the new type environment
+    val stateTuple@(newTypeEnvironment, newChildren) =  children.foldLeft((typeEnvironment, List[Processor]()))({
+      case (((typeEnv), previous), next) =>
+        val mappedProcessor = performTypeInference(typeEnv, next)
+        val newEnv = mappedProcessor.after.get
+        (newEnv, previous :+ mappedProcessor)
+    })
+    stateTuple
   }
 
   /**

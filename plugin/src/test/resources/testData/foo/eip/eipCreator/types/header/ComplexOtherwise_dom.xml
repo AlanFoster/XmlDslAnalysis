@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:camel="http://camel.apache.org/schema/blueprint"
+           xsi:schemaLocation="
+       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+    <camelContext trace="true" xmlns="http://camel.apache.org/schema/blueprint">
+        <route>
+            <from id="from" uri="direct:start"/>
+
+            <setHeader id="headerA" headerName="headerA">
+                <simple resultType="java.lang.String">"headerA"</simple>
+            </setHeader>
+
+
+            <choice id="choice1">
+                <when id="when1">
+                    <constant>true</constant>
+                    <setHeader id="headerAString" headerName="headerA">
+                        <constant>hello world</constant>
+                    </setHeader>
+
+                    <choice id="choice1Nested">
+                        <otherwise id="choice1NestedOtherwise">
+                            <setHeader id="headerAInteger" headerName="headerA">
+                                <simple resultType="java.lang.Integer">10</simple>
+                            </setHeader>
+                        </otherwise>
+                    </choice>
+                    <to uri="direct:foo" />
+                </when>
+                <otherwise id="choice1otherwise">
+
+                </otherwise>
+            </choice>
+
+            <choice id="choice2">
+                <when id="choice2When1">
+                    <constant>true</constant>
+                    <setHeader id="headerADouble" headerName="headerA">
+                        <simple resultType="java.lang.Double">10</simple>
+                    </setHeader>
+                </when>
+               <otherwise id="otherwise">
+                   <setHeader id="headerAFloat" headerName="headerA">
+                       <simple resultType="java.lang.Float">10</simple>
+                   </setHeader>
+               </otherwise>
+            </choice>
+
+
+            <choice id="emptyChoice">
+
+            </choice>
+
+            <choice id="secondEmptyChoice">
+                <otherwise id="secondEmptyChoiceEmptyOtherwise">
+                </otherwise>
+            </choice>
+
+
+            <to id="afterChoice" uri="direct:afterChoice" />
+        </route>
+    </camelContext>
+</blueprint>

@@ -1,0 +1,27 @@
+<eipDag>
+    <vertices>
+        <vertex id="afterChoice" eipType="to" text="direct:afterChoice" headers="{headerA}"/>
+        <vertex id="log" eipType="misc" text="Otherwise" headers="{headerA}"/>
+        <vertex id="choice1otherwise" eipType="otherwise" text="" headers="{headerA}"/>
+        <vertex id="headerAInt" eipType="translator" text="headerA -&gt; 10" headers="{headerA}"/>
+        <vertex id="when2" eipType="when" text="true" headers="{headerA}"/>
+        <vertex id="headerAString" eipType="translator" text="headerA -&gt; hello world" headers="{headerA}"/>
+        <vertex id="when1" eipType="when" text="true" headers="{headerA}"/>
+        <vertex id="choice1" eipType="choice" text="" headers="{headerA}"/>
+        <vertex id="headerA" eipType="translator" text="headerA -&gt; &quot;headerA&quot;" headers="{headerA}"/>
+        <vertex id="from" eipType="from" text="direct:start" headers="{}"/>
+    </vertices>
+    <edges>
+        <edge source="headerAString" target="afterChoice" edgeConnection="headerAString_afterChoice10"/>
+        <edge source="headerAInt" target="afterChoice" edgeConnection="headerAInt_afterChoice9"/>
+        <edge source="log" target="afterChoice" edgeConnection="log_afterChoice8"/>
+        <edge source="choice1otherwise" target="log" edgeConnection="choice1otherwise_log7"/>
+        <edge source="choice1" target="choice1otherwise" edgeConnection="choice1_choice1otherwise6"/>
+        <edge source="when2" target="headerAInt" edgeConnection="when2_headerAInt5"/>
+        <edge source="choice1" target="when2" edgeConnection="choice1_when24"/>
+        <edge source="when1" target="headerAString" edgeConnection="when1_headerAString3"/>
+        <edge source="choice1" target="when1" edgeConnection="choice1_when12"/>
+        <edge source="headerA" target="choice1" edgeConnection="headerA_choice11"/>
+        <edge source="from" target="headerA" edgeConnection="from_headerA0"/>
+    </edges>
+</eipDag>

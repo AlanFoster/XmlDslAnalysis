@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:camel="http://camel.apache.org/schema/blueprint"
+           xsi:schemaLocation="
+       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+    <bean class="foo.factory.OrderFactory" id="orderFactory" />
+    <bean class="foo.factory.PersonFactory" id="personFactory" />
+    <bean class="foo.factory.ComplexModelFactory" id="complexFactory" />
+
+    <camelContext trace="true" xmlns="http://camel.apache.org/schema/blueprint">
+        <route>
+            <from id="from" uri="direct:start"/>
+            <to id="foo" uri="direct:foo" />
+
+            <bean ref="complexFactory" method="createComplexModel" />
+
+            <!-- A single otherwise, similar to pipeline semantics -->
+            <choice>
+                <otherwise>
+                    <bean ref="orderFactory" method="createOrder" />
+                </otherwise>
+            </choice>
+
+            <!-- Common otherwise pattern - Body should only be of type order factory -->
+            <choice>
+                <when>
+                    <simple>${body.orderType} == "Widget"</simple>
+                    <log message="Widgets" />
+                    <setBody>
+                        <constant>Widget</constant>
+                    </setBody>
+                </when>
+                <when>
+                    <simple>${body.orderType} == "Gadget"</simple>
+                    <log message="Gadgets" />
+                    <setBody>
+                        <constant>Gadget</constant>
+                    </setBody>
+                </when>
+                <otherwise>
+                    <log message="Otherwise block" />
+                    <bean ref="complexFactory" method="createComplexModel" />
+                </otherwise>
+            </choice>
+
+            <!-- Body should only be of type String or ComplexModel -->
+            <to id="bar" uri="direct:bar"/>
+        </route>
+    </camelContext>
+</blueprint>

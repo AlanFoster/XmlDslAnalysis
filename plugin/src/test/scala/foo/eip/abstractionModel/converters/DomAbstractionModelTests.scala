@@ -89,10 +89,13 @@ class DomAbstractionModelTests
     doTest()
   }
 
+  def testOtherwise() {
+    doTest()
+  }
+
   /**
    * Ensures the test is valid - using the test name as the configuration file
    */
-  // TODO Could merge with the EipDagAssert class
   def doTest() {
     // Load and create the DOM representation
     val virtualFile = myFixture.configureByFile(s"/dom/${getTestName(false)}_dom.xml").getVirtualFile

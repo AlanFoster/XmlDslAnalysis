@@ -56,6 +56,14 @@ class HeaderTypePropagationTests
     doTest()
   }
 
+  def testChoiceOtherwise() {
+    doTest()
+  }
+
+  def testComplexOtherwise() {
+    doTest()
+  }
+
   /**
    * Ensures the test is valid - using the test name as the configuration file
    */

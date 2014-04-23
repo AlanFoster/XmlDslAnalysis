@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:camel="http://camel.apache.org/schema/blueprint"
+           xsi:schemaLocation="
+       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+    <camelContext trace="true" xmlns="http://camel.apache.org/schema/blueprint">
+        <route>
+            <from id="from" uri="direct:start"/>
+
+            <setHeader id="headerA" headerName="headerA">
+                <simple resultType="java.lang.String">"headerA"</simple>
+            </setHeader>
+
+
+            <choice id="choice1">
+                <when id="when1">
+                    <constant>true</constant>
+                    <setHeader id="headerAString" headerName="headerA">
+                        <constant>hello world</constant>
+                    </setHeader>
+                </when>
+                <when id="when2">
+                    <constant>true</constant>
+                    <setHeader id="headerAInt" headerName="headerA">
+                        <simple resultType="java.lang.Integer">10</simple>
+                    </setHeader>
+                </when>
+                <otherwise id="choice1otherwise">
+                    <log id="log" message="Otherwise" />
+                </otherwise>
+            </choice>
+
+            <to id="afterChoice" uri="direct:afterChoice" />
+        </route>
+    </camelContext>
+</blueprint>

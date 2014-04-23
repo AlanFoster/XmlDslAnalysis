@@ -1,0 +1,25 @@
+Route(
+     From(Some(direct:start),DomReference(FromProcessorDefinition),NotInferred)
+     To(Some(direct:foo),DomReference(ToProcessorDefinition),NotInferred)
+     Bean(Some(complexFactory),Some(createComplexModel),DomReference(BeanDefinition),NotInferred)
+     Choice(
+          Otherwise(
+               Bean(Some(orderFactory),Some(createOrder),DomReference(BeanDefinition),NotInferred)
+          )
+     )
+     Choice(
+          When(Simple(${body.orderType} == "Widget",None,ExpressionReference(XmlTag:simple)))(
+               Log(Some(Widgets),DomReference(LogProcessorDefinition),NotInferred)
+               SetBody(Constant(Widget),DomReference(ExpressionDefinitionImpl),NotInferred)
+          )
+          When(Simple(${body.orderType} == "Gadget",None,ExpressionReference(XmlTag:simple)))(
+               Log(Some(Gadgets),DomReference(LogProcessorDefinition),NotInferred)
+               SetBody(Constant(Gadget),DomReference(ExpressionDefinitionImpl),NotInferred)
+          )
+          Otherwise(
+               Log(Some(Otherwise block),DomReference(LogProcessorDefinition),NotInferred)
+               Bean(Some(complexFactory),Some(createComplexModel),DomReference(BeanDefinition),NotInferred)
+          )
+     )
+     To(Some(direct:bar),DomReference(ToProcessorDefinition),NotInferred)
+)

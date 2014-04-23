@@ -38,6 +38,10 @@ class GraphTests
     doTest()
   }
 
+  def testChoiceWithOtherwise() {
+    doTest()
+  }
+
   private def doTest() {
     loadAllCommon(myFixture)
 

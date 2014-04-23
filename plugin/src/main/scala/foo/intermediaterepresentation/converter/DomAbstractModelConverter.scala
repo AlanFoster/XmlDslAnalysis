@@ -124,7 +124,9 @@ class DomAbstractModelConverter extends AbstractModelConverter[Blueprint] {
     case choice: ChoiceProcessorDefinition =>
      val domChildren = choice.getWhenClauses.asScala
      val abstractChildren = domChildren.map(convertWhenClause).toList
-     Choice(abstractChildren, DomReference(domElement))
+     val otherwiseDefinition = convertOtherwiseClause(choice.getOtherwise)
+
+     Choice(abstractChildren, otherwiseDefinition, DomReference(domElement))
 
     /**
      * Handle the <log message="..." /> node
@@ -141,22 +143,29 @@ class DomAbstractModelConverter extends AbstractModelConverter[Blueprint] {
   }
 
   /**
+   * Converts the given otherwise DOM element into an IR representation
+   * @param otherwiseDefinition The current otherwise definition DomElement
+   * @return The appropriate abstract model associated with this DomElement
+   */
+  def convertOtherwiseClause(otherwiseDefinition: OtherwiseDefinition): Option[Otherwise] = {
+    if(!otherwiseDefinition.isValid || !otherwiseDefinition.exists()) {
+      None
+    } else {
+      val childProcessors = otherwiseDefinition.getComponents.asScala.map(convert).toList
+      Some(Otherwise(childProcessors, DomReference(otherwiseDefinition)))
+    }
+  }
+
+  /**
    * Converts the when clause Dom Elements to the relevent expressions as expected
    * @param whenDefinition The current when definition DomElement
    * @return The appropriate abstract model associated with this DomElement
    */
-  def convertWhenClause(whenDefinition: WhenDefinition): When = whenDefinition match {
-    /**
-     * Handle the When case - note we need to recursively apply the function
-     * to our children also
-     */
-    case when: WhenDefinition =>
-      val expression = convertExpression(when.getExpression)
-      val children = when.getComponents.asScala.map(convert).toList
+  def convertWhenClause(whenDefinition: WhenDefinition): When = {
+      val expression = convertExpression(whenDefinition.getExpression)
+      val children = whenDefinition.getComponents.asScala.map(convert).toList
 
       When(expression, children, DomReference(whenDefinition))
-
-    // case otherwise:
   }
 
   /**

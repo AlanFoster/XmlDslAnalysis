@@ -1,0 +1,45 @@
+<eipDag>
+    <vertices>
+        <vertex id="afterChoice" eipType="to" text="direct:afterChoice" headers="{headerA}"/>
+        <vertex id="secondEmptyChoiceEmptyOtherwise" eipType="otherwise" text="" headers="{headerA}"/>
+        <vertex id="secondEmptyChoice" eipType="choice" text="" headers="{headerA}"/>
+        <vertex id="emptyChoice" eipType="choice" text="" headers="{headerA}"/>
+        <vertex id="headerAFloat" eipType="translator" text="headerA -&gt; 10" headers="{headerA}"/>
+        <vertex id="otherwise" eipType="otherwise" text="" headers="{headerA}"/>
+        <vertex id="headerADouble" eipType="translator" text="headerA -&gt; 10" headers="{headerA}"/>
+        <vertex id="choice2When1" eipType="when" text="true" headers="{headerA}"/>
+        <vertex id="choice2" eipType="choice" text="" headers="{headerA}"/>
+        <vertex id="choice1otherwise" eipType="otherwise" text="" headers="{headerA}"/>
+        <vertex eipType="to" text="direct:foo" headers="{headerA}"/>
+        <vertex id="headerAInteger" eipType="translator" text="headerA -&gt; 10" headers="{headerA}"/>
+        <vertex id="choice1NestedOtherwise" eipType="otherwise" text="" headers="{headerA}"/>
+        <vertex id="choice1Nested" eipType="choice" text="" headers="{headerA}"/>
+        <vertex id="headerAString" eipType="translator" text="headerA -&gt; hello world" headers="{headerA}"/>
+        <vertex id="when1" eipType="when" text="true" headers="{headerA}"/>
+        <vertex id="choice1" eipType="choice" text="" headers="{headerA}"/>
+        <vertex id="headerA" eipType="translator" text="headerA -&gt; &quot;headerA&quot;" headers="{headerA}"/>
+        <vertex id="from" eipType="from" text="direct:start" headers="{}"/>
+    </vertices>
+    <edges>
+        <edge source="secondEmptyChoiceEmptyOtherwise" target="afterChoice" edgeConnection="secondEmptyChoiceEmptyOtherwise_afterChoice19"/>
+        <edge source="secondEmptyChoice" target="secondEmptyChoiceEmptyOtherwise" edgeConnection="secondEmptyChoice_secondEmptyChoiceEmptyOtherwise18"/>
+        <edge source="emptyChoice" target="secondEmptyChoice" edgeConnection="emptyChoice_secondEmptyChoice17"/>
+        <edge source="headerADouble" target="emptyChoice" edgeConnection="headerADouble_emptyChoice16"/>
+        <edge source="headerAFloat" target="emptyChoice" edgeConnection="headerAFloat_emptyChoice15"/>
+        <edge source="otherwise" target="headerAFloat" edgeConnection="otherwise_headerAFloat14"/>
+        <edge source="choice2" target="otherwise" edgeConnection="choice2_otherwise13"/>
+        <edge source="choice2When1" target="headerADouble" edgeConnection="choice2When1_headerADouble12"/>
+        <edge source="choice2" target="choice2When1" edgeConnection="choice2_choice2When111"/>
+        <edge target="choice2" edgeConnection="null_choice210"/>
+        <edge source="choice1otherwise" target="choice2" edgeConnection="choice1otherwise_choice29"/>
+        <edge source="choice1" target="choice1otherwise" edgeConnection="choice1_choice1otherwise8"/>
+        <edge source="headerAInteger" edgeConnection="headerAInteger_null7"/>
+        <edge source="choice1NestedOtherwise" target="headerAInteger" edgeConnection="choice1NestedOtherwise_headerAInteger6"/>
+        <edge source="choice1Nested" target="choice1NestedOtherwise" edgeConnection="choice1Nested_choice1NestedOtherwise5"/>
+        <edge source="headerAString" target="choice1Nested" edgeConnection="headerAString_choice1Nested4"/>
+        <edge source="when1" target="headerAString" edgeConnection="when1_headerAString3"/>
+        <edge source="choice1" target="when1" edgeConnection="choice1_when12"/>
+        <edge source="headerA" target="choice1" edgeConnection="headerA_choice11"/>
+        <edge source="from" target="headerA" edgeConnection="from_headerA0"/>
+    </edges>
+</eipDag>

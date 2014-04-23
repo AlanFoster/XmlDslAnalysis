@@ -111,8 +111,11 @@ sealed trait Processor extends Mappable[Processor] {
       this match {
         case Route(children, _, _ ) =>
           findChild(children)(func)
-        case Choice(children, _, _) =>
-          findChild(children)(func)
+        case Choice(children, otherwiseOption, _, _) =>
+          otherwiseOption match {
+            case Some(otherwise) => findChild(otherwise :: children)(func)
+            case None => findChild(children)(func)
+          }
         case When(_, children, _, _) =>
           findChild(children)(func)
         case _ =>
@@ -159,8 +162,14 @@ final case class SetBody(expression: Expression, reference:Reference, typeInform
 final case class SetHeader(headerName: Option[String], expression: Expression, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
   val eipType: EipName = EipName.Translator
 }
-final case class Choice(whens: List[When], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
+final case class Choice(whens: List[When], otherwiseOption: Option[Otherwise], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
   val eipType: EipName = EipName.choice
+  def getChildren: List[Processor] = {
+    otherwiseOption match {
+      case Some(otherwise) => whens :+ otherwise
+      case None => whens
+    }
+  }
 }
 final case class When(expression: Expression, children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
   val eipType: EipName = EipName.When

@@ -1,0 +1,43 @@
+Route(
+     From(Some(direct:start),DomReference(FromProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+     To(Some(direct:foo),DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+     Bean(Some(complexFactory),Some(createComplexModel),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(foo.models.ComplexModel),Map())))
+     Choice{ 
+          (Set(foo.models.ComplexModel), Map())
+          (Set(foo.models.OrderModel), Map())
+     }(
+          Otherwise{ 
+               (Set(foo.models.ComplexModel), Map())
+               (Set(foo.models.OrderModel), Map())
+          }(
+               Bean(Some(orderFactory),Some(createOrder),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(foo.models.ComplexModel),Map()),TypeEnvironment(Set(foo.models.OrderModel),Map())))
+          )
+     )
+     Choice{ 
+          (Set(foo.models.OrderModel), Map())
+          (Set(foo.models.ComplexModel, java.lang.String), Map())
+     }(
+          When(Simple(${body.orderType} == "Widget",None,ExpressionReference(XmlTag:simple))){ 
+               (Set(foo.models.OrderModel), Map())
+               (Set(java.lang.String), Map())
+          }(
+               Log(Some(Widgets),DomReference(LogProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.OrderModel),Map()),TypeEnvironment(Set(foo.models.OrderModel),Map())))
+               SetBody(Constant(Widget),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(foo.models.OrderModel),Map()),TypeEnvironment(Set(java.lang.String),Map())))
+          )
+          When(Simple(${body.orderType} == "Gadget",None,ExpressionReference(XmlTag:simple))){ 
+               (Set(foo.models.OrderModel), Map())
+               (Set(java.lang.String), Map())
+          }(
+               Log(Some(Gadgets),DomReference(LogProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.OrderModel),Map()),TypeEnvironment(Set(foo.models.OrderModel),Map())))
+               SetBody(Constant(Gadget),DomReference(ExpressionDefinitionImpl),Inferred(TypeEnvironment(Set(foo.models.OrderModel),Map()),TypeEnvironment(Set(java.lang.String),Map())))
+          )
+          Otherwise{ 
+               (Set(foo.models.OrderModel), Map())
+               (Set(foo.models.ComplexModel), Map())
+          }(
+               Log(Some(Otherwise block),DomReference(LogProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.OrderModel),Map()),TypeEnvironment(Set(foo.models.OrderModel),Map())))
+               Bean(Some(complexFactory),Some(createComplexModel),DomReference(BeanDefinition),Inferred(TypeEnvironment(Set(foo.models.OrderModel),Map()),TypeEnvironment(Set(foo.models.ComplexModel),Map())))
+          )
+     )
+     To(Some(direct:bar),DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(foo.models.ComplexModel, java.lang.String),Map()),TypeEnvironment(Set(foo.models.ComplexModel, java.lang.String),Map())))
+)
