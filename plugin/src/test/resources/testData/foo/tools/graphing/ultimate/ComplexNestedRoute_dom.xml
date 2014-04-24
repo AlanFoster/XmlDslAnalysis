@@ -6,9 +6,9 @@
        http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
        http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
 
-    <bean class="foo.factory.OrderFactory" />
-    <bean class="foo.factory.PersonFactory" />
-    <bean class="foo.factory.ComplexModelFactory" />
+    <bean class="foo.factory.OrderFactory" id="orderFactory"/>
+    <bean class="foo.factory.PersonFactory" id="personFactory"/>
+    <bean class="foo.factory.ComplexModelFactory" id="complexModelFactory"/>
 
     <camelContext trace="true" xmlns="http://camel.apache.org/schema/blueprint">
         <route>
