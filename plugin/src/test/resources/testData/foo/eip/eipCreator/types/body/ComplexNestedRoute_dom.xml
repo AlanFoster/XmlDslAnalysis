@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:camel="http://camel.apache.org/schema/blueprint"
+           xsi:schemaLocation="
+       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+    <bean class="foo.factory.OrderFactory" id="orderFactory"/>
+    <bean class="foo.factory.PersonFactory" id="personFactory"/>
+    <bean class="foo.factory.ComplexModelFactory" id="complexModelFactory"/>
+
+    <camelContext trace="true" xmlns="http://camel.apache.org/schema/blueprint">
+        <route>
+            <from uri="direct:start"/>
+            <to uri="direct:foo" />
+
+
+            <choice id="P1">
+                <when id="P2">
+                    <constant>true</constant>
+                    <bean id="P3" ref="orderFactory" method="createOrder"/>
+                </when>
+            </choice>
+
+            <choice id="P4">
+                <when id="P5">
+                    <simple resultType="java.lang.Boolean">true</simple>
+                    <to id="P6" uri="uri:firstChoiceProcessor" />
+                </when>
+                <when id="P7">
+                    <simple>false</simple>
+                    <to  id="P8" uri="uri:secondChoiceProcessor" />
+                    <bean id="P9" ref="personFactory" method="createPerson"/>
+                    <to id="P10" uri="uri:thirdChoiceProcessor" />
+                    <choice id="P11">
+                        <when id="P12">
+                            <simple resultType="java.lang.Boolean">true</simple>
+                            <to id="P13" uri="uri:firstChoiceProcessor" />
+                        </when>
+                        <when id="P14">
+                            <simple>false</simple>
+                            <bean id="P15" ref="personFactory" method="createPerson"/>
+                            <to id="P16" uri="uri:thirdChoiceProcessor" />
+                        </when>
+                    </choice>
+                </when>
+            </choice>
+            <to id="P17" uri="direct:bar"/>
+
+            <choice id="P18">
+                <when id="P19">
+                    <simple resultType="java.lang.Boolean">true</simple>
+                    <to id="P20" uri="uri:firstChoiceProcessor" />
+                    <choice id="P21">
+                        <when id="P22">
+                            <simple resultType="java.lang.Boolean">true</simple>
+                            <to uri="uri:firstChoiceProcessor" />
+                            <bean id="P23" ref="complexModelFactory" method="createComplexModel"/>
+                        </when>
+                        <when id="P24">
+                            <simple>false</simple>
+                            <bean id="P25" ref="personFactory" method="createPerson"/>
+                            <to id="P26" uri="uri:secondChoiceProcessor" />
+                            <to id="P27" uri="uri:thirdChoiceProcessor" />
+
+                            <to id="P28" uri="direct:foo" />
+
+                            <setHeader id="P29" headerName="secondHeader">
+                                <simple resultType="java.lang.String">${body}</simple>
+                            </setHeader>
+                            <setHeader id="P30" headerName="thirdHeader">
+                                <simple resultType="java.lang.Integer">${body}</simple>
+                            </setHeader>
+                            <setHeader id="P31" headerName="secondHeader">
+                                <simple resultType="java.lang.Object">${body}</simple>
+                            </setHeader>
+
+                            <choice id="P32">
+                                <when id="P33">
+                                    <constant>true</constant>
+                                    <bean id="P34" ref="orderFactory" method="createOrder"/>
+                                </when>
+                            </choice>
+
+                            <choice id="P35">
+                                <when id="P36">
+                                    <simple resultType="java.lang.Boolean">true</simple>
+                                    <to id="P37" uri="uri:firstChoiceProcessor" />
+                                </when>
+                                <when id="P38">
+                                    <simple>false</simple>
+                                    <to id="P39" uri="uri:secondChoiceProcessor" />
+                                    <bean id="P40" ref="personFactory" method="createPerson"/>
+                                    <to id="P41" uri="uri:thirdChoiceProcessor" />
+                                    <choice id="P42">
+                                        <when id="P43">
+                                            <simple resultType="java.lang.Boolean">true</simple>
+                                            <to id="P44" uri="uri:firstChoiceProcessor" />
+                                        </when>
+                                        <when id="P45">
+                                            <simple>false</simple>
+                                            <bean id="P46" ref="personFactory" method="createPerson"/>
+                                            <to id="P47" uri="uri:thirdChoiceProcessor" />
+                                        </when>
+                                    </choice>
+                                </when>
+                            </choice>
+                            <to id="P48" uri="direct:bar"/>
+
+                            <choice id="P49">
+                                <when id="P50">
+                                    <simple resultType="java.lang.Boolean">true</simple>
+                                    <to id="P51" uri="uri:firstChoiceProcessor" />
+                                    <choice id="P52">
+                                        <when id="P53">
+                                            <simple resultType="java.lang.Boolean">true</simple>
+                                            <to id="P54" uri="uri:firstChoiceProcessor" />
+                                            <bean id="P55" ref="complexModelFactory" method="createComplexModel"/>
+                                        </when>
+                                        <when id="P56">
+                                            <simple>false</simple>
+                                            <bean id="P57" ref="personFactory" method="createPerson"/>
+                                            <to id="P58" uri="uri:secondChoiceProcessor" />
+                                            <to id="P59" uri="uri:thirdChoiceProcessor" />
+
+                                            <to id="P60" uri="direct:foo" />
+
+                                            <setHeader id="P61" headerName="secondHeader">
+                                                <simple resultType="java.lang.String">${body}</simple>
+                                            </setHeader>
+                                            <setHeader id="P62" headerName="thirdHeader">
+                                                <simple resultType="java.lang.Integer">${body}</simple>
+                                            </setHeader>
+                                            <setHeader id="P62b" headerName="secondHeader">
+                                                <simple resultType="java.lang.Object">${body}</simple>
+                                            </setHeader>
+
+                                            <setHeader id="P63" headerName="fourthHeader">
+                                                <simple resultType="java.lang.Integer">5</simple>
+                                            </setHeader>
+                                        </when>
+                                    </choice>
+                                </when>
+                                <when id="P65">
+                                    <simple>false</simple>
+
+                                    <!-- Set the body as the model -->
+                                    <bean id="P66" ref="complexModelFactory" method="createComplexModel" />
+
+                                    <setBody id="P67">
+                                        <simple resultType="java.lang.String">${body.additionalInformation}</simple>
+                                    </setBody>
+
+                                    <to id="P68" uri="uri:secondChoiceProcessor" />
+                                    <to id="P69" uri="uri:thirdChoiceProcessor" />
+                                </when>
+                            </choice>
+
+                            <choice id="P70">
+                                <when id="P71">
+                                    <constant>true</constant>
+                                    <bean id="P72" ref="personFactory" method="createPerson"/>
+                                </when>
+                            </choice>
+
+                            <choice id="P73">
+                                <when>
+                                    <constant>true</constant>
+                                    <bean id="P74" ref="complexModelFactory" method="createComplexModel"/>
+                                </when>
+                            </choice>
+
+                            <setHeader id="P75" headerName="fifthHeader">
+                                <constant>Hello World</constant>
+                            </setHeader>
+
+                            <setHeader id="P76" headerName="fourthHeader">
+                                <simple resultType="java.lang.Integer">5</simple>
+                            </setHeader>
+                        </when>
+                    </choice>
+                </when>
+                <when id="P77">
+                    <simple>false</simple>
+
+                    <!-- Set the body as the model -->
+                    <bean id="P78" ref="complexModelFactory" method="createComplexModel" />
+
+                    <setBody id="P79">
+                        <simple resultType="java.lang.String">${body.additionalInformation}</simple>
+                    </setBody>
+
+                    <to id="P80" uri="uri:secondChoiceProcessor" />
+                    <to id="P81" uri="uri:thirdChoiceProcessor" />
+                </when>
+            </choice>
+
+            <choice id="P82">
+                <when id="P83">
+                    <constant>true</constant>
+                    <bean id="P84" ref="personFactory" method="createPerson"/>
+                </when>
+            </choice>
+
+            <choice id="P85">
+                <when id="P86">
+                    <constant>true</constant>
+                    <bean id="P87" ref="complexModelFactory" method="createComplexModel"/>
+                </when>
+            </choice>
+
+            <setHeader id="P88" headerName="fifthHeader">
+                <constant>Hello World</constant>
+            </setHeader>
+
+        </route>
+    </camelContext>
+</blueprint>

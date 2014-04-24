@@ -1,0 +1,207 @@
+<eipDag>
+    <vertices>
+        <vertex id="P88" eipType="translator" text="fifthHeader -&gt; Hello World" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
+        <vertex id="P87" eipType="to" text="complexModelFactory.createComplexModel()" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="P86" eipType="when" text="true" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="P85" eipType="choice" text="" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
+        <vertex id="P84" eipType="to" text="personFactory.createPerson()" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P83" eipType="when" text="true" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P82" eipType="choice" text="" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
+        <vertex id="P81" eipType="to" text="uri:thirdChoiceProcessor" inferredType="{java.lang.Object}"/>
+        <vertex id="P80" eipType="to" text="uri:secondChoiceProcessor" inferredType="{java.lang.Object}"/>
+        <vertex id="P79" eipType="translator" text="${body.additionalInformation}" inferredType="{java.lang.Object}"/>
+        <vertex id="P78" eipType="to" text="complexModelFactory.createComplexModel()" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="P77" eipType="when" text="false" inferredType="{java.lang.Object}"/>
+        <vertex id="P76" eipType="translator" text="fourthHeader -&gt; 5" inferredType="{foo.models.PersonModel, foo.models.OrderModel, java.lang.Object, foo.models.ComplexModel}"/>
+        <vertex id="P75" eipType="translator" text="fifthHeader -&gt; Hello World" inferredType="{foo.models.PersonModel, foo.models.OrderModel, java.lang.Object, foo.models.ComplexModel}"/>
+        <vertex id="P74" eipType="to" text="complexModelFactory.createComplexModel()" inferredType="{foo.models.ComplexModel}"/>
+        <vertex eipType="when" text="true" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="P73" eipType="choice" text="" inferredType="{foo.models.PersonModel, foo.models.OrderModel, java.lang.Object, foo.models.ComplexModel}"/>
+        <vertex id="P72" eipType="to" text="personFactory.createPerson()" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P71" eipType="when" text="true" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P70" eipType="choice" text="" inferredType="{foo.models.PersonModel, foo.models.OrderModel, java.lang.Object, foo.models.ComplexModel}"/>
+        <vertex id="P69" eipType="to" text="uri:thirdChoiceProcessor" inferredType="{java.lang.Object}"/>
+        <vertex id="P68" eipType="to" text="uri:secondChoiceProcessor" inferredType="{java.lang.Object}"/>
+        <vertex id="P67" eipType="translator" text="${body.additionalInformation}" inferredType="{java.lang.Object}"/>
+        <vertex id="P66" eipType="to" text="complexModelFactory.createComplexModel()" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="P65" eipType="when" text="false" inferredType="{java.lang.Object}"/>
+        <vertex id="P63" eipType="translator" text="fourthHeader -&gt; 5" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P62b" eipType="translator" text="secondHeader -&gt; ${body}" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P62" eipType="translator" text="thirdHeader -&gt; ${body}" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P61" eipType="translator" text="secondHeader -&gt; ${body}" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P60" eipType="to" text="direct:foo" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P59" eipType="to" text="uri:thirdChoiceProcessor" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P58" eipType="to" text="uri:secondChoiceProcessor" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P57" eipType="to" text="personFactory.createPerson()" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P56" eipType="when" text="false" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P55" eipType="to" text="complexModelFactory.createComplexModel()" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="P54" eipType="to" text="uri:firstChoiceProcessor" inferredType="{foo.models.PersonModel, foo.models.OrderModel}"/>
+        <vertex id="P53" eipType="when" text="true" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="P52" eipType="choice" text="" inferredType="{foo.models.PersonModel, foo.models.OrderModel, foo.models.ComplexModel}"/>
+        <vertex id="P51" eipType="to" text="uri:firstChoiceProcessor" inferredType="{foo.models.PersonModel, foo.models.OrderModel}"/>
+        <vertex id="P50" eipType="when" text="true" inferredType="{foo.models.PersonModel, foo.models.OrderModel, foo.models.ComplexModel}"/>
+        <vertex id="P49" eipType="choice" text="" inferredType="{foo.models.PersonModel, foo.models.OrderModel, java.lang.Object, foo.models.ComplexModel}"/>
+        <vertex id="P48" eipType="to" text="direct:bar" inferredType="{foo.models.PersonModel, foo.models.OrderModel}"/>
+        <vertex id="P47" eipType="to" text="uri:thirdChoiceProcessor" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P46" eipType="to" text="personFactory.createPerson()" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P45" eipType="when" text="false" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P44" eipType="to" text="uri:firstChoiceProcessor" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P43" eipType="when" text="true" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P42" eipType="choice" text="" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P41" eipType="to" text="uri:thirdChoiceProcessor" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P40" eipType="to" text="personFactory.createPerson()" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P39" eipType="to" text="uri:secondChoiceProcessor" inferredType="{foo.models.PersonModel, foo.models.OrderModel}"/>
+        <vertex id="P38" eipType="when" text="false" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P37" eipType="to" text="uri:firstChoiceProcessor" inferredType="{foo.models.PersonModel, foo.models.OrderModel}"/>
+        <vertex id="P36" eipType="when" text="true" inferredType="{foo.models.PersonModel, foo.models.OrderModel}"/>
+        <vertex id="P35" eipType="choice" text="" inferredType="{foo.models.PersonModel, foo.models.OrderModel}"/>
+        <vertex id="P34" eipType="to" text="orderFactory.createOrder()" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="P33" eipType="when" text="true" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="P32" eipType="choice" text="" inferredType="{foo.models.PersonModel, foo.models.OrderModel}"/>
+        <vertex id="P31" eipType="translator" text="secondHeader -&gt; ${body}" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P30" eipType="translator" text="thirdHeader -&gt; ${body}" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P29" eipType="translator" text="secondHeader -&gt; ${body}" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P28" eipType="to" text="direct:foo" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P27" eipType="to" text="uri:thirdChoiceProcessor" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P26" eipType="to" text="uri:secondChoiceProcessor" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P25" eipType="to" text="personFactory.createPerson()" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P24" eipType="when" text="false" inferredType="{foo.models.PersonModel, foo.models.OrderModel, java.lang.Object, foo.models.ComplexModel}"/>
+        <vertex id="P23" eipType="to" text="complexModelFactory.createComplexModel()" inferredType="{foo.models.ComplexModel}"/>
+        <vertex eipType="to" text="uri:firstChoiceProcessor" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel}"/>
+        <vertex id="P22" eipType="when" text="true" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="P21" eipType="choice" text="" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
+        <vertex id="P20" eipType="to" text="uri:firstChoiceProcessor" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel}"/>
+        <vertex id="P19" eipType="when" text="true" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
+        <vertex id="P18" eipType="choice" text="" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
+        <vertex id="P17" eipType="to" text="direct:bar" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel}"/>
+        <vertex id="P16" eipType="to" text="uri:thirdChoiceProcessor" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P15" eipType="to" text="personFactory.createPerson()" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P14" eipType="when" text="false" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P13" eipType="to" text="uri:firstChoiceProcessor" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P12" eipType="when" text="true" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P11" eipType="choice" text="" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P10" eipType="to" text="uri:thirdChoiceProcessor" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P9" eipType="to" text="personFactory.createPerson()" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P8" eipType="to" text="uri:secondChoiceProcessor" inferredType="{java.lang.Object, foo.models.OrderModel}"/>
+        <vertex id="P7" eipType="when" text="false" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="P6" eipType="to" text="uri:firstChoiceProcessor" inferredType="{java.lang.Object, foo.models.OrderModel}"/>
+        <vertex id="P5" eipType="when" text="true" inferredType="{java.lang.Object, foo.models.OrderModel}"/>
+        <vertex id="P4" eipType="choice" text="" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel}"/>
+        <vertex id="P3" eipType="to" text="orderFactory.createOrder()" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="P2" eipType="when" text="true" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="P1" eipType="choice" text="" inferredType="{java.lang.Object, foo.models.OrderModel}"/>
+        <vertex eipType="to" text="direct:foo" inferredType="{java.lang.Object}"/>
+        <vertex eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
+    </vertices>
+    <edges>
+        <edge source="P87" target="P88" edgeConnection="P87_P88235"/>
+        <edge source="P85" target="P88" edgeConnection="P85_P88234"/>
+        <edge source="P86" target="P87" edgeConnection="P86_P87233"/>
+        <edge source="P85" target="P86" edgeConnection="P85_P86232"/>
+        <edge source="P84" target="P85" edgeConnection="P84_P85231"/>
+        <edge source="P82" target="P85" edgeConnection="P82_P85230"/>
+        <edge source="P83" target="P84" edgeConnection="P83_P84229"/>
+        <edge source="P82" target="P83" edgeConnection="P82_P83228"/>
+        <edge source="P23" target="P82" edgeConnection="P23_P82227"/>
+        <edge source="P76" target="P82" edgeConnection="P76_P82226"/>
+        <edge source="P81" target="P82" edgeConnection="P81_P8298"/>
+        <edge source="P18" target="P82" edgeConnection="P18_P8297"/>
+        <edge source="P80" target="P81" edgeConnection="P80_P8196"/>
+        <edge source="P79" target="P80" edgeConnection="P79_P8095"/>
+        <edge source="P78" target="P79" edgeConnection="P78_P7994"/>
+        <edge source="P77" target="P78" edgeConnection="P77_P7893"/>
+        <edge source="P18" target="P77" edgeConnection="P18_P7792"/>
+        <edge source="P75" target="P76" edgeConnection="P75_P7691"/>
+        <edge source="P74" target="P75" edgeConnection="P74_P7590"/>
+        <edge source="P73" target="P75" edgeConnection="P73_P7589"/>
+        <edge target="P74" edgeConnection="null_P7488"/>
+        <edge source="P73" edgeConnection="P73_null87"/>
+        <edge source="P72" target="P73" edgeConnection="P72_P7386"/>
+        <edge source="P70" target="P73" edgeConnection="P70_P7385"/>
+        <edge source="P71" target="P72" edgeConnection="P71_P7284"/>
+        <edge source="P70" target="P71" edgeConnection="P70_P7183"/>
+        <edge source="P55" target="P70" edgeConnection="P55_P7082"/>
+        <edge source="P63" target="P70" edgeConnection="P63_P7081"/>
+        <edge source="P69" target="P70" edgeConnection="P69_P7080"/>
+        <edge source="P49" target="P70" edgeConnection="P49_P7079"/>
+        <edge source="P68" target="P69" edgeConnection="P68_P6978"/>
+        <edge source="P67" target="P68" edgeConnection="P67_P6877"/>
+        <edge source="P66" target="P67" edgeConnection="P66_P6776"/>
+        <edge source="P65" target="P66" edgeConnection="P65_P6675"/>
+        <edge source="P49" target="P65" edgeConnection="P49_P6574"/>
+        <edge source="P62b" target="P63" edgeConnection="P62b_P6373"/>
+        <edge source="P62" target="P62b" edgeConnection="P62_P62b72"/>
+        <edge source="P61" target="P62" edgeConnection="P61_P6271"/>
+        <edge source="P60" target="P61" edgeConnection="P60_P6170"/>
+        <edge source="P59" target="P60" edgeConnection="P59_P6069"/>
+        <edge source="P58" target="P59" edgeConnection="P58_P5968"/>
+        <edge source="P57" target="P58" edgeConnection="P57_P5867"/>
+        <edge source="P56" target="P57" edgeConnection="P56_P5766"/>
+        <edge source="P52" target="P56" edgeConnection="P52_P5665"/>
+        <edge source="P54" target="P55" edgeConnection="P54_P5564"/>
+        <edge source="P53" target="P54" edgeConnection="P53_P5463"/>
+        <edge source="P52" target="P53" edgeConnection="P52_P5362"/>
+        <edge source="P51" target="P52" edgeConnection="P51_P5261"/>
+        <edge source="P50" target="P51" edgeConnection="P50_P5160"/>
+        <edge source="P49" target="P50" edgeConnection="P49_P5059"/>
+        <edge source="P48" target="P49" edgeConnection="P48_P4958"/>
+        <edge source="P37" target="P48" edgeConnection="P37_P4857"/>
+        <edge source="P44" target="P48" edgeConnection="P44_P4856"/>
+        <edge source="P47" target="P48" edgeConnection="P47_P4855"/>
+        <edge source="P35" target="P48" edgeConnection="P35_P4854"/>
+        <edge source="P46" target="P47" edgeConnection="P46_P4753"/>
+        <edge source="P45" target="P46" edgeConnection="P45_P4652"/>
+        <edge source="P42" target="P45" edgeConnection="P42_P4551"/>
+        <edge source="P43" target="P44" edgeConnection="P43_P4450"/>
+        <edge source="P42" target="P43" edgeConnection="P42_P4349"/>
+        <edge source="P41" target="P42" edgeConnection="P41_P4248"/>
+        <edge source="P40" target="P41" edgeConnection="P40_P4147"/>
+        <edge source="P39" target="P40" edgeConnection="P39_P4046"/>
+        <edge source="P38" target="P39" edgeConnection="P38_P3945"/>
+        <edge source="P35" target="P38" edgeConnection="P35_P3844"/>
+        <edge source="P36" target="P37" edgeConnection="P36_P3743"/>
+        <edge source="P35" target="P36" edgeConnection="P35_P3642"/>
+        <edge source="P34" target="P35" edgeConnection="P34_P3541"/>
+        <edge source="P32" target="P35" edgeConnection="P32_P3540"/>
+        <edge source="P33" target="P34" edgeConnection="P33_P3439"/>
+        <edge source="P32" target="P33" edgeConnection="P32_P3338"/>
+        <edge source="P31" target="P32" edgeConnection="P31_P3237"/>
+        <edge source="P30" target="P31" edgeConnection="P30_P3136"/>
+        <edge source="P29" target="P30" edgeConnection="P29_P3035"/>
+        <edge source="P28" target="P29" edgeConnection="P28_P2934"/>
+        <edge source="P27" target="P28" edgeConnection="P27_P2833"/>
+        <edge source="P26" target="P27" edgeConnection="P26_P2732"/>
+        <edge source="P25" target="P26" edgeConnection="P25_P2631"/>
+        <edge source="P24" target="P25" edgeConnection="P24_P2530"/>
+        <edge source="P21" target="P24" edgeConnection="P21_P2429"/>
+        <edge target="P23" edgeConnection="null_P2328"/>
+        <edge source="P22" edgeConnection="P22_null27"/>
+        <edge source="P21" target="P22" edgeConnection="P21_P2226"/>
+        <edge source="P20" target="P21" edgeConnection="P20_P2125"/>
+        <edge source="P19" target="P20" edgeConnection="P19_P2024"/>
+        <edge source="P18" target="P19" edgeConnection="P18_P1923"/>
+        <edge source="P17" target="P18" edgeConnection="P17_P1822"/>
+        <edge source="P6" target="P17" edgeConnection="P6_P1721"/>
+        <edge source="P13" target="P17" edgeConnection="P13_P1720"/>
+        <edge source="P16" target="P17" edgeConnection="P16_P1719"/>
+        <edge source="P4" target="P17" edgeConnection="P4_P1718"/>
+        <edge source="P15" target="P16" edgeConnection="P15_P1617"/>
+        <edge source="P14" target="P15" edgeConnection="P14_P1516"/>
+        <edge source="P11" target="P14" edgeConnection="P11_P1415"/>
+        <edge source="P12" target="P13" edgeConnection="P12_P1314"/>
+        <edge source="P11" target="P12" edgeConnection="P11_P1213"/>
+        <edge source="P10" target="P11" edgeConnection="P10_P1112"/>
+        <edge source="P9" target="P10" edgeConnection="P9_P1011"/>
+        <edge source="P8" target="P9" edgeConnection="P8_P910"/>
+        <edge source="P7" target="P8" edgeConnection="P7_P89"/>
+        <edge source="P4" target="P7" edgeConnection="P4_P78"/>
+        <edge source="P5" target="P6" edgeConnection="P5_P67"/>
+        <edge source="P4" target="P5" edgeConnection="P4_P56"/>
+        <edge source="P3" target="P4" edgeConnection="P3_P45"/>
+        <edge source="P1" target="P4" edgeConnection="P1_P44"/>
+        <edge source="P2" target="P3" edgeConnection="P2_P33"/>
+        <edge source="P1" target="P2" edgeConnection="P1_P22"/>
+        <edge target="P1" edgeConnection="null_P11"/>
+        <edge edgeConnection="null_null0"/>
+    </edges>
+</eipDag>

@@ -2,7 +2,7 @@ package foo.tooling.graphing
 
 import StaticGraphTypes.EipDAG
 import foo.dom.Model._
-import foo.tooling.graphing.ADT.EmptyDAG
+import foo.tooling.graphing.ADT.{DAG, EmptyDAG}
 import foo.intermediaterepresentation.model.expressions.Expression
 import foo.intermediaterepresentation.model.processors._
 import foo.intermediaterepresentation.model.processors.Route
@@ -113,11 +113,11 @@ class EipGraphCreator {
    */
   def createEipGraph(routeWithSemantics: Route): EipDAG = {
       val createdDAG: EipDAG = EmptyDAG[EipProcessor, String]()
-      createEipGraph(
+      pruneEdges(createEipGraph(
         List(),
         routeWithSemantics.children,
         createdDAG
-      )
+      ))
   }
 
   /**
@@ -294,6 +294,26 @@ class EipGraphCreator {
         else children.flatMap(child => getLeafNodesTailRec(graph, child.target, leafNodes))
       }
       getLeafNodesTailRec(graph, parent, List[EipProcessor]())
+  }
+
+  /**
+   * Prunes the edges on a given graph, based on distinct (source, target) edge tuples
+   * @param graph The EipGraph
+   * @return An EipGraph with pruned edges.
+   */
+  private def pruneEdges(graph:EipDAG): EipDAG = {
+    val prunedEdges =
+      graph.edges.foldLeft(
+        List[foo.tooling.graphing.ADT.Edge[EipProcessor, String]](),
+        Set[(EipProcessor, EipProcessor)]()
+      ) ({
+        case (acc@(pruned, distinct), next) =>
+          val sourceTargetTuple = (next.source, next.target)
+          if(distinct(sourceTargetTuple)) acc
+          else (next :: pruned, distinct + sourceTargetTuple)
+      })._1.reverse
+    val prunedDag = DAG(graph.vertices, prunedEdges)
+    prunedDag
   }
 
   /**

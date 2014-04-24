@@ -87,6 +87,10 @@ class BodyTypePropagationTests
     doTest()
   }
 
+  def testComplexNestedRoute() {
+    doTest()
+  }
+
   /**
    * Ensures the test is valid
    */
