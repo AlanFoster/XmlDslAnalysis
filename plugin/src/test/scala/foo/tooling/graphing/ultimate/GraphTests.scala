@@ -8,6 +8,7 @@ import foo.tooling.graphing.strategies.tooltip.SemanticToolTipStrategy
 import junit.framework.Assert
 import javax.swing.{WindowConstants, JFrame}
 import org.apache.commons.lang.time.DurationFormatUtils
+import foo.tooling.graphing.strategies.node.EipDescriptiveIconVertexFactory
 
 class GraphTests
   extends LightCodeInsightFixtureTestCase
@@ -49,7 +50,10 @@ class GraphTests
     val virtualFile = myFixture.configureByFile(s"${testName}_dom.xml").getVirtualFile
 
     val startTime = System.currentTimeMillis()
-    val ideaGraphCreator = new IdeaGraphCreator(new EipIconLoader with IntellijIconLoader, new SemanticToolTipStrategy)
+    val ideaGraphCreator = new IdeaGraphCreator(
+      new EipDescriptiveIconVertexFactory(new EipIconLoader with IntellijIconLoader),
+      new SemanticToolTipStrategy
+    )
 
     val eipEditor= new EipEditor(getProject, virtualFile, List(ideaGraphCreator))
     eipEditor.selectNotify()

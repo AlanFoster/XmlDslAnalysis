@@ -10,15 +10,15 @@ import java.awt.Color
 import foo.tooling.graphing.ADT.Edge
 import foo.tooling.graphing.EipProcessor
 import foo.tooling.graphing.strategies.tooltip.ToolTipStrategy
-import foo.tooling.graphing.strategies.icons.EipIconLoader
 import foo.FunctionalUtil._
+import foo.tooling.graphing.strategies.node.EipVertexFactory
 
 /**
  * The graph presentation model deals with edges/nodes drawing etc.
  * For instance being able to provide custom realizors for nodes.
  */
 class CamelGraphPresentationModel(graph: Graph, project: Project,
-                                  iconLoader: EipIconLoader, tooltipStrategy: ToolTipStrategy)
+                                  eipVertexFactory: EipVertexFactory, tooltipStrategy: ToolTipStrategy)
   extends BasicGraphPresentationModel[EipProcessor, Edge[EipProcessor, String]](graph) {
 
   /**
@@ -75,7 +75,7 @@ class CamelGraphPresentationModel(graph: Graph, project: Project,
    * Lazily instantiated eip graph node render, which will handle drawing the nodes
    * wtihin this graph
    */
-  def eipGraphNodeRenderer = new EipGraphNodeRenderer(getGraphBuilder, iconLoader)
+  def eipGraphNodeRenderer = new EipGraphNodeRenderer(getGraphBuilder, eipVertexFactory)
 
   /**
    * Provide a concrete implementation of a node realizer which allows for a custom

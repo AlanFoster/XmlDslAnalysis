@@ -12,8 +12,8 @@ import javax.swing.JPanel
 import java.awt.BorderLayout
 import foo.tooling.graphing.{GraphCreator, StaticGraphTypes}
 import StaticGraphTypes.EipDAG
-import foo.tooling.graphing.strategies.icons.EipIconLoader
 import foo.tooling.graphing.strategies.tooltip.ToolTipStrategy
+import foo.tooling.graphing.strategies.node.EipVertexFactory
 
 /**
  * A concrete implementation of the GraphCreator trait which interacts
@@ -24,7 +24,7 @@ import foo.tooling.graphing.strategies.tooltip.ToolTipStrategy
  * @param iconLoader Provide access to an EIP Icon loader strategy implementation
  * @param tooltipStrategy Provide access to a tooltip strategy implementation
  */
-class IdeaGraphCreator(iconLoader: EipIconLoader, tooltipStrategy: ToolTipStrategy) extends GraphCreator {
+class IdeaGraphCreator(iconLoader: EipVertexFactory, tooltipStrategy: ToolTipStrategy) extends GraphCreator {
   /**
    * {@inheritdoc}
    */

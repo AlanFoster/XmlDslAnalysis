@@ -1,20 +1,24 @@
 package foo.tooling.graphing.jung
 
-import edu.uci.ics.jung.visualization.{VisualizationModel, DefaultVisualizationModel, GraphZoomScrollPane, VisualizationViewer}
+import edu.uci.ics.jung.visualization._
 import java.awt._
 import org.apache.commons.collections15.Transformer
 import javax.swing._
-import java.awt.geom.Rectangle2D
+import java.awt.geom.{AffineTransform, Rectangle2D}
 import edu.uci.ics.jung.visualization.control._
 import java.awt.event._
 import foo.FunctionalUtil._
 import foo.tooling.graphing.{EipProcessor, StaticGraphTypes}
 import StaticGraphTypes.EipDAG
 import foo.tooling.serializers.CompleteEipDagSerializer
-import edu.uci.ics.jung.algorithms.layout.{StaticLayout, TreeLayout}
+import edu.uci.ics.jung.algorithms.layout.{Layout, StaticLayout, TreeLayout}
 import javax.swing.border.LineBorder
 import foo.tooling.graphing.strategies.icons.{EipIconLoader, IconLoader}
 import foo.tooling.graphing.strategies.tooltip.ToolTipStrategy
+import foo.tooling.graphing.strategies.node.EipVertexFactory
+import edu.uci.ics.jung.visualization.renderers.Renderer.Vertex
+import edu.uci.ics.jung.visualization.renderers.BasicVertexRenderer
+import edu.uci.ics.jung.visualization.transform.shape.GraphicsDecorator
 
 /**
  * Class used to represent a visual representation of the the given EipDAG.
@@ -27,7 +31,7 @@ import foo.tooling.graphing.strategies.tooltip.ToolTipStrategy
  * @param eipDag In order to be agnostic of the underlying technology/DSL used for
  *               creating the given Camel routes, the EipDAG abstraction is instead used
  */
-class VisualEipGraph(eipDag: EipDAG, iconLoader: EipIconLoader, tooltipStrategy: ToolTipStrategy) {
+class VisualEipGraph(eipDag: EipDAG, eipVertexFactory: EipVertexFactory, tooltipStrategy: ToolTipStrategy) {
   /**
    * Create a type alias for VisualizationViewer to improve code readability
    */
@@ -109,28 +113,27 @@ class VisualEipGraph(eipDag: EipDAG, iconLoader: EipIconLoader, tooltipStrategy:
 
 
   /**
-   * Binds the EIP renderer to the given Viewer
+   * Binds the EIP renderers to the given Viewer
    * @param viewer The viewer that will render EIP icons
    * @return The Viewer
    */
   private def bindEipRenderer(viewer: Viewer): Viewer = {
-    def getIcon(component: EipProcessor): Icon = {
+    def getNodeComponent(component: EipProcessor): JComponent = {
       val isSelected = viewer.getPickedVertexState.getPicked.contains (component)
-      iconLoader.loadIcon(component, isSelected)
+      eipVertexFactory.create(component, isSelected)
     }
 
-    viewer.getRenderContext.setVertexIconTransformer(new Transformer[EipProcessor, Icon] {
-      override def transform(component: EipProcessor): Icon = getIcon(component)
-    })
-
+    viewer.getRenderer.setVertexRenderer(new EipVertexRenderer(getNodeComponent))
     viewer.getRenderContext.setVertexShapeTransformer(new Transformer[EipProcessor, Shape] {
       def transform(component: EipProcessor): Shape = {
-        val icon = getIcon(component)
+        val nodeComponent = getNodeComponent(component)
+        val preferredSize = nodeComponent.getPreferredSize
 
-        val (width, height) = (icon.getIconWidth.toDouble, icon.getIconHeight.toDouble)
+        val (width, height) = (preferredSize.getWidth, preferredSize.getHeight)
         new Rectangle2D.Double(-(width / 2), -(height / 2), width, height)
       }
     })
+
     viewer
   }
 

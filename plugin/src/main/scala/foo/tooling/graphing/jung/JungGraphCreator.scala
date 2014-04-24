@@ -6,6 +6,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import javax.swing.JComponent
 import foo.tooling.graphing.strategies.icons.{EipIconLoader, IconLoader, IntellijIconLoader}
 import foo.tooling.graphing.strategies.tooltip.ToolTipStrategy
+import foo.tooling.graphing.strategies.node.EipVertexFactory
 
 /**
  * A concrete implementation of the GraphCreator trait which interacts
@@ -13,10 +14,10 @@ import foo.tooling.graphing.strategies.tooltip.ToolTipStrategy
  *
  * {@link foo.tooling.graphing.GraphCreator}
  *
- * @param iconLoader Provide access to an EIP Icon loader strategy implementation
+ * @param eipVertexFactory Provide access to an EIP Icon loader strategy implementation
  * @param tooltipStrategy Provide access to a tooltip strategy implementation
  */
-class JungGraphCreator(iconLoader: EipIconLoader, val tooltipStrategy: ToolTipStrategy) extends GraphCreator {
+class JungGraphCreator(eipVertexFactory: EipVertexFactory, val tooltipStrategy: ToolTipStrategy) extends GraphCreator {
   /**
    * {@inheritdoc}
    */
@@ -26,7 +27,7 @@ class JungGraphCreator(iconLoader: EipIconLoader, val tooltipStrategy: ToolTipSt
    * {@inheritdoc}
    */
   override def createComponent(project: Project, file: VirtualFile, eipGraph: StaticGraphTypes.EipDAG): JComponent = {
-    val visualEipGraph = new VisualEipGraph(eipGraph, iconLoader, tooltipStrategy).createScrollableViewer
+    val visualEipGraph = new VisualEipGraph(eipGraph, eipVertexFactory, tooltipStrategy).createScrollableViewer
     visualEipGraph
   }
 }

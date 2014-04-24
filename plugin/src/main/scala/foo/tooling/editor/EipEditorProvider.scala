@@ -10,6 +10,7 @@ import foo.tooling.graphing.ultimate.IdeaGraphCreator
 import foo.tooling.graphing.jung.JungGraphCreator
 import foo.tooling.graphing.strategies.icons.{EipIconLoader, IntellijIconLoader}
 import foo.tooling.graphing.strategies.tooltip.SemanticToolTipStrategy
+import foo.tooling.graphing.strategies.node.EipDescriptiveIconVertexFactory
 
 /**
  * Represents the EipEditorProvider, which acts as a factory for FileEditors.
@@ -62,7 +63,7 @@ class EipEditorProvider extends FileEditorProvider with DumbAware {
    */
   def createEditor(project: Project, file: VirtualFile): FileEditor = {
     val strategies@(iconLoader, tooltipStrategy) = (
-      new EipIconLoader with IntellijIconLoader,
+      new EipDescriptiveIconVertexFactory(new EipIconLoader with IntellijIconLoader),
       new SemanticToolTipStrategy
     )
 
