@@ -148,14 +148,14 @@ class EipGraphCreator {
        */
       head match {
         /**
-         * Provides a conversion for the From IR Model
+         * Creates the From processor node, linking to the previous nodes in the DAG, if any
          */
         case processor@From(uri, _, _) =>
           val eipProcessor = EipProcessor(uri.getOrElse(DefaultAttributes.uri), processor)
           createEipGraph(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
 
         /**
-         * Provides a conversion for the SetHeader IR Model
+         * Creates the SetHeader processor node, linking to the previous nodes in the DAG, if any
          */
         case processor@SetHeader(headerNameOption, Expression(expressionValue), _, _) =>
           val headerText = headerNameOption.map(_ + " -> " + expressionValue).getOrElse(DefaultAttributes.EmptyHeaderName)
@@ -164,7 +164,7 @@ class EipGraphCreator {
           createEipGraph(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
 
         /**
-         * Match a removeHeader element
+         * Creates the RemoveHeader processor node, linking to the previous nodes in the DAG, if any
          */
         case processor@RemoveHeader(headerNameOption, _, _) =>
           val headerName = headerNameOption.getOrElse(DefaultAttributes.EmptyHeaderName)
@@ -172,28 +172,28 @@ class EipGraphCreator {
           createEipGraph(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
 
         /**
-         * Provides a conversion for the Log IR Model
+         * Creates the Log processor node, linking to the previous nodes in the DAG, if any
          */
         case processor@Log(text, _, _) =>
           val eipProcessor = EipProcessor(text.getOrElse(DefaultAttributes.NotValid), processor)
           createEipGraph(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
 
         /**
-         * Provides a conversion for the SetBody IR Model
+         * Creates the SetBody processor node, linking to the previous nodes in the DAG, if any
          */
         case processor@SetBody(Expression(expressionText), _, _) =>
           val eipProcessor = EipProcessor(expressionText, processor)
           createEipGraph(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
 
         /**
-         * Provides a conversion for the To IR Model
+         * Creates the To processor node, linking to the previous nodes in the DAG, if any
          */
         case processor@To(uri, _, _) =>
           val eipProcessor = EipProcessor(uri.getOrElse(DefaultAttributes.uri), processor)
           createEipGraph(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
 
         /**
-         * Provides a conversion for the Bean IR Model
+         * Creates the Bean processor node, linking to the previous nodes in the DAG, if any
          */
         case processor@Bean(beanReferenceOption, beanMethodOption, _, _) =>
           val beanTextOption = for {
@@ -206,30 +206,69 @@ class EipGraphCreator {
           createEipGraph(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
 
         /**
-         * Provides a conversion for the Choice IR Model
+         * Creates the require nodes + edges associated with a given choice element.
+         * This is done in two stages, firstly creating the when graphs, and then if required
+         * the optional otherwise block is then explored.
+         *
+         * Lastly the leaf nodes are created which are required to be linked to the next processor
+         * in the chain.
+         *
+         * For instance if the otherwise node is defined, there will not exist an edge between the
+         * choice expression and the next processor, otherwise one will exist.
          */
         case choice@Choice(whens, otherwise, _, _) =>
           val choiceEipProcessor = EipProcessor("", choice)
           val linkedGraph = graph.linkComponents(previous, choiceEipProcessor)
 
           // Perform the when graph creation on each when child
-          val whenInformation@(completedWhenGraph, previousDefinitions) = whens.foldLeft((linkedGraph, List[EipProcessor]()))({
-            case ((eipGraph, lastProcessorDefinition), when:When) =>
-              createWhenSubgraph(choiceEipProcessor, eipGraph, lastProcessorDefinition, when)
-          })
+          val whensGraph =
+            whens.foldLeft(linkedGraph)({
+              case (eipGraph, when:When) =>
+                createEipGraph(List(choiceEipProcessor), List(when), eipGraph)
+            })
 
-          // Finally  complete the operation on the otherwise statement, if it exists.
-          // If it does not exist, default to the created when subgraph
-          val (completedGraph, completedPreviousDefinitions) = otherwise.map(o => {
-            createOtherwiseSubgraph(choiceEipProcessor, completedWhenGraph, previousDefinitions, o)
-          })
-          .getOrElse(whenInformation)
+          // Complete the remaining otherwise node graph, if required, otherwise
+          // complete with the already created whens graph
+          val completedGraph =
+            otherwise.map(o => {
+              createEipGraph(List(choiceEipProcessor), List(o), whensGraph)
+            })
+            .getOrElse(whensGraph)
+
+          val leafNodes = getLeafNodes(completedGraph, choiceEipProcessor)
 
           // Additionally link the choice node to the next processor if there was no otherwise element
-          if(otherwise.isEmpty) createEipGraph(choiceEipProcessor :: completedPreviousDefinitions, tail, completedGraph)
-          else createEipGraph(completedPreviousDefinitions, tail, completedGraph)
+          val allPreviousNodes =
+            if(whens.isEmpty && otherwise.isEmpty) List(choiceEipProcessor)
+            else if(otherwise.isEmpty) choiceEipProcessor :: leafNodes
+            else leafNodes
 
-        // TODO Only required because of a matching bug within Scala ?
+          createEipGraph(allPreviousNodes, tail, completedGraph)
+
+        /**
+         * A when expression consists of edges from the previous choice node
+         * to every when child in a pipeline
+         */
+        case when@When(Expression(expressionText), children, _, _) =>
+          // Create the initial expression element from the when expression
+          val whenEipProcessor = EipProcessor(expressionText, when)
+          val linkedGraph = graph.linkComponents(previous, whenEipProcessor)
+
+          // Apply the graph function recursively to produce all children nodes within the when graph
+          createEipGraph(List(whenEipProcessor), children, linkedGraph)
+
+        /**
+         * An otherwise expression consists of an edge from the previous choice node
+         * to every otherwise child in a pipeline
+         */
+        case otherwise@Otherwise(children, _, _) =>
+          val otherwiseEipProcessor = EipProcessor("", otherwise)
+          val linkedGraph = graph.linkComponents(previous, otherwiseEipProcessor)
+
+          // Apply the graph function recursively to produce all children nodes within the otherwise graph
+          createEipGraph(List(otherwiseEipProcessor), children, linkedGraph)
+
+        // TODO Only required because of a matching bug within Scala
         // Fall through case, hitting a node we don't understand
         // We simply interpret it as a to component, so that we can still display
         // the information without crashing or such
@@ -240,43 +279,6 @@ class EipGraphCreator {
     }
   }
 
-  def createWhenSubgraph(parentChoice: EipProcessor,
-                      eipGraph: EipDAG,
-                      lastProcessorDefinition: List[EipProcessor],
-                      when: When): (EipDAG, List[EipProcessor]) = when match {
-    case when@When(Expression(expressionText), children, _, _) =>
-      // Create the initial expression element from the when expression
-      val whenEipProcessor = EipProcessor(expressionText, when)
-      val linkedGraph = eipGraph.linkComponents(parentChoice, whenEipProcessor)
-
-      // Apply the graph function recursively to produce all children nodes within the when expression
-      val whenSubGraph = createEipGraph(List(whenEipProcessor), children, linkedGraph)
-
-      val leafNodes =  getLeafNodes(whenSubGraph, whenEipProcessor)
-      (whenSubGraph, leafNodes ::: lastProcessorDefinition)
-  }
-
-
-  def createOtherwiseSubgraph(parentChoice: EipProcessor,
-                      eipGraph: EipDAG,
-                      lastProcessorDefinition: List[EipProcessor],
-                      otherwise: Otherwise): (EipDAG, List[EipProcessor]) =
-    otherwise match {
-      case otherwise@Otherwise(children, _, _) =>
-        val otherwiseEipProcessor = EipProcessor("", otherwise)
-        val linkedGraph = eipGraph.linkComponents(parentChoice, otherwiseEipProcessor)
-
-        // If we have no children, then the graph is complete, but we must be linked to the next processor
-        if(children.isEmpty) (linkedGraph, otherwiseEipProcessor :: lastProcessorDefinition)
-        else {
-          // Produce the subgraph from the processor's children
-          val otherwiseSubgraph = createEipGraph(List(otherwiseEipProcessor), children, linkedGraph)
-          val lastChild = otherwiseSubgraph.vertices.find(_.processor == children.last).get
-
-          // Only the last child in the pipeline is required to be linked to the next processor
-          (otherwiseSubgraph, lastChild :: lastProcessorDefinition)
-        }
-  }
 
   /**
    * get all leaf nodes which are contained within the subgraph, ie all descendants of the parent when node

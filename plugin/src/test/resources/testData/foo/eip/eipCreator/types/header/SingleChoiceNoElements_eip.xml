@@ -1,0 +1,13 @@
+<eipDag>
+    <vertices>
+        <vertex id="final" eipType="to" text="direct:end" headers="{a}"/>
+        <vertex id="emptyChoice" eipType="choice" text="" headers="{a}"/>
+        <vertex id="setHeader" eipType="translator" text="a -&gt; hello world" headers="{a}"/>
+        <vertex id="from" eipType="from" text="direct:start" headers="{}"/>
+    </vertices>
+    <edges>
+        <edge source="emptyChoice" target="final" edgeConnection="emptyChoice_final2"/>
+        <edge source="setHeader" target="emptyChoice" edgeConnection="setHeader_emptyChoice1"/>
+        <edge source="from" target="setHeader" edgeConnection="from_setHeader0"/>
+    </edges>
+</eipDag>

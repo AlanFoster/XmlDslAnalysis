@@ -64,6 +64,10 @@ class HeaderTypePropagationTests
     doTest()
   }
 
+  def testSingleChoiceNoElements() {
+    doTest()
+  }
+
   /**
    * Ensures the test is valid - using the test name as the configuration file
    */
