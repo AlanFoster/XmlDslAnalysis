@@ -21,10 +21,10 @@ import foo.tooling.graphing.strategies.node.EipVertexFactory
  *
  * {@link foo.tooling.graphing.GraphCreator}
  *
- * @param iconLoader Provide access to an EIP Icon loader strategy implementation
+ * @param vertexFactory Provide access to an EIP vertex factory
  * @param tooltipStrategy Provide access to a tooltip strategy implementation
  */
-class IdeaGraphCreator(iconLoader: EipVertexFactory, tooltipStrategy: ToolTipStrategy) extends GraphCreator {
+class IdeaGraphCreator(vertexFactory: EipVertexFactory, tooltipStrategy: ToolTipStrategy) extends GraphCreator {
   /**
    * {@inheritdoc}
    */
@@ -67,7 +67,7 @@ class IdeaGraphCreator(iconLoader: EipVertexFactory, tooltipStrategy: ToolTipStr
     // Create our data model and presentation model
     val (edges, nodes) = (eipGraph.vertices, eipGraph.edges)
     val dataModel = new CamelGraphDataModel(edges, nodes)
-    val presentationModel = new CamelGraphPresentationModel(graph, project, iconLoader, tooltipStrategy)
+    val presentationModel = new CamelGraphPresentationModel(graph, project, vertexFactory, tooltipStrategy)
 
     // Create a builder
     val builder = GraphBuilderFactory.getInstance(project)
