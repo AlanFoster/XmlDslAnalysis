@@ -10,12 +10,11 @@ import com.intellij.psi.xml.XmlTag
 import foo.language.Core.CamelPsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import foo.language.generated.psi.{CamelExpression, CamelLiteral, CamelCamelFunction}
-import foo.language.Resolving
+import foo.language.{SetHeaderHelper, ValidParentChild, Resolving}
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.CommandProcessor
-import com.intellij.psi.codeStyle.CodeStyleManager
 import foo.language.references.CamelRenameFactory
-import scala.annotation.tailrec
+import com.intellij.psi.codeStyle.CodeStyleManager
 
 /**
  * Provides support for extracting sub-expressions from the ACSL into the surrounding
@@ -28,13 +27,6 @@ import scala.annotation.tailrec
  */
 class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
 
-  /**
-   * Represents a valid parent/child relationship which can be used for creating a new
-   * setHeader element
-   * @param validParent A valid parent, which is not equal to a choice element
-   * @param validChild The appropriate child element
-   */
-  case class ValidParentChild(validParent: XmlTag, validChild: XmlTag)
 
   /**
    * @inheritdoc
@@ -64,7 +56,7 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
     val maximalExpressionOption = getMaximalExpression(camelEditor, camelFile)
 
     if(maximalExpressionOption.isEmpty) {
-      return List("Invalid selection")
+      return List("Invalid selection - Full expressions must be selected")
     }
 
     val maximalExpression = maximalExpressionOption.get
@@ -76,13 +68,13 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
     parentTag match {
       case Some(tag) =>
 
+        // Write actions must be done under readers/writers cycle
         ApplicationManager.getApplication.runWriteAction(new Runnable {
           override def run(): Unit = {
 
             // Register undo-support
             CommandProcessor.getInstance().executeCommand(project, new Runnable {
               override def run(): Unit = {
-                // TODO Provide user configurable header name
                 val headerName: String = "id"
                 val validParentChild =  insertHeader(headerName, maximalExpression.getText, tag)
 
@@ -97,7 +89,7 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
 
                 // Update the caret to start after the newly created expression
                 val updatedLocation = camelEditor.getSelectionModel.getSelectionStart + newExpression.length
-                resetCaret(camelEditor, updatedLocation)
+                SetHeaderHelper.resetCaret(camelEditor, updatedLocation)
               }
             }, "Refactor Camel Expression", project)
           }
@@ -108,12 +100,6 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
         List("Refactoring only provided for XML references")
     }
   }
-
-  private def resetCaret(editor: Editor, newOffset: Int) = {
-    editor.getSelectionModel.removeSelection()
-    editor.getCaretModel.moveToOffset(newOffset)
-  }
-
 
   private def getMaximalExpression(editor: Editor, camelFile: CamelPsiFile): Option[PsiElement] = {
     val model: SelectionModel = editor.getSelectionModel
@@ -174,7 +160,7 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
    * @param currentLocation
    */
   private def insertHeader(headerName: String, expressionText: String, currentLocation: XmlTag):ValidParentChild ={
-    val validParentChild = getValidParent(currentLocation)
+    val validParentChild = SetHeaderHelper.getValidParent(currentLocation)
 
     validParentChild match {
       case ValidParentChild(parent, child) =>
@@ -187,21 +173,6 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
     }
   }
 
-
-  /**
-   * Attempts to get the topmost valid parent and child in which a new header element can
-   * successfully be inserted. For instance, this function will not return a location
-   * which is 'between' a choice element for instance, ie child name is equal to 'when'
-   *
-   * @param child The current XML tag to check
-   * @return The topmost valid parent child relationship that the XmlTag can be inserted
-   */
-  @tailrec
-  private final def getValidParent(child: XmlTag): ValidParentChild = {
-    val parent = child.getParentTag
-    if(child.getLocalName == "when") getValidParent(parent)
-    else ValidParentChild(parent, child)
-  }
 
   /**
    * Creates a new instance of a setHeader XmlTag. Note this is element will not be attached to the

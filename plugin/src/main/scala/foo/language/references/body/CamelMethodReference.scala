@@ -153,7 +153,7 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
   private def resolveForIj(availableVariants: Set[Array[(PsiMethod, String)]]): Option[PsiMethod] = {
     val methodName = Try(element.getText.substring(range.getStartOffset, range.getEndOffset)).toOption
     methodName match {
-      case None => null
+      case None => None
       case Some(value) =>
               // TODO Multiple resolve
               availableVariants
