@@ -91,13 +91,24 @@
             -->
             <psi.referenceContributor implementation="foo.language.references.body.CamelBodyReferenceContributor" />
 
-            <!--
-                Allows inplace renaming of identity elements
-            -->
-<!--            <lang.refactoringSupport language="Camel" implementationClass="foo.language.references.CamelRefactoringSupportProvider"/>-->
 
-        <!-- Providing attributes for schemes -->
-        <additionalTextAttributes scheme="Default" file="colorSchemes/CamelDefault.xml" />
+          <!--
+            Allows inplace renaming of identity elements *if* they are embedded within the XML language
+          -->
+<!--
+            <lang.refactoringSupport language="XML" implementationClass="foo.language.references.CamelRefactoringSupportProvider"/>
+            <lang.refactoringSupport language="Camel" implementationClass="foo.language.references.CamelRefactoringSupportProvider"/>
+-->
+
+          <!--
+            Provide Refactoring support for ACSL which has been injected into a DSL
+          -->
+          <lang.refactoringSupport language="Camel" implementationClass="foo.language.actions.CamelRefactoringSupportProvider"/>
+
+
+
+            <!-- Providing attributes for color schemes -->
+            <additionalTextAttributes scheme="Default" file="colorSchemes/CamelDefault.xml" />
 
 
       <!-- End Apache Camel Language Support -->

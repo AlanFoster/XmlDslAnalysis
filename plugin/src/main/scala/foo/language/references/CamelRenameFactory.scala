@@ -28,6 +28,13 @@ object CamelRenameFactory {
     replacement
   }
 
+  def replaceAll(existing: PsiElement, rangeInElement: TextRange, newExpression: String): PsiElement = {
+    val replacementText = rangeInElement.replace(existing.getText, newExpression)
+    val newFile = createTempFile(existing, replacementText)
+
+    newFile
+  }
+
   private def createTempFile(element: PsiElement, text: String): CamelPsiFile = {
     val project = element.getProject
     val tempFileName = "__" + element.getContainingFile.getName

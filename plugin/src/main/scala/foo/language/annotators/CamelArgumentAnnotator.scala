@@ -6,11 +6,9 @@ import com.intellij.patterns.PlatformPatterns._
 import foo.language.generated.psi.CamelFunctionArg
 import com.intellij.psi.tree.IElementType
 import com.intellij.lang.ASTNode
-import foo.language.{CamelFunction, CamelArgument}
+import foo.language.{Resolving, CamelArgument, CamelFunction}
 import foo.language.typeChecking.CamelSimpleTypeChecker
-import foo.language.references.Resolving
 import foo.intermediaterepresentation.model.types.TypeEnvironment
-import foo.language.CamelFunction
 import scala.Some
 
 /**
