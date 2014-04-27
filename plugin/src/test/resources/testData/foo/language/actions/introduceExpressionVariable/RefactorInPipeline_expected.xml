@@ -12,12 +12,11 @@
         <route>
             <from uri="direct:start"/>
 
-            <bean ref="orderFactory" method="createComplexModel" />
+            <bean ref="orderFactory" method="createComplexModel"/>
 
             <setHeader headerName="id">
                 <simple>${body.self.self.self.id}</simple>
             </setHeader>
-
             <setBody>
                 <simple>${headers.id}<caret> == 10</simple>
             </setBody>

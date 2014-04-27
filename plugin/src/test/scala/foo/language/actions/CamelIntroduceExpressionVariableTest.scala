@@ -70,7 +70,7 @@ class CamelIntroduceExpressionVariableTest
   }
 
   def testRefactorInPipeline() {
-    // doTest()
+    doTest()
   }
 
   def testRefactorInWhenExpression() {

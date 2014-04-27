@@ -9,7 +9,7 @@ import com.intellij.refactoring.util.CommonRefactoringUtil
 import com.intellij.psi.xml.XmlTag
 import foo.language.Core.CamelPsiFile
 import com.intellij.psi.util.PsiTreeUtil
-import foo.language.generated.psi.CamelExpression
+import foo.language.generated.psi.{CamelLiteral, CamelCamelFunction}
 import foo.language.Resolving
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.CommandProcessor
@@ -87,10 +87,10 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
                 val validParentChild =  insertHeader(headerName, maximalExpression.getText, tag)
 
                 val newExpression: String = "${headers." + headerName + "}"
-                // Replace the existing camel expression entirely - to avoid 'guessing' expression types
-                val replacement = CamelRenameFactory.replaceAll(camelFile, maximalExpression.getTextRange, newExpression)
-                maximalExpression.replace(replacement)
 
+                // Replace the camel reference with a new Psi Element tree
+                val replacement = CamelRenameFactory.replaceAll(maximalExpression, maximalExpression.getTextRange, newExpression)
+                maximalExpression.replace(replacement)
 
                 // Format the element that was succesfully created
                 CodeStyleManager.getInstance(project).reformat(validParentChild.validParent)
@@ -118,7 +118,13 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
     val model: SelectionModel = editor.getSelectionModel
     val (start, end) = (model.getSelectionStart, model.getSelectionEnd)
 
-    val maximalExpression = Option(PsiTreeUtil.findElementOfClassAtRange(camelFile, start, end, classOf[CamelExpression]))
+    val classesToTry = List(classOf[CamelCamelFunction], classOf[CamelLiteral])
+
+    val maximalExpression =
+      classesToTry.foldLeft(Option.empty[PsiElement])((opt, clazz) => {
+        if(opt.isEmpty) Option(PsiTreeUtil.findElementOfClassAtRange(camelFile, start, end, clazz))
+        else opt
+      })
 
     maximalExpression
   }
