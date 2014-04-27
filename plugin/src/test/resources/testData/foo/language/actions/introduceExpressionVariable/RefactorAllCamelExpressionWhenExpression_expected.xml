@@ -15,10 +15,22 @@
             <bean ref="orderFactory" method="createComplexModel"/>
 
             <setHeader headerName="id">
-                <simple>"100"</simple>
+                <simple>${body.foo.id}</simple>
             </setHeader>
+            <choice>
+                <when>
+                    <simple>${headers.bar}</simple>
+                    <log message="Hello World"/>
+                </when>
+
+                <when>
+                    <simple>${headers.id}<caret></simple>
+                    <log message="Hello World"/>
+                </when>
+            </choice>
+
             <setBody>
-                <simple>${headers.id}<caret></simple>
+                <simple>${body.self.self.self.id}</simple>
             </setBody>
         </route>
     </camelContext>

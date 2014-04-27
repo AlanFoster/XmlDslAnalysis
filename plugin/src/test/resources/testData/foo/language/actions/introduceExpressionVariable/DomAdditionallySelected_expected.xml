@@ -15,7 +15,7 @@
             <bean ref="orderFactory" method="createComplexModel" />
 
             <setBody>
-                <simple><selection>${body.self.self.self.id} == 10</simple></selection>
+                <simple><selection>${body.self.self.self.id}<caret> == 10</simple></selection>
             </setBody>
         </route>
     </camelContext>

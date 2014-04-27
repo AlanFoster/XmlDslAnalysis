@@ -15,6 +15,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.CommandProcessor
 import com.intellij.psi.codeStyle.CodeStyleManager
 import foo.language.references.CamelRenameFactory
+import scala.annotation.tailrec
 
 /**
  * Provides support for extracting sub-expressions from the ACSL into the surrounding
@@ -26,6 +27,15 @@ import foo.language.references.CamelRenameFactory
  * @see foo.language.actions.CamelRefactoringSupportProvider
  */
 class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
+
+  /**
+   * Represents a valid parent/child relationship which can be used for creating a new
+   * setHeader element
+   * @param validParent A valid parent, which is not equal to a choice element
+   * @param validChild The appropriate child element
+   */
+  case class ValidParentChild(validParent: XmlTag, validChild: XmlTag)
+
   /**
    * @inheritdoc
    *
@@ -45,20 +55,21 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
     }
 
     println("Refactoring for :: " + file)
-    doWork(project, editor, file.asInstanceOf[CamelPsiFile])
+    val workErrors = doWork(project, editor, file.asInstanceOf[CamelPsiFile])
+    // Show any additional errors to the user
+    workErrors.foreach(errorCreator)
   }
 
-  private def doWork(project: Project, camelEditor: Editor, camelFile: CamelPsiFile) {
+  private def doWork(project: Project, camelEditor: Editor, camelFile: CamelPsiFile): List[String] = {
     val maximalExpressionOption = getMaximalExpression(camelEditor, camelFile)
 
     if(maximalExpressionOption.isEmpty) {
-      // TODO error
-      return
+      return List("Invalid selection")
     }
 
     val maximalExpression = maximalExpressionOption.get
 
-    println("Maximal expression :: " + maximalExpression)
+    println("Maximal expression :: " + maximalExpression + " ... " + maximalExpression.getText)
 
     val parentTag = getParentXmlTag(camelEditor, camelFile)
 
@@ -73,26 +84,28 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
               override def run(): Unit = {
                 // TODO Provide user configurable header name
                 val headerName: String = "id"
-                insertHeader(headerName, maximalExpression.getText, tag)
+                val validParentChild =  insertHeader(headerName, maximalExpression.getText, tag)
 
+                val newExpression: String = "${headers." + headerName + "}"
                 // Replace the existing camel expression entirely - to avoid 'guessing' expression types
-                val replacement = CamelRenameFactory.replaceAll(camelFile, maximalExpression.getTextRange, "${headers." + headerName + "}")
+                val replacement = CamelRenameFactory.replaceAll(camelFile, maximalExpression.getTextRange, newExpression)
                 maximalExpression.replace(replacement)
 
-                // TODO Should only adjust lines be invoked perhaps?
-                CodeStyleManager.getInstance(project).reformat(tag.getParentTag)
+
+                // Format the element that was succesfully created
+                CodeStyleManager.getInstance(project).reformat(validParentChild.validParent)
 
                 // Update the caret position to be contained after the previously selected maximal expression
-                resetCaret(camelEditor, 5)
+                resetCaret(camelEditor, newExpression.length)
               }
             }, "Refactor Camel Expression", project)
           }
         })
-      case None =>
-        // TODO Warning saying that refactoring only provided for XML references
-    }
 
-    println()
+        List()
+      case None =>
+        List("Refactoring only provided for XML references")
+    }
   }
 
   private def resetCaret(editor: Editor, newOffset: Int) = {
@@ -153,10 +166,34 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
    * @param headerName
    * @param currentLocation
    */
-  private def insertHeader(headerName: String, expressionText: String, currentLocation: XmlTag) {
-    val validParent = currentLocation.getParentTag
-    val headerTag = createHeaderTag(headerName, expressionText, validParent)
-    validParent.addBefore(headerTag, currentLocation)
+  private def insertHeader(headerName: String, expressionText: String, currentLocation: XmlTag):ValidParentChild ={
+    val validParentChild = getValidParent(currentLocation)
+
+    validParentChild match {
+      case ValidParentChild(parent, child) =>
+        val headerTag = createHeaderTag(headerName, expressionText, parent)
+        parent.addBefore(headerTag, child)
+        validParentChild
+      case _ =>
+        // TODO Add error to say that there is no valid refactoring - Shouldn't happen?
+        ???
+    }
+  }
+
+
+  /**
+   * Attempts to get the topmost valid parent and child in which a new header element can
+   * successfully be inserted. For instance, this function will not return a location
+   * which is 'between' a choice element for instance, ie child name is equal to 'when'
+   *
+   * @param child The current XML tag to check
+   * @return The topmost valid parent child relationship that the XmlTag can be inserted
+   */
+  @tailrec
+  private final def getValidParent(child: XmlTag): ValidParentChild = {
+    val parent = child.getParentTag
+    if(child.getLocalName == "when") getValidParent(parent)
+    else ValidParentChild(parent, child)
   }
 
   /**

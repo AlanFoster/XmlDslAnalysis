@@ -61,6 +61,10 @@ class CamelIntroduceExpressionVariableTest
     doTest()
   }
 
+  def testRefactorAllCamelExpressionWhenExpression() {
+    doTest()
+  }
+
   def testRefactorAllStringLiteral() {
     doTest()
   }

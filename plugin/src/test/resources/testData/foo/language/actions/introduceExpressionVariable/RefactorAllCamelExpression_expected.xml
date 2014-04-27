@@ -18,7 +18,7 @@
                 <simple>${body.self.self.self.id}</simple>
             </setHeader>
             <setBody>
-                <simple>${headers.id}</simple>
+                <simple>${headers.id}<caret></simple>
             </setBody>
         </route>
     </camelContext>
