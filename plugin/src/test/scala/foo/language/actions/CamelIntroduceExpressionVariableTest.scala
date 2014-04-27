@@ -73,24 +73,16 @@ class CamelIntroduceExpressionVariableTest
     doTest()
   }
 
-  def testRefactorInWhenExpression() {
-
+  def testRefactorRelationalExpression() {
+    doTest()
   }
 
-  def testRefactorInSetBody() {
-
+  def testRefactorRightHandSideLiteral() {
+    doTest()
   }
 
-  def testRefactorInSetHeader() {
-
-  }
-
-  def testRefactorWithDuplicateHeaderName() {
-
-  }
-
-  def testRefactorRightHandSide() {
-    // ${foo} == <selection>10</selection>
+  def testRefactorRightHandSideCamelFunc() {
+    doTest()
   }
 
 

@@ -12,17 +12,14 @@ import com.intellij.refactoring.RefactoringActionHandler
 class CamelRefactoringSupportProvider extends RefactoringSupportProvider {
   /**
    * Enables or disables the associated refactoring support with the given PsiElement.
-   * Currently refactoring support is only provided for Camel Function Expressions.
-   * Any additional validation logic will be performed in the appropriate handler
+   * All validation logic will be performed in the appropriate handler
    *
    * @param context The current refactoring context element
    * @return True if refactoring is available for this current element,
    *         false otherwise/
    */
-  override def isAvailable(context: PsiElement): Boolean = {
-    println(context)
+  override def isAvailable(context: PsiElement): Boolean =
     true
-  }
 
   /**
    * @inheritdoc

@@ -28,9 +28,8 @@ object CamelRenameFactory {
     replacement
   }
 
-  def replaceAll(existing: PsiElement, rangeInElement: TextRange, newExpression: String): PsiElement = {
-    val replacementText = rangeInElement.replace(existing.getText, newExpression)
-    val newFile = createTempFile(existing, replacementText)
+  def createFresh(existing: PsiElement, rangeInElement: TextRange, newExpression: String): PsiElement = {
+    val newFile = createTempFile(existing, newExpression)
 
     newFile
   }

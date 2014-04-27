@@ -9,7 +9,7 @@ import com.intellij.refactoring.util.CommonRefactoringUtil
 import com.intellij.psi.xml.XmlTag
 import foo.language.Core.CamelPsiFile
 import com.intellij.psi.util.PsiTreeUtil
-import foo.language.generated.psi.{CamelLiteral, CamelCamelFunction}
+import foo.language.generated.psi.{CamelExpression, CamelLiteral, CamelCamelFunction}
 import foo.language.Resolving
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.command.CommandProcessor
@@ -89,14 +89,15 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
                 val newExpression: String = "${headers." + headerName + "}"
 
                 // Replace the camel reference with a new Psi Element tree
-                val replacement = CamelRenameFactory.replaceAll(maximalExpression, maximalExpression.getTextRange, newExpression)
+                val replacement = CamelRenameFactory.createFresh(maximalExpression, maximalExpression.getTextRange, newExpression)
                 maximalExpression.replace(replacement)
 
                 // Format the element that was succesfully created
                 CodeStyleManager.getInstance(project).reformat(validParentChild.validParent)
 
-                // Update the caret position to be contained after the previously selected maximal expression
-                resetCaret(camelEditor, newExpression.length)
+                // Update the caret to start after the newly created expression
+                val updatedLocation = camelEditor.getSelectionModel.getSelectionStart + newExpression.length
+                resetCaret(camelEditor, updatedLocation)
               }
             }, "Refactor Camel Expression", project)
           }
@@ -118,7 +119,7 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
     val model: SelectionModel = editor.getSelectionModel
     val (start, end) = (model.getSelectionStart, model.getSelectionEnd)
 
-    val classesToTry = List(classOf[CamelCamelFunction], classOf[CamelLiteral])
+    val classesToTry = List(classOf[CamelExpression], classOf[CamelCamelFunction], classOf[CamelLiteral])
 
     val maximalExpression =
       classesToTry.foldLeft(Option.empty[PsiElement])((opt, clazz) => {
