@@ -66,10 +66,9 @@
 // The main entry point to the grammar - Note doesn't support arbitrary english/string interpolation
 camel_file ::= camelInterpolation
 
-// A valid camel string is an interpolation of normal text plus camel expressions  - ie `Hello ${body.name}
 private camelInterpolation ::=  expression
 
-// A top level expression, IE useful as a RHS of a binary expression ie ${body} == RHS
+// A top level expression such as "${...}" or "10"
 expression ::=  camel_expression | literal
 
 // Represents literals, ie numbers, strings
@@ -132,6 +131,5 @@ private identifierAccess ::=
 private arrayAccess ::=
     IDENTIFIER arrayOrMapIndices
 
-// Can be written as LEFT_SQUARE_BRACE (identifierAccess | expression)
 private arrayOrMapIndices ::=
     LEFT_SQUARE_BRACE (NUMBER | STRING | variableAccess) RIGHT_SQUARE_BRACE

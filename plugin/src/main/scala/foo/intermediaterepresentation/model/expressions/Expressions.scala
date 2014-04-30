@@ -20,7 +20,6 @@ object Expression {
   * Expressions - The implementations
   *******************************************************************/
 
-// TODO Maybe result type should be more statically typed instead of a string
 final case class Simple(value: String, resultType: Option[ACSLFqcn], reference: Reference) extends Expression
 final case class Constant(value: String) extends Expression
 final case class UnknownExpression() extends Expression{
