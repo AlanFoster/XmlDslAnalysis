@@ -20,6 +20,8 @@ import foo.tooling.graphing.{GraphCreator, EipGraphCreator}
 import java.awt.event.{ActionEvent, ActionListener}
 import com.intellij.openapi.progress.ProgressManager
 import foo.intermediaterepresentation.model.AbstractModelManager
+import com.intellij.openapi.diagnostic.Logger
+import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
 
 /**
  * Creates and visualises the given XML DSl as a graph.
@@ -27,6 +29,16 @@ import foo.intermediaterepresentation.model.AbstractModelManager
  * available to the user, and the core visual representation of the given virtual file.
  */
 class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[GraphCreator]) extends UserDataHolderBase with FileEditor {
+  private val LOG = Logger.getInstance(this.getClass.toString)
+
+  /**
+   * Total number of graphs created by this EipEditor
+   */
+  private val idCount = new AtomicInteger(0)
+  /**
+   * Set to true if a graph is currently being created, false otherwise
+   */
+  val processingGraphFlag = new AtomicBoolean(false)
 
   /**
    * The currently selected graph creator implementation
@@ -92,7 +104,17 @@ class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[
    * Creates the given EIPGraph, and modifies the graphContainer
    */
   def selectNotify() {
-    generateGraph(currentlySelectedGraphCreator)
+    val myId = idCount.incrementAndGet()
+    val processingGraph = processingGraphFlag.getAndSet(true)
+
+    // Ignore processing if a graph is already being created
+    if(!processingGraph) {
+      LOG.debug("Creating graph :: " + myId)
+      generateGraph(currentlySelectedGraphCreator)
+      processingGraphFlag.set(false)
+    } else {
+      LOG.debug("Already processing, request ignored :: " + myId)
+    }
   }
 
   private def generateGraph(graphCreator: GraphCreator) {
