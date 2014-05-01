@@ -50,7 +50,7 @@ class GraphTests
     val virtualFile = myFixture.configureByFile(s"${testName}_dom.xml").getVirtualFile
 
     val startTime = System.currentTimeMillis()
-    val ideaGraphCreator = new IdeaGraphCreator(
+    val ideaGraphCreator = new IdeaVisualEipGraphFactory(
       new EipDescriptiveIconVertexFactory(new EipIconLoader with IntellijIconLoader),
       new SemanticToolTipStrategy
     )

@@ -14,6 +14,7 @@ trait IconLoader {
    */
   def load(path: String): Icon
 
+
   /**
    * Loads the required picked icon, where picked means selected/highlighted
    * @param name The name of the icon

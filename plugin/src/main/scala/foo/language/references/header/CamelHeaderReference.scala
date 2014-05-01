@@ -5,7 +5,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.xml.{DomTarget, ElementPresentationManager}
 import foo.dom.Model.ProcessorDefinition
-import foo.intermediaterepresentation.model.AbstractModelManager
+import foo.intermediaterepresentation.model.AbstractModelFacade
 import foo.language.references.{CamelRenameFactory, EipSimpleReference}
 import foo.intermediaterepresentation.model.types.{BaseType, CamelType, TypeEnvironment}
 import foo.intermediaterepresentation.model.types.CamelStaticTypes.{ACSLFqcn, ACSLKey}
@@ -40,7 +40,7 @@ class CamelHeaderReference(element: PsiElement, range: TextRange)
 
   private def getAvailableHeaders: Map[ACSLKey, (ACSLFqcn, ProcessorDefinition)] = {
     val typeEnvironment = getTypeEnvironment(myElement)
-    val headers = typeEnvironment.flatMap(AbstractModelManager.getInferredHeaders)
+    val headers = typeEnvironment.flatMap(AbstractModelFacade.getInferredHeaders)
     headers.getOrElse(Map())
   }
 
@@ -66,7 +66,7 @@ class CamelHeaderReference(element: PsiElement, range: TextRange)
   override def resolveEip(typeEnvironment: TypeEnvironment): Set[CamelType] = {
     val resolvedHeader =
       for {
-        headers <- AbstractModelManager.getInferredHeaders(typeEnvironment)
+        headers <- AbstractModelFacade.getInferredHeaders(typeEnvironment)
         resolvedHeader <- resolveHeader(headers)
       } yield resolvedHeader
 

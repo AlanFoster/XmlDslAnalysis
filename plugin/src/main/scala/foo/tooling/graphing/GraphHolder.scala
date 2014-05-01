@@ -10,7 +10,7 @@ trait GraphHolder {
    * Access all graphs
    * @return The list of registered graphs that can be used by this plugin
    */
-  def graphs: List[GraphCreator]
+  def graphs: List[VisualEipGraphFactory]
 }
 
 /**
@@ -21,7 +21,7 @@ class ExtensionPointGraphHolder() extends GraphHolder {
    * Access all graphs
    * @return The list of registered graphs that can be used by this plugin
    */
-  def graphs: List[GraphCreator] = {
+  def graphs: List[VisualEipGraphFactory] = {
     val extensionPoint = Extensions.getRootArea.getExtensionPoint("foo.initial.eipGraphingLibrary")
     extensionPoint.getExtensions.toList
   }

@@ -19,7 +19,7 @@ abstract class EipIconLoader extends IconLoader {
    *                   True if the current processor is selected within the given graph, false otherwise.
    * @return The associated icon with this EIP processor
    */
-  def loadIcon(component: EipProcessor, isSelected: Boolean) = component match {
+  def loadIcon(component: EipProcessor, isSelected: Boolean): Icon = component match {
     case component@EipProcessor (_, _, eipName, _) =>
       val eipType = eipName.toString.toLowerCase
       cache.getOrElseUpdate((eipType, isSelected), {

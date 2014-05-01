@@ -4,8 +4,8 @@ import junit.framework.Assert
 import com.intellij.testFramework.fixtures.CodeInsightTestFixture
 import foo.tooling.serializers.EipDagSerializer
 import foo.dom.DomFileAccessor
-import foo.tooling.graphing.EipGraphCreator
-import foo.intermediaterepresentation.model.AbstractModelManager
+import foo.tooling.graphing.EipDAGCreator
+import foo.intermediaterepresentation.model.AbstractModelFacade
 
 /**
  * EipDag asserting methods for ensuring that the EipDAGs are represented as expected
@@ -30,10 +30,10 @@ object EipDagAssert {
     val expectedDag = fixture.configureByFile(s"${testName}_eip.xml").getText
 
     // Create the intermediate representation with semantic information
-    val route = AbstractModelManager.createSemanticIntermediateRepresentation(loadedDomFile)
+    val route = AbstractModelFacade.createSemanticModel(loadedDomFile)
 
     // Convert the IR graph into an EIP Dag, which fills in the appropriate edges between nodes
-    val eipDag = new EipGraphCreator().createEipGraph(route)
+    val eipDag = new EipDAGCreator().createEipDAG(route)
     val serializedXml = serializer.serialize(eipDag)
 
     // Assert Equals - Note, IntelliJ will provide a nice comparison tool in failure scenarios

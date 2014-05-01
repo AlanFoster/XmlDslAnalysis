@@ -11,7 +11,7 @@ import scala.language.implicitConversions
 /**
  * EipGraphCreator Object which contains EipDag manipulation methods.
  */
-object EipGraphCreator {
+object EipDAGCreator {
   import scala.language.implicitConversions
   /**
    * Provides an implicit definition for conversion to a new 'richer' EipDag model
@@ -101,8 +101,8 @@ object EipGraphCreator {
  * This class is associated with converting the Intermediate representation into a
  * DAG of EipProcessors, which can then be used later by a graphing API.
  */
-class EipGraphCreator {
-  import EipGraphCreator._
+class EipDAGCreator {
+  import EipDAGCreator._
 
   /**
    * Converts the given intermediate representation of camel into a the 'visual' representation.
@@ -111,9 +111,9 @@ class EipGraphCreator {
    * @return The converted EipDAG, which contains the appropriate edges between nodes so that they
    *         can be visually iinterpretedas an EIP diagram.
    */
-  def createEipGraph(routeWithSemantics: Route): EipDAG = {
+  def createEipDAG(routeWithSemantics: Route): EipDAG = {
       val createdDAG: EipDAG = EmptyDAG[EipProcessor, String]()
-      pruneEdges(createEipGraph(
+      pruneEdges(createEipDAG(
         List(),
         routeWithSemantics.children,
         createdDAG
@@ -133,7 +133,7 @@ class EipGraphCreator {
    * @param graph The currently created EipDag
    * @return A new EipDag, note the original data structure will not be mutated
    */
-  private def createEipGraph(previous: List[EipProcessor],
+  private def createEipDAG(previous: List[EipProcessor],
                      processors: List[Processor],
                      graph: EipDAG): EipDAG = {
     // When there are no processors, we have completed our effort.
@@ -152,7 +152,7 @@ class EipGraphCreator {
          */
         case processor@From(uri, _, _) =>
           val eipProcessor = EipProcessor(uri.getOrElse(DefaultAttributes.uri), processor)
-          createEipGraph(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
+          createEipDAG(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
 
         /**
          * Creates the SetHeader processor node, linking to the previous nodes in the DAG, if any
@@ -161,7 +161,7 @@ class EipGraphCreator {
           val headerText = headerNameOption.map(_ + " -> " + expressionValue).getOrElse(DefaultAttributes.EmptyHeaderName)
           val eipProcessor = EipProcessor(headerText, processor)
 
-          createEipGraph(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
+          createEipDAG(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
 
         /**
          * Creates the RemoveHeader processor node, linking to the previous nodes in the DAG, if any
@@ -169,28 +169,28 @@ class EipGraphCreator {
         case processor@RemoveHeader(headerNameOption, _, _) =>
           val headerName = headerNameOption.getOrElse(DefaultAttributes.EmptyHeaderName)
           val eipProcessor = EipProcessor(headerName, processor)
-          createEipGraph(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
+          createEipDAG(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
 
         /**
          * Creates the Log processor node, linking to the previous nodes in the DAG, if any
          */
         case processor@Log(text, _, _) =>
           val eipProcessor = EipProcessor(text.getOrElse(DefaultAttributes.NotValid), processor)
-          createEipGraph(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
+          createEipDAG(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
 
         /**
          * Creates the SetBody processor node, linking to the previous nodes in the DAG, if any
          */
         case processor@SetBody(Expression(expressionText), _, _) =>
           val eipProcessor = EipProcessor(expressionText, processor)
-          createEipGraph(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
+          createEipDAG(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
 
         /**
          * Creates the To processor node, linking to the previous nodes in the DAG, if any
          */
         case processor@To(uri, _, _) =>
           val eipProcessor = EipProcessor(uri.getOrElse(DefaultAttributes.uri), processor)
-          createEipGraph(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
+          createEipDAG(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
 
         /**
          * Creates the Bean processor node, linking to the previous nodes in the DAG, if any
@@ -203,7 +203,7 @@ class EipGraphCreator {
 
           val beanText = beanTextOption.getOrElse(DefaultAttributes.NotValid)
           val eipProcessor = EipProcessor(beanText, processor)
-          createEipGraph(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
+          createEipDAG(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
 
         /**
          * Creates the require nodes + edges associated with a given choice element.
@@ -224,14 +224,14 @@ class EipGraphCreator {
           val whensGraph =
             whens.foldLeft(linkedGraph)({
               case (eipGraph, when:When) =>
-                createEipGraph(List(choiceEipProcessor), List(when), eipGraph)
+                createEipDAG(List(choiceEipProcessor), List(when), eipGraph)
             })
 
           // Complete the remaining otherwise node graph, if required, otherwise
           // complete with the already created whens graph
           val completedGraph =
             otherwise.map(o => {
-              createEipGraph(List(choiceEipProcessor), List(o), whensGraph)
+              createEipDAG(List(choiceEipProcessor), List(o), whensGraph)
             })
             .getOrElse(whensGraph)
 
@@ -243,7 +243,7 @@ class EipGraphCreator {
             else if(otherwise.isEmpty) choiceEipProcessor :: leafNodes
             else leafNodes
 
-          createEipGraph(allPreviousNodes, tail, completedGraph)
+          createEipDAG(allPreviousNodes, tail, completedGraph)
 
         /**
          * A when expression consists of edges from the previous choice node
@@ -255,7 +255,7 @@ class EipGraphCreator {
           val linkedGraph = graph.linkComponents(previous, whenEipProcessor)
 
           // Apply the graph function recursively to produce all children nodes within the when graph
-          createEipGraph(List(whenEipProcessor), children, linkedGraph)
+          createEipDAG(List(whenEipProcessor), children, linkedGraph)
 
         /**
          * An otherwise expression consists of an edge from the previous choice node
@@ -266,7 +266,7 @@ class EipGraphCreator {
           val linkedGraph = graph.linkComponents(previous, otherwiseEipProcessor)
 
           // Apply the graph function recursively to produce all children nodes within the otherwise graph
-          createEipGraph(List(otherwiseEipProcessor), children, linkedGraph)
+          createEipDAG(List(otherwiseEipProcessor), children, linkedGraph)
 
         // TODO Only required because of a matching bug within Scala
         // Fall through case, hitting a node we don't understand
@@ -274,7 +274,7 @@ class EipGraphCreator {
         // the information without crashing or such
         case unmatched =>
           val component = EipProcessor("Not Handled", unmatched)
-          createEipGraph(List(component), tail, graph.linkComponents(previous, component))
+          createEipDAG(List(component), tail, graph.linkComponents(previous, component))
       }
     }
   }

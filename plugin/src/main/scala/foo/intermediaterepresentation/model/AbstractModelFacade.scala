@@ -13,7 +13,7 @@ import foo.intermediaterepresentation.model.types.CamelStaticTypes.{ACSLFqcn, AC
  * Represents the singleton instance of an AbstractModelManager, which simply provides
  * helper methods for accessing common information within the given intermediate representation
  */
-object AbstractModelManager {
+object AbstractModelFacade {
   /**
    * Extracts the current node from the given IR
    * @param domFile The blueprint dom file
@@ -21,7 +21,7 @@ object AbstractModelManager {
    * @return The IR model of the given XmlTag
    */
   def getCurrentNode(domFile: Blueprint, currentTag: XmlTag): Option[Processor] = {
-    val routeWithSemantics = createSemanticIntermediateRepresentation(domFile)
+    val routeWithSemantics = createSemanticModel(domFile)
 
     val currentNode = routeWithSemantics.collectFirst({
       case Processor(DomReference(reference), _) =>
@@ -62,7 +62,7 @@ object AbstractModelManager {
    * @param blueprint The Blueprint Element
    * @return The intermediate representation and semantic information for the given blueprint file
    */
-  def createSemanticIntermediateRepresentation(blueprint: Blueprint): Route = {
+  def createSemanticModel(blueprint: Blueprint): Route = {
     // Instantiate the methods of creating an abstract dom model and semantic information for later DI
     // IE, this converts to an IR and then performs type inference on the structure
     val modelConverter = new DomAbstractModelConverter()

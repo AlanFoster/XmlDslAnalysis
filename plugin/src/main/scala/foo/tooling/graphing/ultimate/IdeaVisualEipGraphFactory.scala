@@ -10,7 +10,7 @@ import com.intellij.openapi.graph.builder.util.GraphViewUtil
 import foo.FunctionalUtil._
 import javax.swing.JPanel
 import java.awt.BorderLayout
-import foo.tooling.graphing.{GraphCreator, StaticGraphTypes}
+import foo.tooling.graphing.{VisualEipGraphFactory, StaticGraphTypes}
 import StaticGraphTypes.EipDAG
 import foo.tooling.graphing.strategies.tooltip.ToolTipStrategy
 import foo.tooling.graphing.strategies.node.EipVertexFactory
@@ -21,10 +21,10 @@ import foo.tooling.graphing.strategies.node.EipVertexFactory
  *
  * {@link foo.tooling.graphing.GraphCreator}
  *
- * @param vertexFactory Provide access to an EIP vertex factory
+ * @param eipVertexFactory Provide access to an EIP vertex factory
  * @param tooltipStrategy Provide access to a tooltip strategy implementation
  */
-class IdeaGraphCreator(vertexFactory: EipVertexFactory, tooltipStrategy: ToolTipStrategy) extends GraphCreator {
+class IdeaVisualEipGraphFactory(val eipVertexFactory: EipVertexFactory, val tooltipStrategy: ToolTipStrategy) extends VisualEipGraphFactory {
   /**
    * {@inheritdoc}
    */
@@ -33,7 +33,7 @@ class IdeaGraphCreator(vertexFactory: EipVertexFactory, tooltipStrategy: ToolTip
   /**
    * {@inheritdoc}
    */
-  def createComponent(project: Project, file: VirtualFile, eipGraph: EipDAG) = {
+  def createVisualGraph(project: Project, file: VirtualFile, eipGraph: EipDAG) = {
     val panel = new JPanel()
 
     // createOverview
@@ -67,7 +67,7 @@ class IdeaGraphCreator(vertexFactory: EipVertexFactory, tooltipStrategy: ToolTip
     // Create our data model and presentation model
     val (edges, nodes) = (eipGraph.vertices, eipGraph.edges)
     val dataModel = new CamelGraphDataModel(edges, nodes)
-    val presentationModel = new CamelGraphPresentationModel(graph, project, vertexFactory, tooltipStrategy)
+    val presentationModel = new CamelGraphPresentationModel(graph, project, eipVertexFactory, tooltipStrategy)
 
     // Create a builder
     val builder = GraphBuilderFactory.getInstance(project)

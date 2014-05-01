@@ -16,10 +16,10 @@ import com.intellij.openapi.ui.MessageType
 import com.intellij.ui.awt.RelativePoint
 import foo.dom.DomFileAccessor
 import foo.dom.Model.Blueprint
-import foo.tooling.graphing.{GraphCreator, EipGraphCreator}
+import foo.tooling.graphing.{VisualEipGraphFactory, EipDAGCreator}
 import java.awt.event.{ActionEvent, ActionListener}
 import com.intellij.openapi.progress.ProgressManager
-import foo.intermediaterepresentation.model.AbstractModelManager
+import foo.intermediaterepresentation.model.AbstractModelFacade
 import com.intellij.openapi.diagnostic.Logger
 import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
 
@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
  * This is done in two steps; Creating a wrapper object which contains a set of options
  * available to the user, and the core visual representation of the given virtual file.
  */
-class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[GraphCreator]) extends UserDataHolderBase with FileEditor {
+class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[VisualEipGraphFactory]) extends UserDataHolderBase with FileEditor {
   private val LOG = Logger.getInstance(this.getClass.toString)
 
   /**
@@ -117,7 +117,7 @@ class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[
     }
   }
 
-  private def generateGraph(graphCreator: GraphCreator) {
+  private def generateGraph(graphCreator: VisualEipGraphFactory) {
       // Assume we are using a DOM representation of camel intially
       // Which allows for a EipDAG to be used within the VisualEipGraph, which could
       // be expended upon in the future to allow for Java DSL EIP representations etc
@@ -129,21 +129,22 @@ class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[
       override def run(): Unit = {
         processManager.getProgressIndicator.setText("Initializing...")
 
-        // Clear all existing state within the graphContainer, which will only contain the visual graph component
-        graphContainer.removeAll()
-
         val blueprintDom = blueprintDomOption.get
 
         // Create the intermediate representation with semantic information
         processManager.getProgressIndicator.setText("Creating Model...")
-        val route = AbstractModelManager.createSemanticIntermediateRepresentation(blueprintDom)
+        val route = AbstractModelFacade.createSemanticModel(blueprintDom)
 
         // Convert the IR graph into an EIP Dag, which fills in the appropriate edges between nodes
         // And then attempt to create the element visually
         processManager.getProgressIndicator.setText(s"Creating ${graphCreator.prettyName}...")
 
-        val eipGraph = new EipGraphCreator().createEipGraph(route)
-        val graphComponent = currentlySelectedGraphCreator.createComponent(project, virtualFile, eipGraph)
+        val eipGraph = new EipDAGCreator().createEipDAG(route)
+        val graphComponent = currentlySelectedGraphCreator.createVisualGraph(project, virtualFile, eipGraph)
+
+
+        // Replace the ccontainer
+        graphContainer.removeAll()
         graphContainer.add(graphComponent)
 
         processManager.getProgressIndicator.setText("Finished.")
@@ -277,7 +278,7 @@ class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[
    */
   def getStructureViewBuilder: StructureViewBuilder = null
 
- private case class GraphCreatorOption(graphCreator: GraphCreator) {
+ private case class GraphCreatorOption(graphCreator: VisualEipGraphFactory) {
    override def toString: String = graphCreator.prettyName
  }
 }

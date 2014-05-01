@@ -30,7 +30,7 @@
         Exposed extension points for extensible functionality
     -->
     <extensionPoints>
-        <extensionPoint name="eipGraphingLibrary" interface="foo.tooling.graphing.GraphCreator"/>
+        <extensionPoint name="eipGraphingLibrary" interface="foo.tooling.graphing.VisualEipGraphFactory"/>
     </extensionPoints>
 
     <!--
@@ -38,8 +38,8 @@
         There should be at least one registered graphing library.
     -->
     <extensions defaultExtensionNs="foo.initial">
-        <eipGraphingLibrary implementation="foo.tooling.graphing.ultimate.IdeaGraphCreator"/>
-        <eipGraphingLibrary implementation="foo.tooling.graphing.jung.JungGraphCreator"/>
+        <eipGraphingLibrary implementation="foo.tooling.graphing.ultimate.IdeaVisualEipGraphFactory"/>
+        <eipGraphingLibrary implementation="foo.tooling.graphing.jung.JungVisualEipGraphFactory"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">

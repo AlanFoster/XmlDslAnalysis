@@ -1,6 +1,6 @@
 package foo.tooling.graphing.jung
 
-import foo.tooling.graphing.{StaticGraphTypes, GraphCreator}
+import foo.tooling.graphing.{StaticGraphTypes, VisualEipGraphFactory}
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import javax.swing.JComponent
@@ -17,7 +17,7 @@ import foo.tooling.graphing.strategies.node.EipVertexFactory
  * @param eipVertexFactory Provide access to an EIP Icon loader strategy implementation
  * @param tooltipStrategy Provide access to a tooltip strategy implementation
  */
-class JungGraphCreator(eipVertexFactory: EipVertexFactory, val tooltipStrategy: ToolTipStrategy) extends GraphCreator {
+class JungVisualEipGraphFactory(val eipVertexFactory: EipVertexFactory, val tooltipStrategy: ToolTipStrategy) extends VisualEipGraphFactory {
   /**
    * {@inheritdoc}
    */
@@ -26,7 +26,7 @@ class JungGraphCreator(eipVertexFactory: EipVertexFactory, val tooltipStrategy: 
   /**
    * {@inheritdoc}
    */
-  override def createComponent(project: Project, file: VirtualFile, eipGraph: StaticGraphTypes.EipDAG): JComponent = {
+  override def createVisualGraph(project: Project, file: VirtualFile, eipGraph: StaticGraphTypes.EipDAG): JComponent = {
     val visualEipGraph = new VisualEipGraph(eipGraph, eipVertexFactory, tooltipStrategy).createScrollableViewer
     visualEipGraph
   }

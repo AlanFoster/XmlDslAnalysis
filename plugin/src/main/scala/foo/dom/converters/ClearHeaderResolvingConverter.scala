@@ -65,7 +65,7 @@ class ClearHeaderResolvingConverter extends ResolvingConverter[ProcessorDefiniti
     val domFile = DomFileAccessor.getBlueprintDomFile(project, virtualFile).get
 
     // Access the header information as expected
-    val headers = AbstractModelManager
+    val headers = AbstractModelFacade
       .getInferredHeaders(domFile, currentTag)
       .map(_.map { case (key, (_, processor)) => (key, processor) })
       .getOrElse(Map())

@@ -5,7 +5,7 @@ import foo.intermediaterepresentation.model.types.{Inferred, TypeEnvironment}
 import com.intellij.psi.xml.XmlTag
 import foo.dom.DomFileAccessor
 import foo.intermediaterepresentation.model.processors.Processor
-import foo.intermediaterepresentation.model.AbstractModelManager
+import foo.intermediaterepresentation.model.AbstractModelFacade
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil
 import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.psi.util.PsiTreeUtil
@@ -21,7 +21,7 @@ object Resolving {
 
     val typeEnvironment = domFileOption flatMap {
       case domFile =>
-        val currentNode: Option[Processor] = AbstractModelManager.getCurrentNode(domFile, parentElement)
+        val currentNode: Option[Processor] = AbstractModelFacade.getCurrentNode(domFile, parentElement)
         currentNode.map(_.typeInformation).collect({
           case Inferred(before, _) => before
         })

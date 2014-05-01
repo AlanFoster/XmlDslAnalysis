@@ -4,12 +4,24 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import foo.tooling.graphing.StaticGraphTypes._
 import javax.swing.JComponent
+import foo.tooling.graphing.strategies.node.EipVertexFactory
+import foo.tooling.graphing.strategies.tooltip.ToolTipStrategy
 
 /**
- * Represents a trait which has the ability to create a representation of the given
- * EipDag information.
+ * Represents a trait which has the ability to create a visual representation of the given
+ * EipDAG information.
  */
-trait GraphCreator {
+trait VisualEipGraphFactory {
+  /**
+   * Encapsulate a reference to an Eip Vertex Factory
+   */
+  val eipVertexFactory: EipVertexFactory
+
+  /**
+   * Encapsulate a reference to a tooltip strategy
+   */
+  val tooltipStrategy: ToolTipStrategy
+
   /**
    * The 'pretty name' associated with this GraphCreator, IE a human readable string.
    */
@@ -22,5 +34,5 @@ trait GraphCreator {
    * @param eipGraph A graph containing the available semantic information
    * @return A newly created instance of a graph component
    */
-  def createComponent(project: Project, file: VirtualFile, eipGraph: EipDAG): JComponent
+  def createVisualGraph(project: Project, file: VirtualFile, eipGraph: EipDAG): JComponent
 }
