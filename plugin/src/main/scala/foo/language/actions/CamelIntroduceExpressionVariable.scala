@@ -46,7 +46,6 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
       return
     }
 
-    println("Refactoring for :: " + file)
     val workErrors = doWork(project, editor, file.asInstanceOf[CamelPsiFile])
     // Show any additional errors to the user
     workErrors.foreach(errorCreator)
@@ -60,9 +59,6 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
     }
 
     val maximalExpression = maximalExpressionOption.get
-
-    println("Maximal expression :: " + maximalExpression + " ... " + maximalExpression.getText)
-
     val parentTag = getParentXmlTag(camelEditor, camelFile)
 
     parentTag match {
@@ -84,7 +80,7 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
                 val replacement = CamelRenameFactory.createFresh(maximalExpression, maximalExpression.getTextRange, newExpression)
                 maximalExpression.replace(replacement)
 
-                // Format the element that was succesfully created
+                // Format the element that was successfully created
                 CodeStyleManager.getInstance(project).reformat(validParentChild.validParent)
 
                 // Update the caret to start after the newly created expression
@@ -101,6 +97,13 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
     }
   }
 
+  /**
+   * Finds the maximal expression to be extracted from the given CamelPsiFile, via the currently
+   * selected text.
+   * @param editor
+   * @param camelFile
+   * @return The maximal expression that is selected.
+   */
   private def getMaximalExpression(editor: Editor, camelFile: CamelPsiFile): Option[PsiElement] = {
     val model: SelectionModel = editor.getSelectionModel
     val (start, end) = (model.getSelectionStart, model.getSelectionEnd)
@@ -191,7 +194,6 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
 
     setHeaderTag
   }
-
 
   /**
    * @inheritdoc

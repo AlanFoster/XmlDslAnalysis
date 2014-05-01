@@ -6,11 +6,8 @@ import org.jdom.Element
 import com.intellij.openapi.vfs.VirtualFile
 import foo.dom.DomFileAccessor
 import DomFileAccessor._
-import foo.tooling.graphing.ultimate.IdeaGraphCreator
-import foo.tooling.graphing.jung.JungGraphCreator
-import foo.tooling.graphing.strategies.icons.{EipIconLoader, IntellijIconLoader}
-import foo.tooling.graphing.strategies.tooltip.SemanticToolTipStrategy
-import foo.tooling.graphing.strategies.node.EipDescriptiveIconVertexFactory
+import com.intellij.openapi.components.ServiceManager
+import foo.tooling.graphing.GraphHolder
 
 /**
  * Represents the EipEditorProvider, which acts as a factory for FileEditors.
@@ -62,15 +59,10 @@ class EipEditorProvider extends FileEditorProvider with DumbAware {
    * @return The new file editor associated to the given file
    */
   def createEditor(project: Project, file: VirtualFile): FileEditor = {
-    val strategies@(iconLoader, tooltipStrategy) = (
-      new EipDescriptiveIconVertexFactory(new EipIconLoader with IntellijIconLoader),
-      new SemanticToolTipStrategy
-    )
+    // Gain access to all registered graph creators
+    val graphHolder = ServiceManager.getService(classOf[GraphHolder])
+    val graphCreators = graphHolder.graphs
 
-    val graphCreators = List(
-      new IdeaGraphCreator(iconLoader, tooltipStrategy),
-      new JungGraphCreator(iconLoader, tooltipStrategy)
-    )
     new EipEditor(project, file, graphCreators)
   }
 

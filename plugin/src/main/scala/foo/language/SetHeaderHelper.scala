@@ -29,6 +29,12 @@ object SetHeaderHelper {
     else ValidParentChild(parent, child)
   }
 
+  /**
+   * Resets the caret in the editor to the given location and scrolls to the given
+   * position.
+   * @param editor The current editor
+   * @param newOffset The new offset.
+   */
   def resetCaret(editor: Editor, newOffset: Int) = {
     editor.getSelectionModel.removeSelection()
     editor.getCaretModel.moveToOffset(newOffset)

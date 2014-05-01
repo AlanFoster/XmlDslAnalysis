@@ -4,8 +4,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import foo.tooling.graphing.StaticGraphTypes._
 import javax.swing.JComponent
-import foo.tooling.graphing.strategies.icons.EipIconLoader
-import foo.tooling.graphing.strategies.tooltip.ToolTipStrategy
 
 /**
  * Represents a trait which has the ability to create a representation of the given

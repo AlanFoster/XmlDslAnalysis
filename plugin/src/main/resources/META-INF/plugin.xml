@@ -1,144 +1,170 @@
 <idea-plugin version="2">
-  <id>foo.initial</id>
-  <name>StaticAnalysis</name>
-  <version>1.0</version>
+    <id>foo.initial</id>
+    <name>StaticAnalysis</name>
+    <version>1.0</version>
 
-  <description><![CDATA[
+    <description><![CDATA[
       Provides static analysis for the XML DSL provided by Apache Camel.<br>
       ]]></description>
 
-  <change-notes><![CDATA[
+    <change-notes><![CDATA[
       Initial investigation.
       ]]>
-  </change-notes>
+    </change-notes>
 
 
-  <idea-version since-build="107.105"/>
+    <idea-version since-build="107.105"/>
 
-  <application-components>
+    <application-components>
 
-  </application-components>
+    </application-components>
 
-  <project-components>
-  </project-components>
+    <project-components>
+    </project-components>
 
-  <actions>
+    <actions>
 
-  </actions>
+    </actions>
 
-  <extensions defaultExtensionNs="com.intellij">
-          <!-- Start Apache Camel Language Support -->
-          <!--
-            Register the Apache Camel Language
-          -->
-          <fileTypeFactory implementation="foo.language.Core.CamelFileTypeFactory"/>
+    <!--
+        Exposed extension points for extensible functionality
+    -->
+    <extensionPoints>
+        <extensionPoint name="eipGraphingLibrary" interface="foo.tooling.graphing.GraphCreator"/>
+    </extensionPoints>
 
-          <!--
-            Register the parser definition which performs the role of creating a lexer, and parser.
-            And with the given AST tree will create the PSI elements etc
-          -->
-          <lang.parserDefinition language="Camel" implementationClass="foo.language.parser.CamelParserDefinition" />
+    <!--
+        Eip Graphing Library Extensions - Provide different concrete implementations for EIP Graphs.
+        There should be at least one registered graphing library.
+    -->
+    <extensions defaultExtensionNs="foo.initial">
+        <eipGraphingLibrary implementation="foo.tooling.graphing.ultimate.IdeaGraphCreator"/>
+        <eipGraphingLibrary implementation="foo.tooling.graphing.jung.JungGraphCreator"/>
+    </extensions>
 
-            <!--
-                Color Highlighting
-            -->
-            <lang.syntaxHighlighterFactory key="Camel" implementationClass="foo.language.Highlighting.CamelSyntaxHighlighterFactory" />
-
-
-            <!--
-                Color Highlighting editing
-            -->
-            <colorSettingsPage implementation="foo.language.Highlighting.CamelColorSettingsPage" />
-
-            <!--
-                Basic Code completion for core apache camel variables
-            -->
-            <completion.contributor language="Camel" implementationClass="foo.language.completion.CamelVariableCompletionContributor" />
-
-
-            <!-- Brace Matching -->
-            <lang.braceMatcher language="Camel" implementationClass="foo.language.formatting.CamelBraceMatcher" />
-
-            <!-- Show hint for function completion -->
-            <codeInsight.parameterInfo language="Camel" implementationClass="foo.language.CamelParameterInfoHandler" />
-
-            <!--
-                Annotators for camel functions are called as expected
-            -->
-            <annotator language="Camel" implementationClass="foo.language.annotators.CamelArgumentAnnotator"/>
-            <annotator language="Camel" implementationClass="foo.language.annotators.CamelFunctionNameAnnotator"/>
-            <annotator language="Camel" implementationClass="foo.language.annotators.IncompleteStringAnnotator"/>
-            <annotator language="Camel" implementationClass="foo.language.annotators.CreateHeaderAnnotator"/>
-
-            <annotator language="Camel" implementationClass="foo.language.Highlighting.CamelComplexElementAnnotator"/>
-
-
-            <!-- Language Injector - Ensure that we have injected the camel language into the appropriate places -->
-            <languageInjector implementation="foo.language.CamelSimpleLanguageInjector" />
-
-            <!-- Annotator for unresolved class names -->
-            <annotator language="Camel" implementationClass="foo.language.annotators.UnresolvedReferenceAnnotator" />
-
-            <!-- Quote Handler - Comments added to the top of the CamelQuoteHandler class as to why this is registered -->
-            <quoteHandler fileType="Camel" className="foo.language.formatting.CamelQuoteHandler" />
-
-            <!--
-                Header reference contributions within the simple language
-            -->
-            <psi.referenceContributor implementation="foo.language.references.header.CamelHeaderReferenceContributor"/>
-
-
-            <!--
-                Body Reference within camel, ie ${in.body<caret>} support
-            -->
-            <psi.referenceContributor implementation="foo.language.references.body.CamelBodyReferenceContributor" />
-
-
-          <!--
-            Allows inplace renaming of identity elements *if* they are embedded within the XML language
-          -->
-<!--
-            <lang.refactoringSupport language="XML" implementationClass="foo.language.references.CamelRefactoringSupportProvider"/>
-            <lang.refactoringSupport language="Camel" implementationClass="foo.language.references.CamelRefactoringSupportProvider"/>
--->
-
-          <!--
-            Provide Refactoring support for ACSL which has been injected into a DSL
-          -->
-          <lang.refactoringSupport language="Camel" implementationClass="foo.language.actions.CamelRefactoringSupportProvider"/>
-
-
-
-            <!-- Providing attributes for color schemes -->
-            <additionalTextAttributes scheme="Default" file="colorSchemes/CamelDefault.xml" />
-
-
-      <!-- End Apache Camel Language Support -->
-
-      <!--
-        Represents the top level blueprint DOM description, which provides an abstraction layer
-        for interacting with XML - rather than having to deal with null possible PSI elements
-      -->
-      <dom.fileDescription id="BlueprintDom" implementation="foo.dom.BlueprintDomFile"/>
-
-      <!-- Provide an implementation for expression elements -->
-      <dom.implementation
-            interfaceClass="foo.dom.Model.ExpressionDefinition"
-            implementationClass="foo.dom.Model.impl.ExpressionDefinitionImpl" />
-
-      <!--
-        Provide error highlighting within the DOM model.
-        Note this hooks into the DOM model metadata, ie annotations such as @Required etc.
-      -->
-      <localInspection
-              language="XML" enabledByDefault="true" level="ERROR"
-              groupName="Blueprint" displayName="Blueprint Basic Error Highlighting"
-              implementationClass="foo.dom.inspections.BlueprintDomElementInspector"/>
-
-      <!--
-          Represents the EIP Editor functionality within a Dom tree
+    <extensions defaultExtensionNs="com.intellij">
+        <!--
+            Application Services - Singleton instances of functionality, acccessible via
+            constructor dependency injection, or the ServiceManager
         -->
-      <fileEditorProvider implementation="foo.tooling.editor.EipEditorProvider" />
+        <applicationService
+                serviceInterface="foo.tooling.graphing.strategies.node.EipVertexFactory"
+                serviceImplementation="foo.tooling.graphing.strategies.node.EipDescriptiveIconVertexFactory"/>
+        <applicationService
+                serviceInterface="foo.tooling.graphing.strategies.icons.EipIconLoader"
+                serviceImplementation="foo.tooling.graphing.strategies.icons.IdeaEipIconLoader"/>
+        <applicationService
+                serviceInterface="foo.tooling.graphing.strategies.tooltip.ToolTipStrategy"
+                serviceImplementation="foo.tooling.graphing.strategies.tooltip.SemanticToolTipStrategy"/>
+        <applicationService
+                serviceInterface="foo.tooling.graphing.GraphHolder"
+                serviceImplementation="foo.tooling.graphing.ExtensionPointGraphHolder" />
 
-  </extensions>
+        <!-- Start Apache Camel Language Support -->
+        <!--
+          Register the Apache Camel Language
+        -->
+        <fileTypeFactory implementation="foo.language.Core.CamelFileTypeFactory"/>
+
+        <!--
+          Register the parser definition which performs the role of creating a lexer, and parser.
+          And with the given AST tree will create the PSI elements etc
+        -->
+        <lang.parserDefinition language="Camel" implementationClass="foo.language.parser.CamelParserDefinition"/>
+
+        <!--
+            Color Highlighting
+        -->
+        <lang.syntaxHighlighterFactory key="Camel"
+                                       implementationClass="foo.language.Highlighting.CamelSyntaxHighlighterFactory"/>
+
+        <!--
+            Color Highlighting editing
+        -->
+        <colorSettingsPage implementation="foo.language.Highlighting.CamelColorSettingsPage"/>
+
+        <!--
+            Basic Code completion for core apache camel variables
+        -->
+        <completion.contributor language="Camel"
+                                implementationClass="foo.language.completion.CamelVariableCompletionContributor"/>
+
+
+        <!-- Brace Matching -->
+        <lang.braceMatcher language="Camel" implementationClass="foo.language.formatting.CamelBraceMatcher"/>
+
+        <!-- Show hint for function completion -->
+        <codeInsight.parameterInfo language="Camel" implementationClass="foo.language.CamelParameterInfoHandler"/>
+
+        <!--
+            Annotators for camel functions are called as expected
+        -->
+        <annotator language="Camel" implementationClass="foo.language.annotators.CamelArgumentAnnotator"/>
+        <annotator language="Camel" implementationClass="foo.language.annotators.CamelFunctionNameAnnotator"/>
+        <annotator language="Camel" implementationClass="foo.language.annotators.IncompleteStringAnnotator"/>
+        <annotator language="Camel" implementationClass="foo.language.annotators.CreateHeaderAnnotator"/>
+
+        <annotator language="Camel" implementationClass="foo.language.Highlighting.CamelComplexElementAnnotator"/>
+
+
+        <!-- Language Injector - Ensure that we have injected the camel language into the appropriate places -->
+        <languageInjector implementation="foo.language.CamelSimpleLanguageInjector"/>
+
+        <!-- Annotator for unresolved class names -->
+        <annotator language="Camel" implementationClass="foo.language.annotators.UnresolvedReferenceAnnotator"/>
+
+        <!-- Quote Handler - Comments added to the top of the CamelQuoteHandler class as to why this is registered -->
+        <quoteHandler fileType="Camel" className="foo.language.formatting.CamelQuoteHandler"/>
+
+        <!--
+            Header reference contributions within the simple language
+        -->
+        <psi.referenceContributor implementation="foo.language.references.header.CamelHeaderReferenceContributor"/>
+
+
+        <!--
+            Body Reference within camel, ie ${in.body<caret>} support
+        -->
+        <psi.referenceContributor implementation="foo.language.references.body.CamelBodyReferenceContributor"/>
+
+
+        <!--
+          Provide Refactoring support for ACSL which has been injected into a DSL
+        -->
+        <lang.refactoringSupport language="Camel"
+                                 implementationClass="foo.language.actions.CamelRefactoringSupportProvider"/>
+
+
+        <!-- Providing attributes for color schemes -->
+        <additionalTextAttributes scheme="Default" file="colorSchemes/CamelDefault.xml"/>
+
+
+        <!-- End Apache Camel Language Support -->
+
+        <!--
+          Represents the top level blueprint DOM description, which provides an abstraction layer
+          for interacting with XML - rather than having to deal with null possible PSI elements
+        -->
+        <dom.fileDescription id="BlueprintDom" implementation="foo.dom.BlueprintDomFile"/>
+
+        <!-- Provide an implementation for expression elements -->
+        <dom.implementation
+                interfaceClass="foo.dom.Model.ExpressionDefinition"
+                implementationClass="foo.dom.Model.impl.ExpressionDefinitionImpl"/>
+
+        <!--
+          Provide error highlighting within the DOM model.
+          Note this hooks into the DOM model metadata, ie annotations such as @Required etc.
+        -->
+        <localInspection
+                language="XML" enabledByDefault="true" level="ERROR"
+                groupName="Blueprint" displayName="Blueprint Basic Error Highlighting"
+                implementationClass="foo.dom.inspections.BlueprintDomElementInspector"/>
+
+        <!--
+            Represents the EIP Editor functionality within a Dom tree
+          -->
+        <fileEditorProvider implementation="foo.tooling.editor.EipEditorProvider"/>
+
+    </extensions>
 </idea-plugin>
