@@ -59,6 +59,9 @@
         <applicationService
                 serviceInterface="foo.tooling.graphing.GraphHolder"
                 serviceImplementation="foo.tooling.graphing.ExtensionPointGraphHolder" />
+        <applicationService
+                serviceInterface="foo.intermediaterepresentation.AbstractModelFacade"
+                serviceImplementation="foo.intermediaterepresentation.AbstractModelManager" />
 
         <!-- Start Apache Camel Language Support -->
         <!--

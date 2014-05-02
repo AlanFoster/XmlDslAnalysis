@@ -5,23 +5,35 @@ import foo.intermediaterepresentation.model.types.{Inferred, TypeEnvironment}
 import com.intellij.psi.xml.XmlTag
 import foo.dom.DomFileAccessor
 import foo.intermediaterepresentation.model.processors.Processor
-import foo.intermediaterepresentation.model.AbstractModelFacade
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil
 import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.openapi.components.ServiceManager
+import foo.intermediaterepresentation.AbstractModelFacade
 
 object Resolving {
+  /**
+   * Extracts the type environment from the given PsiElement
+   * @param psiElement The PSI element to extract the type environemtn from
+   * @return The inferred type environment
+   */
   def getTypeEnvironment(psiElement: PsiElement): Option[TypeEnvironment] = {
     getParentXmlElement(psiElement).flatMap(parent => getTypeEnvironment(parent))
   }
 
+  /**
+   * Extracts the type environment from the given XmlTag
+   * @param parentElement The parent XML Tag of an expression
+   * @return The inferred type environment
+   */
   def getTypeEnvironment(parentElement: XmlTag): Option[TypeEnvironment] = {
     val (project, psiFile) = (parentElement.getProject, parentElement.getContainingFile)
     val domFileOption = DomFileAccessor.getBlueprintDomFile(project, psiFile)
 
     val typeEnvironment = domFileOption flatMap {
       case domFile =>
-        val currentNode: Option[Processor] = AbstractModelFacade.getCurrentNode(domFile, parentElement)
+        val facade = ServiceManager.getService(classOf[AbstractModelFacade])
+        val currentNode: Option[Processor] = facade.getCurrentNode(domFile, parentElement)
         currentNode.map(_.typeInformation).collect({
           case Inferred(before, _) => before
         })

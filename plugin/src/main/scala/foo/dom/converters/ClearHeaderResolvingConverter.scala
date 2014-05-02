@@ -6,8 +6,9 @@ import scala.collection.JavaConverters._
 
 import foo.dom.DomFileAccessor
 import foo.dom.Model.ProcessorDefinition
-import foo.intermediaterepresentation.model._
 import foo.intermediaterepresentation.model.types.CamelStaticTypes.ACSLKey
+import com.intellij.openapi.components.ServiceManager
+import foo.intermediaterepresentation.AbstractModelFacade
 
 
 /**
@@ -65,7 +66,7 @@ class ClearHeaderResolvingConverter extends ResolvingConverter[ProcessorDefiniti
     val domFile = DomFileAccessor.getBlueprintDomFile(project, virtualFile).get
 
     // Access the header information as expected
-    val headers = AbstractModelFacade
+    val headers = ServiceManager.getService(classOf[AbstractModelFacade])
       .getInferredHeaders(domFile, currentTag)
       .map(_.map { case (key, (_, processor)) => (key, processor) })
       .getOrElse(Map())

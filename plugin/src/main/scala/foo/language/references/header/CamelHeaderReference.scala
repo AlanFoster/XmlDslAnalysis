@@ -5,11 +5,12 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.util.xml.{DomTarget, ElementPresentationManager}
 import foo.dom.Model.ProcessorDefinition
-import foo.intermediaterepresentation.model.AbstractModelFacade
 import foo.language.references.{CamelRenameFactory, EipSimpleReference}
 import foo.intermediaterepresentation.model.types.{BaseType, CamelType, TypeEnvironment}
 import foo.intermediaterepresentation.model.types.CamelStaticTypes.{ACSLFqcn, ACSLKey}
 import com.intellij.pom.references.PomService
+import com.intellij.openapi.components.ServiceManager
+import foo.intermediaterepresentation.AbstractModelFacade
 
 /**
  * A concrete implementation of a CamelHeaderReference
@@ -40,7 +41,8 @@ class CamelHeaderReference(element: PsiElement, range: TextRange)
 
   private def getAvailableHeaders: Map[ACSLKey, (ACSLFqcn, ProcessorDefinition)] = {
     val typeEnvironment = getTypeEnvironment(myElement)
-    val headers = typeEnvironment.flatMap(AbstractModelFacade.getInferredHeaders)
+    val facade = ServiceManager.getService(classOf[AbstractModelFacade])
+    val headers = typeEnvironment.flatMap(facade.getInferredHeaders)
     headers.getOrElse(Map())
   }
 
@@ -64,9 +66,10 @@ class CamelHeaderReference(element: PsiElement, range: TextRange)
    * @inheritdoc
    */
   override def resolveEip(typeEnvironment: TypeEnvironment): Set[CamelType] = {
+    val facade = ServiceManager.getService(classOf[AbstractModelFacade])
     val resolvedHeader =
       for {
-        headers <- AbstractModelFacade.getInferredHeaders(typeEnvironment)
+        headers <- facade.getInferredHeaders(typeEnvironment)
         resolvedHeader <- resolveHeader(headers)
       } yield resolvedHeader
 

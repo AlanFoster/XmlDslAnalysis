@@ -5,7 +5,8 @@ import com.intellij.testFramework.fixtures.CodeInsightTestFixture
 import foo.tooling.serializers.EipDagSerializer
 import foo.dom.DomFileAccessor
 import foo.tooling.graphing.EipDAGCreator
-import foo.intermediaterepresentation.model.AbstractModelFacade
+import com.intellij.openapi.components.ServiceManager
+import foo.intermediaterepresentation.AbstractModelFacade
 
 /**
  * EipDag asserting methods for ensuring that the EipDAGs are represented as expected
@@ -30,7 +31,8 @@ object EipDagAssert {
     val expectedDag = fixture.configureByFile(s"${testName}_eip.xml").getText
 
     // Create the intermediate representation with semantic information
-    val route = AbstractModelFacade.createSemanticModel(loadedDomFile)
+    val facade = ServiceManager.getService(classOf[AbstractModelFacade])
+    val route = facade.createSemanticModel(loadedDomFile)
 
     // Convert the IR graph into an EIP Dag, which fills in the appropriate edges between nodes
     val eipDag = new EipDAGCreator().createEipDAG(route)

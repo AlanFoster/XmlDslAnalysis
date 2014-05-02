@@ -19,9 +19,10 @@ import foo.dom.Model.Blueprint
 import foo.tooling.graphing.{VisualEipGraphFactory, EipDAGCreator}
 import java.awt.event.{ActionEvent, ActionListener}
 import com.intellij.openapi.progress.ProgressManager
-import foo.intermediaterepresentation.model.AbstractModelFacade
 import com.intellij.openapi.diagnostic.Logger
 import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
+import com.intellij.openapi.components.ServiceManager
+import foo.intermediaterepresentation.AbstractModelFacade
 
 /**
  * Creates and visualises the given XML DSl as a graph.
@@ -133,7 +134,8 @@ class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[
 
         // Create the intermediate representation with semantic information
         processManager.getProgressIndicator.setText("Creating Model...")
-        val route = AbstractModelFacade.createSemanticModel(blueprintDom)
+        val facade = ServiceManager.getService(classOf[AbstractModelFacade])
+        val route = facade.createSemanticModel(blueprintDom)
 
         // Convert the IR graph into an EIP Dag, which fills in the appropriate edges between nodes
         // And then attempt to create the element visually
