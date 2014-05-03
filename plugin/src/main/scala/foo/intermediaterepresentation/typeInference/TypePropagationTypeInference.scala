@@ -224,48 +224,49 @@ class TypePropagationTypeInference extends AbstractModelTypeInference with Reado
    * @param expression The expression to infer type information on
    * @return The inferred type information of the given expression
    */
-  def inferExpressionTypeInformation(typeEnvironment: TypeEnvironment, expression: Expression): Set[String] = expression match {
-    /**
-     * Constants may only return Strings
-     */
-    case constant: Constant => Set(CommonClassNames.JAVA_LANG_STRING)
+  def inferExpressionTypeInformation(typeEnvironment: TypeEnvironment, expression: Expression): Set[String] = {
+    val inferredExpressionTypeInformation = expression match {
+      /**
+       * Constants may only return Strings
+       */
+      case constant: Constant => Some(Set(CommonClassNames.JAVA_LANG_STRING))
 
-    /**
-     * A simple expression with a supplied resultType will be used over the inferred
-     * output of the expression value
-     */
-    case Simple(value, Some(fqcn), reference) =>
-      // Extract the required project
-      val projectOption = reference.getProject
-      val resolvedFqcn = projectOption.flatMap(project => omega(fqcn, project)).map(_.getQualifiedName)
-      resolvedFqcn.map(fqcn => Set(fqcn)).getOrElse(Set(DEFAULT_INFERRED_TYPE))
+      /**
+       * A simple expression with a supplied resultType will be used over the inferred
+       * output of the expression value
+       */
+      case Simple(value, Some(fqcn), reference) =>
+        // Extract the required project
+        val projectOption = reference.getProject
+        val resolvedFqcn = projectOption.flatMap(project => omega(fqcn, project)).map(_.getQualifiedName)
+        resolvedFqcn.map(fqcn => Set(fqcn))
 
-    /**
-     * When no resultType is set we should infer it
-     */
-    case Simple(value, None, reference) =>
-      val psiElementOption = reference match {
-        case NoReference | DomReference(_) => None
-        case ExpressionReference(element) =>
-          Some(element)
-      }
+      /**
+       * When no resultType is set we should infer it
+       */
+      case Simple(value, None, reference) =>
+        val psiElementOption = reference match {
+          case NoReference | DomReference(_) => None
+          case ExpressionReference(element) =>
+            Some(element)
+        }
 
-      psiElementOption match {
-        case None => Set(DEFAULT_INFERRED_TYPE)
-        case Some(element) =>
-          val psiFile = element.getContainingFile
-          val textOffset = element.getValue.getTextRange.getStartOffset
+        psiElementOption match {
+          case None => None
+          case Some(element) =>
+            val psiFile = element.getContainingFile
+            val textOffset = element.getValue.getTextRange.getStartOffset
 
-          // Attempt to infer the type of the camel expression
-          val camelPsiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(psiFile, textOffset).asInstanceOf[CamelPsiFile]
-          val resolvedFqcn = new CamelSimpleTypeChecker().typeCheckCamel(typeEnvironment, camelPsiFile)
+            // Attempt to infer the type of the camel expression
+            val camelPsiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(psiFile, textOffset).asInstanceOf[CamelPsiFile]
+            val resolvedFqcn = new CamelSimpleTypeChecker().typeCheckCamel(typeEnvironment, camelPsiFile)
 
-          resolvedFqcn.getOrElse(Set(DEFAULT_INFERRED_TYPE))
-      }
+            resolvedFqcn
+        }
 
-    /**
-     * By default we should the default inferred type for unknown type expressions
-     */
-    case _ => Set(DEFAULT_INFERRED_TYPE)
+      case _ => None
+    }
+
+    inferredExpressionTypeInformation.getOrElse(Set(DEFAULT_INFERRED_TYPE))
   }
 }
