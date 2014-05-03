@@ -67,4 +67,11 @@ After the plugin has been installed we can see the problem more clearly with syn
 </div>
 
 
-## 
+## Intelligent Type Information Propagation
+
+This tooling analyses the information which is available to the user at a given point in the DSL. 
+
+<div class="text-center" align="center">
+	<div><img alt="Broken code - Type param" src="docs_images/codeExample_typePropagation.png" doc-img /></div>
+	*Inferred Type Information*
+</div>
