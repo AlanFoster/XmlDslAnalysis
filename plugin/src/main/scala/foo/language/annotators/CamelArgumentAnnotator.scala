@@ -7,7 +7,7 @@ import foo.language.generated.psi.CamelFunctionArg
 import com.intellij.psi.tree.IElementType
 import com.intellij.lang.ASTNode
 import foo.language.{Resolving, CamelArgument, CamelFunction}
-import foo.language.typeChecking.CamelSimpleTypeChecker
+import foo.language.typeChecking.SimpleTypeChecker
 import foo.intermediaterepresentation.model.types.TypeEnvironment
 import scala.Some
 
@@ -15,7 +15,7 @@ import scala.Some
  * Represents the annotator which ensures that the camel functions are called as expected.
  * IE provides semantic analysis for the camel functions, and highlights errors.
  */
-class CamelArgumentAnnotator extends Annotator {
+class CamelArgumentAnnotator(simpleTypeChecker: SimpleTypeChecker) extends Annotator {
   /**
    * {@inheritdoc}
    */
@@ -76,7 +76,7 @@ class CamelArgumentAnnotator extends Annotator {
     // Firstly attempt to perform type checking on the current element through type inference rules
     val typeEnvironment = Resolving.getTypeEnvironment(psiArg).getOrElse(TypeEnvironment())
     val matchInferredType = {
-        val inferredTypes = new CamelSimpleTypeChecker().typeCheckCamel(typeEnvironment, psiArg)
+        val inferredTypes = simpleTypeChecker.typeCheckCamel(typeEnvironment, psiArg)
         inferredTypes.exists(_.contains(requiredFqcn))
     }
 

@@ -6,7 +6,7 @@ import foo.tooling.serializers.EipDagSerializer
 import foo.dom.DomFileAccessor
 import foo.tooling.graphing.EipDAGCreator
 import com.intellij.openapi.components.ServiceManager
-import foo.intermediaterepresentation.AbstractModelFacade
+import foo.intermediaterepresentation.model.AbstractModelFacade
 
 /**
  * EipDag asserting methods for ensuring that the EipDAGs are represented as expected

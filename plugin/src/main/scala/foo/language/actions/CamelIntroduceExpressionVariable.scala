@@ -71,6 +71,7 @@ class CamelIntroduceExpressionVariable extends RefactoringActionHandler {
             // Register undo-support
             CommandProcessor.getInstance().executeCommand(project, new Runnable {
               override def run(): Unit = {
+                // TODO Provide user input for create ID
                 val headerName: String = "id"
                 val validParentChild =  insertHeader(headerName, maximalExpression.getText, tag)
 

@@ -9,7 +9,7 @@ import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil
 import com.intellij.lang.injection.InjectedLanguageManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.openapi.components.ServiceManager
-import foo.intermediaterepresentation.AbstractModelFacade
+import foo.intermediaterepresentation.model.AbstractModelFacade
 
 object Resolving {
   /**

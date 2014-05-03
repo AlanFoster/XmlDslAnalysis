@@ -22,7 +22,7 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.diagnostic.Logger
 import java.util.concurrent.atomic.{AtomicBoolean, AtomicInteger}
 import com.intellij.openapi.components.ServiceManager
-import foo.intermediaterepresentation.AbstractModelFacade
+import foo.intermediaterepresentation.model.AbstractModelFacade
 
 /**
  * Creates and visualises the given XML DSl as a graph.

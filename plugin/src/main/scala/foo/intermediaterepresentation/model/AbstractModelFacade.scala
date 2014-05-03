@@ -1,4 +1,4 @@
-package foo.intermediaterepresentation
+package foo.intermediaterepresentation.model
 
 import foo.dom.Model.{ProcessorDefinition, Blueprint}
 import com.intellij.psi.xml.XmlTag

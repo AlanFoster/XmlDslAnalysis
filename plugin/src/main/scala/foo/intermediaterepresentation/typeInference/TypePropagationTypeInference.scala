@@ -4,8 +4,8 @@ import foo.intermediaterepresentation.model._
 import com.intellij.psi.CommonClassNames
 import com.intellij.psi.impl.source.tree.injected.InjectedLanguageUtil
 import foo.language.Core.CamelPsiFile
-import foo.language.typeChecking.CamelSimpleTypeChecker
-import foo.intermediaterepresentation.model.types.{NotInferred, TypeEnvironment}
+import foo.language.typeChecking.SimpleTypeChecker
+import foo.intermediaterepresentation.model.types.TypeEnvironment
 import foo.intermediaterepresentation.model.references.{DomReference, NoReference, ExpressionReference}
 import foo.intermediaterepresentation.model.expressions.Expression
 import foo.intermediaterepresentation.model.processors._
@@ -23,7 +23,7 @@ import CoreConstants._
  * by using the concept of type information 'flowing' between
  * processors, and unioning their type information.
  */
-class TypePropagationTypeInference extends AbstractModelTypeInference with ReadonlyTypeEnvironment {
+class TypePropagationTypeInference(simpleTypeChecker: SimpleTypeChecker) extends AbstractModelTypeInference with ReadonlyTypeEnvironment {
 
   /**
    * Performs type inference on the given model
@@ -259,7 +259,7 @@ class TypePropagationTypeInference extends AbstractModelTypeInference with Reado
 
             // Attempt to infer the type of the camel expression
             val camelPsiFile = InjectedLanguageUtil.findInjectedPsiNoCommit(psiFile, textOffset).asInstanceOf[CamelPsiFile]
-            val resolvedFqcn = new CamelSimpleTypeChecker().typeCheckCamel(typeEnvironment, camelPsiFile)
+            val resolvedFqcn = simpleTypeChecker.typeCheckCamel(typeEnvironment, camelPsiFile)
 
             resolvedFqcn
         }

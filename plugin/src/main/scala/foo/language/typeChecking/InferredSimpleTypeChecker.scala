@@ -15,7 +15,7 @@ import foo.intermediaterepresentation.model.types.CamelStaticTypes.ACSLFqcn
  * A concrete implementation of a SimpleTypeCheck which relies on recursively
  * resolving a given Camel expression, based on type judgements/inference rules
  */
-class CamelSimpleTypeChecker extends SimpleTypeChecker with ReadonlyTypeEnvironment {
+class InferredSimpleTypeChecker extends SimpleTypeChecker with ReadonlyTypeEnvironment {
   /**
    * {@inheritdoc}
    */

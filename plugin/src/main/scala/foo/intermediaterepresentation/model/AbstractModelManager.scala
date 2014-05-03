@@ -1,4 +1,4 @@
-package foo.intermediaterepresentation
+package foo.intermediaterepresentation.model
 
 import foo.dom.Model.{ProcessorDefinition, Blueprint}
 import com.intellij.psi.xml.XmlTag
@@ -6,14 +6,15 @@ import foo.intermediaterepresentation.model.processors.{Route, Processor}
 import foo.intermediaterepresentation.model.types.CamelStaticTypes._
 import foo.intermediaterepresentation.model.references.DomReference
 import foo.intermediaterepresentation.model.types.TypeEnvironment
-import foo.intermediaterepresentation.converter.DomAbstractModelConverter
-import foo.intermediaterepresentation.typeInference.TypePropagationTypeInference
+import foo.intermediaterepresentation.converter.{AbstractModelConverter, DomAbstractModelConverter}
+import foo.intermediaterepresentation.typeInference.{AbstractModelTypeInference, TypePropagationTypeInference}
 
 /**
  * A concrete implementation of the AbstractModelFacade, which provides a simple
  * interface for accessing common information within the given intermediate representation
  */
-class AbstractModelManager extends AbstractModelFacade {
+class AbstractModelManager(converter: AbstractModelConverter[Blueprint],
+                           typeInference: AbstractModelTypeInference) extends AbstractModelFacade {
   /**
    * Extracts the current node from the given IR
    * @param domFile The blueprint dom file
@@ -68,15 +69,10 @@ class AbstractModelManager extends AbstractModelFacade {
    * @return The intermediate representation and semantic information for the given blueprint file
    */
   def createSemanticModel(blueprint: Blueprint): Route = {
-    // Instantiate the methods of creating an abstract dom model and semantic information for later DI
-    // IE, this converts to an IR and then performs type inference on the structure
-    val modelConverter = new DomAbstractModelConverter()
-    val dataFlowInference = new TypePropagationTypeInference()
-
     // Apply the transformation
     // firstly creating the IR representation, then applying the more expensive type inference
-    val route = modelConverter.convert(blueprint)
-    val routeWithSemantics = dataFlowInference.performTypeInference(route)
+    val route = converter.convert(blueprint)
+    val routeWithSemantics = typeInference.performTypeInference(route)
 
     routeWithSemantics
   }

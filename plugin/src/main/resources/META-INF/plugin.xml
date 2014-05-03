@@ -27,7 +27,9 @@
     </actions>
 
     <!--
-        Exposed extension points for extensible functionality
+        Exposed extension points for extensible functionality - which allow for third party plugins
+        to hook into our plugin and provide functionality. Also used by this plugin to provide
+        different graph implementations.
     -->
     <extensionPoints>
         <extensionPoint name="eipGraphingLibrary" interface="foo.tooling.graphing.VisualEipGraphFactory"/>
@@ -43,10 +45,11 @@
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!--
+        <!--###############################################################################
             Application Services - Singleton instances of functionality, acccessible via
             constructor dependency injection, or the ServiceManager
-        -->
+        #################################################################################-->
+        <!-- Graphing -->
         <applicationService
                 serviceInterface="foo.tooling.graphing.strategies.node.EipVertexFactory"
                 serviceImplementation="foo.tooling.graphing.strategies.node.EipDescriptiveIconVertexFactory"/>
@@ -60,13 +63,28 @@
                 serviceInterface="foo.tooling.graphing.GraphHolder"
                 serviceImplementation="foo.tooling.graphing.ExtensionPointGraphHolder" />
         <applicationService
-                serviceInterface="foo.intermediaterepresentation.AbstractModelFacade"
-                serviceImplementation="foo.intermediaterepresentation.AbstractModelManager" />
+                serviceInterface="foo.tooling.graphing.GraphHolder"
+                serviceImplementation="foo.tooling.graphing.ExtensionPointGraphHolder" />
 
-        <!-- Start Apache Camel Language Support -->
-        <!--
-          Register the Apache Camel Language
-        -->
+        <!-- Core services - type inference, type checking, and most importantly the Facade -->
+        <applicationService
+                serviceInterface="foo.intermediaterepresentation.model.AbstractModelFacade"
+                serviceImplementation="foo.intermediaterepresentation.model.AbstractModelManager" />
+        <applicationService
+                serviceInterface="foo.intermediaterepresentation.typeInference.AbstractModelTypeInference"
+                serviceImplementation="foo.intermediaterepresentation.typeInference.TypePropagationTypeInference" />
+        <applicationService
+                serviceInterface="foo.intermediaterepresentation.converter.AbstractModelConverter"
+                serviceImplementation="foo.intermediaterepresentation.converter.DomAbstractModelConverter" />
+        <applicationService
+                serviceInterface="foo.language.typeChecking.SimpleTypeChecker"
+                serviceImplementation="foo.language.typeChecking.InferredSimpleTypeChecker" />
+
+
+        <!--###############################################################################
+            Apache Camel Simple Language Support
+        #################################################################################-->
+        <!-- Register the Apache Camel Language -->
         <fileTypeFactory implementation="foo.language.Core.CamelFileTypeFactory"/>
 
         <!--
@@ -142,8 +160,9 @@
         <additionalTextAttributes scheme="Default" file="colorSchemes/CamelDefault.xml"/>
 
 
-        <!-- End Apache Camel Language Support -->
-
+        <!--###############################################################################
+            Blueprint DOM Support
+        #################################################################################-->
         <!--
           Represents the top level blueprint DOM description, which provides an abstraction layer
           for interacting with XML - rather than having to deal with null possible PSI elements

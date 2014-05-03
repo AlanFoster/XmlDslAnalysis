@@ -8,7 +8,7 @@ import foo.dom.DomFileAccessor
 import foo.dom.Model.ProcessorDefinition
 import foo.intermediaterepresentation.model.types.CamelStaticTypes.ACSLKey
 import com.intellij.openapi.components.ServiceManager
-import foo.intermediaterepresentation.AbstractModelFacade
+import foo.intermediaterepresentation.model.AbstractModelFacade
 
 
 /**

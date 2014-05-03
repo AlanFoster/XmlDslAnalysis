@@ -10,7 +10,7 @@ import foo.intermediaterepresentation.model.types.{BaseType, CamelType, TypeEnvi
 import foo.intermediaterepresentation.model.types.CamelStaticTypes.{ACSLFqcn, ACSLKey}
 import com.intellij.pom.references.PomService
 import com.intellij.openapi.components.ServiceManager
-import foo.intermediaterepresentation.AbstractModelFacade
+import foo.intermediaterepresentation.model.AbstractModelFacade
 
 /**
  * A concrete implementation of a CamelHeaderReference
