@@ -43,7 +43,7 @@ class TypePropagationTypeInference extends AbstractModelTypeInference with Reado
    * @tparam T The generic type of the processor to be returned
    * @return A new processor with updated type semantics
    */
-  def performTypeInference[T >: Processor](typeEnvironment: TypeEnvironment,
+  private def performTypeInference[T >: Processor](typeEnvironment: TypeEnvironment,
                                            processor: T): T = processor match {
     /**
      * Ensure that Route information takes into consideration its children
@@ -197,7 +197,7 @@ class TypePropagationTypeInference extends AbstractModelTypeInference with Reado
    * @param envs The list of possible type environments
    * @return A single unified instance of a TypeEnvironment
    */
-  def mergeTypeEnvironment(current: TypeEnvironment, envs: List[TypeEnvironment]): TypeEnvironment = {
+  private def mergeTypeEnvironment(current: TypeEnvironment, envs: List[TypeEnvironment]): TypeEnvironment = {
     envs.foldLeft(current)(_ + _)
   }
 
@@ -264,7 +264,7 @@ class TypePropagationTypeInference extends AbstractModelTypeInference with Reado
       }
 
     /**
-     * By default we should the default inferred typefor unknown type expressions
+     * By default we should the default inferred type for unknown type expressions
      */
     case _ => Set(DEFAULT_INFERRED_TYPE)
   }
