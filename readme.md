@@ -43,7 +43,7 @@ Before / After
 
 By default there is no tooling available for Apache Camel. This tooling provides support for both Apache Camel's Simple Language and provides support for code completion within processors.
 
-## Simple Language Support
+#### Simple Language Support
 For instance consider the following scenario in which a Simple function is being called, however the arguments are reversed.
 
 Such a mistake would not be known about until either runtime or deploy time, and the worst time to find out about mistakes is within production!
@@ -67,7 +67,7 @@ After the plugin has been installed we can see the problem more clearly with syn
 </div>
 
 
-## Intelligent Type Information Propagation
+#### Intelligent Type Information Propagation
 
 This tooling analyses the information which is available to the user at a given point in the DSL. 
 
