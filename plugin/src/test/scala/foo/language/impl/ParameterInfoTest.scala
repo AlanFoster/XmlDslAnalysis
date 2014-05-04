@@ -1,7 +1,6 @@
 package foo.language.impl
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import foo.language.CamelParameterInfoHandler
 import com.intellij.codeInsight.hint.ShowParameterInfoContext
 import junit.framework.Assert._
 import foo.language.generated.psi.CamelFunctionCall
@@ -11,6 +10,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.psi.PsiFile
 import foo.language.Core.CamelFileType
 import foo.TestBase
+import foo.language.functions.CamelParameterInfoHandler
 
 /**
  * Tests to ensure that the ParameterInfo implementation is valid.

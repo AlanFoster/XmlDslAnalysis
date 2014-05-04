@@ -1,4 +1,4 @@
-package foo.language
+package foo.language.functions
 
 import com.intellij.lang.parameterInfo._
 import com.intellij.codeInsight.lookup.LookupElement

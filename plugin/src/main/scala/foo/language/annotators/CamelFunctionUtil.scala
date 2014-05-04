@@ -3,7 +3,7 @@ package foo.language.annotators
 import com.intellij.psi.PsiElement
 import foo.language.generated.psi.CamelFunctionCall
 import com.intellij.psi.util.PsiTreeUtil
-import foo.language.{CamelFunctions, CamelFunction}
+import foo.language.functions.{CamelFunctions, CamelFunction}
 
 /**
  * Functional utilities for interacting with Camel Function Psi Elements

@@ -62,9 +62,6 @@
         <applicationService
                 serviceInterface="foo.tooling.graphing.GraphHolder"
                 serviceImplementation="foo.tooling.graphing.ExtensionPointGraphHolder" />
-        <applicationService
-                serviceInterface="foo.tooling.graphing.GraphHolder"
-                serviceImplementation="foo.tooling.graphing.ExtensionPointGraphHolder" />
 
         <!-- Core services - type inference, type checking, and most importantly the Facade -->
         <applicationService
@@ -115,7 +112,7 @@
         <lang.braceMatcher language="Camel" implementationClass="foo.language.formatting.CamelBraceMatcher"/>
 
         <!-- Show hint for function completion -->
-        <codeInsight.parameterInfo language="Camel" implementationClass="foo.language.CamelParameterInfoHandler"/>
+        <codeInsight.parameterInfo language="Camel" implementationClass="foo.language.functions.CamelParameterInfoHandler"/>
 
         <!--
             Annotators for camel functions are called as expected
@@ -159,6 +156,12 @@
         <!-- Providing attributes for color schemes -->
         <additionalTextAttributes scheme="Default" file="colorSchemes/CamelDefault.xml"/>
 
+        <!--
+            Provide documentation for camel
+            NOTE - Doesn't work, as the camel inbuilt functions do not have reference contributions
+            Therefore this method is not called appropriately for these tokens..
+         -->
+<!--        <lang.documentationProvider language="Camel" implementationClass="foo.language.functions.CamelFunctionDocumentationProvider" />-->
 
         <!--###############################################################################
             Blueprint DOM Support

@@ -4,7 +4,7 @@ import com.intellij.lang.annotation.{AnnotationHolder, Annotator}
 import com.intellij.psi.PsiElement
 import com.intellij.patterns.PlatformPatterns._
 import foo.language.generated.psi.CamelFunctionCall
-import foo.language.CamelFunction
+import foo.language.functions.CamelFunction
 
 /**
  * Ensures that the given function name exists within the camel language

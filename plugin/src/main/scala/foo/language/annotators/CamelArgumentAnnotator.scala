@@ -6,10 +6,11 @@ import com.intellij.patterns.PlatformPatterns._
 import foo.language.generated.psi.CamelFunctionArg
 import com.intellij.psi.tree.IElementType
 import com.intellij.lang.ASTNode
-import foo.language.{Resolving, CamelArgument, CamelFunction}
+import foo.language.Resolving
 import foo.language.typeChecking.SimpleTypeChecker
 import foo.intermediaterepresentation.model.types.TypeEnvironment
 import scala.Some
+import foo.language.functions.{CamelFunction, CamelArgument}
 
 /**
  * Represents the annotator which ensures that the camel functions are called as expected.
@@ -32,7 +33,7 @@ class CamelArgumentAnnotator(simpleTypeChecker: SimpleTypeChecker) extends Annot
     }
 
     CamelFunctionUtil.matchFunction(element)({
-      case (camelFunctionDefinition@CamelFunction(_, arguments: List[CamelArgument]), psiCamelFunction) => {
+      case (camelFunctionDefinition@CamelFunction(_, arguments: List[CamelArgument], _), psiCamelFunction) => {
         // Calculate our current argument position
         val argList = psiCamelFunction.getFunctionArgs.getFunctionArgList
         val index = argList.indexOf(psiArgument)
