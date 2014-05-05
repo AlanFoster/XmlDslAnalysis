@@ -4,6 +4,11 @@ var AsyncSpec = require("jasmine-async")(jasmine);
 import dbPool = require("./../db/Core");
 import repo = require("./../ts/DataModelTest");
 
+// Provide access to global config
+global.config = {};
+var config = global.config;
+config.realm = "feature-spec.ts";
+
 var featuresService = require("./../ts/feature-service.js");
 var arrayShim = require("./../ts/arrayShim.js");
 var serviceHelpers = require("./service-helper.js");
