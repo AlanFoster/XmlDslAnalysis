@@ -143,6 +143,12 @@ class TypePropagationTypeInference(simpleTypeChecker: SimpleTypeChecker) extends
       from.copy(typeInformation = Inferred(typeEnvironment, typeEnvironment))
 
     /**
+     * WireTaps are read only, and the original content should not be affected
+     */
+    case wireTap: WireTap =>
+      wireTap.copy(typeInformation = Inferred(typeEnvironment, typeEnvironment))
+
+    /**
      * The type information of expressions applied to setHeader can update the type environment
      */
     case setHeader@SetHeader(headerNameOption, expression, reference, _) =>

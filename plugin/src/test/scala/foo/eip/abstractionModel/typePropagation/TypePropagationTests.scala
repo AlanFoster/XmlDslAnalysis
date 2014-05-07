@@ -96,6 +96,14 @@ class TypePropagationTests
     doTest()
   }
 
+
+  /**
+   * Ensure the WireTap element is handled
+   */
+  def testWireTap() {
+    doTest()
+  }
+
   /**
    * Ensure that multiple set bodies in a row function as expected
    */

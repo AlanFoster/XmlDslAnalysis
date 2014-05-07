@@ -136,6 +136,13 @@ class DomAbstractModelConverter extends AbstractModelConverter[Blueprint] {
       Log(message, DomReference(log))
 
     /**
+     * Handle the <wireTap uri="..." /> node
+     */
+    case wireTap: WireTapDefinition =>
+      val uri = Option(wireTap.getUri.getStringValue)
+      WireTap(uri, DomReference(wireTap))
+
+    /**
      * Ensure we fall through safely in case there is a node we do not understand
      */
     case _ =>

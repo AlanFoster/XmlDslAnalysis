@@ -94,6 +94,13 @@ class DomAbstractionModelTests
   }
 
   /**
+   * Ensure the WireTap element is handled
+   */
+  def testWireTap() {
+    doTest()
+  }
+
+  /**
    * Ensures the test is valid - using the test name as the configuration file
    */
   def doTest() {

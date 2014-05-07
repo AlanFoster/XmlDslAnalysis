@@ -15,6 +15,7 @@
             <from uri="direct:start"/>
             <to uri="direct:foo" />
 
+            <wireTap uri="direct:wireTap" />
 
             <choice>
                 <when>

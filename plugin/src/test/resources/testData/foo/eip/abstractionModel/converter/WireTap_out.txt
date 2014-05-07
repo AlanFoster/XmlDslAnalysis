@@ -1,0 +1,5 @@
+Route(
+     From(Some(direct:start),DomReference(FromProcessorDefinition),NotInferred)
+     WireTap(Some(direct:wiretap),DomReference(WireTapDefinition),NotInferred)
+     To(Some(direct:bar),DomReference(ToProcessorDefinition),NotInferred)
+)

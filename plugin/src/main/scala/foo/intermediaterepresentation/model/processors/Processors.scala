@@ -183,6 +183,9 @@ final case class Bean(ref: Option[GenericAttributeValue[BlueprintBean]], method:
 final case class Log(message: Option[String], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
   val eipType: EipName = EipName.Misc
 }
+final case class WireTap(uri: Option[String], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
+  val eipType: EipName = EipName.WireTap
+}
 
 /**
  * Represents the human readable defaults associated with attributes that were not

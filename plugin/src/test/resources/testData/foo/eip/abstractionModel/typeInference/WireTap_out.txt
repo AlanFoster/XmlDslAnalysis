@@ -1,0 +1,5 @@
+Route(
+     From(Some(direct:start),DomReference(FromProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+     WireTap(Some(direct:wiretap),DomReference(WireTapDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+     To(Some(direct:bar),DomReference(ToProcessorDefinition),Inferred(TypeEnvironment(Set(java.lang.Object),Map()),TypeEnvironment(Set(java.lang.Object),Map())))
+)

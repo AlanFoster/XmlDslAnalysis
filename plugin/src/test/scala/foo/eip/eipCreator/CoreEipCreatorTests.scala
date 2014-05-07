@@ -83,6 +83,13 @@ class CoreEipCreatorTests
   }
 
   /**
+   * Test to ensure that the wiretap processor is mapped correctly
+   */
+  def testWireTap() {
+    doTest()
+  }
+
+  /**
    * Ensures the test is valid
    */
   def doTest() {

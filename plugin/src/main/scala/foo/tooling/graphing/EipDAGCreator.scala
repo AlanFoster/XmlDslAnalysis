@@ -193,6 +193,13 @@ class EipDAGCreator {
           createEipDAG(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
 
         /**
+         * Creates the WireTap processor node, linking to the previous nodes in the DAG, if any
+         */
+        case processor@WireTap(uri, _, _) =>
+          val eipProcessor = EipProcessor(uri.getOrElse(DefaultAttributes.uri), processor)
+          createEipDAG(List(eipProcessor), tail, graph.linkComponents(previous, eipProcessor))
+
+        /**
          * Creates the Bean processor node, linking to the previous nodes in the DAG, if any
          */
         case processor@Bean(beanReferenceOption, beanMethodOption, _, _) =>
