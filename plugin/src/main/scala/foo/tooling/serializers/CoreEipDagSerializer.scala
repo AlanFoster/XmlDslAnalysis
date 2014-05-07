@@ -2,6 +2,7 @@ package foo.tooling.serializers
 
 import scala.xml.Elem
 import foo.tooling.graphing.StaticGraphTypes
+import foo.intermediaterepresentation.model.EipType
 
 /**
  * Represents a concrete implementation of a 'Core' eip Dag serializer.
@@ -17,7 +18,7 @@ class CoreEipDagSerializer extends EipDagSerializer {
   def createXml(eipDag: StaticGraphTypes.EipDAG): Elem =
     <eipDag>
       <vertices>
-        {eipDag.vertices.map(vertex => <vertex id={vertex.id} eipType={vertex.eipType.toString.toLowerCase} text={vertex.text}/>)}
+        {eipDag.vertices.map(vertex => <vertex id={vertex.id} eipType={EipType.getString(vertex.eipType)} text={vertex.text}/>)}
       </vertices>
       <edges>
         {eipDag.edges.map(edge => <edge source={edge.source.id} target={edge.target.id} edgeConnection={edge.edge}/>)}

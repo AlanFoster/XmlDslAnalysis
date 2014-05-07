@@ -1,24 +1,24 @@
 <eipDag>
     <vertices>
-        <vertex id="afterChoice" eipType="to" text="direct:afterChoice" headers="{headerA}"/>
-        <vertex id="secondEmptyChoiceEmptyOtherwise" eipType="otherwise" text="" headers="{headerA}"/>
-        <vertex id="secondEmptyChoice" eipType="choice" text="" headers="{headerA}"/>
-        <vertex id="emptyChoice" eipType="choice" text="" headers="{headerA}"/>
-        <vertex id="headerAFloat" eipType="translator" text="headerA -&gt; 10" headers="{headerA}"/>
-        <vertex id="otherwise" eipType="otherwise" text="" headers="{headerA}"/>
-        <vertex id="headerADouble" eipType="translator" text="headerA -&gt; 10" headers="{headerA}"/>
-        <vertex id="choice2When1" eipType="when" text="true" headers="{headerA}"/>
-        <vertex id="choice2" eipType="choice" text="" headers="{headerA}"/>
-        <vertex id="choice1otherwise" eipType="otherwise" text="" headers="{headerA}"/>
-        <vertex eipType="to" text="direct:foo" headers="{headerA}"/>
-        <vertex id="headerAInteger" eipType="translator" text="headerA -&gt; 10" headers="{headerA}"/>
-        <vertex id="choice1NestedOtherwise" eipType="otherwise" text="" headers="{headerA}"/>
-        <vertex id="choice1Nested" eipType="choice" text="" headers="{headerA}"/>
-        <vertex id="headerAString" eipType="translator" text="headerA -&gt; hello world" headers="{headerA}"/>
-        <vertex id="when1" eipType="when" text="true" headers="{headerA}"/>
-        <vertex id="choice1" eipType="choice" text="" headers="{headerA}"/>
-        <vertex id="headerA" eipType="translator" text="headerA -&gt; &quot;headerA&quot;" headers="{headerA}"/>
-        <vertex id="from" eipType="from" text="direct:start" headers="{}"/>
+        <vertex id="afterChoice" eipType="To" text="direct:afterChoice" headers="{headerA}"/>
+        <vertex id="secondEmptyChoiceEmptyOtherwise" eipType="Otherwise" text="" headers="{headerA}"/>
+        <vertex id="secondEmptyChoice" eipType="Choice" text="" headers="{headerA}"/>
+        <vertex id="emptyChoice" eipType="Choice" text="" headers="{headerA}"/>
+        <vertex id="headerAFloat" eipType="Translator" text="headerA -&gt; 10" headers="{headerA}"/>
+        <vertex id="otherwise" eipType="Otherwise" text="" headers="{headerA}"/>
+        <vertex id="headerADouble" eipType="Translator" text="headerA -&gt; 10" headers="{headerA}"/>
+        <vertex id="choice2When1" eipType="When" text="true" headers="{headerA}"/>
+        <vertex id="choice2" eipType="Choice" text="" headers="{headerA}"/>
+        <vertex id="choice1otherwise" eipType="Otherwise" text="" headers="{headerA}"/>
+        <vertex eipType="To" text="direct:foo" headers="{headerA}"/>
+        <vertex id="headerAInteger" eipType="Translator" text="headerA -&gt; 10" headers="{headerA}"/>
+        <vertex id="choice1NestedOtherwise" eipType="Otherwise" text="" headers="{headerA}"/>
+        <vertex id="choice1Nested" eipType="Choice" text="" headers="{headerA}"/>
+        <vertex id="headerAString" eipType="Translator" text="headerA -&gt; hello world" headers="{headerA}"/>
+        <vertex id="when1" eipType="When" text="true" headers="{headerA}"/>
+        <vertex id="choice1" eipType="Choice" text="" headers="{headerA}"/>
+        <vertex id="headerA" eipType="Translator" text="headerA -&gt; &quot;headerA&quot;" headers="{headerA}"/>
+        <vertex id="from" eipType="From" text="direct:start" headers="{}"/>
     </vertices>
     <edges>
         <edge source="secondEmptyChoiceEmptyOtherwise" target="afterChoice" edgeConnection="secondEmptyChoiceEmptyOtherwise_afterChoice19"/>

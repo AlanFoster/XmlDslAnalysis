@@ -1,8 +1,8 @@
 <eipDag>
     <vertices>
-        <vertex id="third" eipType="to" text="direct:foo" inferredType="{foo.models.OrderModel}"/>
-        <vertex id="orderFactoryReference" eipType="to" text="orderFactory.createOrder()" inferredType="{foo.models.OrderModel}"/>
-        <vertex id="first" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
+        <vertex id="third" eipType="To" text="direct:foo" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="orderFactoryReference" eipType="To" text="orderFactory.createOrder()" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="first" eipType="From" text="direct:start" inferredType="{java.lang.Object}"/>
     </vertices>
     <edges>
         <edge source="orderFactoryReference" target="third" edgeConnection="orderFactoryReference_third1"/>

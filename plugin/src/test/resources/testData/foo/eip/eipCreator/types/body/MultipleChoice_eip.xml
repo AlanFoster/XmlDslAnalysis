@@ -1,16 +1,16 @@
 <eipDag>
     <vertices>
-        <vertex id="to" eipType="to" text="direct:start" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
-        <vertex id="beanTwo" eipType="to" text="complexModelFactory.createComplexModel()" inferredType="{foo.models.ComplexModel}"/>
-        <vertex id="when3" eipType="when" text="true" inferredType="{foo.models.ComplexModel}"/>
-        <vertex id="choice3" eipType="choice" text="" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
-        <vertex id="beanThree" eipType="to" text="personFactory.createPerson()" inferredType="{foo.models.PersonModel}"/>
-        <vertex id="when2" eipType="when" text="true" inferredType="{foo.models.PersonModel}"/>
-        <vertex id="choice2" eipType="choice" text="" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel}"/>
-        <vertex id="beanOne" eipType="to" text="orderFactory.createOrder()" inferredType="{foo.models.OrderModel}"/>
-        <vertex id="when1" eipType="when" text="true" inferredType="{foo.models.OrderModel}"/>
-        <vertex id="choice1" eipType="choice" text="" inferredType="{java.lang.Object, foo.models.OrderModel}"/>
-        <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
+        <vertex id="to" eipType="To" text="direct:start" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
+        <vertex id="beanTwo" eipType="To" text="complexModelFactory.createComplexModel()" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="when3" eipType="When" text="true" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="choice3" eipType="Choice" text="" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
+        <vertex id="beanThree" eipType="To" text="personFactory.createPerson()" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="when2" eipType="When" text="true" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="choice2" eipType="Choice" text="" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel}"/>
+        <vertex id="beanOne" eipType="To" text="orderFactory.createOrder()" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="when1" eipType="When" text="true" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="choice1" eipType="Choice" text="" inferredType="{java.lang.Object, foo.models.OrderModel}"/>
+        <vertex id="from" eipType="From" text="direct:start" inferredType="{java.lang.Object}"/>
     </vertices>
     <edges>
         <edge source="beanTwo" target="to" edgeConnection="beanTwo_to12"/>

@@ -1,6 +1,6 @@
 package foo.tooling.graphing
 
-import foo.intermediaterepresentation.model.EipName._
+import foo.intermediaterepresentation.model.EipType._
 import foo.intermediaterepresentation.model.processors.Processor
 import foo.intermediaterepresentation.model.references.{ExpressionReference, Reference, DomReference, NoReference}
 
@@ -12,7 +12,7 @@ import foo.intermediaterepresentation.model.references.{ExpressionReference, Ref
  * @param eipType The EipType information
  * @param processor The processor that is associated with this object
  */
-case class EipProcessor(text: String, id: String, eipType: EipName, processor: Processor)
+case class EipProcessor(text: String, id: String, eipType: EipType, processor: Processor)
 
 /**
   * Created by a on 30/03/14.

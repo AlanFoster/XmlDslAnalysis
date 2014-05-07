@@ -1,14 +1,14 @@
 <eipDag>
     <vertices>
-        <vertex id="final" eipType="to" text="direct:final" inferredType="{java.lang.Object}"/>
-        <vertex id="nullValue" eipType="translator" text="null" inferredType="{java.lang.Object}"/>
-        <vertex id="malformedFloatOrDouble" eipType="translator" text=".23" inferredType="{java.lang.Object}"/>
-        <vertex id="floatOrDouble" eipType="translator" text="10.23" inferredType="{java.lang.Double}"/>
-        <vertex id="integer" eipType="translator" text="10" inferredType="{java.lang.Double}"/>
-        <vertex id="singleFoo" eipType="translator" text="'foo'" inferredType="{java.lang.String}"/>
-        <vertex id="doubleFoo" eipType="translator" text="&quot;foo&quot;" inferredType="{java.lang.String}"/>
-        <vertex id="beanRef" eipType="to" text="complexModelFactory.createComplexModel()" inferredType="{foo.models.ComplexModel}"/>
-        <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
+        <vertex id="final" eipType="To" text="direct:final" inferredType="{java.lang.Object}"/>
+        <vertex id="nullValue" eipType="Translator" text="null" inferredType="{java.lang.Object}"/>
+        <vertex id="malformedFloatOrDouble" eipType="Translator" text=".23" inferredType="{java.lang.Object}"/>
+        <vertex id="floatOrDouble" eipType="Translator" text="10.23" inferredType="{java.lang.Double}"/>
+        <vertex id="integer" eipType="Translator" text="10" inferredType="{java.lang.Double}"/>
+        <vertex id="singleFoo" eipType="Translator" text="'foo'" inferredType="{java.lang.String}"/>
+        <vertex id="doubleFoo" eipType="Translator" text="&quot;foo&quot;" inferredType="{java.lang.String}"/>
+        <vertex id="beanRef" eipType="To" text="complexModelFactory.createComplexModel()" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="from" eipType="From" text="direct:start" inferredType="{java.lang.Object}"/>
     </vertices>
     <edges>
         <edge source="nullValue" target="final" edgeConnection="nullValue_final7"/>

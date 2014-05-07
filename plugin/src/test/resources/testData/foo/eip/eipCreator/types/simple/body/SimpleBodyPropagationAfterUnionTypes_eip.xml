@@ -1,15 +1,15 @@
 <eipDag>
     <vertices>
-        <vertex id="end" eipType="to" text="direct:end" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
-        <vertex id="setBody" eipType="translator" text="${body}" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
-        <vertex id="thirdBean" eipType="to" text="orderFactory.createOrder()" inferredType="{foo.models.OrderModel}"/>
-        <vertex id="choice3" eipType="when" text="true" inferredType="{foo.models.OrderModel}"/>
-        <vertex id="secondBean" eipType="to" text="personFactory.createPerson()" inferredType="{foo.models.PersonModel}"/>
-        <vertex id="choice2" eipType="when" text="true" inferredType="{foo.models.PersonModel}"/>
-        <vertex id="firstBean" eipType="to" text="complexModelFactory.createComplexModel()" inferredType="{foo.models.ComplexModel}"/>
-        <vertex id="choice1" eipType="when" text="true" inferredType="{foo.models.ComplexModel}"/>
-        <vertex id="choice" eipType="choice" text="" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
-        <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
+        <vertex id="end" eipType="To" text="direct:end" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
+        <vertex id="setBody" eipType="Translator" text="${body}" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
+        <vertex id="thirdBean" eipType="To" text="orderFactory.createOrder()" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="choice3" eipType="When" text="true" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="secondBean" eipType="To" text="personFactory.createPerson()" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="choice2" eipType="When" text="true" inferredType="{foo.models.PersonModel}"/>
+        <vertex id="firstBean" eipType="To" text="complexModelFactory.createComplexModel()" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="choice1" eipType="When" text="true" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="choice" eipType="Choice" text="" inferredType="{java.lang.Object, foo.models.OrderModel, foo.models.PersonModel, foo.models.ComplexModel}"/>
+        <vertex id="from" eipType="From" text="direct:start" inferredType="{java.lang.Object}"/>
     </vertices>
     <edges>
         <edge source="setBody" target="end" edgeConnection="setBody_end11"/>

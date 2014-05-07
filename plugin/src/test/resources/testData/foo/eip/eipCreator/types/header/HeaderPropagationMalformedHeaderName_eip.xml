@@ -1,8 +1,8 @@
 <eipDag>
     <vertices>
-        <vertex eipType="translator" text="[Empty]" headers="{}"/>
-        <vertex id="initialHeader" eipType="translator" text="[Empty]" headers="{}"/>
-        <vertex id="from" eipType="from" text="direct:start" headers="{}"/>
+        <vertex eipType="Translator" text="[Empty]" headers="{}"/>
+        <vertex id="initialHeader" eipType="Translator" text="[Empty]" headers="{}"/>
+        <vertex id="from" eipType="From" text="direct:start" headers="{}"/>
     </vertices>
     <edges>
         <edge source="initialHeader" edgeConnection="initialHeader_null1"/>

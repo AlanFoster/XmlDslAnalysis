@@ -1,9 +1,9 @@
 <eipDag>
     <vertices>
-        <vertex id="end" eipType="to" text="direct:end" inferredType="{java.lang.String}"/>
-        <vertex id="setBody" eipType="translator" text="${in.headers.foo}" inferredType="{java.lang.String}"/>
-        <vertex id="setHeader" eipType="translator" text="foo -&gt; Hello World" inferredType="{java.lang.Object}"/>
-        <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
+        <vertex id="end" eipType="To" text="direct:end" inferredType="{java.lang.String}"/>
+        <vertex id="setBody" eipType="Translator" text="${in.headers.foo}" inferredType="{java.lang.String}"/>
+        <vertex id="setHeader" eipType="Translator" text="foo -&gt; Hello World" inferredType="{java.lang.Object}"/>
+        <vertex id="from" eipType="From" text="direct:start" inferredType="{java.lang.Object}"/>
     </vertices>
     <edges>
         <edge source="setBody" target="end" edgeConnection="setBody_end2"/>

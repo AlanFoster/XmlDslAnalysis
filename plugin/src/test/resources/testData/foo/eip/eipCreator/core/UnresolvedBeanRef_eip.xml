@@ -1,7 +1,7 @@
 <eipDag>
     <vertices>
-        <vertex id="bean" eipType="to" text="[Empty]"/>
-        <vertex id="from" eipType="from" text="direct:start"/>
+        <vertex id="bean" eipType="To" text="[Empty]"/>
+        <vertex id="from" eipType="From" text="direct:start"/>
     </vertices>
     <edges>
         <edge source="from" target="bean" edgeConnection="from_bean0"/>

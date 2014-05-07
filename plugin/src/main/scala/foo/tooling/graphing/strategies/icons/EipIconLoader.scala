@@ -2,8 +2,7 @@ package foo.tooling.graphing.strategies.icons
 
 import foo.tooling.graphing.EipProcessor
 import javax.swing.Icon
-import com.intellij.openapi.util.SystemInfo
-import com.intellij.openapi.application.PathManager
+import foo.intermediaterepresentation.model.EipType
 
 abstract class EipIconLoader extends IconLoader {
   /**
@@ -20,8 +19,8 @@ abstract class EipIconLoader extends IconLoader {
    * @return The associated icon with this EIP processor
    */
   def loadIcon(component: EipProcessor, isSelected: Boolean): Icon = component match {
-    case component@EipProcessor (_, _, eipName, _) =>
-      val eipType = eipName.toString.toLowerCase
+    case component@EipProcessor (_, _, eipTypeValue, _) =>
+      val eipType = EipType.getString(eipTypeValue)
       cache.getOrElseUpdate((eipType, isSelected), {
         if (isSelected) loadPickedIcon (eipType)
         else loadUnpickedIcon (eipType)

@@ -3,6 +3,7 @@ package foo.tooling.serializers
 import foo.tooling.graphing.{EipProcessor, StaticGraphTypes}
 import StaticGraphTypes.EipDAG
 import scala.xml.{PrettyPrinter, Elem}
+import foo.intermediaterepresentation.model.EipType
 
 /**
  * Represents a concrete implementation of a serializer which can serialize an
@@ -37,7 +38,7 @@ trait EipDagSerializer extends Serializer[EipDAG] {
    * @param eipProcessor the Eip Processor
    * @return The EipType
    */
-  def getEipType(eipProcessor: EipProcessor) = eipProcessor.eipType.toString.toLowerCase
+  def getEipType(eipProcessor: EipProcessor) = EipType.getString(eipProcessor.eipType)
 
   /**
    * Extracts the inferredBody type

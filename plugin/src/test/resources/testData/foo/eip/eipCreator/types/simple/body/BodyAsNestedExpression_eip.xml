@@ -1,10 +1,10 @@
 <eipDag>
     <vertices>
-        <vertex id="end" eipType="to" text="direct:end" inferredType="{java.lang.Object}"/>
-        <vertex id="setBody" eipType="translator" text="${bodyAs(${headers.foo})}" inferredType="{java.lang.Object}"/>
-        <vertex eipType="translator" text="foo -&gt; java.lang.String" inferredType="{foo.models.ComplexModel}"/>
-        <vertex id="beanRef" eipType="to" text="complexModelFactory.createComplexModel()" inferredType="{foo.models.ComplexModel}"/>
-        <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
+        <vertex id="end" eipType="To" text="direct:end" inferredType="{java.lang.Object}"/>
+        <vertex id="setBody" eipType="Translator" text="${bodyAs(${headers.foo})}" inferredType="{java.lang.Object}"/>
+        <vertex eipType="Translator" text="foo -&gt; java.lang.String" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="beanRef" eipType="To" text="complexModelFactory.createComplexModel()" inferredType="{foo.models.ComplexModel}"/>
+        <vertex id="from" eipType="From" text="direct:start" inferredType="{java.lang.Object}"/>
     </vertices>
     <edges>
         <edge source="setBody" target="end" edgeConnection="setBody_end3"/>

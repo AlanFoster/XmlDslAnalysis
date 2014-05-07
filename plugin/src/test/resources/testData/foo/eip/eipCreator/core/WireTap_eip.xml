@@ -1,8 +1,8 @@
 <eipDag>
     <vertices>
-        <vertex id="bar" eipType="to" text="direct:bar"/>
-        <vertex id="wireTap" eipType="wiretap" text="direct:wiretap"/>
-        <vertex id="from" eipType="from" text="direct:start"/>
+        <vertex id="bar" eipType="To" text="direct:bar"/>
+        <vertex id="wireTap" eipType="WireTap" text="direct:wiretap"/>
+        <vertex id="from" eipType="From" text="direct:start"/>
     </vertices>
     <edges>
         <edge source="wireTap" target="bar" edgeConnection="wireTap_bar1"/>

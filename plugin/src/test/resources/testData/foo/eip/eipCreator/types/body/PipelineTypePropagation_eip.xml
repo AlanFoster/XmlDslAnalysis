@@ -1,9 +1,9 @@
 <eipDag>
     <vertices>
-        <vertex id="fourth" eipType="to" text="direct:baz" inferredType="{java.lang.Object}"/>
-        <vertex id="third" eipType="to" text="direct:bar" inferredType="{java.lang.Object}"/>
-        <vertex id="second" eipType="to" text="direct:foo" inferredType="{java.lang.Object}"/>
-        <vertex id="first" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
+        <vertex id="fourth" eipType="To" text="direct:baz" inferredType="{java.lang.Object}"/>
+        <vertex id="third" eipType="To" text="direct:bar" inferredType="{java.lang.Object}"/>
+        <vertex id="second" eipType="To" text="direct:foo" inferredType="{java.lang.Object}"/>
+        <vertex id="first" eipType="From" text="direct:start" inferredType="{java.lang.Object}"/>
     </vertices>
     <edges>
         <edge source="third" target="fourth" edgeConnection="third_fourth2"/>

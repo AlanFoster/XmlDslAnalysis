@@ -1,15 +1,15 @@
 <eipDag>
     <vertices>
-        <vertex id="afterChoice" eipType="to" text="direct:afterChoice" headers="{headerA}"/>
-        <vertex id="log" eipType="misc" text="Otherwise" headers="{headerA}"/>
-        <vertex id="choice1otherwise" eipType="otherwise" text="" headers="{headerA}"/>
-        <vertex id="headerAInt" eipType="translator" text="headerA -&gt; 10" headers="{headerA}"/>
-        <vertex id="when2" eipType="when" text="true" headers="{headerA}"/>
-        <vertex id="headerAString" eipType="translator" text="headerA -&gt; hello world" headers="{headerA}"/>
-        <vertex id="when1" eipType="when" text="true" headers="{headerA}"/>
-        <vertex id="choice1" eipType="choice" text="" headers="{headerA}"/>
-        <vertex id="headerA" eipType="translator" text="headerA -&gt; &quot;headerA&quot;" headers="{headerA}"/>
-        <vertex id="from" eipType="from" text="direct:start" headers="{}"/>
+        <vertex id="afterChoice" eipType="To" text="direct:afterChoice" headers="{headerA}"/>
+        <vertex id="log" eipType="Misc" text="Otherwise" headers="{headerA}"/>
+        <vertex id="choice1otherwise" eipType="Otherwise" text="" headers="{headerA}"/>
+        <vertex id="headerAInt" eipType="Translator" text="headerA -&gt; 10" headers="{headerA}"/>
+        <vertex id="when2" eipType="When" text="true" headers="{headerA}"/>
+        <vertex id="headerAString" eipType="Translator" text="headerA -&gt; hello world" headers="{headerA}"/>
+        <vertex id="when1" eipType="When" text="true" headers="{headerA}"/>
+        <vertex id="choice1" eipType="Choice" text="" headers="{headerA}"/>
+        <vertex id="headerA" eipType="Translator" text="headerA -&gt; &quot;headerA&quot;" headers="{headerA}"/>
+        <vertex id="from" eipType="From" text="direct:start" headers="{}"/>
     </vertices>
     <edges>
         <edge source="headerAString" target="afterChoice" edgeConnection="headerAString_afterChoice10"/>

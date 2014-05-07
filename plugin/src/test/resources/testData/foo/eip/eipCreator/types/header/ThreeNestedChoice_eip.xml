@@ -1,18 +1,18 @@
 <eipDag>
     <vertices>
-        <vertex id="id13" eipType="to" text="direct:end" headers="{a, b, c, d, e}"/>
-        <vertex id="id12" eipType="translator" text="e -&gt; true" headers="{a, c, e}"/>
-        <vertex id="id11" eipType="when" text="false" headers="{a, c, e}"/>
-        <vertex id="id10" eipType="translator" text="d -&gt; true" headers="{a, c, d}"/>
-        <vertex id="id9" eipType="when" text="true" headers="{a, c, d}"/>
-        <vertex id="id8" eipType="choice" text="" headers="{a, c, d, e}"/>
-        <vertex id="id7" eipType="translator" text="c -&gt; true" headers="{a, c}"/>
-        <vertex id="id5" eipType="when" text="false" headers="{a, c, d, e}"/>
-        <vertex id="id4" eipType="translator" text="b -&gt; true" headers="{a, b}"/>
-        <vertex id="id3" eipType="when" text="true" headers="{a, b}"/>
-        <vertex id="id2" eipType="choice" text="" headers="{a, b, c, d, e}"/>
-        <vertex id="id1" eipType="translator" text="a -&gt; true" headers="{a}"/>
-        <vertex id="from" eipType="from" text="direct:start" headers="{}"/>
+        <vertex id="id13" eipType="To" text="direct:end" headers="{a, b, c, d, e}"/>
+        <vertex id="id12" eipType="Translator" text="e -&gt; true" headers="{a, c, e}"/>
+        <vertex id="id11" eipType="When" text="false" headers="{a, c, e}"/>
+        <vertex id="id10" eipType="Translator" text="d -&gt; true" headers="{a, c, d}"/>
+        <vertex id="id9" eipType="When" text="true" headers="{a, c, d}"/>
+        <vertex id="id8" eipType="Choice" text="" headers="{a, c, d, e}"/>
+        <vertex id="id7" eipType="Translator" text="c -&gt; true" headers="{a, c}"/>
+        <vertex id="id5" eipType="When" text="false" headers="{a, c, d, e}"/>
+        <vertex id="id4" eipType="Translator" text="b -&gt; true" headers="{a, b}"/>
+        <vertex id="id3" eipType="When" text="true" headers="{a, b}"/>
+        <vertex id="id2" eipType="Choice" text="" headers="{a, b, c, d, e}"/>
+        <vertex id="id1" eipType="Translator" text="a -&gt; true" headers="{a}"/>
+        <vertex id="from" eipType="From" text="direct:start" headers="{}"/>
     </vertices>
     <edges>
         <edge source="id4" target="id13" edgeConnection="id4_id1314"/>

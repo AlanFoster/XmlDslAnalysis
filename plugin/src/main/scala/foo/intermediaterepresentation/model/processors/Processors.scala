@@ -6,8 +6,8 @@ import com.intellij.util.xml.GenericAttributeValue
 import foo.intermediaterepresentation.model.types.{TypeEnvironment, Inferred, NotInferred, TypeInformation}
 import foo.intermediaterepresentation.model.references.Reference
 import foo.intermediaterepresentation.model.expressions.Expression
-import foo.intermediaterepresentation.model.EipName
-import foo.intermediaterepresentation.model.EipName.EipName
+import foo.intermediaterepresentation.model.EipType
+import foo.intermediaterepresentation.model.EipType.EipType
 
 /**
  * Represents the base trait of a processor.
@@ -31,7 +31,7 @@ sealed trait Processor extends Mappable[Processor] {
    * The high level EipType associated with this Processor.
    * More commonly this will be equal to the Translator Eip
    */
-  val eipType: EipName
+  val eipType: EipType
 
   /**
    * The pretty name of this Processor
@@ -145,25 +145,25 @@ object Processor {
  *************************************************************************/
 
 final case class Route(children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
-  val eipType: EipName = EipName.Route
+  val eipType: EipType = EipType.Route
 }
 final case class From(uri: Option[String], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
-  val eipType: EipName = EipName.From
+  val eipType: EipType = EipType.From
 }
 final case class To(uri: Option[String], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
-  val eipType: EipName = EipName.To
+  val eipType: EipType = EipType.To
 }
 final case class RemoveHeader(headerName: Option[String], reference: Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
-  val eipType: EipName = EipName.Translator
+  val eipType: EipType = EipType.Translator
 }
 final case class SetBody(expression: Expression, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
-  val eipType: EipName = EipName.Translator
+  val eipType: EipType = EipType.Translator
 }
 final case class SetHeader(headerName: Option[String], expression: Expression, reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
-  val eipType: EipName = EipName.Translator
+  val eipType: EipType = EipType.Translator
 }
 final case class Choice(whens: List[When], otherwiseOption: Option[Otherwise], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
-  val eipType: EipName = EipName.choice
+  val eipType: EipType = EipType.Choice
   def getChildren: List[Processor] = {
     otherwiseOption match {
       case Some(otherwise) => whens :+ otherwise
@@ -172,19 +172,19 @@ final case class Choice(whens: List[When], otherwiseOption: Option[Otherwise], r
   }
 }
 final case class When(expression: Expression, children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
-  val eipType: EipName = EipName.When
+  val eipType: EipType = EipType.When
 }
 final case class Otherwise(children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
-  val eipType: EipName = EipName.Otherwise
+  val eipType: EipType = EipType.Otherwise
 }
 final case class Bean(ref: Option[GenericAttributeValue[BlueprintBean]], method: Option[GenericAttributeValue[PsiMethod]], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
-  val eipType: EipName = EipName.To
+  val eipType: EipType = EipType.To
 }
 final case class Log(message: Option[String], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
-  val eipType: EipName = EipName.Misc
+  val eipType: EipType = EipType.Misc
 }
 final case class WireTap(uri: Option[String], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
-  val eipType: EipName = EipName.WireTap
+  val eipType: EipType = EipType.WireTap
 }
 
 /**

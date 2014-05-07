@@ -1,16 +1,16 @@
 <eipDag>
     <vertices>
-        <vertex id="end" eipType="to" text="direct:end" inferredType="{java.lang.Object}"/>
-        <vertex id="setBody" eipType="translator" text="${in.headers.invalid}" inferredType="{java.lang.Object}"/>
-        <vertex id="setHeader" eipType="translator" text="foo -&gt; Hello World" inferredType="{java.lang.Object}"/>
-        <vertex id="sixth" eipType="translator" text="${body.id}" inferredType="{java.lang.Object}"/>
-        <vertex id="fifth" eipType="translator" text="${headers.orderCopy}" inferredType="{foo.models.OrderModel}"/>
-        <vertex id="fourth" eipType="translator" text="${body.id}" inferredType="{java.lang.Object}"/>
-        <vertex id="third" eipType="translator" text="${body}" inferredType="{foo.models.OrderModel}"/>
-        <vertex id="second" eipType="translator" text="orderCopy -&gt; ${body}" inferredType="{foo.models.OrderModel}"/>
-        <vertex id="first" eipType="translator" text="${body}" inferredType="{foo.models.OrderModel}"/>
-        <vertex id="orderfactory" eipType="to" text="orderFactory.createOrder()" inferredType="{foo.models.OrderModel}"/>
-        <vertex id="from" eipType="from" text="direct:start" inferredType="{java.lang.Object}"/>
+        <vertex id="end" eipType="To" text="direct:end" inferredType="{java.lang.Object}"/>
+        <vertex id="setBody" eipType="Translator" text="${in.headers.invalid}" inferredType="{java.lang.Object}"/>
+        <vertex id="setHeader" eipType="Translator" text="foo -&gt; Hello World" inferredType="{java.lang.Object}"/>
+        <vertex id="sixth" eipType="Translator" text="${body.id}" inferredType="{java.lang.Object}"/>
+        <vertex id="fifth" eipType="Translator" text="${headers.orderCopy}" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="fourth" eipType="Translator" text="${body.id}" inferredType="{java.lang.Object}"/>
+        <vertex id="third" eipType="Translator" text="${body}" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="second" eipType="Translator" text="orderCopy -&gt; ${body}" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="first" eipType="Translator" text="${body}" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="orderfactory" eipType="To" text="orderFactory.createOrder()" inferredType="{foo.models.OrderModel}"/>
+        <vertex id="from" eipType="From" text="direct:start" inferredType="{java.lang.Object}"/>
     </vertices>
     <edges>
         <edge source="setBody" target="end" edgeConnection="setBody_end9"/>

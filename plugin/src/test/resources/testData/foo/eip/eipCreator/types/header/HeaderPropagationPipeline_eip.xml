@@ -1,13 +1,13 @@
 <eipDag>
     <vertices>
-        <vertex id="bar" eipType="to" text="direct:bar" headers="{firstHeader, secondHeader, thirdHeader}"/>
-        <vertex id="e" eipType="translator" text="secondHeader -&gt; ${body}" headers="{firstHeader, secondHeader, thirdHeader}"/>
-        <vertex id="d" eipType="translator" text="thirdHeader -&gt; ${body}" headers="{firstHeader, secondHeader, thirdHeader}"/>
-        <vertex id="c" eipType="translator" text="secondHeader -&gt; ${body}" headers="{firstHeader, secondHeader}"/>
-        <vertex id="foo" eipType="to" text="direct:foo" headers="{firstHeader, secondHeader}"/>
-        <vertex id="b" eipType="translator" text="secondHeader -&gt; ${body}" headers="{firstHeader, secondHeader}"/>
-        <vertex id="a" eipType="translator" text="firstHeader -&gt; ${body}" headers="{firstHeader}"/>
-        <vertex id="first" eipType="from" text="direct:start" headers="{}"/>
+        <vertex id="bar" eipType="To" text="direct:bar" headers="{firstHeader, secondHeader, thirdHeader}"/>
+        <vertex id="e" eipType="Translator" text="secondHeader -&gt; ${body}" headers="{firstHeader, secondHeader, thirdHeader}"/>
+        <vertex id="d" eipType="Translator" text="thirdHeader -&gt; ${body}" headers="{firstHeader, secondHeader, thirdHeader}"/>
+        <vertex id="c" eipType="Translator" text="secondHeader -&gt; ${body}" headers="{firstHeader, secondHeader}"/>
+        <vertex id="foo" eipType="To" text="direct:foo" headers="{firstHeader, secondHeader}"/>
+        <vertex id="b" eipType="Translator" text="secondHeader -&gt; ${body}" headers="{firstHeader, secondHeader}"/>
+        <vertex id="a" eipType="Translator" text="firstHeader -&gt; ${body}" headers="{firstHeader}"/>
+        <vertex id="first" eipType="From" text="direct:start" headers="{}"/>
     </vertices>
     <edges>
         <edge source="e" target="bar" edgeConnection="e_bar6"/>

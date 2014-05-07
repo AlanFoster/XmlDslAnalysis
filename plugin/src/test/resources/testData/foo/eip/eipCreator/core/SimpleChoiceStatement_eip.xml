@@ -1,11 +1,11 @@
 <eipDag>
     <vertices>
-        <vertex id="processorBar" eipType="to" text="direct:processorBar"/>
-        <vertex id="secondWhen" eipType="when" text="${body.bar} == &quot;bar&quot;"/>
-        <vertex id="processorFoo" eipType="to" text="direct:processorFoo"/>
-        <vertex id="firstWhen" eipType="when" text="${body.foo} == &quot;foo&quot;"/>
-        <vertex id="choice" eipType="choice" text=""/>
-        <vertex id="from" eipType="from" text="direct:start"/>
+        <vertex id="processorBar" eipType="To" text="direct:processorBar"/>
+        <vertex id="secondWhen" eipType="When" text="${body.bar} == &quot;bar&quot;"/>
+        <vertex id="processorFoo" eipType="To" text="direct:processorFoo"/>
+        <vertex id="firstWhen" eipType="When" text="${body.foo} == &quot;foo&quot;"/>
+        <vertex id="choice" eipType="Choice" text=""/>
+        <vertex id="from" eipType="From" text="direct:start"/>
     </vertices>
     <edges>
         <edge source="secondWhen" target="processorBar" edgeConnection="secondWhen_processorBar4"/>
