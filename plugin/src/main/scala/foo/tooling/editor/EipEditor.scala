@@ -144,10 +144,13 @@ class EipEditor(project: Project, virtualFile: VirtualFile, graphCreators: List[
         val eipGraph = new EipDAGCreator().createEipDAG(route)
         val graphComponent = currentlySelectedGraphCreator.createVisualGraph(project, virtualFile, eipGraph)
 
-
-        // Replace the ccontainer
+        // Replace the container
         graphContainer.removeAll()
         graphContainer.add(graphComponent)
+
+        // Force a repaint
+        graphComponent.repaint()
+        graphComponent.revalidate()
 
         processManager.getProgressIndicator.setText("Finished.")
       }
