@@ -32,6 +32,7 @@ object CamelSyntaxHighlighter {
   private val tokenClassGroupings = Map(
     // Operators
     CamelTextAttributeKeys.OPERATION_SIGN -> List(
+      CamelTypes.EQ_EQ,
       CamelTypes.AND_AND,
       CamelTypes.OR_OR,
       CamelTypes.GT,

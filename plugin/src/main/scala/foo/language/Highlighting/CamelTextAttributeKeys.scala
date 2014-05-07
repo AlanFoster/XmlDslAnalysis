@@ -93,7 +93,7 @@ object CamelTextAttributeKeys {
   )
 
   /**
-   * Camel operator text attributes key, such as || etc
+   * Camel operator text attributes key, such as ||, ==, etc
    */
   val OPERATION_SIGN: TextAttributesKey = createTextAttributesKey(
     camelId("OPERATION_SIGN"),
