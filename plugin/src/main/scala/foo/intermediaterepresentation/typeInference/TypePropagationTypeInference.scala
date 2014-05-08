@@ -216,13 +216,15 @@ class TypePropagationTypeInference(simpleTypeChecker: SimpleTypeChecker) extends
    */
   private def pipelineChildren(typeEnvironment: TypeEnvironment, children: List[Processor]): (TypeEnvironment, List[Processor]) = {
     // Apply map by folding left with the new type environment
-    val stateTuple@(newTypeEnvironment, newChildren) =  children.foldLeft((typeEnvironment, List[Processor]()))({
+    val stateTuple =  children.foldLeft((typeEnvironment, List[Processor]()))({
       case (((typeEnv), previous), next) =>
         val mappedProcessor = performTypeInference(typeEnv, next)
         val newEnv = mappedProcessor.after.get
-        (newEnv, previous :+ mappedProcessor)
+        // Note the ordering, this appends to head instead of tail - reversing order
+        (newEnv, mappedProcessor :: previous)
     })
-    stateTuple
+    // Align with the input order
+    stateTuple.copy(_2 = stateTuple._2.reverse)
   }
 
   /**
