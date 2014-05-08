@@ -62,12 +62,8 @@ class TypePropagationTypeInference(simpleTypeChecker: SimpleTypeChecker) extends
     case choice@Choice(whens, otherwiseOption, _, _) =>
       // Note that each child when node has access to the initial choice element's initial environment always
       // And not the previous node - which differs to the implementation of the when processor implementation
-      val (newWhenTypeEnvs, newWhenChildren) =
-        whens.map(when => performTypeInference(typeEnvironment, when).asInstanceOf[When])
-        .foldLeft((List[TypeEnvironment](), List[When]()))({
-          case ((accumulatedTypeEnvironments, accumulatedWhenExpressions), when) =>
-            (when.after.get :: accumulatedTypeEnvironments, accumulatedWhenExpressions :+ when)
-        })
+      val newWhenChildren = whens.map(when => performTypeInference(typeEnvironment, when).asInstanceOf[When])
+      val newWhenTypeEnvs = newWhenChildren.map(_.after.get).reverse
 
       // Perform type information propagation on the otherwise node if it exists
       val newOtherwiseOption =
@@ -217,7 +213,7 @@ class TypePropagationTypeInference(simpleTypeChecker: SimpleTypeChecker) extends
   private def pipelineChildren(typeEnvironment: TypeEnvironment, children: List[Processor]): (TypeEnvironment, List[Processor]) = {
     // Apply map by folding left with the new type environment
     val stateTuple =  children.foldLeft((typeEnvironment, List[Processor]()))({
-      case (((typeEnv), previous), next) =>
+      case ((typeEnv, previous), next) =>
         val mappedProcessor = performTypeInference(typeEnv, next)
         val newEnv = mappedProcessor.after.get
         // Note the ordering, this appends to head instead of tail - reversing order
