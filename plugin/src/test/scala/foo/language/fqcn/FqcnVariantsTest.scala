@@ -34,7 +34,7 @@ class FqcnVariantsTest
     testPackageVariantsSuggested(expected)
   }
 
-  // TODO investigate why code completion isn't working in the tests, but works fine in the 'real' system
+  // XXX investigate why code completion isn't working in the tests, but works fine in the 'real' system
   def ignoreTestPackageVariantsSuggestedWhenLeftMostPackageSupplied() {
     val expected = List(
       "lang"

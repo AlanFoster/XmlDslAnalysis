@@ -42,7 +42,7 @@ class FunctionAnnotatorTests
   /**
    * Test a not yet completed argument
    */
-  // TODO Add annotation for incomplete argument
+  // XXX Add annotation for incomplete argument
   def ignoreNotCompletedArgument() {
     doTest()
   }

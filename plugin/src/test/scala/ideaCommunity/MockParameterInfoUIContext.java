@@ -1,4 +1,3 @@
-// TODO Find out how to properly import this Jar - is it within the OpenAPI?
 /*
  * Copyright 2000-2009 JetBrains s.r.o.
  *

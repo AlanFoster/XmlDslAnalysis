@@ -79,7 +79,6 @@ class RemoveHeaderReferenceTest
       xmlTag()
         .withAttributeValue("id", ExpectedReferenceId)
 
-    // TODO Surely this type of code is defined in a hidden utility somewhere...
     var expectedReference: PsiElement = null
     psiFile.accept(new PsiRecursiveElementVisitor() {
       override def visitElement(element: PsiElement): Unit = {

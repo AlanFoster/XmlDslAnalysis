@@ -1,1 +1,1 @@
-Included manually as I cannot currently find the utils framework jar
+Classes extract from the utils IntelliJ framework jar

@@ -66,7 +66,6 @@ class CamelFQCNReference(element: PsiElement, range: TextRange)
     /**
      * IntelliJ allows you to create new elements by simply creating new temp files which are lexed/parsed etc
      */
-  // TODO Is there any functional composition gained from this ATM
   def createReplacementFQCN(newText: String, existingElement: PsiElement) = {
     val tempName = s"__${newText}_${existingElement.getContainingFile.getName}_replace.Camel"
     val fileText = s"""$${headerAs('temp', ${newText})}"""

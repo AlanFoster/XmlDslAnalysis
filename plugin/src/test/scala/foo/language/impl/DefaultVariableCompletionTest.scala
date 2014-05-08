@@ -44,7 +44,7 @@ class DefaultVariableCompletionTest
   /**
    * Testing that operators are contributed when between camel functions
    */
-  // TODO This is a regression!
+  // XXX This is a regression!
   def ignoreTestOperatorContribution() {
     doTest(List(
       ">", ">=",

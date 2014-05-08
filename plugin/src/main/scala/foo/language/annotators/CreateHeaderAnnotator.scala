@@ -81,7 +81,7 @@ private class CreateCamelHeaderQuickFix(element: PsiElement, headerName: String)
         // Provide a listener so when the template editing is complete, the caret will be placed appropriately
         templateManager.startTemplate(xmlEditor, template, new TemplateEditingCaretListener(camelEditor, currentCaret))
       case _ =>
-        // TODO Show a user warning that insert header support only provided for XML Files
+        // XXX Potentially show a user warning that insert header support only provided for XML Files
     }
   }
 
