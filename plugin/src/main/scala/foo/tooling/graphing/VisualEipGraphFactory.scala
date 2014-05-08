@@ -31,8 +31,8 @@ trait VisualEipGraphFactory {
    * Creates a new instance of a graph component for the given files
    * @param project The associated project
    * @param file The virtual file associated with the given EIP Graph
-   * @param eipGraph A graph containing the available semantic information
+   * @param eipDag A graph containing the available semantic information
    * @return A newly created instance of a graph component
    */
-  def createVisualGraph(project: Project, file: VirtualFile, eipGraph: EipDAG): JComponent
+  def createVisualGraph(project: Project, file: VirtualFile, eipDag: EipDAG): JComponent
 }

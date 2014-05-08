@@ -19,7 +19,7 @@ class InferredSimpleTypeChecker extends SimpleTypeChecker with ReadonlyTypeEnvir
   /**
    * {@inheritdoc}
    */
-  override def typeCheckCamel(typeEnvironment: TypeEnvironment, camelPsiFile: PsiElement): Option[Set[String]] = {
+  override def typeCheckCamel(typeEnvironment: TypeEnvironment, camelPsiFile: PsiElement): Option[Set[ACSLFqcn]] = {
     typeCheck(typeEnvironment, camelPsiFile)
   }
 
