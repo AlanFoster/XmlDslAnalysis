@@ -177,7 +177,8 @@ final case class When(expression: Expression, children: List[Processor], referen
 final case class Otherwise(children: List[Processor], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor{
   val eipType: EipType = EipType.Otherwise
 }
-final case class Bean(ref: Option[GenericAttributeValue[BlueprintBean]], method: Option[GenericAttributeValue[PsiMethod]], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
+final case class Bean(ref: Option[GenericAttributeValue[BlueprintBean]], method: Option[GenericAttributeValue[PsiMethod]],
+                      reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {
   val eipType: EipType = EipType.To
 }
 final case class Log(message: Option[String], reference:Reference, typeInformation: TypeInformation = NotInferred) extends Processor {

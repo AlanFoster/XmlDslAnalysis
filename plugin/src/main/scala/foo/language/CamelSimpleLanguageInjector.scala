@@ -3,13 +3,10 @@ package foo.language
 import com.intellij.psi._
 import com.intellij.patterns.XmlPatterns._
 import com.intellij.patterns.DomPatterns._
-import com.intellij.psi.xml.{XmlText, XmlTag}
+import com.intellij.psi.xml.XmlText
 import foo.language.Core.CamelLanguage
 import com.intellij.openapi.util.TextRange
-import com.intellij.patterns.PsiJavaPatterns._
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.psi.search.PsiShortNamesCache
-import java.net.URLDecoder
 import org.apache.commons.lang.StringEscapeUtils
 import foo.dom.Model.SimpleExpression
 

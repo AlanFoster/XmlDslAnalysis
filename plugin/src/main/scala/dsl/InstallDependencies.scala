@@ -20,7 +20,7 @@ object InstallDependencies {
     println(s"Attempting install with the following information\n\t-version ${configuration.intellijVersion} -intellijPath ${configuration.intellijPath}");
 
     configuration match {
-      case Configuration(version, path) => {
+      case Configuration(version, path) =>
         // Get the Lib Directory PATH for the new Java NIO library
         val libPath = {
           val libDirectory = new File(path, "lib").toURI
@@ -37,7 +37,6 @@ object InstallDependencies {
           val artifactId = jarFile.getFileName.toString.replace(".jar", "")
           installJar(jarFile, groupId, artifactId, version)
         })
-      }
       // Note, this should never occur
       case _ => println("Unexpected configuration")
     }
@@ -48,7 +47,7 @@ object InstallDependencies {
     println( s""""${groupId}" % "${artifactId}" % "${version}",""")
 
     println(s"Installing .. groupId: ${groupId}, artifactId: ${artifactId}, version: ${version}, path : ${path}")
-    val os = System.getProperty("os.name")
+    val os = sys.props("os.name")
     val mvnCommand = s"""mvn install:install-file -Dfile="${path}" -DgroupId=${groupId} -DartifactId=$artifactId -Dversion=${version} -Dpackaging=jar"""
 
     val osCommand =
