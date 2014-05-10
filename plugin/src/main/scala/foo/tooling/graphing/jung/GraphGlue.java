@@ -13,6 +13,11 @@ import org.apache.commons.collections15.Transformer;
  */
 public class GraphGlue {
     /**
+     * This class is a helper method for Scala code, and should not be instantiated.
+     */
+    private GraphGlue() { }
+
+    /**
      * Creates a new MinimumSpanningForest
      *
      * @param graph The Graph of V, E

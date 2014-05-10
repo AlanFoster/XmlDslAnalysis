@@ -170,13 +170,9 @@ class TypePropagationTypeInference(simpleTypeChecker: SimpleTypeChecker) extends
      * and the option is well defined
      */
     case removeHeader@RemoveHeader(headerNameOption, reference, _) =>
-      val filteredHeaders = {
-        headerNameOption match {
-          case None => typeEnvironment.headers
-          case Some(headerName) =>
-            typeEnvironment.headers.filterKeys(_ != headerName)
-        }
-      }
+      val filteredHeaders =
+        headerNameOption.map(headerName => typeEnvironment.headers.filterKeys(_ != headerName))
+          .getOrElse(typeEnvironment.headers)
       val inferredTypeEnvironment = typeEnvironment.copy(headers = filteredHeaders)
       removeHeader.copy(typeInformation = Inferred(typeEnvironment, inferredTypeEnvironment))
 
