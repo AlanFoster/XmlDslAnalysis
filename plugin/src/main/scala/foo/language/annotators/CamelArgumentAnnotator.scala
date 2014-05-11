@@ -18,8 +18,9 @@ import foo.language.functions.{CamelFunction, CamelArgument}
  */
 class CamelArgumentAnnotator(simpleTypeChecker: SimpleTypeChecker) extends Annotator {
   /**
-   * {@inheritdoc}
-   */
+    * Validates if the current argument index is valid - ie within the bounds of the given function
+    * Additionally validates whether or not the applied argument is semantically correct
+    */
   def annotate(element: PsiElement, holder: AnnotationHolder) {
     // Only accept psiElements which are a CamelFunctionArg
     val isAccepted = psiElement(classOf[CamelFunctionArg]).accepts(element)
@@ -32,16 +33,18 @@ class CamelArgumentAnnotator(simpleTypeChecker: SimpleTypeChecker) extends Annot
       ()
     }
 
-    CamelFunctionUtil.matchFunction(element)({
-      case (camelFunctionDefinition@CamelFunction(_, arguments: List[CamelArgument], _), psiCamelFunction) => {
+    // Attempt to match the given function, if it does not exist, do not annotate anything.
+    val matchingFunction = CamelFunctionUtil.matchFunction(element)
+    matchingFunction match {
+      case Some((camelFunctionDefinition@CamelFunction(_, arguments: List[CamelArgument], _), psiCamelFunction)) =>
         // Calculate our current argument position
         val argList = psiCamelFunction.getFunctionArgs.getFunctionArgList
         val index = argList.indexOf(psiArgument)
 
         validateArgumentIndex(index, arguments)(addError)
         validateArgumentType(index, arguments, psiArgument)(addError)
-      }
-    }, () => ())
+      case _ =>
+    }
   }
 
   /**
@@ -59,15 +62,16 @@ class CamelArgumentAnnotator(simpleTypeChecker: SimpleTypeChecker) extends Annot
    * definition
    */
   def validateArgumentType(currentIndex: Int, arguments: List[CamelArgument], psiArg: CamelFunctionArg)
-                          (addError: String => Unit) = arguments.lift(currentIndex) match {
-    case Some(camelArgumentDefinition : CamelArgument) => {
-          val isValid = isOfType(psiArg, camelArgumentDefinition.requiredFQCN, camelArgumentDefinition.requiredElementType)
-          if (!isValid) {
-            addError("Expected type: " + camelArgumentDefinition.prettyType)
-          }
+                          (addError: String => Unit) = {
+      arguments.lift(currentIndex) match {
+        case Some(camelArgumentDefinition : CamelArgument) =>
+              val isValid = isOfType(psiArg, camelArgumentDefinition.requiredFQCN, camelArgumentDefinition.requiredElementType)
+              if (!isValid) {
+                addError("Expected type: " + camelArgumentDefinition.prettyType)
+              }
+        case _ =>
+      }
     }
-    case _ =>
-  }
 
   /**
    * @return True if the given psiElement is inferrable to the required Fqcn, or contains the requiredElementType

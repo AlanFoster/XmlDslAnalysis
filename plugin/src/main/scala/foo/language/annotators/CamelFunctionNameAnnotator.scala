@@ -7,7 +7,8 @@ import foo.language.generated.psi.CamelFunctionCall
 import foo.language.functions.CamelFunction
 
 /**
- * Ensures that the given function name exists within the camel language
+ * Ensures that the given function name exists within the camel language, and that
+ * the supplied arguments are valid.
  */
 class CamelFunctionNameAnnotator extends Annotator {
   /**
@@ -23,29 +24,30 @@ class CamelFunctionNameAnnotator extends Annotator {
       ()
     }
 
-    CamelFunctionUtil.matchFunction(element)(
-      success = { case (camelFunctionDefinition, psiCamelFunction) => {
+    val matchingFunction = CamelFunctionUtil.matchFunction(element)
+    matchingFunction match {
+      case Some((camelFunctionDefinition, psiCamelFunction)) =>
         validateAllArgumentsPresent(camelFunctionDefinition, psiCamelFunction)(addError)
-      }},
       // Provide error highlighting on the function name, if the function doesn't exist
-      () => holder.createErrorAnnotation(element, "Function does not exist")
-    )
+      case _ => holder.createErrorAnnotation(element, "Function does not exist")
+    }
   }
 
   /**
    * Ensures the function is of the correct argument length
    */
-  def validateAllArgumentsPresent(camelFunctionDefinition:CamelFunction,
+  def validateAllArgumentsPresent(camelFunctionDefinition: CamelFunction,
                                   psiCamelFunction: CamelFunctionCall)
                                  (addError: String => Unit) {
     val expectedArgumentCount = camelFunctionDefinition.arguments.length
-    val currentArgumentCount = { for {
-      functionArgs <- Option(psiCamelFunction.getFunctionArgs)
-      size = functionArgs.getFunctionArgList.size()
-    } yield size } getOrElse 0
-    if(expectedArgumentCount != currentArgumentCount) {
+    val currentArgumentCount = {
+      for {
+        functionArgs <- Option(psiCamelFunction.getFunctionArgs)
+        size = functionArgs.getFunctionArgList.size()
+      } yield size
+    } getOrElse 0
+    if (expectedArgumentCount != currentArgumentCount) {
       addError("Expected: " + camelFunctionDefinition.prettyPrint())
     }
   }
-
 }
