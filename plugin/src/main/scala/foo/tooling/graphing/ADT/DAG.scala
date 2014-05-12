@@ -42,7 +42,7 @@ case class DAG[V, E](vertices: List[V], edges: List[Edge[V, E]]) extends Graph[V
 }
 
 /**
- * Represents an Empty DAG.
+ * Represents an Empty Graph.
  *
  * @tparam V The vertex generic type
  * @tparam E The edge generic type

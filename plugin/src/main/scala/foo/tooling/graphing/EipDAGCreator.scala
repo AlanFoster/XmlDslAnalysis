@@ -1,7 +1,6 @@
 package foo.tooling.graphing
 
 import StaticGraphTypes.EipDAG
-import foo.dom.Model._
 import foo.tooling.graphing.ADT.{DAG, EmptyDAG}
 import foo.intermediaterepresentation.model.expressions.Expression
 import foo.intermediaterepresentation.model.processors._
@@ -323,16 +322,5 @@ class EipDAGCreator {
     prunedDag
   }
 
-  /**
-   * Attempts to extract the ID from the given processor definition.
-   * @param processorDefinition The dom processor definition element
-   * @return The ID attribute if present, otherwise defaults to the hash code of the element
-   */
-  def createId(processorDefinition: ProcessorDefinition): String = {
-    val idAttribute = processorDefinition.getId
-
-    if(idAttribute.exists()) idAttribute.getStringValue
-    else idAttribute.hashCode.toString
-  }
 }
 
