@@ -1,7 +1,7 @@
 package foo.dom.converters.BlueprintBeanConverterTests
 
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import foo.TestBase
+import foo.{CommonTestClasses, JavaJDK1_7TestBase, TestBase}
 import com.intellij.codeInsight.completion.CompletionType
 import scala.collection.JavaConverters._
 import org.unitils.reflectionassert.ReflectionAssert._
@@ -14,7 +14,9 @@ import org.unitils.reflectionassert.ReflectionComparatorMode._
  */
 class BlueprintBeanContributionTest
   extends LightCodeInsightFixtureTestCase
-  with TestBase {
+  with JavaJDK1_7TestBase
+  with TestBase
+  with CommonTestClasses {
 
   /**
    * {@inheritdoc}

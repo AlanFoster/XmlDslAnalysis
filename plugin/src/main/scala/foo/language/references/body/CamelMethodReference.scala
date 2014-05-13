@@ -59,7 +59,7 @@ class CamelMethodReference(element: PsiElement, range: TextRange, previousRefere
       psiClass <- psiClasses
     } yield {
       // Access all public methods - minus constructors
-      val publicMethods = MethodTraversal.getAllPublicMethods(psiClass)
+      val publicMethods = MethodTraversal.getAllPublicMethodsWithoutConstructors(psiClass)
       val availableVariants = createAvailableVariants(publicMethods)
       availableVariants
     }

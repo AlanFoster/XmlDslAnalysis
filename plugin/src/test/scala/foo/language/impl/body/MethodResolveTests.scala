@@ -40,6 +40,7 @@ class MethodResolveTests
   val BodyIsJavaLangObject = TestScenario(Some("BodyIsJavaLangObject.xml"))
   val BodyIsComplexModel = TestScenario(Some("ComplexModel.xml"))
   val BodyIsEdgeCasesModel = TestScenario(Some("EdgeCaseModel.xml"))
+  val ConstructorMethodCall = TestScenario(Some("ConstructorMethodCall.xml"))
 
   /**
    * Ensures that a non-getter method can be contributed
@@ -68,6 +69,13 @@ class MethodResolveTests
    */
   def testBodyAccessComplexGetter() {
     doTest(BodyIsEdgeCasesModel.withExpectedMethodName("get_123$$3"))
+  }
+
+  /**
+   * Edge case - Calling constructor methods
+   */
+  def testBodyAccessHashCode_ConstructorMethodCall() {
+    doTest(ConstructorMethodCall.withExpectedMethodName("hashCode"))
   }
 
   /**

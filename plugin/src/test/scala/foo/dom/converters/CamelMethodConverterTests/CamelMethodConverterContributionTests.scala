@@ -2,7 +2,7 @@ package foo.dom.converters.CamelMethodConverterTests
 
 import scala.collection.JavaConverters._
 import com.intellij.testFramework.fixtures.LightCodeInsightFixtureTestCase
-import foo.{JavaJDK1_7TestBase, TestBase}
+import foo.{CommonTestClasses, JavaJDK1_7TestBase, TestBase}
 import com.intellij.codeInsight.completion.CompletionType
 import org.unitils.reflectionassert.ReflectionAssert._
 import org.unitils.reflectionassert.ReflectionComparatorMode._
@@ -13,8 +13,9 @@ import org.unitils.reflectionassert.ReflectionComparatorMode._
  */
 class CamelMethodConverterContributionTests
   extends LightCodeInsightFixtureTestCase
+  with JavaJDK1_7TestBase
   with TestBase
-  with JavaJDK1_7TestBase {
+  with CommonTestClasses {
 
   /**
    * {@inheritdoc}
@@ -26,8 +27,21 @@ class CamelMethodConverterContributionTests
       "charAt", "checkBounds", "codePointAt", "codePointBefore", "codePointCount", "compareTo", "compareToIgnoreCase", "concat",
       "contains", "contentEquals", "copyValueOf", "endsWith", "equals", "equalsIgnoreCase", "format", "getBytes", "getChars", "hashCode",
       "indexOf", "intern", "lastIndexOf", "length", "matches", "offsetByCodePoints", "regionMatches", "replace", "replaceAll",
-      "replaceFirst", "split", "startsWith", "String", "substring", "toCharArray", "toLowerCase", "toString", "toUpperCase", "trim",
-      "valueOf", "clone", "Object", "finalize", "getClass", "notify", "notifyAll", "registerNatives", "subSequence", "wait"))
+      "replaceFirst", "split", "startsWith", /*"String",*/ "substring", "toCharArray", "toLowerCase", "toString", "toUpperCase", "trim",
+      "valueOf", "clone", /*"Object",*/ "finalize", "getClass", "notify", "notifyAll", "registerNatives", "subSequence", "wait"))
+  }
+
+
+  /**
+   * Ensure that constructor methods are not shown to the user
+   */
+  def testConstructorMethod() {
+    loadAllCommon(myFixture)
+    doTest(List(
+      /* "ConnectionFactory", */ "createConnection", "getConnectionString", "getMaximumConnections", "getTimeout",
+      "getUrl", "getUsername", "setConnectionString", "setMaximumConnections", "setPassword", "setTimeout", "setUrl",
+      "setUsername", "clone", "equals", "hashCode", /*"Object",*/ "toString", "finalize", "getClass", "notify", "notifyAll",
+      "registerNatives", "wait"))
   }
 
   /**

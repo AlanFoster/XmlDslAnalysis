@@ -92,6 +92,13 @@ class BodyTypePropagationTests
   }
 
   /**
+   * Constructor methods do not return a return type and shouldn't throw exceptions
+   */
+  def testConstructorMethodCalled() {
+    doTest()
+  }
+
+  /**
    * Ensures the test is valid
    */
   def doTest() {

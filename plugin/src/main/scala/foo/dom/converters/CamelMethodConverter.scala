@@ -53,7 +53,7 @@ class CamelMethodConverter extends ResolvingConverter[PsiMethod] {
         camelBean <- camelBeanOption
         blueprintBean <- Option(camelBean.getRef.getValue)
         psiClass <- Option(blueprintBean.getPsiClass.getValue)
-        methods = MethodTraversal.getAllMethods(psiClass)
+        methods = MethodTraversal.getAllPublicMethodsWithoutConstructors(psiClass)
       } yield methods
     }.getOrElse(List[PsiMethod]())
 

@@ -1,0 +1,22 @@
+<eipDag>
+    <vertices>
+        <vertex id="removeHeader" eipType="Translator" text="helloWorld" inferredType="{java.lang.Object}"/>
+        <vertex id="setBody" eipType="Translator" text="${body}" inferredType="{java.lang.Object}"/>
+        <vertex id="bean2" eipType="To" text="connectionFactory.ConnectionFactory()" inferredType="{java.lang.Object}"/>
+        <vertex id="when" eipType="When" text="${headers.orderType} == &quot;Widget&quot;" inferredType="{java.lang.Object}"/>
+        <vertex id="choice" eipType="Choice" text="" inferredType="{java.lang.Object}"/>
+        <vertex id="setHeader" eipType="Translator" text="orderType -&gt; ${body.getOrderType}" inferredType="{java.lang.Object}"/>
+        <vertex id="bean" eipType="To" text="orderFactory.createOrder()" inferredType="{java.lang.Object}"/>
+        <vertex id="from" eipType="From" text="direct:entry" inferredType="{java.lang.Object}"/>
+    </vertices>
+    <edges>
+        <edge source="setBody" target="removeHeader" edgeConnection="setBody_removeHeader7"/>
+        <edge source="bean2" target="setBody" edgeConnection="bean2_setBody6"/>
+        <edge source="choice" target="setBody" edgeConnection="choice_setBody5"/>
+        <edge source="when" target="bean2" edgeConnection="when_bean24"/>
+        <edge source="choice" target="when" edgeConnection="choice_when3"/>
+        <edge source="setHeader" target="choice" edgeConnection="setHeader_choice2"/>
+        <edge source="bean" target="setHeader" edgeConnection="bean_setHeader1"/>
+        <edge source="from" target="bean" edgeConnection="from_bean0"/>
+    </edges>
+</eipDag>

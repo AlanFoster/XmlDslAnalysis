@@ -17,6 +17,7 @@ trait CommonTestClasses
     loadCommon(fixture, "/foo/models/ComplexModel.java")
     loadCommon(fixture, "/foo/models/BaseSimpleModel.java")
     loadCommon(fixture, "/foo/models/EdgeCaseModel.java")
+    loadCommon(fixture, "/foo/models/Connection.java")
 
     // Processors
     loadCommon(fixture, "/foo/processors/OrderProcessor.java")
@@ -26,6 +27,7 @@ trait CommonTestClasses
     loadCommon(fixture, "/foo/factory/PersonFactory.java")
     loadCommon(fixture, "/foo/factory/ComplexModelFactory.java")
     loadCommon(fixture, "/foo/factory/EdgeCaseFactory.java")
+    loadCommon(fixture, "/foo/factory/ConnectionFactory.java")
   }
 
   def commonFile = new File(testRoot, "/commonClasses")

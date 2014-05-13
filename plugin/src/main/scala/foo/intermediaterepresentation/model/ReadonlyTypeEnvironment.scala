@@ -25,7 +25,9 @@ trait ReadonlyTypeEnvironment {
    */
   def mR(psiElementOption: Option[PsiMethod]): ACSLFqcn = {
     psiElementOption
-      .map(_.getReturnType.getCanonicalText)
+      // Ensure that a null return type is handled successfully - only occurs within constructors
+      .flatMap(element => Option(element.getReturnType))
+      .map(_.getCanonicalText)
       .getOrElse(CoreConstants.DEFAULT_INFERRED_TYPE)
   }
 }

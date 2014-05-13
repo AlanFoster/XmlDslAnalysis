@@ -8,7 +8,20 @@ import com.intellij.psi.{PsiModifier, PsiClass, PsiMethod}
 object MethodTraversal {
   /**
    * Returns the list of all known methods available within this psi class
-   * Note this includes all super methods
+   * Note this includes all super methods, however constructors are filtered
+   * @param psiClass The psi class which contains the relevant Psi information
+   * @return The list of all possible variants within the given context, which
+   *         have unique identifier method names.
+   */
+  def getAllMethodsWithoutConstructors(psiClass: PsiClass): List[PsiMethod] = {
+    // Filtering constructors
+    MethodTraversal.getAllMethods(psiClass)
+      .filter(!_.isConstructor)
+  }
+
+  /**
+   * Returns the list of all known methods available within this psi class
+   * Note this includes all super methods and constructor methods
    * @param psiClass The psi class which contains the relevant Psi information
    * @return The list of all possible variants within the given context, which
    *         have unique identifier method names.
@@ -27,11 +40,9 @@ object MethodTraversal {
    * @param psiClass The given Psi Class
    * @return The list of PsiMethods which hold true to thie predicate
    */
-  def getAllPublicMethods(psiClass: PsiClass): List[PsiMethod] = {
-    MethodTraversal.getAllMethods(psiClass)
+  def getAllPublicMethodsWithoutConstructors(psiClass: PsiClass): List[PsiMethod] = {
+    MethodTraversal.getAllMethodsWithoutConstructors(psiClass)
       // Public accessors only
       .filter(_.getModifierList.hasModifierProperty(PsiModifier.PUBLIC))
-      // We shouldn't suggest constructors
-      .filter(!_.isConstructor)
   }
 }
