@@ -24,11 +24,11 @@ class CamelMethodConverterContributionTests
 
   def testDuplicatesRemoved() {
     doTest(List(
-      "charAt", "checkBounds", "codePointAt", "codePointBefore", "codePointCount", "compareTo", "compareToIgnoreCase", "concat",
-      "contains", "contentEquals", "copyValueOf", "endsWith", "equals", "equalsIgnoreCase", "format", "getBytes", "getChars", "hashCode",
+      "charAt", "codePointAt", "codePointBefore", "codePointCount", "compareTo", "compareToIgnoreCase", "concat",
+      "contains", "contentEquals", "copyValueOf", "endsWith", "equals", "equalsIgnoreCase", "format", "getBytes", "hashCode",
       "indexOf", "intern", "lastIndexOf", "length", "matches", "offsetByCodePoints", "regionMatches", "replace", "replaceAll",
       "replaceFirst", "split", "startsWith", /*"String",*/ "substring", "toCharArray", "toLowerCase", "toString", "toUpperCase", "trim",
-      "valueOf", "clone", /*"Object",*/ "finalize", "getClass", "notify", "notifyAll", "registerNatives", "subSequence", "wait"))
+      "valueOf", "getClass", "notify", "notifyAll", "subSequence", "wait"))
   }
 
 
@@ -38,10 +38,10 @@ class CamelMethodConverterContributionTests
   def testConstructorMethod() {
     loadAllCommon(myFixture)
     doTest(List(
-      /* "ConnectionFactory", */ "createConnection", "getConnectionString", "getMaximumConnections", "getTimeout",
+      "createConnection", "getConnectionString", "getMaximumConnections", "getTimeout",
       "getUrl", "getUsername", "setConnectionString", "setMaximumConnections", "setPassword", "setTimeout", "setUrl",
-      "setUsername", "clone", "equals", "hashCode", /*"Object",*/ "toString", "finalize", "getClass", "notify", "notifyAll",
-      "registerNatives", "wait"))
+      "setUsername", "equals", "hashCode", "toString", "getClass", "notify", "notifyAll",
+      "wait"))
   }
 
   /**
