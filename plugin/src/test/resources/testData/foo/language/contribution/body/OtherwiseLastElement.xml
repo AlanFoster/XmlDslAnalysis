@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:camel="http://camel.apache.org/schema/blueprint"
+           xsi:schemaLocation="
+       http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+       http://camel.apache.org/schema/blueprint http://camel.apache.org/schema/blueprint/camel-blueprint.xsd">
+
+    <bean class="foo.factory.PersonFactory" id="personFactory"/>
+    <bean class="foo.bar.ConnectionFactory" id="connectionFactory"/>
+    <bean class="foo.factory.ComplexModelFactory" id="complexModelFactory"/>
+    <bean class="foo.factory.OrderFactory" id="orderFactory"/>
+
+    <camelContext trace="true" xmlns="http://camel.apache.org/schema/blueprint">
+        <route>
+            <from uri="..."/>
+
+            <bean ref="orderFactory" method="createOrder"/>
+
+            <choice>
+                <otherwise>
+                    <bean ref="orderFactory" method="createOrder"/>
+
+                    <setBody>
+                        <simple>LANGUAGE_INJECTION_HERE</simple>
+                    </setBody>
+                </otherwise>
+            </choice>
+
+        </route>
+    </camelContext>
+</blueprint>

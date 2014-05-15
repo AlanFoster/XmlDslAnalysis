@@ -118,6 +118,8 @@ sealed trait Processor extends Mappable[Processor] {
           }
         case When(_, children, _, _) =>
           findChild(children)(func)
+        case Otherwise(children, _, _) =>
+          findChild(children)(func)
         case _ =>
           None
       }

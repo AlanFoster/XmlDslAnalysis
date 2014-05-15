@@ -41,6 +41,7 @@ class MethodResolveTests
   val BodyIsComplexModel = TestScenario(Some("ComplexModel.xml"))
   val BodyIsEdgeCasesModel = TestScenario(Some("EdgeCaseModel.xml"))
   val ConstructorMethodCall = TestScenario(Some("ConstructorMethodCall.xml"))
+  val OtherwiseLastElement = TestScenario(Some("OtherwiseLastElement.xml"))
 
   /**
    * Ensures that a non-getter method can be contributed
@@ -76,6 +77,10 @@ class MethodResolveTests
    */
   def testBodyAccessHashCode_ConstructorMethodCall() {
     doTest(ConstructorMethodCall.withExpectedMethodName("hashCode"))
+  }
+
+  def testBodyAccessHashCode_OtherwiseLastElement() {
+    doTest(OtherwiseLastElement.withExpectedMethodName("hashCode"))
   }
 
   /**
