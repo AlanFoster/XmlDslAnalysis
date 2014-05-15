@@ -43,19 +43,25 @@ class CamelGraphPresentationModel(graph: Graph, project: Project,
   override def customizeSettings(view: Graph2DView, editMode: EditMode): Unit = {
     super.customizeSettings(view, editMode)
 
+    // Bind our default layout - ie bubble/hierarchical etc
+   val layouter = getLayouter
+    GraphSettingsProvider.getInstance(project).getSettings(graph)
+      .setCurrentLayouter(layouter)
+
     // Disable various view/editing modes etc
     view.setGridVisible(false)
     view.setAntialiasedPainting(false)
     view.setFitContentOnResize(false)
 
+    view.setPaintDetailThreshold(0d)
+
     editMode.allowResizeNodes(false)
     editMode.allowEdgeCreation(false)
     editMode.allowBendCreation(false)
 
-    // Bind our default layout - ie bubble/hierarchical etc
-    val layouter = getLayouter
-    GraphSettingsProvider.getInstance(project).getSettings(graph)
-      .setCurrentLayouter(layouter)
+    view.fitContent(true)
+    view.applyLayout(layouter)
+    view.fitWorldRect()
   }
 
   /**
@@ -145,4 +151,6 @@ class CamelGraphPresentationModel(graph: Graph, project: Project,
    */
   override def getNodeTooltip(node: EipProcessor): String =
     tooltipStrategy.createTooltip(node)
+
+
 }
