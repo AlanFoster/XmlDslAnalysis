@@ -9,7 +9,8 @@ var DefaultTags = {
     SIMPLE: "Simple",
     CAMEL: "Camel",
     JAVA: "Java",
-    XML: "XML"
+    XML: "XML",
+    GRAPHING: "Graphing"
 };
 
 var features = <any> [
@@ -128,6 +129,51 @@ var features = <any> [
             DefaultTags.SIMPLE,
             DefaultTags.JAVA,
             DefaultTags.XML
+        ]
+    },
+    {
+        title: "Graph Creation",
+        date: 8,
+        images: [
+            {
+                location: "images/GraphExample.png",
+                title: "Graph Creation",
+                description: "Graph Creation under the EIP Editor Tab"
+            }
+        ],
+        tags: [
+            DefaultTags.XML,
+            DefaultTags.GRAPHING
+        ]
+    },
+    {
+        title: "Graph Type Hints",
+        date: 8,
+        images: [
+            {
+                location: "images/GraphExampleStaticInformation.png",
+                title: "Graph Creation - Type Hinting",
+                description: "Static Information displayed under tooltips"
+            }
+        ],
+        tags: [
+            DefaultTags.XML,
+            DefaultTags.GRAPHING
+        ]
+    },
+    {
+        title: "Graph Type Hints",
+        date: 8,
+        images: [
+            {
+                location: "images/GraphExampleTypeUnion.png",
+                title: "Graph Creation - Unioned Type Hinting",
+                description: "Example of unioned type information"
+            }
+        ],
+        tags: [
+            DefaultTags.XML,
+            DefaultTags.GRAPHING
         ]
     }
 ];
