@@ -1,3 +1,5 @@
+###### Note - This Apache Camel Plugin is *not* currently available within the IntelliJ plugin repository
+
 This project aims to provide developer tooling for [Apache Camel](http://camel.apache.org/), an integration library, in order to provide first-class support within [IntelliJ](http://www.jetbrains.com/idea/), an enterprise Java IDE developed by Jetbrains.
 
 This is achieved by applying static analysis in order to provide intelligent code completion, type checking, renaming support, smart-code navigation and type checking. All of which are associated with  increasing the productivity, efficiency and experience of developers.
